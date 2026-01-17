@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>轻量天气 - 实时掌握天气动态</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 天气图标库 -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- 自定义配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F9DFE', // 主色调（天空蓝）
+                        secondary: '#F5F7FA', // 辅助色（浅灰）
+                        dark: '#1D2939', // 深色文本
+                        light: '#667085', // 浅色文本
+                        success: '#00B42A',
+                        warning: '#FF7D00',
+                        danger: '#F53F3F',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'fade-in-delay': 'fadeIn 0.6s ease-out 0.2s both',
+                        'pulse-light': 'pulseLight 2s infinite',
+                        'bg-gradient': 'bgGradient 15s ease infinite',
+                        'skeleton-pulse': 'skeletonPulse 1.5s ease-in-out infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'scale-in': 'scaleIn 0.4s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        scaleIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        },
+                        pulseLight: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.7' },
+                        },
+                        bgGradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' },
+                        },
+                        skeletonPulse: {
+                            '0%': { background: 'rgba(255, 255, 255, 0.1)' },
+                            '50%': { background: 'rgba(255, 255, 255, 0.25)' },
+                            '100%': { background: 'rgba(255, 255, 255, 0.1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                    },
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .bg-gradient-weather {
+                background: linear-gradient(120deg, #4F9DFE, #74B9FF, #00CEFF);
+                background-size: 200% 200%;
+            }
+            .card-shadow {
+                box-shadow: 0 8px 24px rgba(79, 157, 254, 0.15);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .card-shadow-hover {
+                box-shadow: 0 12px 32px rgba(79, 157, 254, 0.2);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .scroll-smooth {
+                scroll-behavior: smooth;
+            }
+            .skeleton {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                animation: skeletonPulse 1.5s ease-in-out infinite;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-secondary font-sans text-dark antialiased scroll-smooth">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md card-shadow transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="flex items-center gap-2">
+                <i class="ri-cloud-line text-primary text-2xl animate-float"></i>
+                <h1 class="text-xl font-bold text-primary">轻量天气</h1>
+            </div>
+            <div class="relative w-full sm:w-64 md:w-80">
+                <input 
+                    type="text" 
+                    id="cityInput"
+                    placeholder="输入城市名查询天气"
+                    class="w-full py-2 px-4 pr-10 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-300"
+                >
+                <button 
+                    id="searchBtn"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:text-primary/80 transition-colors duration-300"
+                >
+                    <i class="ri-search-line text-lg"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 加载状态（骨架屏） -->
+    <div id="loading" class="fixed inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-50 animate-fade-in">
+        <div class="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4"></div>
+        <p class="text-primary animate-pulse-light">正在获取天气数据...</p>
+    </div>
+
+    <!-- 骨架屏（内容加载中） -->
+    <div id="skeletonLoader" class="container mx-auto px-4 py-8 hidden">
+        <!-- 实时天气骨架屏 -->
+        <section class="bg-gradient-weather rounded-2xl p-6 md:p-8 mb-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0 w-48 h-8 skeleton mb-2"></div>
+                <div class="flex items-center gap-4">
+                    <div class="w-24 h-24 skeleton rounded-full"></div>
+                    <div class="text-right">
+                        <div class="w-32 h-16 skeleton mb-2"></div>
+                        <div class="w-20 h-6 skeleton"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center h-20 skeleton"></div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center h-20 skeleton"></div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center h-20 skeleton"></div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center h-20 skeleton"></div>
+            </div>
+        </section>
+
+        <!-- 未来预报骨架屏 -->
+        <section class="animate-fade-in-delay">
+            <div class="w-40 h-8 skeleton mb-4"></div>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                <div class="bg-white rounded-xl p-4 h-48 skeleton"></div>
+                <div class="bg-white rounded-xl p-4 h-48 skeleton"></div>
+                <div class="bg-white rounded-xl p-4 h-48 skeleton"></div>
+                <div class="bg-white rounded-xl p-4 h-48 skeleton"></div>
+                <div class="bg-white rounded-xl p-4 h-48 skeleton"></div>
+                <div class="bg-white rounded-xl p-4 h-48 skeleton"></div>
+                <div class="bg-white rounded-xl p-4 h-48 skeleton"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 错误提示 -->
+    <div id="error" class="container mx-auto px-4 py-8 hidden animate-fade-in">
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center card-shadow">
+            <i id="errorIcon" class="ri-error-warning-line text-red-500 text-4xl mb-3"></i>
+            <p id="errorMsg" class="text-red-600">数据加载失败，请稍后重试</p>
+            <button 
+                id="retryBtn"
+                class="mt-4 px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors duration-300 transform hover:scale-105"
+            >
+                重新加载
+            </button>
+        </div>
+    </div>
+
+    <!-- 缓存提示 -->
+    <div id="cacheTip" class="container mx-auto px-4 py-2 hidden">
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center text-sm text-blue-600">
+            <i class="ri-database-line mr-1"></i>
+            <span>当前显示缓存数据，实时数据将在 <span id="cacheCountdown"></span> 后更新</span>
+        </div>
+    </div>
+
+    <!-- 天气主内容 -->
+    <main id="weatherContent" class="container mx-auto px-4 py-8 hidden">
+        <!-- 实时天气卡片 -->
+        <section class="bg-gradient-weather animate-bg-gradient rounded-2xl p-6 md:p-8 text-white card-shadow mb-8 animate-fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h2 id="currentCity" class="text-2xl md:text-3xl font-bold text-shadow mb-2">北京市</h2>
+                    <p id="currentDate" class="text-white/90 text-shadow">2026年1月17日 星期六</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <i id="currentWeatherIcon" class="ri-sun-line text-6xl md:text-8xl text-shadow animate-float"></i>
+                    <div class="text-right">
+                        <p id="currentTemp" class="text-5xl md:text-7xl font-bold text-shadow">25℃</p>
+                        <p id="currentWeather" class="text-xl md:text-2xl text-white/90 text-shadow">晴</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
+                    <p class="text-white/80 text-sm mb-1">风向</p>
+                    <p id="windDir" class="font-medium">东风</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
+                    <p class="text-white/80 text-sm mb-1">风力</p>
+                    <p id="windPower" class="font-medium">3级</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
+                    <p class="text-white/80 text-sm mb-1">湿度</p>
+                    <p id="humidity" class="font-medium">65%</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
+                    <p class="text-white/80 text-sm mb-1">气压</p>
+                    <p id="pressure" class="font-medium">1012 hPa</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 未来天气预报（核心修复：网格容器直接承载卡片，移除嵌套） -->
+        <section class="animate-fade-in-delay">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="ri-calendar-line text-primary"></i>
+                未来7天天气预报
+            </h2>
+            <!-- 修复点：将forecastContainer改为网格容器，直接生成卡片作为子元素 -->
+            <div id="forecastContainer" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4"></div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="mt-12 py-6 bg-white card-shadow">
+        <div class="container mx-auto px-4 text-center text-light text-sm">
+            <p>数据来源：高德开放平台 | 轻量天气 © 2026</p>
+            <p class="mt-1 text-xs" id="cacheInfo">缓存状态：实时天气缓存剩余 0 分钟 | 未来天气缓存剩余 0 小时</p>
+        </div>
+    </footer>
+
+    <script>
+        // 高德API配置（替换为你的真实Key）
+        const AMAP_KEY = "a4db0093766f7bc349fcc370ec03913d";
+        // 缓存配置（毫秒）
+        const CACHE_CONFIG = {
+            realtime: 30 * 60 * 1000, // 实时天气30分钟
+            forecast: 12 * 60 * 60 * 1000, // 未来天气12小时
+        };
+        // 天气图标映射
+        const weatherIconMap = {
+            '晴': 'ri-sun-line',
+            '多云': 'ri-cloud-line',
+            '阴': 'ri-cloudy-line',
+            '小雨': 'ri-rainy-line',
+            '中雨': 'ri-rainy-line',
+            '大雨': 'ri-heavy-rain-line',
+            '暴雨': 'ri-heavy-rain-line',
+            '雷阵雨': 'ri-thunderstorms-line',
+            '小雪': 'ri-snowy-line',
+            '中雪': 'ri-snowy-line',
+            '大雪': 'ri-snowy-line',
+            '雾': 'ri-fog-line',
+            '霾': 'ri-smog-line',
+            '扬沙': 'ri-dust-line',
+            '沙尘暴': 'ri-dust-line'
+        };
+
+        // DOM元素
+        const loadingEl = document.getElementById('loading');
+        const skeletonLoaderEl = document.getElementById('skeletonLoader');
+        const errorEl = document.getElementById('error');
+        const errorIconEl = document.getElementById('errorIcon');
+        const errorMsgEl = document.getElementById('errorMsg');
+        const weatherContentEl = document.getElementById('weatherContent');
+        const cityInputEl = document.getElementById('cityInput');
+        const searchBtnEl = document.getElementById('searchBtn');
+        const retryBtnEl = document.getElementById('retryBtn');
+        const forecastContainerEl = document.getElementById('forecastContainer');
+        const cacheTipEl = document.getElementById('cacheTip');
+        const cacheCountdownEl = document.getElementById('cacheCountdown');
+        const cacheInfoEl = document.getElementById('cacheInfo');
+
+        // 防抖函数（搜索优化）
+        function debounce(func, delay = 500) {
+            let timer = null;
+            return function(...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化缓存倒计时显示
+            updateCacheInfo();
+            
+            // IP定位获取城市
+            getCityByIP().then(city => {
+                if (city) {
+                    getWeatherData(city);
+                } else {
+                    getWeatherData('北京市');
+                }
+            });
+
+            // 搜索事件（防抖）
+            const handleSearch = debounce(() => {
+                const city = cityInputEl.value.trim();
+                if (city) {
+                    getWeatherData(city);
+                } else {
+                    alert('请输入城市名');
+                }
+            });
+            
+            searchBtnEl.addEventListener('click', handleSearch);
+            cityInputEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+
+            // 重试按钮
+            retryBtnEl.addEventListener('click', () => {
+                const currentCity = document.getElementById('currentCity').textContent;
+                // 清除缓存后重试
+                clearCache(currentCity);
+                getWeatherData(currentCity);
+            });
+
+            // 定时更新缓存信息
+            setInterval(updateCacheInfo, 60 * 1000);
+        });
+
+        /**
+         * 获取缓存数据
+         * @param {string} city 城市名
+         * @param {string} type 缓存类型 realtime/forecast
+         */
+        function getCache(city, type) {
+            try {
+                const cacheKey = `weather_${type}_${city}`;
+                const cacheStr = localStorage.getItem(cacheKey);
+                if (!cacheStr) return null;
+
+                const cacheData = JSON.parse(cacheStr);
+                // 检查缓存是否过期
+                if (Date.now() - cacheData.timestamp < CACHE_CONFIG[type]) {
+                    return cacheData.data;
+                } else {
+                    // 过期则清除
+                    localStorage.removeItem(cacheKey);
+                    return null;
+                }
+            } catch (err) {
+                console.error('获取缓存失败:', err);
+                return null;
+            }
+        }
+
+        /**
+         * 设置缓存数据
+         * @param {string} city 城市名
+         * @param {string} type 缓存类型
+         * @param {any} data 缓存数据
+         */
+        function setCache(city, type, data) {
+            try {
+                const cacheKey = `weather_${type}_${city}`;
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    timestamp: Date.now(),
+                    data: data
+                }));
+            } catch (err) {
+                console.error('设置缓存失败:', err);
+            }
+        }
+
+        /**
+         * 清除指定城市缓存
+         * @param {string} city 城市名
+         */
+        function clearCache(city) {
+            localStorage.removeItem(`weather_realtime_${city}`);
+            localStorage.removeItem(`weather_forecast_${city}`);
+        }
+
+        /**
+         * 更新缓存信息显示
+         */
+        function updateCacheInfo() {
+            const currentCity = document.getElementById('currentCity')?.textContent || '北京市';
+            
+            // 计算实时缓存剩余时间
+            const realtimeCacheKey = `weather_realtime_${currentCity}`;
+            const realtimeCacheStr = localStorage.getItem(realtimeCacheKey);
+            let realtimeLeft = 0;
+            if (realtimeCacheStr) {
+                const cacheData = JSON.parse(realtimeCacheStr);
+                realtimeLeft = Math.max(0, Math.floor((CACHE_CONFIG.realtime - (Date.now() - cacheData.timestamp)) / 60000));
+            }
+
+            // 计算未来缓存剩余时间
+            const forecastCacheKey = `weather_forecast_${currentCity}`;
+            const forecastCacheStr = localStorage.getItem(forecastCacheKey);
+            let forecastLeft = 0;
+            if (forecastCacheStr) {
+                const cacheData = JSON.parse(forecastCacheStr);
+                forecastLeft = Math.max(0, Math.floor((CACHE_CONFIG.forecast - (Date.now() - cacheData.timestamp)) / 3600000));
+            }
+
+            // 更新页脚缓存信息
+            cacheInfoEl.textContent = `缓存状态：实时天气缓存剩余 ${realtimeLeft} 分钟 | 未来天气缓存剩余 ${forecastLeft} 小时`;
+
+            // 更新缓存倒计时提示
+            if (realtimeLeft > 0) {
+                cacheTipEl.classList.remove('hidden');
+                cacheCountdownEl.textContent = `${realtimeLeft} 分钟`;
+            } else {
+                cacheTipEl.classList.add('hidden');
+            }
+        }
+
+        /**
+         * 通过IP获取当前城市
+         */
+        async function getCityByIP() {
+            try {
+                const res = await fetch(`https://restapi.amap.com/v3/ip?key=${AMAP_KEY}`);
+                const data = await res.json();
+                
+                // 处理高德API配额耗尽
+                if (data.status === '0' && data.info === 'DAILY_QUERY_OVER_LIMIT') {
+                    throw new Error('高德API调用次数已用完，请明天再试');
+                }
+                
+                if (data.status === '1') {
+                    return data.city;
+                }
+                return null;
+            } catch (err) {
+                console.error('IP定位失败:', err);
+                return null;
+            }
+        }
+
+        /**
+         * 获取天气数据（优先缓存）
+         * @param {string} city 城市名
+         */
+        async function getWeatherData(city) {
+            // 显示加载状态
+            loadingEl.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+            weatherContentEl.classList.add('hidden');
+            
+            try {
+                // 1. 先尝试获取缓存
+                const realtimeCache = getCache(city, 'realtime');
+                const forecastCache = getCache(city, 'forecast');
+                let needRealtimeRequest = !realtimeCache;
+                let needForecastRequest = !forecastCache;
+
+                // 显示骨架屏
+                loadingEl.classList.add('hidden');
+                skeletonLoaderEl.classList.remove('hidden');
+
+                // 2. 获取ADCODE（优先缓存）
+                let adcode = getCache(city, 'adcode');
+                if (!adcode) {
+                    const geoRes = await fetch(`https://restapi.amap.com/v3/geocode/geo?address=${encodeURIComponent(city)}&key=${AMAP_KEY}`);
+                    const geoData = await geoRes.json();
+                    
+                    // 处理高德API错误
+                    if (geoData.status === '0') {
+                        if (geoData.info === 'DAILY_QUERY_OVER_LIMIT') {
+                            throw new Error('高德API调用次数已用完，请明天再试');
+                        } else if (geoData.info === 'INVALID_USER_KEY') {
+                            throw new Error('高德API Key无效，请检查配置');
+                        } else {
+                            throw new Error(`地理编码失败：${geoData.info || '未找到该城市'}`);
+                        }
+                    }
+
+                    if (!geoData.geocodes.length) {
+                        throw new Error('未找到该城市，请检查名称是否正确');
+                    }
+                    
+                    adcode = geoData.geocodes[0].adcode;
+                    // 缓存ADCODE（永久，城市编码不变）
+                    setCache(city, 'adcode', adcode);
+                }
+
+                // 3. 获取实时天气（缓存未命中则请求）
+                let realtimeData = realtimeCache;
+                if (needRealtimeRequest) {
+                    const realtimeRes = await fetch(`https://restapi.amap.com/v3/weather/weatherInfo?key=${AMAP_KEY}&city=${adcode}&extensions=base&output=JSON`);
+                    const realtimeResp = await realtimeRes.json();
+                    
+                    if (realtimeResp.status === '0') {
+                        if (realtimeResp.info === 'DAILY_QUERY_OVER_LIMIT') {
+                            throw new Error('高德API调用次数已用完，请明天再试');
+                        } else {
+                            throw new Error(`实时天气获取失败：${realtimeResp.info || '服务器错误'}`);
+                        }
+                    }
+                    
+                    realtimeData = realtimeResp.lives[0];
+                    // 设置缓存
+                    setCache(city, 'realtime', realtimeData);
+                }
+
+                // 4. 获取未来天气（缓存未命中则请求）
+                let forecastData = forecastCache;
+                if (needForecastRequest) {
+                    const forecastRes = await fetch(`https://restapi.amap.com/v3/weather/weatherInfo?key=${AMAP_KEY}&city=${adcode}&extensions=all&output=JSON`);
+                    const forecastResp = await forecastRes.json();
+                    
+                    if (forecastResp.status === '0') {
+                        if (forecastResp.info === 'DAILY_QUERY_OVER_LIMIT') {
+                            throw new Error('高德API调用次数已用完，请明天再试');
+                        } else {
+                            throw new Error(`未来天气获取失败：${forecastResp.info || '服务器错误'}`);
+                        }
+                    }
+                    
+                    forecastData = forecastResp.forecasts[0].casts;
+                    // 设置缓存
+                    setCache(city, 'forecast', forecastData);
+                }
+
+                // 5. 渲染数据
+                renderRealtimeWeather(realtimeData, city);
+                renderForecastWeather(forecastData);
+
+                // 6. 更新UI状态
+                skeletonLoaderEl.classList.add('hidden');
+                weatherContentEl.classList.remove('hidden');
+                updateCacheInfo();
+
+            } catch (err) {
+                console.error('天气数据请求失败:', err);
+                // 显示错误
+                skeletonLoaderEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+                errorMsgEl.textContent = err.message;
+                
+                // 自定义错误图标
+                if (err.message.includes('调用次数已用完')) {
+                    errorIconEl.className = 'ri-warning-line text-warning text-4xl mb-3';
+                    errorMsgEl.className = 'text-warning';
+                } else if (err.message.includes('Key无效')) {
+                    errorIconEl.className = 'ri-key-line text-danger text-4xl mb-3';
+                    errorMsgEl.className = 'text-danger';
+                } else {
+                    errorIconEl.className = 'ri-error-warning-line text-red-500 text-4xl mb-3';
+                    errorMsgEl.className = 'text-red-600';
+                }
+            } finally {
+                loadingEl.classList.add('hidden');
+            }
+        }
+
+        /**
+         * 渲染实时天气
+         */
+        function renderRealtimeWeather(data, city) {
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${['日', '一', '二', '三', '四', '五', '六'][now.getDay()]}`;
+            
+            // 更新DOM
+            document.getElementById('currentCity').textContent = city;
+            document.getElementById('currentDate').textContent = dateStr;
+            document.getElementById('currentTemp').textContent = `${data.temperature}℃`;
+            document.getElementById('currentWeather').textContent = data.weather;
+            document.getElementById('windDir').textContent = data.winddirection;
+            document.getElementById('windPower').textContent = `${data.windpower}级`;
+            document.getElementById('humidity').textContent = `${data.humidity}%`;
+            document.getElementById('pressure').textContent = `${data.pressure} hPa`;
+            
+            // 更新图标
+            const iconClass = weatherIconMap[data.weather] || 'ri-cloud-line';
+            document.getElementById('currentWeatherIcon').className = `${iconClass} text-6xl md:text-8xl text-shadow animate-float`;
+        }
+
+        /**
+         * 渲染未来天气预报（修复后逻辑）
+         */
+        function renderForecastWeather(data) {
+            // 清空容器
+            forecastContainerEl.innerHTML = '';
+            // 只取前7天数据
+            const sevenDaysData = data.slice(0, 7);
+            
+            sevenDaysData.forEach((item, index) => {
+                const dayName = getDayName(item.week);
+                const iconClass = weatherIconMap[item.dayweather] || 'ri-cloud-line';
+                
+                // 创建预报卡片
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-xl p-4 text-center card-shadow hover:card-shadow-hover hover:scale-105 transition-all duration-300 animate-fade-in`;
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.innerHTML = `
+                    <p class="font-medium mb-2">${item.date}</p>
+                    <p class="text-sm text-light mb-3">${dayName}</p>
+                    <i class="${iconClass} text-primary text-2xl mb-2 animate-float" style="animation-delay: ${index * 0.2}s"></i>
+                    <p class="text-sm">${item.dayweather}</p>
+                    <p class="font-medium mt-2">${item.daytemp}°/${item.nighttemp}°</p>
+                `;
+                // 直接添加到网格容器中（核心修复）
+                forecastContainerEl.appendChild(card);
+            });
+        }
+
+        /**
+         * 转换星期
+         */
+        function getDayName(weekNum) {
+            const weekMap = {
+                '1': '周一',
+                '2': '周二',
+                '3': '周三',
+                '4': '周四',
+                '5': '周五',
+                '6': '周六',
+                '7': '周日'
+            };
+            return weekMap[weekNum] || '';
+        }
+    </script>
+</body>
+</html>
