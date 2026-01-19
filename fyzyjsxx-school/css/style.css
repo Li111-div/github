@@ -1,0 +1,465 @@
+/* 全局重置与基础样式 */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Microsoft Yahei", sans-serif;
+	scroll-behavior: smooth;
+	/* 页面内跳转丝滑 */
+}
+
+body {
+	color: #333;
+	line-height: 1.6;
+	overflow-x: hidden;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+ul {
+	list-style: none;
+}
+
+.container {
+	width: 90%;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+/* 动画元素初始状态 */
+.animate {
+	opacity: 0;
+	transform: translateY(30px);
+	transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+	/* 丝滑缓动 */
+}
+
+/* 动画触发后状态 */
+.animate.active {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* 横向滑入动画 */
+.animate-left {
+	opacity: 0;
+	transform: translateX(-30px);
+	transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-left.active {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+.animate-right {
+	opacity: 0;
+	transform: translateX(30px);
+	transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-right.active {
+	opacity: 1;
+	transform: translateX(0);
+}
+
+/* 导航栏样式 */
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 999;
+	background: rgba(255, 255, 255, 0.95);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease;
+}
+
+.nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 15px 0;
+}
+
+.logo img {
+	height: 50px;
+}
+
+.nav-menu {
+	display: flex;
+	gap: 30px;
+}
+
+.nav-menu li a {
+	font-size: 16px;
+	font-weight: 500;
+	color: #2c5282;
+	position: relative;
+	padding: 5px 0;
+}
+
+.nav-menu li a::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background: #2c5282;
+	transition: width 0.3s ease;
+}
+
+.nav-menu li a:hover::after {
+	width: 100%;
+}
+
+/* 移动端导航 */
+.menu-toggle {
+	display: none;
+	font-size: 24px;
+	cursor: pointer;
+	color: #2c5282;
+}
+
+/* 横幅样式 */
+.banner {
+	height: 100vh;
+	background: url("../images/banner.jpg") no-repeat center center/cover;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	color: white;
+	margin-top: 80px;
+}
+
+.banner-content {
+	background: rgba(0, 0, 0, 0.5);
+	padding: 50px;
+	border-radius: 10px;
+	animation: fadeIn 1s ease;
+}
+
+.banner h1 {
+	font-size: 48px;
+	margin-bottom: 20px;
+}
+
+.banner p {
+	font-size: 20px;
+	margin-bottom: 30px;
+}
+
+.btn {
+	display: inline-block;
+	padding: 12px 30px;
+	background: #2c5282;
+	color: white;
+	border-radius: 5px;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	border: none;
+	cursor: pointer;
+}
+
+.btn:hover {
+	background: #1a365d;
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 通用板块样式 */
+.section {
+	padding: 80px 0;
+}
+
+.section-title {
+	text-align: center;
+	margin-bottom: 60px;
+	font-size: 36px;
+	color: #2c5282;
+	position: relative;
+}
+
+.section-title::after {
+	content: "";
+	position: absolute;
+	bottom: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80px;
+	height: 3px;
+	background: #2c5282;
+}
+
+/* 首页特色板块 */
+.features {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 30px;
+	margin-top: 40px;
+}
+
+.feature-card {
+	background: white;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card h3 {
+	font-size: 22px;
+	color: #2c5282;
+	margin-bottom: 15px;
+}
+
+/* 学校简介页面样式 */
+.about-content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 40px;
+	align-items: center;
+}
+
+.about-img img {
+	width: 100%;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.about-text h3 {
+	font-size: 28px;
+	color: #2c5282;
+	margin-bottom: 20px;
+}
+
+.about-text p {
+	margin-bottom: 15px;
+	font-size: 16px;
+	line-height: 1.8;
+}
+
+/* 专业设置页面样式 */
+.majors-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+	gap: 30px;
+}
+
+.major-card {
+	background: white;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease;
+}
+
+.major-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.major-img img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+}
+
+.major-info {
+	padding: 20px;
+}
+
+.major-info h3 {
+	font-size: 22px;
+	color: #2c5282;
+	margin-bottom: 10px;
+}
+
+.major-info p {
+	font-size: 15px;
+	color: #666;
+}
+
+/* 校园风采页面样式 */
+.campus-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 20px;
+}
+
+.campus-item {
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+	transition: all 0.3s ease;
+}
+
+.campus-item img {
+	width: 100%;
+	height: 250px;
+	object-fit: cover;
+	transition: transform 0.5s ease;
+}
+
+.campus-item:hover img {
+	transform: scale(1.05);
+}
+
+/* 联系我们页面样式 */
+.contact-content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 40px;
+}
+
+.contact-info {
+	background: white;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.contact-info h3 {
+	font-size: 24px;
+	color: #2c5282;
+	margin-bottom: 20px;
+}
+
+.contact-info p {
+	margin-bottom: 15px;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.contact-img img {
+	width: 100%;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 页脚样式 */
+.footer {
+	background: #2c5282;
+	color: white;
+	padding: 50px 0 20px;
+}
+
+.footer-content {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 40px;
+	margin-bottom: 30px;
+}
+
+.footer-col h3 {
+	font-size: 20px;
+	margin-bottom: 20px;
+	position: relative;
+	padding-bottom: 10px;
+}
+
+.footer-col h3::after {
+	content: "";
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 50px;
+	height: 2px;
+	background: white;
+}
+
+.footer-col ul li {
+	margin-bottom: 10px;
+}
+
+.footer-col ul li a:hover {
+	text-decoration: underline;
+}
+
+.copyright {
+	text-align: center;
+	padding-top: 20px;
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
+	font-size: 14px;
+}
+
+/* 响应式适配 */
+@media (max-width: 992px) {
+
+	.about-content,
+	.contact-content {
+		grid-template-columns: 1fr;
+	}
+
+	.banner h1 {
+		font-size: 36px;
+	}
+
+	.section-title {
+		font-size: 30px;
+	}
+}
+
+@media (max-width: 768px) {
+	.menu-toggle {
+		display: block;
+	}
+
+	.nav-menu {
+		position: fixed;
+		top: 80px;
+		left: -100%;
+		width: 100%;
+		height: calc(100vh - 80px);
+		background: white;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+		transition: left 0.3s ease;
+		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+	}
+
+	.nav-menu.active {
+		left: 0;
+	}
+
+	.banner {
+		height: 80vh;
+	}
+
+	.banner-content {
+		padding: 30px;
+	}
+
+	.banner h1 {
+		font-size: 28px;
+	}
+
+	.banner p {
+		font-size: 16px;
+	}
+}
+
+/* 基础动画 */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
