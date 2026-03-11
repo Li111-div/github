@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="途味 - 您的旅游美食专家，探索全国各地美食与景点">
+  <meta name="keywords" content="美食，旅游，菜谱，景点，路线规划，AI 助手">
+  <meta name="author" content="途味团队">
+  
+  <!-- 启用 IE 最新模式 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  
+  <!-- 禁用电话识别 -->
+  <meta name="format-detection" content="telephone=no">
+  
+  <title>途味 - 探索美食与美景</title>
+  
+  <!-- 引入公共样式 -->
+  <link rel="stylesheet" href="css/common.css">
+  <!-- 引入美食板块样式 -->
+  <link rel="stylesheet" href="css/food.css">
+  <!-- 引入旅游板块样式 -->
+  <link rel="stylesheet" href="css/travel.css">
+  
+  <!-- Favicon（可选） -->
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+  
+  <style>
+    /* 页面特有样式 */
+    .hero {
+      height: 500px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="rgba(255,255,255,0.1)"></path></svg>') no-repeat bottom;
+      background-size: cover;
+    }
+    
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease;
+    }
+    
+    .hero__title {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero__subtitle {
+      font-size: 20px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    
+    .hero__search {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .section-title {
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    
+    .section-subtitle {
+      font-size: 16px;
+      text-align: center;
+      color: #999;
+      margin-bottom: 40px;
+    }
+    
+    /* 特性区域 */
+    .features {
+      padding: 60px 20px;
+      background: #fff;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .feature-card {
+      text-align: center;
+      padding: 30px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feature-card__icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    
+    .feature-card__title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    
+    .feature-card__text {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.8;
+    }
+    
+    /* 板块内容 */
+    .food-section,
+    .travel-section {
+      padding: 60px 20px;
+    }
+    
+    .food-section {
+      background: linear-gradient(135deg, #FFF0E6 0%, #FFE4D1 100%);
+    }
+    
+    .travel-section {
+      background: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+    }
+    
+    /* 底部导航（移动端） */
+    .bottom-nav {
+      display: none;
+    }
+    
+    /* 响应式调整 */
+    @media screen and (max-width: 768px) {
+      .hero {
+        height: 350px;
+      }
+      
+      .hero__title {
+        font-size: 32px;
+      }
+      
+      .hero__subtitle {
+        font-size: 16px;
+      }
+      
+      .section-title {
+        font-size: 24px;
+      }
+      
+      .features {
+        padding: 40px 15px;
+      }
+      
+      .feature-card {
+        padding: 20px;
+      }
+      
+      .feature-card__icon {
+        font-size: 40px;
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .hero__title {
+        font-size: 24px;
+      }
+      
+      .hero__subtitle {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航栏 -->
+  <header class="header">
+    <div class="header__container">
+      <a href="index.html" class="header__logo">🍽️ 途味</a>
+      
+      <nav class="header__nav">
+        <a href="#home" class="header__nav-item header__nav-item--active">首页</a>
+        <a href="#food" class="header__nav-item">美食</a>
+        <a href="#travel" class="header__nav-item">旅游</a>
+        <a href="#about" class="header__nav-item">关于</a>
+      </nav>
+      
+      <!-- 移动端菜单按钮 -->
+      <button class="header__menu-btn" aria-label="菜单">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="main">
+    <!-- Hero 区域 -->
+    <section class="hero" id="home">
+      <div class="hero__content">
+        <h1 class="hero__title">探索美食与美景</h1>
+        <p class="hero__subtitle">让 AI 为您的味蕾和脚步指引方向</p>
+        
+        <!-- 搜索框 -->
+        <div class="hero__search">
+          <div class="search-box">
+            <input type="text" class="search-box__input" placeholder="搜索美食、景点、菜谱...">
+            <button class="search-box__btn">🔍</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 特性介绍 -->
+    <section class="features">
+      <h2 class="section-title">为什么选择途味？</h2>
+      <p class="section-subtitle">一站式解决您的美食探索和旅行规划需求</p>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-card__icon">🤖</div>
+          <h3 class="feature-card__title">AI 智能推荐</h3>
+          <p class="feature-card__text">接入 DeepSeek 大模型，为您提供个性化的美食教程和旅行路线规划</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card__icon">🍳</div>
+          <h3 class="feature-card__title">八大菜系</h3>
+          <p class="feature-card__text">涵盖川、粤、鲁、苏、浙、闽、湘、徽八大菜系及各地特色小吃</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card__icon">✈️</div>
+          <h3 class="feature-card__title">全球景点</h3>
+          <p class="feature-card__text">精选国内外热门景点，提供详细的攻略和路线建议</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card__icon">📱</div>
+          <h3 class="feature-card__title">全端适配</h3>
+          <p class="feature-card__text">完美支持 PC、平板、手机等各种设备，随时随地使用</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 选项卡切换 -->
+    <div class="tabs">
+      <button class="tabs__item tabs__item--food active" data-tab="food">
+        🍳 美食板块
+      </button>
+      <button class="tabs__item tabs__item--travel" data-tab="travel">
+        ✈️ 旅游板块
+      </button>
+    </div>
+
+    <!-- 美食板块 -->
+    <section class="section section--active food-section" id="food">
+      <div class="main__container">
+        <h2 class="section-title">探索中华美食</h2>
+        <p class="section-subtitle">从八大菜系到地方小吃，品味舌尖上的中国</p>
+        
+        <!-- 功能模块切换 -->
+        <div class="food-module-tabs">
+          <button class="food-module-tabs__item food-module-tabs__item--active" data-module="module-cuisine">
+            📚 菜系大全
+          </button>
+          <button class="food-module-tabs__item" data-module="module-shop">
+            🛒 购买美食
+          </button>
+          <button class="food-module-tabs__item" data-module="module-cook">
+            👨‍🍳 自制美食
+          </button>
+        </div>
+        
+        <!-- 菜系大全模块 -->
+        <div class="food-module food-module--active" id="module-cuisine">
+          <!-- 筛选器 -->
+          <div class="filter">
+            <div class="filter__item filter__item--active" data-type="all">全部</div>
+            <div class="filter__item" data-type="spicy">麻辣</div>
+            <div class="filter__item" data-type="light">清淡</div>
+            <div class="filter__item" data-type="sweet">甜润</div>
+            <div class="filter__item" data-type="sour">酸辣</div>
+          </div>
+          
+          <!-- 搜索框 -->
+          <div class="search-box">
+            <input type="text" class="search-box__input input--food" placeholder="搜索菜系、菜品...">
+            <button class="search-box__btn">🔍</button>
+          </div>
+          
+          <!-- 菜系卡片网格 -->
+          <div class="cuisine-grid">
+            <!-- 由 JS 动态生成 -->
+          </div>
+          
+          <!-- 地方小吃 -->
+          <h3 style="font-size: 24px; font-weight: bold; margin: 50px 0 30px; text-align: center;">🍜 地方特色小吃</h3>
+          <div class="snack-grid">
+            <!-- 由 JS 动态生成 -->
+          </div>
+        </div>
+        
+        <!-- 购买美食模块 -->
+        <div class="food-module" id="module-shop">
+          <div class="food-shop-grid">
+            <!-- 商品卡片由 JS 动态生成 -->
+          </div>
+        </div>
+        
+        <!-- 自制美食 AI 模块 -->
+        <div class="food-module" id="module-cook">
+          <div class="ai-cook-container">
+            <div class="ai-cook-header">
+              <h3 class="ai-cook-title">🤖 途味助手 - AI 烹饪顾问</h3>
+              <p class="ai-cook-subtitle">输入您想做的菜，AI 为您生成详细制作教程</p>
+            </div>
+            
+            <form class="ai-cook-form">
+              <div class="ai-cook-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                <div class="ai-cook-group">
+                  <label class="ai-cook-label">菜品名称 *</label>
+                  <input type="text" name="dishName" class="ai-cook-input" placeholder="例如：宫保鸡丁" required>
+                </div>
+                
+                <div class="ai-cook-group">
+                  <label class="ai-cook-label">菜系类型</label>
+                  <select name="cuisineType" class="ai-cook-select">
+                    <option value="">不限</option>
+                    <option value="川菜">川菜</option>
+                    <option value="粤菜">粤菜</option>
+                    <option value="鲁菜">鲁菜</option>
+                    <option value="苏菜">苏菜</option>
+                    <option value="浙菜">浙菜</option>
+                    <option value="闽菜">闽菜</option>
+                    <option value="湘菜">湘菜</option>
+                    <option value="徽菜">徽菜</option>
+                    <option value="家常菜">家常菜</option>
+                  </select>
+                </div>
+                
+                <div class="ai-cook-group">
+                  <label class="ai-cook-label">难度等级</label>
+                  <select name="difficulty" class="ai-cook-select">
+                    <option value="简单">简单</option>
+                    <option value="中等" selected>中等</option>
+                    <option value="困难">困难</option>
+                  </select>
+                </div>
+              </div>
+              
+              <button type="submit" class="ai-cook-btn">
+                ✨ 生成教程
+              </button>
+            </form>
+            
+            <!-- AI 生成结果 -->
+            <div class="ai-result-container">
+              <!-- 结果由 JS 动态显示 -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 旅游板块 -->
+    <section class="section travel-section" id="travel">
+      <div class="main__container">
+        <h2 class="section-title">探索世界美景</h2>
+        <p class="section-subtitle">从国内到国外，让 AI 为您规划完美旅程</p>
+        
+        <!-- 景点分类 -->
+        <div class="travel-tabs">
+          <div class="travel-tabs__item travel-tabs__item--active" data-type="domestic">
+            🇨🇳 国内景点
+          </div>
+          <div class="travel-tabs__item" data-type="international">
+            🌏 国外景点
+          </div>
+        </div>
+        
+        <!-- 排序选项 -->
+        <div style="text-align: right; margin-bottom: 20px;">
+          <select class="sort-select" style="padding: 8px 15px; border-radius: 20px; border: 2px solid #e0e0e0; outline: none; cursor: pointer;">
+            <option value="default">默认排序</option>
+            <option value="rating">评分最高</option>
+            <option value="price-asc">价格从低到高</option>
+            <option value="price-desc">价格从高到低</option>
+          </select>
+        </div>
+        
+        <!-- AI 路线生成器 -->
+        <div class="ai-route-container">
+          <div class="ai-route-header">
+            <h3 class="ai-route-title">🤖 途味助手 - AI 旅行规划师</h3>
+            <p class="ai-route-subtitle">告诉我您的需求，AI 为您定制专属旅行路线</p>
+          </div>
+          
+          <form class="ai-route-form">
+            <div class="ai-route-grid">
+              <div class="ai-route-group">
+                <label class="ai-route-label">出发地 *</label>
+                <input type="text" name="departure" class="ai-route-input" placeholder="例如：北京" required>
+              </div>
+              
+              <div class="ai-route-group">
+                <label class="ai-route-label">目的地 *</label>
+                <input type="text" name="destination" class="ai-route-input" placeholder="例如：成都" required>
+              </div>
+              
+              <div class="ai-route-group">
+                <label class="ai-route-label">游玩天数</label>
+                <input type="number" name="days" class="ai-route-input" value="3" min="1" max="30">
+              </div>
+              
+              <div class="ai-route-group">
+                <label class="ai-route-label">预算范围（元）</label>
+                <input type="number" name="budget" class="ai-route-input" placeholder="例如：5000">
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 25px;">
+              <label class="ai-route-label">偏好选择（可多选）</label>
+              <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                  <input type="checkbox" name="preference" value="自然风光"> 自然风光
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                  <input type="checkbox" name="preference" value="历史文化"> 历史文化
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                  <input type="checkbox" name="preference" value="美食探索"> 美食探索
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                  <input type="checkbox" name="preference" value="休闲度假"> 休闲度假
+                </label>
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                  <input type="checkbox" name="preference" value="冒险刺激"> 冒险刺激
+                </label>
+              </div>
+            </div>
+            
+            <button type="submit" class="ai-route-btn">
+              🗺️ 生成路线
+            </button>
+          </form>
+          
+          <!-- AI 生成结果 -->
+          <div class="route-result-container">
+            <!-- 结果由 JS 动态显示 -->
+          </div>
+        </div>
+        
+        <!-- 瀑布流景点展示 -->
+        <h3 style="font-size: 24px; font-weight: bold; margin: 50px 0 30px; text-align: center;">🏞️ 热门推荐</h3>
+        <div class="scenic-waterfall">
+          <!-- 景点卡片由 JS 动态生成 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 关于区域 -->
+    <section class="features" id="about" style="background: #fff;">
+      <h2 class="section-title">关于途味</h2>
+      <p class="section-subtitle" style="max-width: 800px; margin: 0 auto 40px;">
+        途味是一个集美食探索与旅游规划于一体的综合平台，致力于为用户提供最优质的美食教程和旅行路线推荐。
+        通过 AI 技术，我们让美食制作和旅行规划变得更加简单有趣。
+      </p>
+      
+      <div style="text-align: center; margin-top: 40px;">
+        <a href="#" class="btn btn--primary" style="margin: 0 10px;">联系我们</a>
+        <a href="#" class="btn btn--secondary" style="margin: 0 10px;">加入我们</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- 购物车浮动按钮 -->
+  <div class="cart-float" onclick="goToCart()">
+    <span class="cart-float__icon">🛒</span>
+    <span class="cart-float__badge">0</span>
+  </div>
+
+  <!-- 回到顶部按钮 -->
+  <button class="back-to-top" aria-label="回到顶部">↑</button>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer__content">
+      <p class="footer__text">© 2026 途味 - 探索美食与美景 版权所有</p>
+      <div class="footer__links">
+        <a href="#" class="footer__link">关于我们</a>
+        <a href="#" class="footer__link">联系方式</a>
+        <a href="#" class="footer__link">隐私政策</a>
+        <a href="#" class="footer__link">服务条款</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 移动端底部导航 -->
+  <nav class="bottom-nav">
+    <a href="#home" class="bottom-nav__item bottom-nav__item--active">
+      <span class="bottom-nav__icon">🏠</span>
+      <span class="bottom-nav__text">首页</span>
+    </a>
+    <a href="#food" class="bottom-nav__item">
+      <span class="bottom-nav__icon">🍳</span>
+      <span class="bottom-nav__text">美食</span>
+    </a>
+    <a href="#travel" class="bottom-nav__item">
+      <span class="bottom-nav__icon">✈️</span>
+      <span class="bottom-nav__text">旅游</span>
+    </a>
+    <a href="#about" class="bottom-nav__item">
+      <span class="bottom-nav__icon">ℹ️</span>
+      <span class="bottom-nav__text">关于</span>
+    </a>
+  </nav>
+
+  <!-- 引入 jQuery CDN -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  
+  <!-- 引入公共 JS -->
+  <script src="js/common.js"></script>
+  <!-- 引入 AI 接口封装 -->
+  <script src="js/ai.js"></script>
+  <!-- 引入美食板块 JS -->
+  <script src="js/food.js"></script>
+  <!-- 引入旅游板块 JS -->
+  <script src="js/travel.js"></script>
+  
+  <!-- 页面初始化脚本 -->
+  <script>
+    // 等待 DOM 加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🎉 途味主页已加载');
+      
+      // 选项卡切换
+      const tabButtons = document.querySelectorAll('.tabs__item');
+      const sections = {
+        food: document.querySelector('.food-section'),
+        travel: document.querySelector('.travel-section')
+      };
+      
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const target = btn.dataset.tab;
+          
+          // 切换 Tab 状态
+          tabButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          // 切换板块显示
+          Object.values(sections).forEach(section => {
+            section.classList.remove('section--active');
+          });
+          sections[target].classList.add('section--active');
+          
+          // 滚动到板块位置
+          sections[target].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+      
+      // 平滑滚动导航
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          if (targetId !== '#') {
+            const target = document.querySelector(targetId);
+            if (target) {
+              scrollTo(target.offsetTop - 60);
+            }
+          }
+        });
+      });
+      
+      // 导航高亮
+      window.addEventListener('scroll', throttle(() => {
+        const scrollPos = window.pageYOffset + 100;
+        const sections = ['home', 'food', 'travel', 'about'];
+        
+        sections.forEach(id => {
+          const element = document.getElementById(id);
+          if (element) {
+            const offsetTop = element.offsetTop;
+            const offsetHeight = element.offsetHeight;
+            
+            if (scrollPos >= offsetTop && scrollPos < offsetTop + offsetHeight) {
+              document.querySelectorAll('.header__nav-item').forEach(item => {
+                item.classList.remove('header__nav-item--active');
+                if (item.getAttribute('href') === `#${id}`) {
+                  item.classList.add('header__nav-item--active');
+                }
+              });
+              
+              document.querySelectorAll('.bottom-nav__item').forEach(item => {
+                item.classList.remove('bottom-nav__item--active');
+                if (item.getAttribute('href') === `#${id}`) {
+                  item.classList.add('bottom-nav__item--active');
+                }
+              });
+            }
+          }
+        });
+      }, 100));
+      
+      // 初始化移动端菜单高度
+      const nav = document.querySelector('.header__nav');
+      if (nav) {
+        nav.style.maxHeight = '0';
+        nav.style.overflow = 'hidden';
+        nav.style.transition = 'max-height 0.3s ease';
+      }
+      
+      // 移动端菜单展开
+      const menuBtn = document.querySelector('.header__menu-btn');
+      if (menuBtn && nav) {
+        menuBtn.addEventListener('click', () => {
+          const isActive = menuBtn.classList.contains('header__menu-btn--active');
+          nav.style.maxHeight = isActive ? '0' : '300px';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

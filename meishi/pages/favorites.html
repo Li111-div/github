@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的收藏 - 途味</title>
+  
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/travel.css">
+  
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #1E88E5 0%, #64B5F6 100%);
+      padding: 80px 20px 40px;
+      color: #fff;
+    }
+    
+    .page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+    
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .favorites-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+    
+    .favorite-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.4s ease;
+      position: relative;
+    }
+    
+    .favorite-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 35px rgba(30, 136, 229, 0.2);
+    }
+    
+    .favorite-card__image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .favorite-card__content {
+      padding: 20px;
+    }
+    
+    .favorite-card__name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .favorite-card__location {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .favorite-card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .favorite-card__rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #FFD700;
+      font-size: 16px;
+    }
+    
+    .favorite-card__price {
+      font-size: 18px;
+      font-weight: bold;
+      color: #1E88E5;
+    }
+    
+    .favorite-card__actions {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 10px;
+    }
+    
+    .btn-action {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-action:hover {
+      background: #fff;
+      transform: scale(1.1);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 100px 20px;
+    }
+    
+    .empty-state__icon {
+      font-size: 120px;
+      margin-bottom: 30px;
+      opacity: 0.5;
+    }
+    
+    .empty-state__text {
+      font-size: 20px;
+      color: #999;
+      margin-bottom: 30px;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .favorites-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 页面头部 -->
+  <header class="page-header">
+    <div class="page-header__container">
+      <a href="../index.html" class="back-btn">← 返回首页</a>
+      <h1 style="font-size: 32px; font-weight: bold;">❤️ 我的收藏</h1>
+    </div>
+  </header>
+
+  <!-- 主要内容 -->
+  <main class="page-container">
+    <div id="favoritesContent">
+      <!-- 收藏内容将由 JS 生成 -->
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer__content">
+      <p class="footer__text">© 2026 途味 - 探索美食与美景 版权所有</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/travel.js"></script>
+  
+  <script>
+    // 渲染收藏列表
+    function renderFavorites() {
+      const favorites = storage.get('travelFavorites') || [];
+      const container = document.getElementById('favoritesContent');
+      
+      if (favorites.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">💔</div>
+            <p class="empty-state__text">暂无收藏的景点</p>
+            <a href="../index.html#travel" class="btn btn--info">去探索景点</a>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = `
+        <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <h2 style="font-size: 24px; font-weight: bold;">已收藏 ${favorites.length} 个景点</h2>
+          <button onclick="clearAll()" class="btn btn--secondary" style="padding: 10px 20px;">清空全部</button>
+        </div>
+        <div class="favorites-grid">
+          ${favorites.map((item, index) => `
+            <div class="favorite-card" data-id="${item.id}">
+              <div class="favorite-card__actions">
+                <button class="btn-action" onclick="viewDetail(${item.id})" title="查看详情">👁️</button>
+                <button class="btn-action" onclick="removeFavorite(${index})" title="取消收藏">❌</button>
+              </div>
+              <img src="${item.image}" alt="${item.name}" class="favorite-card__image"
+                   onerror="this.src='https://via.placeholder.com/400x300/1E88E5/FFFFFF?text=${encodeURIComponent(item.name)}'">
+              <div class="favorite-card__content">
+                <h3 class="favorite-card__name">${item.name}</h3>
+                <p class="favorite-card__location">📍 ${item.location}</p>
+                <div class="favorite-card__footer">
+                  <div class="favorite-card__rating">
+                    ⭐ ${item.rating}
+                  </div>
+                  <span class="favorite-card__price">${item.price > 0 ? '¥' + item.price : '免费'}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    
+    // 查看详情
+    function viewDetail(id) {
+      window.location.href = `scenic_detail.html?id=${id}`;
+    }
+    
+    // 移除收藏
+    function removeFavorite(index) {
+      let favorites = storage.get('travelFavorites') || [];
+      favorites.splice(index, 1);
+      storage.set('travelFavorites', favorites);
+      renderFavorites();
+      showToast('已取消收藏', 'warning');
+    }
+    
+    // 清空全部
+    function clearAll() {
+      if (confirm('确定要清空所有收藏吗？')) {
+        storage.set('travelFavorites', []);
+        renderFavorites();
+        showToast('已清空所有收藏', 'warning');
+      }
+    }
+    
+    // 页面加载完成
+    document.addEventListener('DOMContentLoaded', function() {
+      renderFavorites();
+    });
+  </script>
+</body>
+</html>

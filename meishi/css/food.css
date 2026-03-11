@@ -1,0 +1,767 @@
+/**
+ * food.css - 美食板块样式文件
+ * 主题色：橙色 #FF7F24，辅助色 #FFB366
+ */
+
+/* ==================== 美食板块特有样式 ==================== */
+.food-section {
+  --theme-primary: #FF7F24;
+  --theme-secondary: #FFB366;
+  --theme-light: #FFF0E6;
+}
+
+/* ==================== 菜系分类卡片 ==================== */
+.cuisine-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.cuisine-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(255, 127, 36, 0.1);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
+  position: relative;
+}
+
+.cuisine-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #FF7F24, #FFB366);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.cuisine-card:hover::before {
+  transform: scaleX(1);
+}
+
+.cuisine-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(255, 127, 36, 0.25);
+}
+
+.cuisine-card__image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.cuisine-card:hover .cuisine-card__image {
+  transform: scale(1.15);
+}
+
+.cuisine-card__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(255, 127, 36, 0.3) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.cuisine-card:hover .cuisine-card__overlay {
+  opacity: 1;
+}
+
+.cuisine-card__content {
+  padding: 20px;
+}
+
+.cuisine-card__title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.cuisine-card__desc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 15px;
+}
+
+.cuisine-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cuisine-card__tag {
+  padding: 4px 12px;
+  background: var(--theme-light);
+  color: var(--theme-primary);
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ==================== 功能切换模块 ==================== */
+.food-module-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.food-module-tabs__item {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 2px solid #e0e0e0;
+  border-radius: 25px;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.food-module-tabs__item:hover {
+  border-color: var(--theme-primary);
+  color: var(--theme-primary);
+}
+
+.food-module-tabs__item--active {
+  background: linear-gradient(135deg, #FF7F24 0%, #FFB366 100%);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* ==================== 购买美食模块 ==================== */
+.food-shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.food-product-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.food-product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 35px rgba(255, 127, 36, 0.2);
+}
+
+.food-product-card__image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.food-product-card:hover .food-product-card__image {
+  transform: scale(1.1);
+}
+
+.food-product-card__info {
+  padding: 18px;
+}
+
+.food-product-card__name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.food-product-card__price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.food-product-card__price {
+  font-size: 22px;
+  font-weight: bold;
+  color: #FF7F24;
+}
+
+.food-product-card__price-symbol {
+  font-size: 14px;
+  margin-right: 2px;
+}
+
+.food-product-card__sales {
+  font-size: 13px;
+  color: #999;
+}
+
+.food-product-card__actions {
+  display: flex;
+  gap: 10px;
+}
+
+.food-product-card__quantity {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.food-product-card__btn {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+  transition: all 0.3s ease;
+}
+
+.food-product-card__btn:hover {
+  background: #FF7F24;
+  color: #fff;
+}
+
+.food-product-card__num {
+  width: 50px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.food-product-card__add-cart {
+  flex: 1;
+  padding: 10px;
+  background: linear-gradient(135deg, #FF7F24 0%, #FFB366 100%);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.food-product-card__add-cart:hover {
+  background: linear-gradient(135deg, #FFB366 0%, #FF7F24 100%);
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(255, 127, 36, 0.3);
+}
+
+/* ==================== 自制美食 AI 模块 ==================== */
+.ai-cook-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.ai-cook-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.ai-cook-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.ai-cook-subtitle {
+  font-size: 14px;
+  color: #999;
+}
+
+.ai-cook-form {
+  max-width: 600px;
+  margin: 0 auto 30px;
+}
+
+.ai-cook-input-group {
+  margin-bottom: 20px;
+}
+
+.ai-cook-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.ai-cook-select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #fff;
+  cursor: pointer;
+}
+
+.ai-cook-select:focus {
+  border-color: #FF7F24;
+  box-shadow: 0 0 0 3px rgba(255, 127, 36, 0.1);
+}
+
+.ai-cook-btn {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #FF7F24 0%, #FFB366 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-cook-btn:hover {
+  background: linear-gradient(135deg, #FFB366 0%, #FF7F24 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 127, 36, 0.3);
+}
+
+.ai-cook-btn:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* AI 生成结果区域 */
+.ai-result-container {
+  margin-top: 30px;
+  display: none;
+}
+
+.ai-result-container--show {
+  display: block;
+  animation: fadeInUp 0.5s ease;
+}
+
+.ai-result-card {
+  background: linear-gradient(135deg, #FFF0E6 0%, #FFE4D1 100%);
+  border-radius: 16px;
+  padding: 25px;
+  border-left: 4px solid #FF7F24;
+}
+
+.ai-result-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-result-section {
+  margin-bottom: 25px;
+}
+
+.ai-result-section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #FF7F24;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-result-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ai-result-list-item {
+  padding: 12px 15px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.ai-result-list-item:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(5px);
+}
+
+.ai-result-list-index {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FF7F24;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.ai-result-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.ai-result-action-btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-result-action-btn--copy {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: #fff;
+}
+
+.ai-result-action-btn--export {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #333;
+}
+
+.ai-result-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 折叠教程 */
+.tutorial-collapse {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.tutorial-collapse__header {
+  padding: 18px 20px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.tutorial-collapse__header:hover {
+  background: #FFF0E6;
+}
+
+.tutorial-collapse__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.tutorial-collapse__icon {
+  font-size: 20px;
+  color: #FF7F24;
+  transition: transform 0.3s ease;
+}
+
+.tutorial-collapse--active .tutorial-collapse__icon {
+  transform: rotate(180deg);
+}
+
+.tutorial-collapse__body {
+  max-height: 0;
+  overflow: hidden;
+  background: #fafafa;
+  transition: max-height 0.4s ease;
+}
+
+.tutorial-collapse--active .tutorial-collapse__body {
+  max-height: 1000px;
+  padding: 20px;
+}
+
+/* ==================== 小吃卡片 ==================== */
+.snack-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s ease;
+}
+
+.snack-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(255, 127, 36, 0.2);
+}
+
+.snack-card__image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.snack-card__image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.snack-card__badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 12px;
+  background: rgba(255, 127, 36, 0.9);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.snack-card__content {
+  padding: 18px;
+}
+
+.snack-card__name {
+  font-size: 17px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.snack-card__location {
+  font-size: 13px;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.snack-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.snack-card__price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #FF7F24;
+}
+
+.snack-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #FFD700;
+  font-size: 14px;
+}
+
+/* ==================== 购物车浮层 ==================== */
+.cart-float {
+  position: fixed;
+  bottom: 30px;
+  right: 100px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #FF7F24 0%, #FFB366 100%);
+  border-radius: 50%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(255, 127, 36, 0.4);
+  z-index: 998;
+  transition: all 0.3s ease;
+}
+
+.cart-float:hover {
+  transform: scale(1.1);
+}
+
+.cart-float--show {
+  display: flex;
+}
+
+.cart-float__icon {
+  font-size: 28px;
+  color: #fff;
+}
+
+.cart-float__badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5576c;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 0 6px;
+}
+
+/* ==================== 美食详情页样式 ==================== */
+.food-detail-hero {
+  position: relative;
+  height: 400px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.food-detail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.food-detail-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: #fff;
+}
+
+.food-detail-name {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.food-detail-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.food-detail-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.food-detail-section {
+  margin-bottom: 30px;
+}
+
+.food-detail-section-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #FF7F24;
+}
+
+/* ==================== 响应式设计 ==================== */
+@media screen and (max-width: 768px) {
+  .cuisine-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    gap: 15px;
+  }
+  
+  .food-shop-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    gap: 15px;
+  }
+  
+  .food-module-tabs {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .food-module-tabs__item {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .ai-cook-container {
+    padding: 20px;
+  }
+  
+  .ai-result-actions {
+    flex-direction: column;
+  }
+  
+  .ai-result-action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .food-detail-hero {
+    height: 250px;
+  }
+  
+  .food-detail-name {
+    font-size: 24px;
+  }
+  
+  .cart-float {
+    right: 30px;
+    bottom: 90px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .cuisine-card__content {
+    padding: 15px;
+  }
+  
+  .cuisine-card__title {
+    font-size: 18px;
+  }
+  
+  .food-product-card__price {
+    font-size: 18px;
+  }
+  
+  .ai-cook-title {
+    font-size: 20px;
+  }
+}
