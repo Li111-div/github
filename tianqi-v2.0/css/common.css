@@ -1,0 +1,430 @@
+/**
+ * common.css - 公共样式文件
+ * 包含全局变量、重置样式、玻璃质感面板、响应式布局等公共样式
+ */
+
+/* ==================== CSS 变量定义 ==================== */
+:root {
+  /* 主题色 - 根据天气和时间动态切换 */
+  --primary-color: #FF9800;      /* 默认：白天晴天（橙色） */
+  --primary-light: #FFB74D;
+  --primary-dark: #F57C00;
+  
+  /* 背景渐变 */
+  --bg-gradient-start: rgba(3, 169, 244, 0.8);
+  --bg-gradient-end: rgba(13, 71, 161, 0.9);
+  
+  /* 玻璃质感参数 */
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --backdrop-blur: blur(20px);
+  
+  /* 文字颜色 */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.6);
+  
+  /* 间距 */
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* 圆角 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  
+  /* 动画 */
+  --transition-fast: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==================== 主题色变体 ==================== */
+/* 白天雨天 - 蓝色 */
+[data-theme="rainy"] {
+  --primary-color: #2196F3;
+  --primary-light: #64B5F6;
+  --primary-dark: #1976D2;
+  --bg-gradient-start: rgba(33, 150, 243, 0.6);
+  --bg-gradient-end: rgba(55, 71, 79, 0.8);
+}
+
+/* 白天多云 - 蓝灰 */
+[data-theme="cloudy"] {
+  --primary-color: #607D8B;
+  --primary-light: #90A4AE;
+  --primary-dark: #455A64;
+  --bg-gradient-start: rgba(176, 190, 197, 0.5);
+  --bg-gradient-end: rgba(96, 125, 139, 0.7);
+}
+
+/* 夜晚晴天 - 靛蓝星空 */
+[data-theme="night"] {
+  --primary-color: #3F51B5;
+  --primary-light: #5C6BC0;
+  --primary-dark: #303F9F;
+  --bg-gradient-start: rgba(26, 35, 126, 0.9);
+  --bg-gradient-end: rgba(66, 33, 116, 0.95);
+}
+
+/* ==================== 全局重置 ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  overflow-x: hidden;
+  transition: background var(--transition-normal);
+}
+
+/* 禁用页面滚动（界面切换时） */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* ==================== 滚动条美化 ==================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ==================== 玻璃质感面板 ==================== */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  transition: all var(--transition-fast);
+}
+
+.glass-panel--hover:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.45);
+}
+
+.glass-panel--press:active {
+  transform: scale(0.98);
+}
+
+/* ==================== 通用布局类 ==================== */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.grid {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* ==================== 文字样式 ==================== */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-large {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.text-huge {
+  font-size: 4rem;
+  font-weight: 700;
+}
+
+/* ==================== 按钮样式 ==================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn--primary {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn--primary:hover {
+  background: var(--primary-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn--primary:active {
+  transform: scale(0.95);
+}
+
+.btn--glass {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn--glass:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.btn--icon {
+  padding: var(--spacing-sm);
+  border-radius: 50%;
+}
+
+.btn--large {
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: 1.1rem;
+  min-height: 44px;
+}
+
+/* ==================== 输入框样式 ==================== */
+.input {
+  width: 100%;
+  padding: var(--spacing-md);
+  font-size: 1rem;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* ==================== 卡片样式 ==================== */
+.card {
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-fast);
+}
+
+.card--hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* ==================== 图标样式 ==================== */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-size: 24px;
+}
+
+.icon--large {
+  width: 48px;
+  height: 48px;
+  font-size: 48px;
+}
+
+.icon--huge {
+  width: 80px;
+  height: 80px;
+  font-size: 80px;
+}
+
+/* ==================== 加载动画 ==================== */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== 工具类 ==================== */
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn var(--transition-normal) forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp var(--transition-normal) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== 响应式断点 ==================== */
+/* 移动端 (320px - 767px) */
+@media (max-width: 767px) {
+  html, body {
+    font-size: 14px;
+  }
+  
+  .container {
+    padding: var(--spacing-sm);
+  }
+  
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .text-huge {
+    font-size: 3rem;
+  }
+  
+  .text-large {
+    font-size: 2rem;
+  }
+  
+  .btn {
+    min-height: 44px;
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+  
+  .btn--large {
+    min-height: 52px;
+  }
+}
+
+/* 平板 (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* PC (1024px - 1440px) */
+@media (min-width: 1024px) {
+  .container {
+    padding: var(--spacing-lg);
+  }
+}

@@ -1,0 +1,465 @@
+/**
+ * weather.css - 主天气界面样式
+ * 包含即时天气、关键指标、未来天气、生活建议等模块样式
+ */
+
+/* ==================== 主界面容器 ==================== */
+.weather-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* ==================== 顶部导航栏 ==================== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) 0;
+}
+
+.header__location {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.header__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+/* ==================== 主天气展示区 ==================== */
+.main-weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+}
+
+.main-weather__icon {
+  margin-bottom: var(--spacing-md);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.main-weather__temp {
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: var(--spacing-sm);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.main-weather__condition {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.main-weather__range {
+  display: flex;
+  gap: var(--spacing-lg);
+  color: var(--text-tertiary);
+}
+
+.main-weather__range-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* ==================== 关键指标网格 ==================== */
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.weather-card {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+
+.weather-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.weather-card__icon {
+  color: var(--primary-color);
+  transition: color var(--transition-fast);
+}
+
+.weather-card:hover .weather-card__icon {
+  color: var(--primary-light);
+}
+
+.weather-card__label {
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+}
+
+.weather-card__value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.weather-card__unit {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.weather-card__desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ==================== 未来天气预报 ==================== */
+.forecast-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.forecast-section__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0 var(--spacing-xs);
+}
+
+.forecast-container {
+  display: flex;
+  gap: var(--spacing-md);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--spacing-sm) 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.forecast-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.forecast-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.forecast-day {
+  flex: 0 0 auto;
+  width: 100px;
+  padding: var(--spacing-lg) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.forecast-day:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px);
+}
+
+.forecast-day--selected {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: var(--primary-color);
+}
+
+.forecast-day__date {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.forecast-day__icon {
+  font-size: 2.5rem;
+  margin: var(--spacing-xs) 0;
+}
+
+.forecast-day__temp {
+  display: flex;
+  gap: var(--spacing-sm);
+  font-size: 0.95rem;
+}
+
+.forecast-day__temp-high {
+  font-weight: 600;
+}
+
+.forecast-day__temp-low {
+  color: var(--text-tertiary);
+}
+
+/* ==================== 生活建议卡片 ==================== */
+.life-advice-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.life-advice-section__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.life-advice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.advice-card {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-fast);
+}
+
+.advice-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.advice-card__icon {
+  color: var(--primary-color);
+}
+
+.advice-card__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.advice-card__content {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 全宽建议卡片 */
+.advice-card--full {
+  grid-column: 1 / -1;
+}
+
+/* ==================== 底部导航 ==================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 100;
+}
+
+.bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-radius: var(--radius-md);
+}
+
+.bottom-nav__item:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.bottom-nav__item--active {
+  color: var(--primary-color);
+}
+
+.bottom-nav__icon {
+  font-size: 1.5rem;
+}
+
+.bottom-nav__label {
+  font-size: 0.75rem;
+}
+
+/* ==================== 刷新按钮 ==================== */
+.refresh-btn {
+  position: fixed;
+  bottom: calc(80px + var(--spacing-lg));
+  right: var(--spacing-lg);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  z-index: 99;
+}
+
+.refresh-btn:hover {
+  background: var(--primary-light);
+  transform: scale(1.1);
+}
+
+.refresh-btn:active {
+  transform: scale(0.95);
+}
+
+.refresh-btn.is-refreshing {
+  animation: rotate 0.8s linear infinite;
+}
+
+/* ==================== 城市选择弹窗 ==================== */
+.city-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-fast);
+}
+
+.city-modal--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.city-modal__content {
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: scale(0.9);
+  transition: transform var(--transition-fast);
+}
+
+.city-modal--visible .city-modal__content {
+  transform: scale(1);
+}
+
+.city-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.city-modal__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.city-modal__close {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+}
+
+.city-modal__body {
+  padding: var(--spacing-lg);
+}
+
+.city-search {
+  margin-bottom: var(--spacing-lg);
+}
+
+.city-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.city-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.city-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.city-item--current {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--primary-color);
+}
+
+/* ==================== 响应式适配 ==================== */
+@media (max-width: 767px) {
+  .main-weather__temp {
+    font-size: 4rem;
+  }
+  
+  .weather-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .life-advice-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .forecast-day {
+    width: 80px;
+  }
+}
+
+@media (min-width: 768px) {
+  .weather-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .life-advice-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .main-weather__temp {
+    font-size: 6rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .weather-page {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .life-advice-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

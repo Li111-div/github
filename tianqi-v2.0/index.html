@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <title>天气 - 智能天气预报助手</title>
+  <meta name="description" content="超大型沉浸式天气 Web 应用，提供实时天气、7 天预报、生活建议等服务">
+  
+  <!-- 样式文件 -->
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/animation.css">
+  <link rel="stylesheet" href="css/weather.css">
+  <link rel="stylesheet" href="css/chart.css">
+  <link rel="stylesheet" href="css/ai.css">
+  
+  <!-- Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  
+  <!-- 可选：添加自定义 favicon -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body data-theme="sunny">
+  <!-- 背景动画容器 -->
+  <div id="backgroundContainer" class="weather-sunny"></div>
+  
+  <!-- 应用主容器 -->
+  <div class="app-container">
+    
+    <!-- ==================== 主天气界面 ==================== -->
+    <section id="page-weather" class="app-page app-page--active">
+      <div class="page-content weather-page">
+        
+        <!-- 顶部导航栏 -->
+        <header class="header glass-panel" style="padding: 12px 16px;">
+          <div class="header__location press-effect">
+            <span class="material-icons">location_on</span>
+            <span class="header__city">北京</span>
+            <span class="material-icons" style="font-size: 18px;">expand_more</span>
+          </div>
+          <div class="header__actions">
+            <span class="header__time text-secondary" style="margin-right: 12px;">12:00</span>
+            <button class="btn btn--glass btn--icon press-effect" title="设置">
+              <span class="material-icons">settings</span>
+            </button>
+          </div>
+        </header>
+        
+        <!-- 主天气展示区 -->
+        <section class="main-weather glass-panel animate-enter">
+          <div class="main-weather__icon">
+            <span class="material-icons icon--huge">wb_sunny</span>
+          </div>
+          <div class="main-weather__temp">25°</div>
+          <div class="main-weather__condition">晴</div>
+          <div class="main-weather__range">
+            <div class="main-weather__range-item">
+              <span class="material-icons" style="font-size: 16px;">arrow_upward</span>
+              <span>28°</span>
+            </div>
+            <div class="main-weather__range-item">
+              <span class="material-icons" style="font-size: 16px;">arrow_downward</span>
+              <span>18°</span>
+            </div>
+          </div>
+        </section>
+        
+        <!-- 关键指标网格 -->
+        <section class="weather-grid">
+          <!-- 由 JS 动态渲染 -->
+        </section>
+        
+        <!-- 未来天气预报 -->
+        <section class="forecast-section animate-enter" data-animation-delay="200">
+          <h3 class="forecast-section__title">未来 7 天预报</h3>
+          <div class="forecast-container">
+            <!-- 由 JS 动态渲染 -->
+          </div>
+        </section>
+        
+        <!-- 生活建议 -->
+        <section class="life-advice-section animate-enter" data-animation-delay="300">
+          <h3 class="life-advice-section__title">生活建议</h3>
+          <div class="life-advice-grid">
+            <!-- 由 JS 动态渲染 -->
+          </div>
+        </section>
+        
+        <!-- 底部占位（避免被导航栏遮挡） -->
+        <div style="height: 80px;"></div>
+        
+      </div>
+      
+      <!-- 刷新按钮 -->
+      <button class="refresh-btn press-effect" title="刷新天气">
+        <span class="material-icons">refresh</span>
+      </button>
+      
+      <!-- 底部导航栏 -->
+      <nav class="bottom-nav">
+        <div class="bottom-nav__item bottom-nav__item--active" data-page="weather">
+          <span class="material-icons bottom-nav__icon">wb_sunny</span>
+          <span class="bottom-nav__label">天气</span>
+        </div>
+        <div class="bottom-nav__item" data-page="chart">
+          <span class="material-icons bottom-nav__icon">insights</span>
+          <span class="bottom-nav__label">趋势</span>
+        </div>
+        <div class="bottom-nav__item" data-page="ai">
+          <span class="material-icons bottom-nav__icon">smart_toy</span>
+          <span class="bottom-nav__label">AI 助手</span>
+        </div>
+      </nav>
+    </section>
+    
+    <!-- ==================== 图表界面 ==================== -->
+    <section id="page-chart" class="app-page">
+      <div class="page-content chart-page">
+        
+        <!-- 顶部返回栏 -->
+        <header class="chart-header">
+          <button class="chart-header__back press-effect">
+            <span class="material-icons">arrow_back</span>
+            <span>返回</span>
+          </button>
+          <h1 class="chart-header__title">北京天气趋势</h1>
+          <div style="width: 80px;"></div>
+        </header>
+        
+        <!-- 图表导航标签 -->
+        <div class="chart-tabs">
+          <div class="chart-tabs__item chart-tabs__item--active" data-chart="temperature">
+            温度趋势
+          </div>
+          <div class="chart-tabs__item" data-chart="precipitation">
+            降水概率
+          </div>
+          <div class="chart-tabs__item" data-chart="wind">
+            风力风向
+          </div>
+        </div>
+        
+        <!-- 温度趋势图 -->
+        <div id="chart-temperature" class="chart-container chart-container--active">
+          <div class="card chart-card">
+            <div class="chart-card__header">
+              <h3 class="chart-card__title">未来 24 小时温度</h3>
+              <span class="material-icons chart-card__icon">thermostat</span>
+            </div>
+            <div class="chart-wrapper">
+              <!-- ECharts 渲染区域 -->
+            </div>
+          </div>
+          
+          <!-- 温度统计数据 -->
+          <div class="chart-stats">
+            <div class="stat-card">
+              <div class="stat-card__label">最高温</div>
+              <div class="stat-card__value">28°C</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">最低温</div>
+              <div class="stat-card__value">18°C</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__label">当前温</div>
+              <div class="stat-card__value">25°C</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 降水概率图 -->
+        <div id="chart-precipitation" class="chart-container">
+          <div class="card chart-card">
+            <div class="chart-card__header">
+              <h3 class="chart-card__title">未来 7 天降水概率</h3>
+              <span class="material-icons chart-card__icon">water_drop</span>
+            </div>
+            <div class="chart-wrapper">
+              <!-- ECharts 渲染区域 -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- 风力风向图 -->
+        <div id="chart-wind" class="chart-container">
+          <div class="card chart-card">
+            <div class="chart-card__header">
+              <h3 class="chart-card__title">未来 7 天风力风向</h3>
+              <span class="material-icons chart-card__icon">air</span>
+            </div>
+            <div class="chart-wrapper">
+              <!-- ECharts 渲染区域 -->
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+    
+    <!-- ==================== AI 助手界面 ==================== -->
+    <section id="page-ai" class="app-page ai-page">
+      <!-- AI 顶部栏 -->
+      <header class="ai-header">
+        <button class="ai-header__back press-effect">
+          <span class="material-icons">arrow_back</span>
+        </button>
+        <div class="ai-header__profile">
+          <div class="ai-header__avatar">🌤️</div>
+          <div>
+            <div class="ai-header__name">小天同学</div>
+            <div class="ai-header__status">
+              <span class="status-dot"></span>
+              <span>在线</span>
+            </div>
+          </div>
+        </div>
+        <div style="width: 40px;"></div>
+      </header>
+      
+      <!-- 聊天容器 -->
+      <div class="ai-chat-container">
+        <!-- 消息列表 -->
+        <div class="chat-messages">
+          <!-- 欢迎界面或历史消息 -->
+        </div>
+        
+        <!-- 快捷建议 -->
+        <div class="quick-suggestions">
+          <div class="suggestion-chip" data-question="今天天气怎么样？">今天天气</div>
+          <div class="suggestion-chip" data-question="明天适合户外运动吗？">户外运动</div>
+          <div class="suggestion-chip" data-question="这周会下雨吗？">会下雨吗</div>
+          <div class="suggestion-chip" data-question="应该穿什么衣服？">穿衣建议</div>
+          <div class="suggestion-chip" data-question="最近容易感冒吗？">健康提示</div>
+        </div>
+        
+        <!-- 输入区域 -->
+        <div class="ai-input-container">
+          <div class="ai-input-wrapper">
+            <textarea 
+              class="ai-input-field" 
+              placeholder="问问我关于天气的问题吧..." 
+              rows="1"
+              maxlength="500"
+            ></textarea>
+            <button class="ai-send-btn press-effect" title="发送">
+              <span class="material-icons">send</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 清空对话按钮 -->
+      <button class="clear-chat-btn press-effect">
+        <span class="material-icons" style="font-size: 16px;">delete_outline</span>
+        <span>清空对话</span>
+      </button>
+    </section>
+    
+  </div>
+  
+  <!-- 城市选择弹窗 -->
+  <div id="cityModal" class="city-modal">
+    <div class="glass-panel city-modal__content">
+      <div class="city-modal__header">
+        <h2 class="city-modal__title">选择城市</h2>
+        <button class="city-modal__close press-effect">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="city-modal__body">
+        <div class="city-search">
+          <input type="text" class="input" placeholder="搜索城市名称...">
+        </div>
+        <div class="city-list">
+          <!-- 热门城市列表 -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 脚本文件 -->
+  <!-- jQuery（项目要求） -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  
+  <!-- ECharts（图表库） -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  
+  <!-- 公共工具 -->
+  <script src="js/common.js"></script>
+  
+  <!-- API 封装 -->
+  <script src="js/api.js"></script>
+  
+  <!-- 主界面逻辑 -->
+  <script src="js/weather.js"></script>
+  
+  <!-- 图表逻辑 -->
+  <script src="js/chart.js"></script>
+  
+  <!-- AI 助手逻辑 -->
+  <script src="js/ai.js"></script>
+  
+  <!-- 应用初始化 -->
+  <script>
+    /**
+     * 应用主模块
+     */
+    const App = {
+      // 当前页面
+      currentPage: 'weather',
+      
+      /**
+       * 初始化应用
+       */
+      async init() {
+        console.log('应用初始化');
+        
+        // 检查依赖
+        if (!checkDependencies()) {
+          console.warn('缺少必要依赖，部分功能可能无法使用');
+        }
+        
+        // 从存储恢复状态
+        this.restoreState();
+        
+        // 绑定全局事件
+        this.bindGlobalEvents();
+        
+        // 初始化主界面
+        await WeatherPage.init();
+        
+        // 初始化 AI 助手
+        AIAssistant.init();
+        
+        console.log('应用初始化完成');
+      },
+      
+      /**
+       * 恢复保存的状态
+       */
+      restoreState() {
+        const lastPage = getStorage('lastPage', 'weather');
+        if (lastPage !== 'weather') {
+          this.navigate(lastPage, null, false);
+        }
+      },
+      
+      /**
+       * 页面导航
+       * @param {string} page - 目标页面（weather/chart/ai）
+       * @param {object} options - 选项
+       * @param {boolean} save - 是否保存状态
+       */
+      navigate(page, options = null, save = true) {
+        if (this.currentPage === page) return;
+        
+        console.log('导航到页面:', page, options);
+        
+        const currentEl = $(`#page-${this.currentPage}`);
+        const targetEl = $(`#page-${page}`);
+        
+        if (!targetEl) {
+          console.error('页面不存在:', page);
+          return;
+        }
+        
+        // 更新页面激活状态
+        if (currentEl) {
+          currentEl.classList.remove('app-page--active');
+          currentEl.classList.add('app-page--previous');
+        }
+        
+        targetEl.classList.remove('app-page--previous');
+        targetEl.classList.add('app-page--active');
+        
+        // 更新底部导航
+        $$('.bottom-nav__item').forEach(item => {
+          item.classList.toggle('bottom-nav__item--active', item.dataset.page === page);
+        });
+        
+        // 初始化目标页面
+        if (page === 'chart' && options) {
+          ChartPage.init(options);
+        } else if (page === 'ai') {
+          // AI 已初始化
+        }
+        
+        // 滚动到顶部
+        const pageContent = targetEl.querySelector('.page-content');
+        if (pageContent) {
+          pageContent.scrollTop = 0;
+        }
+        
+        // 保存状态
+        this.currentPage = page;
+        if (save) {
+          setStorage('lastPage', page);
+        }
+      },
+      
+      /**
+       * 绑定全局事件
+       */
+      bindGlobalEvents() {
+        // 底部导航点击
+        $$('.bottom-nav__item').forEach(item => {
+          on(item, 'click', () => {
+            const page = item.dataset.page;
+            this.navigate(page);
+          });
+        });
+        
+        // 图表页面返回
+        $$('.chart-header__back').forEach(btn => {
+          on(btn, 'click', () => {
+            this.navigate('weather');
+          });
+        });
+        
+        // 处理浏览器后退
+        window.addEventListener('popstate', (e) => {
+          if (this.currentPage !== 'weather') {
+            this.navigate('weather');
+          }
+        });
+        
+        // 可见性变化时刷新数据
+        document.addEventListener('visibilitychange', () => {
+          if (!document.hidden && this.currentPage === 'weather') {
+            // 页面重新可见时，可选择是否刷新数据
+            console.log('页面重新可见');
+          }
+        });
+      }
+    };
+    
+    // DOM 加载完成后初始化应用
+    document.addEventListener('DOMContentLoaded', () => {
+      App.init();
+    });
+    
+    // 导出到全局
+    window.App = App;
+  </script>
+</body>
+</html>
