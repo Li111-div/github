@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>跳跳乐 - Jump Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #gameContainer {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.5s;
+        }
+
+        /* 动态背景 */
+        #gameContainer.sky { background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%); }
+        #gameContainer.forest { background: linear-gradient(180deg, #1a3a1a 0%, #2D5A27 50%, #8FBC8F 100%); }
+        #gameContainer.desert { background: linear-gradient(180deg, #D2691E 0%, #F4A460 50%, #FFE4B5 100%); }
+        #gameContainer.night { background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%); }
+
+        /* 云朵装饰 */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+            animation: float-cloud linear infinite;
+        }
+
+        #gameContainer.forest .cloud,
+        #gameContainer.desert .cloud,
+        #gameContainer.night .cloud { display: none; }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        @keyframes float-cloud {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        /* 星星 */
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+        }
+
+        #gameContainer.sky .star,
+        #gameContainer.forest .star,
+        #gameContainer.desert .star { display: none; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        #gameCanvas {
+            background: transparent;
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+        }
+
+        /* 通用界面样式 */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            transition: opacity 0.4s, transform 0.4s;
+            padding: 20px;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        .screen-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 52px;
+            color: #fff;
+            text-shadow: 3px 3px 0 #FF6B6B, 6px 6px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+            text-align: center;
+            animation: title-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes title-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 按钮样式 */
+        .btn {
+            font-family: 'Nunito', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            border: none;
+            padding: 16px 48px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+            min-width: 220px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn.secondary:hover {
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.5);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, #4ADE80, #22C55E);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.4);
+        }
+
+        .btn.success:hover {
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.5);
+        }
+
+        /* 主菜单按钮容器 */
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* 设置界面 */
+        .settings-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 15px;
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .settings-section h3 {
+            color: #fff;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 15px 10px;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .option-btn.selected {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .map-btn {
+            padding: 15px;
+            border: 3px solid transparent;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .map-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .map-btn.selected {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        .map-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .map-icon.sky { background: linear-gradient(135deg, #87CEEB, #E0F6FF); }
+        .map-icon.forest { background: linear-gradient(135deg, #2D5A27, #8FBC8F); }
+        .map-icon.desert { background: linear-gradient(135deg, #F4A460, #FFE4B5); }
+        .map-icon.night { background: linear-gradient(135deg, #1a1a2e, #E94560); }
+
+        /* 排行榜 */
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 15px;
+            min-width: 320px;
+            max-width: 450px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .leaderboard h3 {
+            color: #fff;
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .leaderboard-item .mode {
+            font-weight: 800;
+        }
+
+        .leaderboard-item .score {
+            font-family: 'Fredoka One', cursive;
+            color: #FFD700;
+            font-size: 20px;
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #FF6B6B;
+        }
+
+        /* 帮助界面 */
+        .help-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 15px;
+            min-width: 320px;
+            max-width: 450px;
+            max-height: 70vh;
+            overflow-y: auto;
+            color: #fff;
+        }
+
+        .help-content h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+
+        .help-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .help-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .help-content li {
+            margin-bottom: 8px;
+        }
+
+        /* 蓄力指示器 */
+        #powerBar {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 12px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: none;
+        }
+
+        #powerBar.active {
+            opacity: 1;
+            display: block;
+        }
+
+        #powerFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4ADE80, #FACC15, #EF4444);
+            border-radius: 6px;
+            transition: width 0.05s linear;
+        }
+
+        /* 分数显示 */
+        #scoreDisplay {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s;
+        }
+
+        #scoreDisplay.visible {
+            opacity: 1;
+            display: block;
+        }
+
+        #comboDisplay {
+            position: absolute;
+            top: 22%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 24px;
+            color: #FF6B6B;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        #comboDisplay.visible {
+            opacity: 1;
+            display: block;
+        }
+
+        #comboDisplay.pop {
+            transform: translateX(-50%) scale(1.3);
+        }
+
+        #perfectText {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 32px;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        #perfectText.show {
+            opacity: 1;
+            display: block;
+            animation: perfect-pop 0.5s ease-out;
+        }
+
+        @keyframes perfect-pop {
+            0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
+            50% { transform: translateX(-50%) scale(1.2); }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        /* 结算界面 */
+        #gameOverScreen {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .game-over-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 48px;
+            color: #FF6B6B;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .final-score {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .final-score span {
+            font-family: 'Fredoka One', cursive;
+            font-size: 56px;
+            color: #FFD700;
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .best-score {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+        }
+
+        .best-score span {
+            color: #4ADE80;
+            font-family: 'Fredoka One', cursive;
+            font-size: 24px;
+        }
+
+        .stats-info {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats-info span {
+            color: #A29BFE;
+            font-weight: 800;
+        }
+
+        /* 粒子效果 */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: particle-fade 0.8s ease-out forwards;
+        }
+
+        @keyframes particle-fade {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .screen-title {
+                font-size: 38px;
+            }
+
+            .btn {
+                font-size: 18px;
+                padding: 14px 36px;
+                min-width: 180px;
+            }
+
+            .settings-section {
+                padding: 20px;
+                min-width: 280px;
+            }
+
+            .game-over-title {
+                font-size: 36px;
+            }
+
+            .final-score span {
+                font-size: 42px;
+            }
+
+            #scoreDisplay {
+                font-size: 36px;
+            }
+
+            #comboDisplay {
+                font-size: 20px;
+            }
+
+            .leaderboard, .help-content {
+                min-width: 280px;
+            }
+
+            .option-btn {
+                font-size: 12px;
+                padding: 12px 8px;
+            }
+        }
+
+        @media (max-height: 500px) {
+            .screen-title {
+                font-size: 28px;
+                margin-bottom: 20px;
+            }
+
+            .btn {
+                padding: 10px 24px;
+                font-size: 16px;
+            }
+
+            .settings-section h3 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer" class="sky">
+        <!-- 云朵装饰 -->
+        <div class="cloud" style="width: 80px; height: 30px; top: 15%; animation-duration: 25s;"></div>
+        <div class="cloud" style="width: 60px; height: 22px; top: 25%; animation-duration: 20s; animation-delay: -10s;"></div>
+        <div class="cloud" style="width: 100px; height: 35px; top: 8%; animation-duration: 30s; animation-delay: -5s;"></div>
+
+        <!-- 星星 (夜晚模式) -->
+        <div class="star" style="width: 3px; height: 3px; top: 10%; left: 15%; animation-delay: 0s;"></div>
+        <div class="star" style="width: 2px; height: 2px; top: 20%; left: 70%; animation-delay: 0.5s;"></div>
+        <div class="star" style="width: 4px; height: 4px; top: 35%; left: 25%; animation-delay: 1s;"></div>
+        <div class="star" style="width: 2px; height: 2px; top: 15%; left: 85%; animation-delay: 1.5s;"></div>
+        <div class="star" style="width: 3px; height: 3px; top: 40%; left: 50%; animation-delay: 0.3s;"></div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- 游戏HUD -->
+        <div id="scoreDisplay">0</div>
+        <div id="comboDisplay"></div>
+        <div id="perfectText">完美!</div>
+        <div id="powerBar"><div id="powerFill"></div></div>
+
+        <!-- 主菜单 -->
+        <div id="menuScreen" class="screen">
+            <div class="screen-title">跳跳乐</div>
+            <div class="menu-buttons">
+                <button class="btn" id="startBtn">开始游戏</button>
+                <button class="btn secondary" id="settingsBtn">设置</button>
+                <button class="btn secondary" id="leaderboardBtn">排行榜</button>
+                <button class="btn secondary" id="helpBtn">帮助</button>
+            </div>
+            <div class="high-score" style="margin-top: 30px; color: #fff; font-size: 16px;">
+                最高分: <span id="menuHighScore" style="font-family: 'Fredoka One'; font-size: 24px; color: #FFD700;">0</span>
+            </div>
+        </div>
+
+        <!-- 设置界面 -->
+        <div id="settingsScreen" class="screen hidden">
+            <div class="screen-title">游戏设置</div>
+
+            <div class="settings-section">
+                <h3>选择难度</h3>
+                <div class="option-grid" id="difficultyOptions">
+                    <button class="option-btn" data-difficulty="easy">简单</button>
+                    <button class="option-btn selected" data-difficulty="normal">中等</button>
+                    <button class="option-btn" data-difficulty="hard">困难</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>选择地图</h3>
+                <div class="map-grid" id="mapOptions">
+                    <button class="map-btn selected" data-map="sky">
+                        <span class="map-icon sky"></span>
+                        天空之城
+                    </button>
+                    <button class="map-btn" data-map="forest">
+                        <span class="map-icon forest"></span>
+                        森林冒险
+                    </button>
+                    <button class="map-btn" data-map="desert">
+                        <span class="map-icon desert"></span>
+                        沙漠探险
+                    </button>
+                    <button class="map-btn" data-map="night">
+                        <span class="map-icon night"></span>
+                        夜晚城市
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn" id="confirmSettingsBtn">开始游戏</button>
+                <button class="btn secondary" id="backFromSettingsBtn">返回</button>
+            </div>
+        </div>
+
+        <!-- 排行榜界面 -->
+        <div id="leaderboardScreen" class="screen hidden">
+            <div class="screen-title">排行榜</div>
+
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" data-tab="all">全部</button>
+                <button class="tab-btn" data-tab="sky">天空</button>
+                <button class="tab-btn" data-tab="forest">森林</button>
+                <button class="tab-btn" data-tab="desert">沙漠</button>
+                <button class="tab-btn" data-tab="night">夜晚</button>
+            </div>
+
+            <div class="leaderboard" id="leaderboardList">
+                <!-- 排行榜内容动态生成 -->
+            </div>
+
+            <button class="btn secondary" id="backFromLeaderboardBtn" style="margin-top: 20px;">返回</button>
+        </div>
+
+        <!-- 帮助界面 -->
+        <div id="helpScreen" class="screen hidden">
+            <div class="screen-title">游戏帮助</div>
+
+            <div class="help-content">
+                <h3>游戏玩法</h3>
+                <p>按住屏幕或鼠标进行蓄力，松开后角色将向前跳跃。跳到下一个平台即可得分！</p>
+
+                <h3>操作方式</h3>
+                <ul>
+                    <li><strong>电脑</strong>: 鼠标左键按住蓄力，松开跳跃</li>
+                    <li><strong>手机</strong>: 手指按住屏幕蓄力，松开跳跃</li>
+                </ul>
+
+                <h3>得分技巧</h3>
+                <ul>
+                    <li>跳到平台<strong>中心区域</strong>可获得额外加分</li>
+                    <li>连续成功跳跃会累积<strong>连击倍数</strong></li>
+                    <li>3连击 x2 倍，5连击 x3 倍</li>
+                </ul>
+
+                <h3>难度说明</h3>
+                <ul>
+                    <li><strong>简单</strong>: 平台宽、间距小，适合新手</li>
+                    <li><strong>中等</strong>: 平衡挑战</li>
+                    <li><strong>困难</strong>: 平台窄、间距大，适合高手</li>
+                </ul>
+            </div>
+
+            <button class="btn secondary" id="backFromHelpBtn" style="margin-top: 20px;">返回</button>
+        </div>
+
+        <!-- 结算界面 -->
+        <div id="gameOverScreen" class="screen hidden">
+            <div class="game-over-title">游戏结束</div>
+            <div class="final-score">
+                得分
+                <span id="finalScore">0</span>
+            </div>
+            <div class="best-score">最高分: <span id="highScoreEnd">0</span></div>
+            <div class="stats-info">
+                难度: <span id="gameDifficulty">中等</span> |
+                地图: <span id="gameMap">天空之城</span>
+            </div>
+            <button class="btn" id="restartBtn">再玩一次</button>
+            <button class="btn secondary" id="backToMenuBtn">返回菜单</button>
+        </div>
+    </div>
+
+    <script>
+        // 难度配置
+        const DIFFICULTY = {
+            easy: { name: '简单', minGap: 60, maxGap: 150, minWidth: 80, maxWidth: 140, maxPower: 2.0, gravity: 0.4, multiplier: 1.0 },
+            normal: { name: '中等', minGap: 80, maxGap: 200, minWidth: 60, maxWidth: 120, maxPower: 1.5, gravity: 0.6, multiplier: 1.2 },
+            hard: { name: '困难', minGap: 120, maxGap: 280, minWidth: 50, maxWidth: 100, maxPower: 1.2, gravity: 0.8, multiplier: 1.5 }
+        };
+
+        // 地图配置
+        const MAPS = {
+            sky: {
+                name: '天空之城',
+                containerClass: 'sky',
+                platformColors: ['#4A90D9', '#5BA3EC'],
+                playerColor: '#FF6B6B'
+            },
+            forest: {
+                name: '森林冒险',
+                containerClass: 'forest',
+                platformColors: ['#8B4513', '#A0522D'],
+                playerColor: '#90EE90'
+            },
+            desert: {
+                name: '沙漠探险',
+                containerClass: 'desert',
+                platformColors: ['#D2691E', '#CD853F'],
+                playerColor: '#FFD700'
+            },
+            night: {
+                name: '夜晚城市',
+                containerClass: 'night',
+                platformColors: ['#E94560', '#0F3460'],
+                playerColor: '#00D9FF'
+            }
+        };
+
+        // 游戏配置
+        const CONFIG = {
+            canvasWidth: 600,
+            canvasHeight: 800,
+            playerRadius: 20,
+            platformHeight: 15,
+            perfectZone: 'rgba(255, 215, 0, 0.3)'
+        };
+
+        // 游戏状态
+        const game = {
+            canvas: null,
+            ctx: null,
+            state: 'menu',
+            currentScreen: 'menu',
+            player: { x: 0, y: 0, vy: 0 },
+            platforms: [],
+            cameraX: 0,
+            score: 0,
+            highScore: 0,
+            combo: 0,
+            isPowering: false,
+            power: 0,
+            powerTime: 0,
+            lastTimestamp: 0,
+            difficulty: 'normal',
+            map: 'sky'
+        };
+
+        // DOM 元素
+        const elements = {
+            container: document.getElementById('gameContainer'),
+            canvas: document.getElementById('gameCanvas'),
+            scoreDisplay: document.getElementById('scoreDisplay'),
+            comboDisplay: document.getElementById('comboDisplay'),
+            perfectText: document.getElementById('perfectText'),
+            powerBar: document.getElementById('powerBar'),
+            powerFill: document.getElementById('powerFill'),
+            menuScreen: document.getElementById('menuScreen'),
+            settingsScreen: document.getElementById('settingsScreen'),
+            leaderboardScreen: document.getElementById('leaderboardScreen'),
+            helpScreen: document.getElementById('helpScreen'),
+            gameOverScreen: document.getElementById('gameOverScreen'),
+            finalScore: document.getElementById('finalScore'),
+            highScoreEnd: document.getElementById('highScoreEnd'),
+            menuHighScore: document.getElementById('menuHighScore'),
+            gameDifficulty: document.getElementById('gameDifficulty'),
+            gameMap: document.getElementById('gameMap'),
+            leaderboardList: document.getElementById('leaderboardList')
+        };
+
+        // 初始化
+        function init() {
+            game.canvas = elements.canvas;
+            game.ctx = game.canvas.getContext('2d');
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            loadSettings();
+            updateHighScores();
+            bindEvents();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resizeCanvas() {
+            const container = elements.container;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            let canvasWidth, canvasHeight;
+
+            if (width < 768) {
+                canvasWidth = Math.min(width, 400);
+                canvasHeight = height;
+            } else {
+                canvasWidth = CONFIG.canvasWidth;
+                canvasHeight = Math.min(height, CONFIG.canvasHeight);
+            }
+
+            game.canvas.width = canvasWidth;
+            game.canvas.height = canvasHeight;
+            CONFIG.displayWidth = canvasWidth;
+            CONFIG.displayHeight = canvasHeight;
+        }
+
+        function loadSettings() {
+            const savedDifficulty = localStorage.getItem('jumpJourneyDifficulty');
+            const savedMap = localStorage.getItem('jumpJourneyMap');
+
+            if (savedDifficulty) game.difficulty = savedDifficulty;
+            if (savedMap) game.map = savedMap;
+
+            updateSettingsUI();
+            applyMap();
+        }
+
+        function updateSettingsUI() {
+            document.querySelectorAll('#difficultyOptions .option-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.difficulty === game.difficulty);
+            });
+
+            document.querySelectorAll('#mapOptions .map-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.map === game.map);
+            });
+        }
+
+        function applyMap() {
+            const mapConfig = MAPS[game.map];
+            elements.container.className = mapConfig.containerClass;
+            CONFIG.colors = {
+                player: mapConfig.playerColor,
+                playerFace: '#2C3E50',
+                platform1: mapConfig.platformColors[0],
+                platform2: mapConfig.platformColors[1],
+                perfectZone: 'rgba(255, 215, 0, 0.3)'
+            };
+        }
+
+        function saveSettings() {
+            localStorage.setItem('jumpJourneyDifficulty', game.difficulty);
+            localStorage.setItem('jumpJourneyMap', game.map);
+        }
+
+        function updateHighScores() {
+            const scores = getAllHighScores();
+            let maxScore = 0;
+            Object.values(scores).forEach(score => {
+                if (score > maxScore) maxScore = score;
+            });
+            game.highScore = maxScore;
+            elements.menuHighScore.textContent = maxScore;
+        }
+
+        function getAllHighScores() {
+            const scores = {};
+            const saved = localStorage.getItem('jumpJourneyScores');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        function getHighScore(difficulty, map) {
+            const scores = getAllHighScores();
+            return scores[`${difficulty}_${map}`] || 0;
+        }
+
+        function saveHighScore(difficulty, map, score) {
+            const scores = getAllHighScores();
+            const key = `${difficulty}_${map}`;
+            if (!scores[key] || score > scores[key]) {
+                scores[key] = score;
+                localStorage.setItem('jumpJourneyScores', JSON.stringify(scores));
+            }
+        }
+
+        // 界面管理
+        function showScreen(screenName) {
+            game.currentScreen = screenName;
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+
+            switch (screenName) {
+                case 'menu':
+                    elements.menuScreen.classList.remove('hidden');
+                    updateHighScores();
+                    break;
+                case 'settings':
+                    elements.settingsScreen.classList.remove('hidden');
+                    updateSettingsUI();
+                    break;
+                case 'leaderboard':
+                    elements.leaderboardScreen.classList.remove('hidden');
+                    renderLeaderboard('all');
+                    break;
+                case 'help':
+                    elements.helpScreen.classList.remove('hidden');
+                    break;
+                case 'game':
+                    game.state = 'playing';
+                    elements.menuScreen.classList.add('hidden');
+                    elements.settingsScreen.classList.add('hidden');
+                    elements.leaderboardScreen.classList.add('hidden');
+                    elements.helpScreen.classList.add('hidden');
+                    elements.gameOverScreen.classList.add('hidden');
+                    elements.canvas.style.display = 'block';
+                    elements.scoreDisplay.classList.add('visible');
+                    startGame();
+                    break;
+                case 'gameOver':
+                    elements.gameOverScreen.classList.remove('hidden');
+                    break;
+            }
+        }
+
+        function renderLeaderboard(tab) {
+            const scores = getAllHighScores();
+            const list = [];
+
+            Object.entries(scores).forEach(([key, score]) => {
+                const [difficulty, map] = key.split('_');
+                if (tab === 'all' || map === tab) {
+                    list.push({ difficulty, map, score });
+                }
+            });
+
+            list.sort((a, b) => b.score - a.score);
+            list.splice(10); // 只显示前10名
+
+            let html = '';
+            if (list.length === 0) {
+                html = '<div style="color: #fff; text-align: center; padding: 20px;">暂无记录</div>';
+            } else {
+                list.forEach((item, index) => {
+                    const difficultyName = DIFFICULTY[item.difficulty].name;
+                    const mapName = MAPS[item.map].name;
+                    html += `
+                        <div class="leaderboard-item">
+                            <span class="mode">${index + 1}. ${mapName} - ${difficultyName}</span>
+                            <span class="score">${item.score}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            elements.leaderboardList.innerHTML = html;
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+        }
+
+        function bindEvents() {
+            // 主菜单按钮
+            document.getElementById('startBtn').addEventListener('click', () => {
+                showScreen('game');
+            });
+
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                showScreen('settings');
+            });
+
+            document.getElementById('leaderboardBtn').addEventListener('click', () => {
+                showScreen('leaderboard');
+            });
+
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                showScreen('help');
+            });
+
+            // 设置界面
+            document.querySelectorAll('#difficultyOptions .option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    game.difficulty = btn.dataset.difficulty;
+                    updateSettingsUI();
+                });
+            });
+
+            document.querySelectorAll('#mapOptions .map-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    game.map = btn.dataset.map;
+                    updateSettingsUI();
+                    applyMap();
+                });
+            });
+
+            document.getElementById('confirmSettingsBtn').addEventListener('click', () => {
+                saveSettings();
+                showScreen('game');
+            });
+
+            document.getElementById('backFromSettingsBtn').addEventListener('click', () => {
+                showScreen('menu');
+            });
+
+            // 排行榜
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    renderLeaderboard(btn.dataset.tab);
+                });
+            });
+
+            document.getElementById('backFromLeaderboardBtn').addEventListener('click', () => {
+                showScreen('menu');
+            });
+
+            // 帮助
+            document.getElementById('backFromHelpBtn').addEventListener('click', () => {
+                showScreen('menu');
+            });
+
+            // 游戏操作
+            const startAction = (e) => {
+                e.preventDefault();
+                if (game.state === 'playing') {
+                    game.isPowering = true;
+                    game.powerTime = 0;
+                    elements.powerBar.classList.add('active');
+                }
+            };
+
+            const endAction = (e) => {
+                e.preventDefault();
+                if (game.state === 'playing' && game.isPowering) {
+                    jump();
+                }
+            };
+
+            document.addEventListener('mousedown', startAction);
+            document.addEventListener('mouseup', endAction);
+            document.addEventListener('touchstart', startAction, { passive: false });
+            document.addEventListener('touchend', endAction, { passive: false });
+
+            // 结算界面
+            document.getElementById('restartBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showScreen('game');
+            });
+
+            document.getElementById('backToMenuBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                game.state = 'menu';
+                elements.canvas.style.display = 'none';
+                elements.scoreDisplay.classList.remove('visible');
+                elements.comboDisplay.classList.remove('visible');
+                elements.powerBar.classList.remove('active');
+                showScreen('menu');
+            });
+        }
+
+        function startGame() {
+            game.state = 'playing';
+            game.score = 0;
+            game.combo = 0;
+            game.cameraX = 0;
+            game.isPowering = false;
+            game.power = 0;
+
+            const diff = DIFFICULTY[game.difficulty];
+            CONFIG.minGap = diff.minGap;
+            CONFIG.maxGap = diff.maxGap;
+            CONFIG.platformMinWidth = diff.minWidth;
+            CONFIG.platformMaxWidth = diff.maxWidth;
+            CONFIG.maxPower = diff.maxPower;
+            CONFIG.gravity = diff.gravity;
+
+            createInitialPlatforms();
+            game.player.x = game.platforms[0].x + game.platforms[0].width / 2;
+            game.player.y = game.platforms[0].y - CONFIG.playerRadius;
+            game.player.vy = 0;
+
+            elements.scoreDisplay.textContent = '0';
+            elements.comboDisplay.classList.remove('visible');
+            elements.powerBar.classList.remove('active');
+            elements.powerFill.style.width = '0%';
+        }
+
+        function createInitialPlatforms() {
+            game.platforms = [];
+
+            const firstPlatform = {
+                x: 100,
+                y: getPlatformY(0),
+                width: 100,
+                height: CONFIG.platformHeight,
+                color: 0
+            };
+            game.platforms.push(firstPlatform);
+
+            for (let i = 1; i < 8; i++) {
+                addPlatform();
+            }
+        }
+
+        function getPlatformY(index) {
+            return CONFIG.displayHeight * 0.7;
+        }
+
+        function addPlatform() {
+            const lastPlatform = game.platforms[game.platforms.length - 1];
+            const difficulty = Math.min(game.score / 50, 1);
+            const diff = DIFFICULTY[game.difficulty];
+
+            const gap = diff.minGap + Math.random() * (diff.maxGap - diff.minGap) * (0.5 + difficulty * 0.5);
+            const widthRange = diff.maxWidth - diff.minWidth;
+            const width = diff.maxWidth - Math.random() * widthRange * (0.3 + difficulty * 0.7);
+
+            let newX = lastPlatform.x + lastPlatform.width / 2 + gap;
+
+            if (Math.random() > 0.5) {
+                newX += (Math.random() - 0.5) * 150;
+            }
+
+            const platform = {
+                x: newX,
+                y: getPlatformY(game.platforms.length),
+                width: Math.max(width, 35),
+                height: CONFIG.platformHeight,
+                color: game.platforms.length % 2
+            };
+
+            game.platforms.push(platform);
+        }
+
+        function jump() {
+            game.isPowering = false;
+            elements.powerBar.classList.remove('active');
+
+            const diff = DIFFICULTY[game.difficulty];
+            const powerRatio = game.powerTime / diff.maxPower;
+            const jumpPower = 12 + powerRatio * 8;
+
+            game.player.vy = -jumpPower;
+            game.state = 'jumping';
+
+            game.power = 0;
+            game.powerTime = 0;
+            elements.powerFill.style.width = '0%';
+        }
+
+        function update(timestamp) {
+            if (!game.lastTimestamp) game.lastTimestamp = timestamp;
+            const deltaTime = (timestamp - game.lastTimestamp) / 16.67;
+            game.lastTimestamp = timestamp;
+
+            if (game.isPowering) {
+                const diff = DIFFICULTY[game.difficulty];
+                game.powerTime += deltaTime * 0.016;
+                if (game.powerTime > diff.maxPower) {
+                    game.powerTime = diff.maxPower;
+                }
+                const powerPercent = (game.powerTime / diff.maxPower) * 100;
+                elements.powerFill.style.width = powerPercent + '%';
+            }
+
+            if (game.state === 'jumping') {
+                game.player.vy += CONFIG.gravity * deltaTime;
+                game.player.y += game.player.vy * deltaTime;
+                game.player.x += (10 + game.powerTime * 5) * deltaTime;
+
+                const targetCameraX = game.player.x - CONFIG.displayWidth * 0.3;
+                if (targetCameraX > game.cameraX) {
+                    game.cameraX = targetCameraX;
+                }
+
+                checkLanding();
+            }
+
+            game.platforms = game.platforms.filter(p => p.x + p.width > game.cameraX - 100);
+
+            const lastPlatform = game.platforms[game.platforms.length - 1];
+            if (lastPlatform && lastPlatform.x < game.cameraX + CONFIG.displayWidth + 200) {
+                addPlatform();
+            }
+
+            checkFall();
+        }
+
+        function checkLanding() {
+            for (const platform of game.platforms) {
+                if (game.player.vy > 0 &&
+                    game.player.y + CONFIG.playerRadius >= platform.y &&
+                    game.player.y + CONFIG.playerRadius <= platform.y + platform.height + 10 &&
+                    game.player.x >= platform.x &&
+                    game.player.x <= platform.x + platform.width) {
+                    landOnPlatform(platform);
+                    return;
+                }
+            }
+        }
+
+        function landOnPlatform(platform) {
+            game.player.y = platform.y - CONFIG.playerRadius;
+            game.player.vy = 0;
+            game.state = 'playing';
+
+            game.combo++;
+            const centerX = platform.x + platform.width / 2;
+            const distFromCenter = Math.abs(game.player.x - centerX);
+            const perfectZone = platform.width * 0.3;
+
+            let points = 1;
+            if (distFromCenter < perfectZone) {
+                points = 2;
+                showPerfect();
+            }
+
+            let multiplier = 1;
+            if (game.combo >= 5) multiplier = 3;
+            else if (game.combo >= 3) multiplier = 2;
+
+            const diff = DIFFICULTY[game.difficulty];
+            game.score += points * multiplier * diff.multiplier;
+            game.score = Math.floor(game.score);
+
+            updateScoreDisplay();
+            showCombo();
+            createParticles(game.player.x, game.player.y);
+        }
+
+        function showPerfect() {
+            elements.perfectText.classList.add('show');
+            setTimeout(() => elements.perfectText.classList.remove('show'), 600);
+        }
+
+        function updateScoreDisplay() {
+            elements.scoreDisplay.textContent = game.score;
+        }
+
+        function showCombo() {
+            if (game.combo >= 3) {
+                const multiplier = game.combo >= 5 ? 3 : 2;
+                elements.comboDisplay.textContent = `${game.combo}连击 x${multiplier}`;
+                elements.comboDisplay.classList.add('visible');
+                elements.comboDisplay.classList.add('pop');
+                setTimeout(() => elements.comboDisplay.classList.remove('pop'), 200);
+            } else {
+                elements.comboDisplay.classList.remove('visible');
+            }
+        }
+
+        function checkFall() {
+            if (game.player.y > CONFIG.displayHeight + 100) {
+                gameOver();
+            }
+        }
+
+        function gameOver() {
+            game.state = 'gameOver';
+
+            saveHighScore(game.difficulty, game.map, game.score);
+
+            elements.finalScore.textContent = game.score;
+            elements.highScoreEnd.textContent = getHighScore(game.difficulty, game.map);
+            elements.gameDifficulty.textContent = DIFFICULTY[game.difficulty].name;
+            elements.gameMap.textContent = MAPS[game.map].name;
+
+            showScreen('gameOver');
+        }
+
+        function createParticles(x, y) {
+            const colors = ['#FFD700', '#FF6B6B', '#4ADE80', '#60A5FA'];
+
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const size = 8 + Math.random() * 8;
+                const angle = (Math.PI * 2 / 8) * i;
+                const distance = 30 + Math.random() * 40;
+                const targetX = x + Math.cos(angle) * distance;
+                const targetY = y + Math.sin(angle) * distance;
+
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = (x * (CONFIG.displayWidth / CONFIG.canvasWidth)) + 'px';
+                particle.style.top = y + 'px';
+
+                elements.container.appendChild(particle);
+
+                particle.animate([
+                    { left: x + 'px', top: y + 'px', transform: 'scale(1)' },
+                    { left: targetX + 'px', top: targetY + 'px', transform: 'scale(0)' }
+                ], { duration: 600, easing: 'ease-out' });
+
+                setTimeout(() => particle.remove(), 600);
+            }
+        }
+
+        function render() {
+            const ctx = game.ctx;
+            const width = game.canvas.width;
+            const height = game.canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+            ctx.save();
+            ctx.translate(-game.cameraX * (width / CONFIG.canvasWidth), 0);
+
+            for (const platform of game.platforms) {
+                drawPlatform(ctx, platform);
+            }
+
+            drawPlayer(ctx);
+            ctx.restore();
+        }
+
+        function drawPlatform(ctx, platform) {
+            const scaleX = CONFIG.displayWidth / CONFIG.canvasWidth;
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            roundRect(ctx, platform.x * scaleX, platform.y + 4, platform.width * scaleX, platform.height, 8);
+            ctx.fill();
+
+            ctx.fillStyle = platform.color === 0 ? CONFIG.colors.platform1 : CONFIG.colors.platform2;
+            roundRect(ctx, platform.x * scaleX, platform.y, platform.width * scaleX, platform.height, 8);
+            ctx.fill();
+
+            if (game.state === 'playing' || game.state === 'jumping') {
+                const centerX = platform.x + platform.width / 2;
+                const perfectZone = platform.width * 0.3;
+
+                ctx.fillStyle = CONFIG.colors.perfectZone;
+                ctx.fillRect((centerX - perfectZone) * scaleX, platform.y, perfectZone * 2 * scaleX, platform.height);
+            }
+        }
+
+        function drawPlayer(ctx) {
+            const scaleX = CONFIG.displayWidth / CONFIG.canvasWidth;
+            const x = game.player.x * scaleX;
+            const y = game.player.y;
+            const r = CONFIG.playerRadius;
+
+            let scaleY = 1, scaleXPlayer = 1;
+
+            if (game.isPowering) {
+                const diff = DIFFICULTY[game.difficulty];
+                const powerRatio = game.powerTime / diff.maxPower;
+                scaleY = 1 - powerRatio * 0.3;
+                scaleXPlayer = 1 + powerRatio * 0.2;
+            } else if (game.state === 'jumping') {
+                if (game.player.vy < 0) {
+                    scaleY = 1.2;
+                    scaleXPlayer = 0.85;
+                } else {
+                    scaleY = 0.9;
+                    scaleXPlayer = 1.1;
+                }
+            }
+
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scaleXPlayer, scaleY);
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.beginPath();
+            ctx.ellipse(0, r - 2, r * 0.8, r * 0.3, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = CONFIG.colors.player;
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.beginPath();
+            ctx.arc(-r * 0.3, -r * 0.3, r * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            const eyeOffsetX = 6, eyeOffsetY = -3, eyeRadius = 4;
+
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(-eyeOffsetX, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(eyeOffsetX, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = CONFIG.colors.playerFace;
+            ctx.beginPath();
+            ctx.arc(-eyeOffsetX + 1, eyeOffsetY, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(eyeOffsetX + 1, eyeOffsetY, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = CONFIG.colors.playerFace;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(0, 2, 6, 0.2, Math.PI - 0.2);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function gameLoop(timestamp) {
+            if (game.state === 'playing' || game.state === 'jumping') {
+                update(timestamp);
+            }
+            if (game.state !== 'menu') {
+                render();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
