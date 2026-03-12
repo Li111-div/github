@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品集 | 中职技能大赛选手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-text">&lt;<span class="highlight">Skills</span>/&gt;</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active" data-page="home">首页</a></li>
+            <li><a href="#about" data-page="about">关于我</a></li>
+            <li><a href="#skills" data-page="skills">技能</a></li>
+            <li><a href="#projects" data-page="projects">项目</a></li>
+            <li><a href="#contact" data-page="contact">联系我</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- 主容器 -->
+    <main class="main-container">
+        <!-- 首页 Hero -->
+        <section id="home" class="page active">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="glitch" data-text="你好，我是 [你的姓名]">你好，我是 <span class="highlight">[你的姓名]</span></h1>
+                    <p class="subtitle">中职技能大赛移动应用与开发赛项选手 |  aspiring Developer</p>
+                    <p class="hero-description">
+                        一名热爱编程的中职生，从校赛到国赛，我在技能竞赛的道路上不断成长。
+                        擅长将创意转化为实际产品，享受从无到有的创造过程。
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary" data-page="projects">查看我的作品</a>
+                        <a href="#about" class="btn btn-secondary" data-page="about">了解我的成长</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="achievement-card">
+                        <div class="card-header">
+                            <i class="fas fa-trophy"></i>
+                            <h3>获奖荣誉</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="achievement-item">
+                                <div class="achievement-icon">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div class="achievement-info">
+                                    <h4>省级一等奖</h4>
+                                    <span>2025 年 · 移动应用开发赛项</span>
+                                </div>
+                            </div>
+                            <div class="achievement-item">
+                                <div class="achievement-icon">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div class="achievement-info">
+                                    <h4>市级金奖</h4>
+                                    <span>2024 年 · 职业技能大赛</span>
+                                </div>
+                            </div>
+                            <div class="achievement-item">
+                                <div class="achievement-icon">
+                                    <i class="fas fa-medal"></i>
+                                </div>
+                                <div class="achievement-info">
+                                    <h4>校级冠军</h4>
+                                    <span>2023 年 · 技能竞赛</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge">持续备战国赛中...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span>探索我的技能树</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- 关于我 -->
+        <section id="about" class="page">
+            <div class="container">
+                <h2 class="section-title">关于我</h2>
+                <p class="section-subtitle">一个中职生的技能成长之路</p>
+                
+                <div class="about-content">
+                    <div class="about-profile">
+                        <div class="profile-card-main">
+                            <div class="profile-avatar-large">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h3 class="profile-name">[你的姓名]</h3>
+                            <p class="profile-major">移动应用与开发赛项选手</p>
+                            
+                            <div class="profile-badges">
+                                <div class="badge-item">
+                                    <i class="fas fa-school"></i>
+                                    <span>[学校名称]</span>
+                                </div>
+                                <div class="badge-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span>2023 级</span>
+                                </div>
+                                <div class="badge-item">
+                                    <i class="fas fa-code"></i>
+                                    <span>计算机专业</span>
+                                </div>
+                                <div class="badge-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <span>500+ 小时训练</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="about-story">
+                        <h3>我的技能成长故事</h3>
+                        <p>
+                            你好！我是来自 <strong>[学校名称]</strong> <strong>计算机专业</strong> 的一名中职生。
+                            自 2023 年入学以来，我便对编程产生了浓厚的兴趣，并立志在移动应用开发领域深耕。
+                        </p>
+                        <p>
+                            <strong>【参赛初衷】</strong><br>
+                            2023 年，我首次参加校级技能大赛并获得一等奖，从此踏上了竞技之路。
+                            对我来说，比赛不仅是技术的较量，更是自我突破的过程。每一次站在舞台上，
+                            我都能感受到技能带来的成就感和自豪感。
+                        </p>
+                        <p>
+                            <strong>【备赛付出】</strong><br>
+                            为了准备比赛，我付出了大量的时间和精力。日常训练包括：
+                        </p>
+                        <ul class="training-list">
+                            <li><i class="fas fa-check-circle"></i> 每天坚持 coding 练习至少 4 小时</li>
+                            <li><i class="fas fa-check-circle"></i> 系统学习算法和数据结构</li>
+                            <li><i class="fas fa-check-circle"></i> 研究往届优秀获奖作品</li>
+                            <li><i class="fas fa-check-circle"></i> 参与开源项目，提升工程能力</li>
+                            <li><i class="fas fa-check-circle"></i> 周末和假期留校集训，克服种种困难</li>
+                        </ul>
+                        <p>
+                            <strong>【成长感悟】</strong><br>
+                            "以赛促学"是我一直坚持的理念。通过比赛，我不仅提升了技术水平，
+                            更培养了问题解决能力、时间管理能力和抗压能力。这些经历让我明白，
+                            中职生同样可以通过技能改变命运，实现人生价值。
+                        </p>
+                        
+                        <div class="quote-box">
+                            <i class="fas fa-quote-left"></i>
+                            <p>技能成就梦想，奋斗成就未来。我希望能够代表中国参加世界技能大赛，在国际舞台上展现中国中职生的风采！</p>
+                            <i class="fas fa-quote-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 大赛历程时间线 -->
+                <div class="competition-timeline">
+                    <h3 class="timeline-title"><i class="fas fa-flag-checkered"></i> 我的大赛历程</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4><i class="fas fa-university"></i> 校赛 - 起点</h4>
+                                    <span class="timeline-date">2023.03</span>
+                                </div>
+                                <div class="timeline-badge school">校级一等奖</div>
+                                <p class="timeline-reflection">
+                                    "第一次站在比赛的舞台上，紧张又兴奋。这次经历让我明白了理论与实践的差距，
+                                    也坚定了我继续深造的决心。"
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4><i class="fas fa-city"></i> 市赛 - 成长</h4>
+                                    <span class="timeline-date">2023.06</span>
+                                </div>
+                                <div class="timeline-badge city">市级金奖</div>
+                                <p class="timeline-reflection">
+                                    "市赛的竞争更加激烈，我遇到了很多优秀的选手。在指导老师的帮助下，
+                                    我系统学习了算法和数据结构，技术水平有了质的飞跃。"
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4><i class="fas fa-landmark"></i> 省赛 - 突破</h4>
+                                    <span class="timeline-date">2023.09</span>
+                                </div>
+                                <div class="timeline-badge provincial">省级一等奖</div>
+                                <p class="timeline-reflection">
+                                    "省赛是我职业生涯的转折点。我独立完成了一个完整的移动应用项目，
+                                    从需求分析到上线部署，全程把控。这次经历让我真正理解了什么是工程化开发。"
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4><i class="fas fa-trophy"></i> 国赛 - 挑战</h4>
+                                    <span class="timeline-date">2024.05</span>
+                                </div>
+                                <div class="timeline-badge national">国赛备战中</div>
+                                <p class="timeline-reflection">
+                                    "全国技能大赛是中职生的最高舞台。我正在紧张备赛中，目标是冲击金牌。
+                                    我相信，所有的努力都不会被辜负。"
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item future">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-header">
+                                    <h4><i class="fas fa-globe"></i> 世赛 - 梦想</h4>
+                                    <span class="timeline-date">未来目标</span>
+                                </div>
+                                <div class="timeline-badge world">奋斗目标</div>
+                                <p class="timeline-reflection">
+                                    "世界技能大赛是我的终极目标。我知道这条路很长，但我已经做好了准备。
+                                    为中国争光，为中职生正名！"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技能展示 -->
+        <section id="skills" class="page">
+            <div class="container">
+                <h2 class="section-title">专业技能</h2>
+                <p class="section-subtitle">五维能力模型 + 核心技术栈</p>
+                
+                <!-- 雷达图 + 技能列表 -->
+                <div class="skills-section">
+                    <div class="radar-wrapper">
+                        <div class="radar-container">
+                            <canvas id="skillRadar"></canvas>
+                        </div>
+                        <p class="radar-caption">五维能力评估：编程能力 | 算法思维 | 工程实践 | 团队协作 | 创新能力</p>
+                    </div>
+                    
+                    <div class="core-skills">
+                        <h3><i class="fas fa-microchip"></i> 核心技能</h3>
+                        
+                        <div class="skill-group">
+                            <h4><i class="fas fa-laptop-code"></i> 编程语言</h4>
+                            <div class="skill-tags">
+                                <span class="skill-tag level-5">JavaScript (ES6+)</span>
+                                <span class="skill-tag level-4">Python</span>
+                                <span class="skill-tag level-4">Java</span>
+                                <span class="skill-tag level-3">TypeScript</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-group">
+                            <h4><i class="fas fa-palette"></i> 前端技术</h4>
+                            <div class="skill-tags">
+                                <span class="skill-tag level-5">Vue.js</span>
+                                <span class="skill-tag level-5">HTML5/CSS3</span>
+                                <span class="skill-tag level-4">React</span>
+                                <span class="skill-tag level-4">Element Plus</span>
+                                <span class="skill-tag level-3">Uni-app</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-group">
+                            <h4><i class="fas fa-server"></i> 后端技术</h4>
+                            <div class="skill-tags">
+                                <span class="skill-tag level-4">Node.js + Express</span>
+                                <span class="skill-tag level-3">Spring Boot</span>
+                                <span class="skill-tag level-3">MySQL</span>
+                                <span class="skill-tag level-3">MongoDB</span>
+                            </div>
+                        </div>
+                        
+                        <div class="skill-group">
+                            <h4><i class="fas fa-tools"></i> 开发工具</h4>
+                            <div class="skill-tags">
+                                <span class="skill-tag level-5">Git/GitHub</span>
+                                <span class="skill-tag level-5">VS Code</span>
+                                <span class="skill-tag level-4">Postman</span>
+                                <span class="skill-tag level-3">Docker</span>
+                                <span class="skill-tag level-3">Linux</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 获奖金字塔 -->
+                <div class="award-pyramid">
+                    <h3><i class="fas fa-layer-group"></i> 获奖经历</h3>
+                    <p class="pyramid-subtitle">从校赛到国赛的晋级之路</p>
+                    
+                    <div class="pyramid-levels">
+                        <div class="pyramid-level level-1">
+                            <div class="level-content">
+                                <i class="fas fa-crown"></i>
+                                <span>国赛（备战中）</span>
+                                <small>全国职业院校技能大赛</small>
+                            </div>
+                        </div>
+                        <div class="pyramid-level level-2">
+                            <div class="level-content">
+                                <i class="fas fa-medal"></i>
+                                <span>省级一等奖</span>
+                                <small>2023 年广东省职业技能大赛 - 移动应用开发</small>
+                            </div>
+                        </div>
+                        <div class="pyramid-level level-3">
+                            <div class="level-content">
+                                <i class="fas fa-award"></i>
+                                <span>市级金奖</span>
+                                <small>2023 年市职业院校技能大赛</small>
+                            </div>
+                        </div>
+                        <div class="pyramid-level level-4">
+                            <div class="level-content">
+                                <i class="fas fa-star"></i>
+                                <span>校级一等奖</span>
+                                <small>2023 年校技能竞赛</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 证书展示区 -->
+                    <div class="certificates-showcase">
+                        <h4>获奖证书</h4>
+                        <div class="certificate-grid">
+                            <div class="certificate-item" onclick="openCertificateModal('images/certificates/provincial-cert.jpg', '省级一等奖证书')">
+                                <div class="certificate-thumb">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <span>省级证书</span>
+                            </div>
+                            <div class="certificate-item" onclick="openCertificateModal('images/certificates/city-cert.jpg', '市级金奖证书')">
+                                <div class="certificate-thumb">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <span>市级证书</span>
+                            </div>
+                            <div class="certificate-item" onclick="openCertificateModal('images/certificates/school-cert.jpg', '校级一等奖证书')">
+                                <div class="certificate-thumb">
+                                    <i class="fas fa-certificate"></i>
+                                </div>
+                                <span>校级证书</span>
+                            </div>
+                        </div>
+                        <p class="certificate-hint">点击证书查看详情</p>
+                    </div>
+                </div>
+
+                <!-- 技术图标墙 -->
+                <div class="tech-icons">
+                    <div class="tech-icon"><i class="fab fa-html5"></i></div>
+                    <div class="tech-icon"><i class="fab fa-css3-alt"></i></div>
+                    <div class="tech-icon"><i class="fab fa-js"></i></div>
+                    <div class="tech-icon"><i class="fab fa-vuejs"></i></div>
+                    <div class="tech-icon"><i class="fab fa-react"></i></div>
+                    <div class="tech-icon"><i class="fab fa-node-js"></i></div>
+                    <div class="tech-icon"><i class="fab fa-python"></i></div>
+                    <div class="tech-icon"><i class="fab fa-java"></i></div>
+                    <div class="tech-icon"><i class="fab fa-git-alt"></i></div>
+                    <div class="tech-icon"><i class="fab fa-docker"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目作品 -->
+        <section id="projects" class="page">
+            <div class="container">
+                <h2 class="section-title">项目作品</h2>
+                <p class="section-subtitle">已部署上线的实战项目</p>
+
+                <div class="projects-grid">
+                    <!-- 项目 1：个人博客系统 -->
+                    <div class="project-card featured">
+                        <div class="project-status">
+                            <span class="status-badge online"><i class="fas fa-circle"></i> 已部署</span>
+                            <span class="difficulty-tag">⭐⭐⭐⭐ 进阶</span>
+                        </div>
+                        <div class="project-image">
+                            <div class="placeholder-image">
+                                <i class="fas fa-blog"></i>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>星辰博客 - 全栈个人博客平台</h3>
+                            <p>一个基于 Vue3 + Node.js 的全栈博客系统，支持文章发布、分类管理、评论互动等功能。</p>
+                            
+                            <div class="project-details">
+                                <div class="detail-section">
+                                    <h4><i class="fas fa-bullseye"></i> 开发背景</h4>
+                                    <p>为展示个人技术实力和备赛而开发，作为技能大赛的代表作品。</p>
+                                </div>
+                                
+                                <div class="detail-section">
+                                    <h4><i class="fas fa-code"></i> 技术栈</h4>
+                                    <div class="project-tags">
+                                        <span class="tag">Vue3</span>
+                                        <span class="tag">TypeScript</span>
+                                        <span class="tag">Node.js</span>
+                                        <span class="tag">Express</span>
+                                        <span class="tag">MySQL</span>
+                                        <span class="tag">Element Plus</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="detail-section">
+                                    <h4><i class="fas fa-exclamation-triangle"></i> 难点解决</h4>
+                                    <ul class="challenge-list">
+                                        <li>
+                                            <strong>问题：</strong>首屏加载速度慢 (5s+)
+                                            <br><strong>解决：</strong>路由懒加载 + 组件异步加载 + Gzip 压缩 → 降至 1.2s
+                                        </li>
+                                        <li>
+                                            <strong>问题：</strong>Markdown 编辑器兼容性差
+                                            <br><strong>解决：</strong>自研基于 Monaco Editor 的 Markdown 组件
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="detail-section">
+                                    <h4><i class="fas fa-lightbulb"></i> 项目亮点</h4>
+                                    <ul class="highlight-list">
+                                        <li><i class="fas fa-check"></i> 完整的 RBAC 权限管理</li>
+                                        <li><i class="fas fa-check"></i> GitHub OAuth 登录</li>
+                                        <li><i class="fas fa-check"></i> Markdown 全文编辑</li>
+                                        <li><i class="fas fa-check"></i> 响应式设计，多端适配</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary btn-sm" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i> 在线演示
+                                </a>
+                                <a href="#" class="btn btn-secondary btn-sm" target="_blank">
+                                    <i class="fab fa-github"></i> 源码
+                                </a>
+                            </div>
+                            
+                            <div class="project-reflection">
+                                <p><strong>收获与改进：</strong>通过这个项目，我掌握了全栈开发的完整流程。后续计划添加 SEO 优化和 SSR 支持。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目 2：数据可视化大屏 -->
+                    <div class="project-card">
+                        <div class="project-status">
+                            <span class="status-badge online"><i class="fas fa-circle"></i> 已部署</span>
+                            <span class="difficulty-tag">⭐⭐⭐⭐⭐ 挑战</span>
+                        </div>
+                        <div class="project-image">
+                            <div class="placeholder-image">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>智慧校园数据驾驶舱</h3>
+                            <p>为学校定制的数据可视化大屏，实时展示校园运行数据，包括考勤统计、成绩分析等。</p>
+                            
+                            <div class="project-tags">
+                                <span class="tag">Vue3</span>
+                                <span class="tag">ECharts</span>
+                                <span class="tag">WebSocket</span>
+                                <span class="tag">Node.js</span>
+                                <span class="tag">Redis</span>
+                            </div>
+                            
+                            <div class="project-highlights">
+                                <h4>核心亮点</h4>
+                                <ul>
+                                    <li><i class="fas fa-bolt"></i> WebSocket 实时推送，延迟 200ms</li>
+                                    <li><i class="fas fa-chart-bar"></i> 流畅支持 50+ 图表同时渲染</li>
+                                    <li><i class="fas fa-desktop"></i> 自适应不同分辨率大屏</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary btn-sm" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i> 在线演示
+                                </a>
+                                <a href="#" class="btn btn-secondary btn-sm" target="_blank">
+                                    <i class="fab fa-github"></i> 源码
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目 3：移动端 H5 应用 -->
+                    <div class="project-card">
+                        <div class="project-status">
+                            <span class="status-badge online"><i class="fas fa-circle"></i> 已部署</span>
+                            <span class="difficulty-tag">⭐⭐⭐⭐ 进阶</span>
+                        </div>
+                        <div class="project-image">
+                            <div class="placeholder-image">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>赛事助手 - 备赛管理 H5</h3>
+                            <p>专为技能大赛选手打造的备赛管理工具，支持训练计划、错题本、资料管理等功能。</p>
+                            
+                            <div class="project-tags">
+                                <span class="tag">Uni-app</span>
+                                <span class="tag">Vue3</span>
+                                <span class="tag">Vant</span>
+                                <span class="tag">Firebase</span>
+                            </div>
+                            
+                            <div class="project-highlights">
+                                <h4>核心亮点</h4>
+                                <ul>
+                                    <li><i class="fas fa-calendar-check"></i> 个性化训练计划制定</li>
+                                    <li><i class="fas fa-book"></i> 智能错题本自动归类</li>
+                                    <li><i class="fas fa-cloud-upload"></i> 云端同步，多端共享</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary btn-sm" target="_blank">
+                                    <i class="fas fa-qrcode"></i> 扫码体验
+                                </a>
+                                <a href="#" class="btn btn-secondary btn-sm" target="_blank">
+                                    <i class="fab fa-github"></i> 源码
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 项目 4：API 服务 -->
+                    <div class="project-card">
+                        <div class="project-status">
+                            <span class="status-badge online"><i class="fas fa-circle"></i> 已部署</span>
+                            <span class="difficulty-tag">⭐⭐⭐ 入门</span>
+                        </div>
+                        <div class="project-image">
+                            <div class="placeholder-image">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <h3>统一身份认证 API</h3>
+                            <p>基于 JWT 的统一身份认证服务，支持多应用接入，提供完整的权限管理功能。</p>
+                            
+                            <div class="project-tags">
+                                <span class="tag">Node.js</span>
+                                <span class="tag">Express</span>
+                                <span class="tag">JWT</span>
+                                <span class="tag">Redis</span>
+                                <span class="tag">MySQL</span>
+                            </div>
+                            
+                            <div class="project-highlights">
+                                <h4>核心亮点</h4>
+                                <ul>
+                                    <li><i class="fas fa-shield-alt"></i> JWT + Refresh Token 双令牌机制</li>
+                                    <li><i class="fas fa-key"></i> RBAC 权限模型</li>
+                                    <li><i class="fas fa-tachometer-alt"></i> Redis 缓存，QPS 1000+</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="project-links">
+                                <a href="#" class="btn btn-primary btn-sm" target="_blank">
+                                    <i class="fas fa-book"></i> API 文档
+                                </a>
+                                <a href="#" class="btn btn-secondary btn-sm" target="_blank">
+                                    <i class="fab fa-github"></i> 源码
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我 -->
+        <section id="contact" class="page">
+            <div class="container">
+                <h2 class="section-title">联系我</h2>
+                <p class="section-subtitle">欢迎交流合作或技术咨询</p>
+
+                <div class="contact-content">
+                    <div class="contact-info-section">
+                        <h3><i class="fas fa-address-card"></i> 联系方式</h3>
+                        <p>如果您有任何合作意向、技术交流或咨询需求，欢迎通过以下方式联系我：</p>
+                        
+                        <div class="contact-methods">
+                            <div class="contact-method">
+                                <div class="method-icon email">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="method-detail">
+                                    <h4>邮箱</h4>
+                                    <p>your.email@example.com</p>
+                                    <small>最推荐的联系方式，24 小时内回复</small>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-method">
+                                <div class="method-icon phone">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="method-detail">
+                                    <h4>电话</h4>
+                                    <p>+86 1XX XXXX XXXX</p>
+                                    <small>工作日 9:00-18:00 可联系</small>
+                                </div>
+                            </div>
+                            
+                            <div class="contact-method wechat-method">
+                                <div class="method-icon wechat">
+                                    <i class="fab fa-weixin"></i>
+                                </div>
+                                <div class="method-detail">
+                                    <h4>微信</h4>
+                                    <p>点击二维码查看</p>
+                                    <small>扫码添加，备注来意</small>
+                                </div>
+                                <div class="wechat-qr-wrapper" onclick="openWechatModal()">
+                                    <img src="images/wechat-qr.png" alt="微信二维码" class="wechat-qr" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                                    <div class="wechat-placeholder" style="display:none">
+                                        <i class="fab fa-weixin"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="social-platforms">
+                            <h4>关注我</h4>
+                            <div class="social-links">
+                                <a href="https://github.com/yourusername" target="_blank" class="social-link github">
+                                    <i class="fab fa-github"></i>
+                                    <span>GitHub</span>
+                                </a>
+                                <a href="https://gitee.com/yourusername" target="_blank" class="social-link gitee">
+                                    <i class="fas fa-code-branch"></i>
+                                    <span>Gitee</span>
+                                </a>
+                                <a href="#" target="_blank" class="social-link csdn">
+                                    <i class="fas fa-blog"></i>
+                                    <span>CSDN</span>
+                                </a>
+                                <a href="#" target="_blank" class="social-link zhihu">
+                                    <i class="fab fa-zhihu"></i>
+                                    <span>知乎</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-section">
+                        <h3><i class="fas fa-paper-plane"></i> 发送消息</h3>
+                        <form id="contactForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">您的姓名 *</label>
+                                    <input type="text" id="name" name="name" required 
+                                           placeholder="请输入您的姓名" minlength="2" maxlength="20">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">您的邮箱 *</label>
+                                    <input type="email" id="email" name="email" required 
+                                           placeholder="example@email.com">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">留言主题 *</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="">请选择主题</option>
+                                    <option value="cooperation">合作咨询</option>
+                                    <option value="technical">技术交流</option>
+                                    <option value="interview">采访邀约</option>
+                                    <option value="other">其他事宜</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">留言内容 *</label>
+                                <textarea id="message" name="message" rows="6" required 
+                                          placeholder="请详细描述您的需求或问题..." minlength="20"></textarea>
+                                <div class="char-count">
+                                    <span id="currentLength">0</span>/500
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">
+                                <span class="btn-text"><i class="fas fa-paper-plane"></i> 发送消息</span>
+                                <span class="btn-loading" style="display:none;"><i class="fas fa-spinner fa-spin"></i> 发送中...</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 [你的姓名]. All rights reserved.</p>
+            <p class="footer-slogan">技能成就梦想，奋斗成就未来</p>
+            <p class="footer-credit">
+                Designed & Built with <i class="fas fa-heart"></i> by [你的姓名]
+            </p>
+        </div>
+    </footer>
+
+    <!-- 证书弹窗 -->
+    <div class="modal" id="certificateModal">
+        <div class="modal-content certificate-modal">
+            <span class="close-btn" onclick="closeCertificateModal()">&times;</span>
+            <img src="" alt="获奖证书" class="modal-image" id="modalImage">
+            <div class="modal-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <!-- 微信二维码弹窗 -->
+    <div class="modal" id="wechatModal">
+        <div class="modal-content wechat-modal-content">
+            <span class="close-btn" onclick="closeWechatModal()">&times;</span>
+            <h3>微信扫一扫</h3>
+            <div class="wechat-qr-large">
+                <img src="images/wechat-qr.png" alt="微信二维码" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                <div class="wechat-placeholder-large" style="display:none">
+                    <i class="fab fa-weixin"></i>
+                    <p>请替换为实际二维码图片</p>
+                </div>
+            </div>
+            <p class="wechat-hint">扫码添加微信，备注来意</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
