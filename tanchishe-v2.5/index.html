@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>贪吃蛇360°大对决</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- 启动页 -->
+        <div id="start-page" class="page active">
+            <div class="title-container">
+                <h1 class="game-title">贪吃蛇360°大对决</h1>
+                <p class="subtitle">360° SNAKE BATTLE</p>
+            </div>
+
+            <!-- 历史记录模块 -->
+            <div class="history-section">
+                <div class="history-header">
+                    <h3>🏆 历史长度排名</h3>
+                    <button id="clear-history" class="btn-clear">清空</button>
+                </div>
+                <div id="history-list" class="history-list">
+                    <!-- 历史记录由JS动态生成 -->
+                </div>
+            </div>
+
+            <div class="start-buttons">
+                <button id="start-btn" class="btn btn-primary">开始游戏</button>
+                <button id="settings-btn" class="btn btn-secondary">游戏设置</button>
+            </div>
+        </div>
+
+        <!-- 模式选择页 -->
+        <div id="mode-page" class="page">
+            <h2>选择游戏模式</h2>
+            <div class="mode-cards">
+                <div class="mode-card" data-mode="classic">
+                    <div class="mode-icon">🎯</div>
+                    <h3>经典模式</h3>
+                    <p>固定速度，纯长度比拼</p>
+                </div>
+                <div class="mode-card" data-mode="fast">
+                    <div class="mode-icon">⚡</div>
+                    <h3>极速模式</h3>
+                    <p>速度提升50%，道具加速</p>
+                </div>
+                <div class="mode-card" data-mode="item">
+                    <div class="mode-icon">🎁</div>
+                    <h3>道具模式</h3>
+                    <p>随机增益道具，趣味竞技</p>
+                </div>
+            </div>
+            <div class="time-select">
+                <label>游戏时长：</label>
+                <select id="game-time">
+                    <option value="60">60秒</option>
+                    <option value="120" selected>120秒</option>
+                    <option value="300">300秒</option>
+                </select>
+            </div>
+            <button id="mode-confirm-btn" class="btn btn-primary">确认开始</button>
+            <button class="btn btn-back back-to-start">返回</button>
+        </div>
+
+        <!-- 设置页 -->
+        <div id="settings-page" class="page">
+            <h2>游戏设置</h2>
+
+            <div class="settings-section">
+                <h3>🐍 皮肤选择</h3>
+                <div class="skin-grid" id="skin-grid">
+                    <!-- 皮肤由JS动态生成 -->
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🖼️ 背景选择</h3>
+                <div class="bg-grid" id="bg-grid">
+                    <!-- 背景由JS动态生成 -->
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🎵 音效设置</h3>
+                <div class="sound-settings">
+                    <div class="sound-item">
+                        <label>背景音乐</label>
+                        <input type="range" id="bgm-volume" min="0" max="100" value="50">
+                        <span id="bgm-value">50%</span>
+                    </div>
+                    <div class="sound-item">
+                        <label>音效音量</label>
+                        <input type="range" id="sfx-volume" min="0" max="100" value="70">
+                        <span id="sfx-value">70%</span>
+                    </div>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="bgm-mute" checked>
+                        开启背景音乐
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🚀 速度调节</h3>
+                <div class="speed-settings">
+                    <label>基础速度：</label>
+                    <div class="speed-buttons" id="speed-buttons">
+                        <button class="speed-btn" data-speed="1">1x</button>
+                        <button class="speed-btn" data-speed="2">2x</button>
+                        <button class="speed-btn" data-speed="3">3x</button>
+                        <button class="speed-btn" data-speed="4">4x</button>
+                        <button class="speed-btn" data-speed="5">5x</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🎮 摇杆设置</h3>
+                <div class="joystick-settings">
+                    <div class="setting-item">
+                        <label>摇杆颜色</label>
+                        <input type="color" id="joystick-color" value="#4ECDC4">
+                    </div>
+                    <div class="setting-item">
+                        <label>摇杆大小：<span id="joystick-size-value">120</span>px</label>
+                        <input type="range" id="joystick-size" min="80" max="200" value="120">
+                    </div>
+                    <div class="setting-item">
+                        <label>透明度：<span id="joystick-opacity-value">80</span>%</label>
+                        <input type="range" id="joystick-opacity" min="30" max="100" value="80">
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🏠 主页背景</h3>
+                <div class="bg-grid" id="home-bg-grid">
+                    <!-- 主页背景由 JS 动态生成 -->
+                </div>
+            </div>
+
+            <button class="btn btn-back back-to-start">返回</button>
+        </div>
+
+        <!-- 游戏主界面 -->
+        <div id="game-page" class="page">
+            <canvas id="game-canvas"></canvas>
+
+            <!-- 左上角实时排名 -->
+            <div id="ranking-panel" class="ranking-panel">
+                <div class="ranking-header">📊 实时排名 TOP10</div>
+                <div id="ranking-list" class="ranking-list">
+                    <!-- 排名由JS动态生成 -->
+                </div>
+            </div>
+
+            <!-- 游戏 HUD -->
+            <div id="game-hud">
+                <div class="hud-top">
+                    <div class="hud-item">
+                        <span class="hud-label">⏱️ 时间</span>
+                        <span id="game-timer">120</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">🐍 长度</span>
+                        <span id="player-length">50</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">🏆 排名</span>
+                        <span id="player-rank">1/10</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">❤️ 复活</span>
+                        <span id="revive-count">2</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 加速按钮 -->
+            <button id="boost-btn" class="hud-btn-boost">⚡</button>
+
+            <!-- 虚拟摇杆 -->
+            <div id="joystick-container">
+                <div id="joystick-base">
+                    <div id="joystick-stick"></div>
+                </div>
+            </div>
+
+            <!-- 暂停按钮 -->
+            <button id="pause-btn" class="hud-btn">⏸️</button>
+        </div>
+
+        <!-- 结算页 -->
+        <div id="result-page" class="page">
+            <div class="result-container">
+                <h2 id="result-title">游戏结束</h2>
+                <div class="result-rank">
+                    <span id="final-rank">#1</span>
+                </div>
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最终长度</span>
+                        <span id="final-length" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">游戏时长</span>
+                        <span id="final-time" class="stat-value">0秒</span>
+                    </div>
+                </div>
+                <div class="result-message" id="result-message">
+                    恭喜获得第一名！
+                </div>
+                <div class="result-buttons">
+                    <button id="restart-btn" class="btn btn-primary">再来一局</button>
+                    <button class="btn btn-secondary back-to-start">返回主页</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 暂停菜单 -->
+        <div id="pause-menu" class="modal hidden">
+            <div class="modal-content">
+                <h2>游戏暂停</h2>
+                <button id="resume-btn" class="btn btn-primary">继续游戏</button>
+                <button id="quit-btn" class="btn btn-secondary">退出游戏</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
