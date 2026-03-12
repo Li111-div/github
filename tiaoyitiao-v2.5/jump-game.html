@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>跳跳乐 - Jump Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #gameContainer {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: background 0.5s;
+            perspective: 1000px;
+        }
+
+        /* 动态背景 */
+        #gameContainer.sky { background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 100%); }
+        #gameContainer.forest { background: linear-gradient(180deg, #1a3a1a 0%, #2D5A27 50%, #8FBC8F 100%); }
+        #gameContainer.desert { background: linear-gradient(180deg, #D2691E 0%, #F4A460 50%, #FFE4B5 100%); }
+        #gameContainer.night { background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%); }
+
+        /* 3D透视背景层 */
+        .bg-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .bg-layer.far {
+            transform: translateZ(-200px);
+            opacity: 0.3;
+        }
+
+        .bg-layer.mid {
+            transform: translateZ(-100px);
+            opacity: 0.5;
+        }
+
+        /* 云朵装饰 */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            animation: float-cloud linear infinite;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        @keyframes float-cloud {
+            from { transform: translateX(-150px) translateZ(0); }
+            to { transform: translateX(calc(100vw + 150px)) translateZ(0); }
+        }
+
+        #gameContainer.forest .cloud,
+        #gameContainer.desert .cloud,
+        #gameContainer.night .cloud { display: none; }
+
+        /* 星星 */
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 2s ease-in-out infinite;
+            box-shadow: 0 0 10px #fff;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        #gameContainer.sky .star,
+        #gameContainer.forest .star,
+        #gameContainer.desert .star { display: none; }
+
+        /* 3D游戏画布 */
+        #gameCanvas {
+            background: transparent;
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+            transform-style: preserve-3d;
+        }
+
+        /* 改进的蓄力条 */
+        #powerBar {
+            position: absolute;
+            bottom: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 9px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3), 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        #powerBar.active {
+            opacity: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        #powerFill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4ADE80 0%, #4ADE80 30%, #FACC15 60%, #EF4444 90%, #EF4444 100%);
+            border-radius: 9px;
+            transition: width 0.03s linear;
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
+        }
+
+        /* 蓄力分段标记 */
+        .power-markers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 2px;
+            pointer-events: none;
+        }
+
+        .power-marker {
+            width: 2px;
+            height: 100%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* 蓄力区间标签 */
+        .power-labels {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5px;
+            margin-bottom: 8px;
+            pointer-events: none;
+        }
+
+        .power-label {
+            font-size: 10px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        /* 跳跃距离预测 */
+        #trajectoryLine {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        #trajectoryLine.active {
+            opacity: 1;
+        }
+
+        /* 分数显示 */
+        #scoreDisplay {
+            position: absolute;
+            top: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 52px;
+            color: #fff;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 255, 255, 0.6);
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        #scoreDisplay.visible {
+            opacity: 1;
+            display: block;
+        }
+
+        #scoreDisplay.bump {
+            animation: score-bump 0.3s ease-out;
+        }
+
+        @keyframes score-bump {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.2); }
+            100% { transform: translateX(-50%) scale(1); }
+        }
+
+        /* 连击显示 */
+        #comboDisplay {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 26px;
+            color: #FF6B6B;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        #comboDisplay.visible {
+            opacity: 1;
+            display: block;
+        }
+
+        #comboDisplay.pop {
+            animation: combo-pop 0.4s ease-out;
+        }
+
+        @keyframes combo-pop {
+            0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
+            50% { transform: translateX(-50%) scale(1.3); }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+
+        /* 完美着陆提示 */
+        #perfectText {
+            position: absolute;
+            top: 28%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Fredoka One', cursive;
+            font-size: 36px;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.8);
+            opacity: 0;
+            display: none;
+            transition: opacity 0.3s;
+        }
+
+        #perfectText.show {
+            opacity: 1;
+            display: block;
+            animation: perfect-pop 0.6s ease-out;
+        }
+
+        @keyframes perfect-pop {
+            0% { transform: translateX(-50%) scale(0.3) rotate(-10deg); opacity: 0; }
+            40% { transform: translateX(-50%) scale(1.3) rotate(5deg); }
+            100% { transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* 通用界面样式 */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            transition: opacity 0.4s, transform 0.4s;
+            padding: 20px;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        .screen-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 56px;
+            color: #fff;
+            text-shadow: 4px 4px 0 #FF6B6B, 8px 8px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+            text-align: center;
+            animation: title-bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes title-bounce {
+            0%, 100% { transform: translateY(0) rotateX(0deg); }
+            50% { transform: translateY(-12px) rotateX(5deg); }
+        }
+
+        /* 3D按钮 */
+        .btn {
+            font-family: 'Nunito', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            border: none;
+            padding: 18px 52px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+            min-width: 220px;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) translateZ(10px);
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.5), inset 0 2px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0) translateZ(5px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn.secondary:hover {
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.5), inset 0 2px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn.success {
+            background: linear-gradient(135deg, #4ADE80, #22C55E);
+            box-shadow: 0 8px 25px rgba(74, 222, 128, 0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+        }
+
+        /* 菜单按钮容器 */
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* 设置界面 */
+        .settings-section {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 15px;
+            min-width: 320px;
+            max-width: 420px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .settings-section h3 {
+            color: #fff;
+            font-size: 22px;
+            margin-bottom: 22px;
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .option-btn {
+            padding: 16px 12px;
+            border: 3px solid transparent;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.selected {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.25);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .map-btn {
+            padding: 16px;
+            border: 3px solid transparent;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .map-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .map-btn.selected {
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.25);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .map-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .map-icon.sky { background: linear-gradient(135deg, #87CEEB, #E0F6FF); }
+        .map-icon.forest { background: linear-gradient(135deg, #2D5A27, #8FBC8F); }
+        .map-icon.desert { background: linear-gradient(135deg, #F4A460, #FFE4B5); }
+        .map-icon.night { background: linear-gradient(135deg, #1a1a2e, #E94560); }
+
+        /* 排行榜 */
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 15px;
+            min-width: 340px;
+            max-width: 460px;
+            max-height: 65vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .leaderboard h3 {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 22px;
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            color: #fff;
+            transition: all 0.2s;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .leaderboard-item .mode {
+            font-weight: 800;
+        }
+
+        .leaderboard-item .score {
+            font-family: 'Fredoka One', cursive;
+            color: #FFD700;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 22px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #FF6B6B;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+        }
+
+        /* 帮助界面 */
+        .help-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 32px;
+            margin: 15px;
+            min-width: 340px;
+            max-width: 460px;
+            max-height: 65vh;
+            overflow-y: auto;
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .help-content h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 22px;
+            margin-bottom: 16px;
+            color: #FFD700;
+        }
+
+        .help-content p {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .help-content ul {
+            margin-left: 22px;
+            margin-bottom: 16px;
+        }
+
+        .help-content li {
+            margin-bottom: 10px;
+        }
+
+        /* 结算界面 */
+        #gameOverScreen {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+        }
+
+        .game-over-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 52px;
+            color: #FF6B6B;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+            margin-bottom: 35px;
+            animation: game-over-shake 0.5s ease-out;
+        }
+
+        @keyframes game-over-shake {
+            0%, 100% { transform: translateX(0) rotate(0); }
+            20% { transform: translateX(-10px) rotate(-2deg); }
+            40% { transform: translateX(10px) rotate(2deg); }
+            60% { transform: translateX(-5px) rotate(-1deg); }
+            80% { transform: translateX(5px) rotate(1deg); }
+        }
+
+        .final-score {
+            font-size: 26px;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .final-score span {
+            font-family: 'Fredoka One', cursive;
+            font-size: 60px;
+            color: #FFD700;
+            display: block;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255,215,0,0.5);
+        }
+
+        .best-score {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 45px;
+        }
+
+        .best-score span {
+            color: #4ADE80;
+            font-family: 'Fredoka One', cursive;
+            font-size: 26px;
+            text-shadow: 0 0 15px rgba(74,222,128,0.5);
+        }
+
+        .stats-info {
+            color: #fff;
+            font-size: 17px;
+            margin-bottom: 22px;
+            text-align: center;
+        }
+
+        .stats-info span {
+            color: #A29BFE;
+            font-weight: 800;
+        }
+
+        /* 粒子效果 */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: particle-fade 0.8s ease-out forwards;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        @keyframes particle-fade {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .screen-title { font-size: 40px; }
+            .btn { font-size: 18px; padding: 15px 38px; min-width: 190px; }
+            .settings-section { padding: 24px; min-width: 290px; }
+            .game-over-title { font-size: 38px; }
+            .final-score span { font-size: 46px; }
+            #scoreDisplay { font-size: 40px; }
+            #comboDisplay { font-size: 22px; }
+            #powerBar { width: 200px; bottom: 20%; }
+            .leaderboard, .help-content { min-width: 290px; padding: 24px; }
+        }
+
+        @media (max-height: 500px) {
+            .screen-title { font-size: 30px; margin-bottom: 25px; }
+            .btn { padding: 12px 28px; font-size: 16px; }
+            .settings-section h3 { font-size: 16px; margin-bottom: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer" class="sky">
+        <!-- 远景云层 -->
+        <div class="bg-layer far">
+            <div class="cloud" style="width: 120px; height: 45px; top: 10%; animation-duration: 35s;"></div>
+            <div class="cloud" style="width: 90px; height: 35px; top: 20%; animation-duration: 28s; animation-delay: -15s;"></div>
+        </div>
+
+        <!-- 中景云层 -->
+        <div class="bg-layer mid">
+            <div class="cloud" style="width: 80px; height: 30px; top: 15%; animation-duration: 25s;"></div>
+            <div class="cloud" style="width: 60px; height: 22px; top: 28%; animation-duration: 20s; animation-delay: -10s;"></div>
+            <div class="cloud" style="width: 100px; height: 35px; top: 8%; animation-duration: 30s; animation-delay: -5s;"></div>
+        </div>
+
+        <!-- 星星 (夜晚模式) -->
+        <div class="star" style="width: 4px; height: 4px; top: 8%; left: 12%; animation-delay: 0s;"></div>
+        <div class="star" style="width: 3px; height: 3px; top: 18%; left: 75%; animation-delay: 0.5s;"></div>
+        <div class="star" style="width: 5px; height: 5px; top: 35%; left: 20%; animation-delay: 1s;"></div>
+        <div class="star" style="width: 2px; height: 2px; top: 12%; left: 88%; animation-delay: 1.5s;"></div>
+        <div class="star" style="width: 4px; height: 4px; top: 42%; left: 55%; animation-delay: 0.3s;"></div>
+        <div class="star" style="width: 3px; height: 3px; top: 25%; left: 40%; animation-delay: 0.8s;"></div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- 跳跃轨迹线 -->
+        <div id="trajectoryLine"></div>
+
+        <!-- 游戏HUD -->
+        <div id="scoreDisplay">0</div>
+        <div id="comboDisplay"></div>
+        <div id="perfectText">完美!</div>
+
+        <!-- 改进的蓄力条 -->
+        <div id="powerBar">
+            <div class="power-markers">
+                <div class="power-marker"></div>
+                <div class="power-marker"></div>
+                <div class="power-marker"></div>
+                <div class="power-marker"></div>
+            </div>
+            <div id="powerFill"></div>
+        </div>
+        <div class="power-labels">
+            <span class="power-label">小跳</span>
+            <span class="power-label">中跳</span>
+            <span class="power-label">大跳</span>
+        </div>
+
+        <!-- 主菜单 -->
+        <div id="menuScreen" class="screen">
+            <div class="screen-title">跳跳乐</div>
+            <div class="menu-buttons">
+                <button class="btn" id="startBtn">开始游戏</button>
+                <button class="btn secondary" id="settingsBtn">设置</button>
+                <button class="btn secondary" id="leaderboardBtn">排行榜</button>
+                <button class="btn secondary" id="helpBtn">帮助</button>
+            </div>
+            <div class="high-score" style="margin-top: 35px; color: #fff; font-size: 17px;">
+                最高分: <span id="menuHighScore" style="font-family: 'Fredoka One'; font-size: 26px; color: #FFD700; text-shadow: 0 0 15px rgba(255,215,0,0.5);">0</span>
+            </div>
+        </div>
+
+        <!-- 设置界面 -->
+        <div id="settingsScreen" class="screen hidden">
+            <div class="screen-title">游戏设置</div>
+
+            <div class="settings-section">
+                <h3>选择难度</h3>
+                <div class="option-grid" id="difficultyOptions">
+                    <button class="option-btn" data-difficulty="easy">简单</button>
+                    <button class="option-btn selected" data-difficulty="normal">中等</button>
+                    <button class="option-btn" data-difficulty="hard">困难</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>选择地图</h3>
+                <div class="map-grid" id="mapOptions">
+                    <button class="map-btn selected" data-map="sky">
+                        <span class="map-icon sky"></span>
+                        天空之城
+                    </button>
+                    <button class="map-btn" data-map="forest">
+                        <span class="map-icon forest"></span>
+                        森林冒险
+                    </button>
+                    <button class="map-btn" data-map="desert">
+                        <span class="map-icon desert"></span>
+                        沙漠探险
+                    </button>
+                    <button class="map-btn" data-map="night">
+                        <span class="map-icon night"></span>
+                        夜晚城市
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-top: 22px;">
+                <button class="btn" id="confirmSettingsBtn">开始游戏</button>
+                <button class="btn secondary" id="backFromSettingsBtn">返回</button>
+            </div>
+        </div>
+
+        <!-- 排行榜界面 -->
+        <div id="leaderboardScreen" class="screen hidden">
+            <div class="screen-title">排行榜</div>
+
+            <div class="leaderboard-tabs">
+                <button class="tab-btn active" data-tab="all">全部</button>
+                <button class="tab-btn" data-tab="sky">天空</button>
+                <button class="tab-btn" data-tab="forest">森林</button>
+                <button class="tab-btn" data-tab="desert">沙漠</button>
+                <button class="tab-btn" data-tab="night">夜晚</button>
+            </div>
+
+            <div class="leaderboard" id="leaderboardList"></div>
+
+            <button class="btn secondary" id="backFromLeaderboardBtn" style="margin-top: 22px;">返回</button>
+        </div>
+
+        <!-- 帮助界面 -->
+        <div id="helpScreen" class="screen hidden">
+            <div class="screen-title">游戏帮助</div>
+
+            <div class="help-content">
+                <h3>游戏玩法</h3>
+                <p>按住屏幕或鼠标进行蓄力，松开后角色将向前跳跃。跳到下一个平台即可得分！</p>
+
+                <h3>蓄力技巧</h3>
+                <ul>
+                    <li><strong>小跳</strong> (0-30%): 短距离跳跃，适合近平台</li>
+                    <li><strong>中跳</strong> (30-60%): 中等距离，常用跳跃距离</li>
+                    <li><strong>大跳</strong> (60-100%): 远距离跳跃，需要精准控制</li>
+                </ul>
+
+                <h3>操作方式</h3>
+                <ul>
+                    <li><strong>电脑</strong>: 鼠标左键按住蓄力，松开跳跃</li>
+                    <li><strong>手机</strong>: 手指按住屏幕蓄力，松开跳跃</li>
+                </ul>
+
+                <h3>得分技巧</h3>
+                <ul>
+                    <li>跳到平台<strong>中心区域</strong>可获得额外加分</li>
+                    <li>连续成功跳跃会累积<strong>连击倍数</strong></li>
+                    <li>3连击 x2 倍，5连击 x3 倍</li>
+                </ul>
+
+                <h3>难度说明</h3>
+                <ul>
+                    <li><strong>简单</strong>: 平台宽、间距小，适合新手</li>
+                    <li><strong>中等</strong>: 平衡挑战</li>
+                    <li><strong>困难</strong>: 平台窄、间距大，适合高手</li>
+                </ul>
+            </div>
+
+            <button class="btn secondary" id="backFromHelpBtn" style="margin-top: 22px;">返回</button>
+        </div>
+
+        <!-- 结算界面 -->
+        <div id="gameOverScreen" class="screen hidden">
+            <div class="game-over-title">游戏结束</div>
+            <div class="final-score">
+                得分
+                <span id="finalScore">0</span>
+            </div>
+            <div class="best-score">最高分: <span id="highScoreEnd">0</span></div>
+            <div class="stats-info">
+                难度: <span id="gameDifficulty">中等</span> |
+                地图: <span id="gameMap">天空之城</span>
+            </div>
+            <button class="btn" id="restartBtn">再玩一次</button>
+            <button class="btn secondary" id="backToMenuBtn">返回菜单</button>
+        </div>
+    </div>
+
+    <script>
+        // 难度配置 - 改进的数值
+        const DIFFICULTY = {
+            easy: { name: '简单', minGap: 60, maxGap: 140, minWidth: 85, maxWidth: 145, maxPower: 2.2, gravity: 0.35, multiplier: 1.0 },
+            normal: { name: '中等', minGap: 75, maxGap: 190, minWidth: 60, maxWidth: 120, maxPower: 1.6, gravity: 0.55, multiplier: 1.2 },
+            hard: { name: '困难', minGap: 110, maxGap: 260, minWidth: 48, maxWidth: 95, maxPower: 1.1, gravity: 0.75, multiplier: 1.5 }
+        };
+
+        // 地图配置
+        const MAPS = {
+            sky: {
+                name: '天空之城',
+                containerClass: 'sky',
+                platformColors: ['#4A90D9', '#5BA3EC'],
+                platformSideColors: ['#3A7BC8', '#4A93DC'],
+                playerColor: '#FF6B6B',
+                ambientLight: 'rgba(135, 206, 235, 0.1)'
+            },
+            forest: {
+                name: '森林冒险',
+                containerClass: 'forest',
+                platformColors: ['#8B4513', '#A0522D'],
+                platformSideColors: ['#6B350F', '#8B4512'],
+                playerColor: '#90EE90',
+                ambientLight: 'rgba(45, 90, 39, 0.15)'
+            },
+            desert: {
+                name: '沙漠探险',
+                containerClass: 'desert',
+                platformColors: ['#D2691E', '#CD853F'],
+                platformSideColors: ['#A05214', '#B8732F'],
+                playerColor: '#FFD700',
+                ambientLight: 'rgba(244, 164, 96, 0.1)'
+            },
+            night: {
+                name: '夜晚城市',
+                containerClass: 'night',
+                platformColors: ['#E94560', '#0F3460'],
+                platformSideColors: ['#C93650', '#0A2540'],
+                playerColor: '#00D9FF',
+                ambientLight: 'rgba(26, 26, 46, 0.2)'
+            }
+        };
+
+        // 游戏配置
+        const CONFIG = {
+            canvasWidth: 600,
+            canvasHeight: 800,
+            playerRadius: 22,
+            platformHeight: 16,
+            platformDepth: 12,
+            perfectZone: 'rgba(255, 215, 0, 0.4)'
+        };
+
+        // 游戏状态
+        const game = {
+            canvas: null,
+            ctx: null,
+            state: 'menu',
+            currentScreen: 'menu',
+            player: { x: 0, y: 0, vy: 0, vz: 0 },
+            platforms: [],
+            cameraX: 0,
+            cameraY: 0,
+            score: 0,
+            highScore: 0,
+            combo: 0,
+            isPowering: false,
+            power: 0,
+            powerTime: 0,
+            lastTimestamp: 0,
+            difficulty: 'normal',
+            map: 'sky',
+            particles: []
+        };
+
+        // DOM 元素
+        const elements = {
+            container: document.getElementById('gameContainer'),
+            canvas: document.getElementById('gameCanvas'),
+            scoreDisplay: document.getElementById('scoreDisplay'),
+            comboDisplay: document.getElementById('comboDisplay'),
+            perfectText: document.getElementById('perfectText'),
+            powerBar: document.getElementById('powerBar'),
+            powerFill: document.getElementById('powerFill'),
+            trajectoryLine: document.getElementById('trajectoryLine'),
+            menuScreen: document.getElementById('menuScreen'),
+            settingsScreen: document.getElementById('settingsScreen'),
+            leaderboardScreen: document.getElementById('leaderboardScreen'),
+            helpScreen: document.getElementById('helpScreen'),
+            gameOverScreen: document.getElementById('gameOverScreen'),
+            finalScore: document.getElementById('finalScore'),
+            highScoreEnd: document.getElementById('highScoreEnd'),
+            menuHighScore: document.getElementById('menuHighScore'),
+            gameDifficulty: document.getElementById('gameDifficulty'),
+            gameMap: document.getElementById('gameMap'),
+            leaderboardList: document.getElementById('leaderboardList')
+        };
+
+        // 初始化
+        function init() {
+            game.canvas = elements.canvas;
+            game.ctx = game.canvas.getContext('2d');
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            loadSettings();
+            updateHighScores();
+            bindEvents();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function resizeCanvas() {
+            const container = elements.container;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            let canvasWidth, canvasHeight;
+
+            if (width < 768) {
+                canvasWidth = Math.min(width, 400);
+                canvasHeight = height;
+            } else {
+                canvasWidth = CONFIG.canvasWidth;
+                canvasHeight = Math.min(height, CONFIG.canvasHeight);
+            }
+
+            game.canvas.width = canvasWidth;
+            game.canvas.height = canvasHeight;
+            CONFIG.displayWidth = canvasWidth;
+            CONFIG.displayHeight = canvasHeight;
+        }
+
+        function loadSettings() {
+            const savedDifficulty = localStorage.getItem('jumpJourneyDifficulty');
+            const savedMap = localStorage.getItem('jumpJourneyMap');
+
+            if (savedDifficulty) game.difficulty = savedDifficulty;
+            if (savedMap) game.map = savedMap;
+
+            updateSettingsUI();
+            applyMap();
+        }
+
+        function updateSettingsUI() {
+            document.querySelectorAll('#difficultyOptions .option-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.difficulty === game.difficulty);
+            });
+
+            document.querySelectorAll('#mapOptions .map-btn').forEach(btn => {
+                btn.classList.toggle('selected', btn.dataset.map === game.map);
+            });
+        }
+
+        function applyMap() {
+            const mapConfig = MAPS[game.map];
+            elements.container.className = mapConfig.containerClass;
+            CONFIG.colors = {
+                player: mapConfig.playerColor,
+                playerFace: '#2C3E50',
+                playerHighlight: 'rgba(255, 255, 255, 0.35)',
+                platform1: mapConfig.platformColors[0],
+                platform2: mapConfig.platformColors[1],
+                platformSide1: mapConfig.platformSideColors[0],
+                platformSide2: mapConfig.platformSideColors[1],
+                perfectZone: 'rgba(255, 215, 0, 0.4)',
+                shadow: 'rgba(0, 0, 0, 0.25)',
+                ambient: mapConfig.ambientLight
+            };
+        }
+
+        function saveSettings() {
+            localStorage.setItem('jumpJourneyDifficulty', game.difficulty);
+            localStorage.setItem('jumpJourneyMap', game.map);
+        }
+
+        function updateHighScores() {
+            const scores = getAllHighScores();
+            let maxScore = 0;
+            Object.values(scores).forEach(score => {
+                if (score > maxScore) maxScore = score;
+            });
+            game.highScore = maxScore;
+            elements.menuHighScore.textContent = maxScore;
+        }
+
+        function getAllHighScores() {
+            const saved = localStorage.getItem('jumpJourneyScores');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        function getHighScore(difficulty, map) {
+            const scores = getAllHighScores();
+            return scores[`${difficulty}_${map}`] || 0;
+        }
+
+        function saveHighScore(difficulty, map, score) {
+            const scores = getAllHighScores();
+            const key = `${difficulty}_${map}`;
+            if (!scores[key] || score > scores[key]) {
+                scores[key] = score;
+                localStorage.setItem('jumpJourneyScores', JSON.stringify(scores));
+            }
+        }
+
+        // 界面管理
+        function showScreen(screenName) {
+            game.currentScreen = screenName;
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+
+            switch (screenName) {
+                case 'menu':
+                    elements.menuScreen.classList.remove('hidden');
+                    updateHighScores();
+                    break;
+                case 'settings':
+                    elements.settingsScreen.classList.remove('hidden');
+                    updateSettingsUI();
+                    break;
+                case 'leaderboard':
+                    elements.leaderboardScreen.classList.remove('hidden');
+                    renderLeaderboard('all');
+                    break;
+                case 'help':
+                    elements.helpScreen.classList.remove('hidden');
+                    break;
+                case 'game':
+                    game.state = 'playing';
+                    elements.menuScreen.classList.add('hidden');
+                    elements.settingsScreen.classList.add('hidden');
+                    elements.leaderboardScreen.classList.add('hidden');
+                    elements.helpScreen.classList.add('hidden');
+                    elements.gameOverScreen.classList.add('hidden');
+                    elements.canvas.style.display = 'block';
+                    elements.scoreDisplay.classList.add('visible');
+                    startGame();
+                    break;
+                case 'gameOver':
+                    elements.gameOverScreen.classList.remove('hidden');
+                    break;
+            }
+        }
+
+        function renderLeaderboard(tab) {
+            const scores = getAllHighScores();
+            const list = [];
+
+            Object.entries(scores).forEach(([key, score]) => {
+                const [difficulty, map] = key.split('_');
+                if (tab === 'all' || map === tab) {
+                    list.push({ difficulty, map, score });
+                }
+            });
+
+            list.sort((a, b) => b.score - a.score);
+            list.splice(10);
+
+            let html = '';
+            if (list.length === 0) {
+                html = '<div style="color: #fff; text-align: center; padding: 20px;">暂无记录</div>';
+            } else {
+                list.forEach((item, index) => {
+                    const difficultyName = DIFFICULTY[item.difficulty].name;
+                    const mapName = MAPS[item.map].name;
+                    html += `<div class="leaderboard-item"><span class="mode">${index + 1}. ${mapName} - ${difficultyName}</span><span class="score">${item.score}</span></div>`;
+                });
+            }
+
+            elements.leaderboardList.innerHTML = html;
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tab);
+            });
+        }
+
+        function bindEvents() {
+            document.getElementById('startBtn').addEventListener('click', () => showScreen('game'));
+            document.getElementById('settingsBtn').addEventListener('click', () => showScreen('settings'));
+            document.getElementById('leaderboardBtn').addEventListener('click', () => showScreen('leaderboard'));
+            document.getElementById('helpBtn').addEventListener('click', () => showScreen('help'));
+
+            document.querySelectorAll('#difficultyOptions .option-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    game.difficulty = btn.dataset.difficulty;
+                    updateSettingsUI();
+                });
+            });
+
+            document.querySelectorAll('#mapOptions .map-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    game.map = btn.dataset.map;
+                    updateSettingsUI();
+                    applyMap();
+                });
+            });
+
+            document.getElementById('confirmSettingsBtn').addEventListener('click', () => {
+                saveSettings();
+                showScreen('game');
+            });
+
+            document.getElementById('backFromSettingsBtn').addEventListener('click', () => showScreen('menu'));
+            document.getElementById('backFromLeaderboardBtn').addEventListener('click', () => showScreen('menu'));
+            document.getElementById('backFromHelpBtn').addEventListener('click', () => showScreen('menu'));
+
+            // 游戏操作
+            const startAction = (e) => {
+                e.preventDefault();
+                if (game.state === 'playing') {
+                    game.isPowering = true;
+                    game.powerTime = 0;
+                    elements.powerBar.classList.add('active');
+                    elements.trajectoryLine.classList.add('active');
+                }
+            };
+
+            const endAction = (e) => {
+                e.preventDefault();
+                if (game.state === 'playing' && game.isPowering) {
+                    jump();
+                }
+            };
+
+            document.addEventListener('mousedown', startAction);
+            document.addEventListener('mouseup', endAction);
+            document.addEventListener('touchstart', startAction, { passive: false });
+            document.addEventListener('touchend', endAction, { passive: false });
+
+            document.getElementById('restartBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showScreen('game');
+            });
+
+            document.getElementById('backToMenuBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                game.state = 'menu';
+                elements.canvas.style.display = 'none';
+                elements.scoreDisplay.classList.remove('visible');
+                elements.comboDisplay.classList.remove('visible');
+                elements.powerBar.classList.remove('active');
+                showScreen('menu');
+            });
+        }
+
+        function startGame() {
+            game.state = 'playing';
+            game.score = 0;
+            game.combo = 0;
+            game.cameraX = 0;
+            game.cameraY = 0;
+            game.isPowering = false;
+            game.power = 0;
+            game.particles = [];
+
+            const diff = DIFFICULTY[game.difficulty];
+            CONFIG.minGap = diff.minGap;
+            CONFIG.maxGap = diff.maxGap;
+            CONFIG.platformMinWidth = diff.minWidth;
+            CONFIG.platformMaxWidth = diff.maxWidth;
+            CONFIG.maxPower = diff.maxPower;
+            CONFIG.gravity = diff.gravity;
+
+            createInitialPlatforms();
+            game.player.x = game.platforms[0].x + game.platforms[0].width / 2;
+            game.player.y = game.platforms[0].y - CONFIG.playerRadius;
+            game.player.vy = 0;
+
+            elements.scoreDisplay.textContent = '0';
+            elements.scoreDisplay.classList.add('visible');
+            elements.comboDisplay.classList.remove('visible');
+            elements.powerBar.classList.remove('active');
+            elements.powerFill.style.width = '0%';
+            elements.trajectoryLine.classList.remove('active');
+        }
+
+        function createInitialPlatforms() {
+            game.platforms = [];
+
+            const firstPlatform = {
+                x: 100,
+                y: getPlatformY(0),
+                width: 105,
+                height: CONFIG.platformHeight,
+                depth: CONFIG.platformDepth,
+                color: 0
+            };
+            game.platforms.push(firstPlatform);
+
+            for (let i = 1; i < 10; i++) {
+                addPlatform();
+            }
+        }
+
+        function getPlatformY(index) {
+            return CONFIG.displayHeight * 0.72;
+        }
+
+        function addPlatform() {
+            const lastPlatform = game.platforms[game.platforms.length - 1];
+            const difficulty = Math.min(game.score / 40, 1);
+            const diff = DIFFICULTY[game.difficulty];
+
+            const gap = diff.minGap + Math.random() * (diff.maxGap - diff.minGap) * (0.4 + difficulty * 0.6);
+            const widthRange = diff.maxWidth - diff.minWidth;
+            const width = diff.maxWidth - Math.random() * widthRange * (0.25 + difficulty * 0.75);
+
+            let newX = lastPlatform.x + lastPlatform.width / 2 + gap;
+
+            if (Math.random() > 0.45) {
+                newX += (Math.random() - 0.5) * 180;
+            }
+
+            const platform = {
+                x: newX,
+                y: getPlatformY(game.platforms.length),
+                width: Math.max(width, 38),
+                height: CONFIG.platformHeight,
+                depth: CONFIG.platformDepth,
+                color: game.platforms.length % 2
+            };
+
+            game.platforms.push(platform);
+        }
+
+        function jump() {
+            game.isPowering = false;
+            elements.powerBar.classList.remove('active');
+            elements.trajectoryLine.classList.remove('active');
+
+            const diff = DIFFICULTY[game.difficulty];
+            const powerRatio = game.powerTime / diff.maxPower;
+
+            // 改进的跳跃物理
+            const basePower = 13;
+            const powerBonus = powerRatio * 9;
+            const jumpPower = basePower + powerBonus;
+
+            // 根据蓄力程度添加轻微的Z轴位移(模拟跳跃高度变化)
+            game.player.vy = -jumpPower;
+            game.player.vz = powerRatio * 3; // Z轴速度
+
+            game.state = 'jumping';
+
+            // 跳跃粒子效果
+            createJumpParticles();
+
+            game.power = 0;
+            game.powerTime = 0;
+            elements.powerFill.style.width = '0%';
+
+            // 更新轨迹线显示下一跳的范围
+            updateTrajectoryPreview();
+        }
+
+        function updateTrajectoryPreview() {
+            const diff = DIFFICULTY[game.difficulty];
+            const baseWidth = 100;
+            const maxExtraWidth = diff.maxGap * 0.9;
+            const totalWidth = baseWidth + maxExtraWidth;
+
+            elements.trajectoryLine.style.width = `${totalWidth * (CONFIG.displayWidth / CONFIG.canvasWidth) * 0.5}px`;
+        }
+
+        function createJumpParticles() {
+            const x = game.player.x * (CONFIG.displayWidth / CONFIG.canvasWidth);
+            const y = game.player.y;
+
+            for (let i = 0; i < 6; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const size = 6 + Math.random() * 6;
+                const angle = (Math.PI + (Math.random() - 0.5) * Math.PI / 2);
+                const distance = 20 + Math.random() * 25;
+                const targetX = x + Math.cos(angle) * distance;
+                const targetY = y + Math.sin(angle) * distance;
+
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.background = CONFIG.colors.player;
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.color = CONFIG.colors.player;
+
+                elements.container.appendChild(particle);
+
+                particle.animate([
+                    { left: x + 'px', top: y + 'px', transform: 'scale(1)' },
+                    { left: targetX + 'px', top: targetY + 'px', transform: 'scale(0)' }
+                ], { duration: 500, easing: 'ease-out' });
+
+                setTimeout(() => particle.remove(), 500);
+            }
+        }
+
+        function update(timestamp) {
+            if (!game.lastTimestamp) game.lastTimestamp = timestamp;
+            const deltaTime = (timestamp - game.lastTimestamp) / 16.67;
+            game.lastTimestamp = timestamp;
+
+            // 更新蓄力
+            if (game.isPowering) {
+                const diff = DIFFICULTY[game.difficulty];
+                game.powerTime += deltaTime * 0.018;
+                if (game.powerTime > diff.maxPower) {
+                    game.powerTime = diff.maxPower;
+                }
+                const powerPercent = (game.powerTime / diff.maxPower) * 100;
+                elements.powerFill.style.width = powerPercent + '%';
+
+                // 更新轨迹线
+                const baseWidth = 80;
+                const diff2 = DIFFICULTY[game.difficulty];
+                const maxExtra = diff2.maxGap * 0.85;
+                const currentWidth = baseWidth + (powerPercent / 100) * maxExtra;
+                elements.trajectoryLine.style.width = `${currentWidth * (CONFIG.displayWidth / CONFIG.canvasWidth) * 0.45}px`;
+            }
+
+            // 更新玩家
+            if (game.state === 'jumping') {
+                game.player.vy += CONFIG.gravity * deltaTime;
+                game.player.y += game.player.vy * deltaTime;
+
+                // X轴移动 - 更平滑的加速
+                const powerRatio = game.powerTime / DIFFICULTY[game.difficulty].maxPower;
+                const moveSpeed = 8 + powerRatio * 7;
+                game.player.x += moveSpeed * deltaTime;
+
+                // 相机跟随 - 添加平滑插值
+                const targetCameraX = game.player.x - CONFIG.displayWidth * 0.32;
+                game.cameraX += (targetCameraX - game.cameraX) * 0.08;
+
+                checkLanding();
+            }
+
+            // 平台管理
+            game.platforms = game.platforms.filter(p => p.x + p.width > game.cameraX - 120);
+
+            const lastPlatform = game.platforms[game.platforms.length - 1];
+            if (lastPlatform && lastPlatform.x < game.cameraX + CONFIG.displayWidth + 250) {
+                addPlatform();
+            }
+
+            // 更新粒子
+            updateParticles();
+
+            checkFall();
+        }
+
+        function updateParticles() {
+            game.particles = game.particles.filter(p => {
+                p.life -= 0.02;
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.1;
+                return p.life > 0;
+            });
+        }
+
+        function checkLanding() {
+            for (const platform of game.platforms) {
+                if (game.player.vy > 0 &&
+                    game.player.y + CONFIG.playerRadius >= platform.y &&
+                    game.player.y + CONFIG.playerRadius <= platform.y + platform.height + 12 &&
+                    game.player.x >= platform.x - 5 &&
+                    game.player.x <= platform.x + platform.width + 5) {
+                    landOnPlatform(platform);
+                    return;
+                }
+            }
+        }
+
+        function landOnPlatform(platform) {
+            game.player.y = platform.y - CONFIG.playerRadius;
+            game.player.vy = 0;
+            game.player.vz = 0;
+            game.state = 'playing';
+
+            game.combo++;
+            const centerX = platform.x + platform.width / 2;
+            const distFromCenter = Math.abs(game.player.x - centerX);
+            const perfectZone = platform.width * 0.28;
+
+            let points = 1;
+            if (distFromCenter < perfectZone) {
+                points = 3;
+                showPerfect();
+            }
+
+            let multiplier = 1;
+            if (game.combo >= 6) multiplier = 4;
+            else if (game.combo >= 4) multiplier = 3;
+            else if (game.combo >= 2) multiplier = 2;
+
+            const diff = DIFFICULTY[game.difficulty];
+            game.score += points * multiplier * diff.multiplier;
+            game.score = Math.floor(game.score);
+
+            updateScoreDisplay();
+            showCombo();
+            createLandParticles();
+            updateTrajectoryPreview();
+        }
+
+        function showPerfect() {
+            elements.perfectText.classList.add('show');
+            setTimeout(() => elements.perfectText.classList.remove('show'), 700);
+        }
+
+        function updateScoreDisplay() {
+            elements.scoreDisplay.textContent = game.score;
+            elements.scoreDisplay.classList.remove('bump');
+            void elements.scoreDisplay.offsetWidth;
+            elements.scoreDisplay.classList.add('bump');
+        }
+
+        function showCombo() {
+            if (game.combo >= 2) {
+                const multiplier = game.combo >= 6 ? 4 : (game.combo >= 4 ? 3 : 2);
+                elements.comboDisplay.textContent = `${game.combo}连击 x${multiplier}`;
+                elements.comboDisplay.classList.add('visible');
+                elements.comboDisplay.classList.remove('pop');
+                void elements.comboDisplay.offsetWidth;
+                elements.comboDisplay.classList.add('pop');
+            } else {
+                elements.comboDisplay.classList.remove('visible');
+            }
+        }
+
+        function createLandParticles() {
+            const x = game.player.x * (CONFIG.displayWidth / CONFIG.canvasWidth);
+            const y = game.player.y;
+            const colors = ['#FFD700', '#FF6B6B', '#4ADE80', '#60A5FA', '#A78BFA'];
+
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                const size = 7 + Math.random() * 9;
+                const angle = (Math.PI * 2 / 10) * i;
+                const distance = 25 + Math.random() * 35;
+                const targetX = x + Math.cos(angle) * distance;
+                const targetY = y + Math.sin(angle) * distance;
+
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+                elements.container.appendChild(particle);
+
+                particle.animate([
+                    { left: x + 'px', top: y + 'px', transform: 'scale(1)' },
+                    { left: targetX + 'px', top: targetY + 'px', transform: 'scale(0)' }
+                ], { duration: 600, easing: 'ease-out' });
+
+                setTimeout(() => particle.remove(), 600);
+            }
+        }
+
+        function checkFall() {
+            if (game.player.y > CONFIG.displayHeight + 120) {
+                gameOver();
+            }
+        }
+
+        function gameOver() {
+            game.state = 'gameOver';
+
+            saveHighScore(game.difficulty, game.map, game.score);
+
+            elements.finalScore.textContent = game.score;
+            elements.highScoreEnd.textContent = getHighScore(game.difficulty, game.map);
+            elements.gameDifficulty.textContent = DIFFICULTY[game.difficulty].name;
+            elements.gameMap.textContent = MAPS[game.map].name;
+
+            showScreen('gameOver');
+        }
+
+        // 3D渲染
+        function render() {
+            const ctx = game.ctx;
+            const width = game.canvas.width;
+            const height = game.canvas.height;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // 绘制环境光
+            ctx.fillStyle = CONFIG.colors.ambient;
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.save();
+            ctx.translate(-game.cameraX * (width / CONFIG.canvasWidth), 0);
+
+            // 绘制平台 - 3D效果
+            for (const platform of game.platforms) {
+                draw3DPlatform(ctx, platform);
+            }
+
+            // 绘制玩家 - 3D效果
+            draw3DPlayer(ctx);
+
+            ctx.restore();
+        }
+
+        function draw3DPlatform(ctx, platform) {
+            const scaleX = CONFIG.displayWidth / CONFIG.canvasWidth;
+            const x = platform.x * scaleX;
+            const y = platform.y;
+            const w = platform.width * scaleX;
+            const h = platform.height;
+            const d = platform.depth;
+
+            const color = platform.color === 0 ? CONFIG.colors.platform1 : CONFIG.colors.platform2;
+            const sideColor = platform.color === 0 ? CONFIG.colors.platformSide1 : CONFIG.colors.platformSide2;
+
+            // 3D平台 - 侧面 (产生深度感)
+            ctx.fillStyle = sideColor;
+            ctx.beginPath();
+            ctx.moveTo(x, y + h);
+            ctx.lineTo(x + d, y + h + d * 0.5);
+            ctx.lineTo(x + d, y + h + d * 0.5 - 2);
+            ctx.lineTo(x, y + h - 2);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(x + w, y + h);
+            ctx.lineTo(x + w + d, y + h + d * 0.5);
+            ctx.lineTo(x + w + d, y + d * 0.5);
+            ctx.lineTo(x + w, y);
+            ctx.closePath();
+            ctx.fill();
+
+            // 顶面 (平台主体)
+            ctx.fillStyle = color;
+            roundRect3D(ctx, x, y, w, h, 6);
+            ctx.fill();
+
+            // 高光边缘
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.beginPath();
+            ctx.roundRect(x + 3, y + 2, w - 6, h / 3, 4);
+            ctx.fill();
+
+            // 阴影
+            ctx.fillStyle = CONFIG.colors.shadow;
+            ctx.beginPath();
+            ctx.ellipse(x + w / 2, y + h + d * 0.5 + 5, w / 2.5, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 完美着陆区域
+            if (game.state === 'playing' || game.state === 'jumping') {
+                const centerX = x + w / 2;
+                const perfectZone = w * 0.28;
+
+                ctx.fillStyle = CONFIG.colors.perfectZone;
+                ctx.fillRect(centerX - perfectZone, y, perfectZone * 2, h);
+
+                // 完美区域边框
+                ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([4, 4]);
+                ctx.strokeRect(centerX - perfectZone, y + h - 3, perfectZone * 2, 3);
+                ctx.setLineDash([]);
+            }
+        }
+
+        function draw3DPlayer(ctx) {
+            const scaleX = CONFIG.displayWidth / CONFIG.canvasWidth;
+            const x = game.player.x * scaleX;
+            const y = game.player.y;
+            const r = CONFIG.playerRadius;
+
+            // 挤压拉伸效果
+            let scaleY = 1, scaleXPlayer = 1;
+
+            if (game.isPowering) {
+                const diff = DIFFICULTY[game.difficulty];
+                const powerRatio = game.powerTime / diff.maxPower;
+                scaleY = 1 - powerRatio * 0.35;
+                scaleXPlayer = 1 + powerRatio * 0.25;
+            } else if (game.state === 'jumping') {
+                if (game.player.vy < 0) {
+                    scaleY = 1.25;
+                    scaleXPlayer = 0.8;
+                } else {
+                    scaleY = 0.85;
+                    scaleXPlayer = 1.15;
+                }
+            }
+
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scaleXPlayer, scaleY);
+
+            // 3D阴影
+            const shadowScale = 1 - Math.min((y - (CONFIG.displayHeight * 0.65)) / 300, 0.5);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.beginPath();
+            ctx.ellipse(0, r + 5, r * 0.9 * shadowScale, r * 0.35 * shadowScale, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 身体 - 3D球体效果
+            const gradient = ctx.createRadialGradient(-r * 0.3, -r * 0.3, 0, 0, 0, r);
+            gradient.addColorStop(0, lightenColor(CONFIG.colors.player, 40));
+            gradient.addColorStop(0.7, CONFIG.colors.player);
+            gradient.addColorStop(1, darkenColor(CONFIG.colors.player, 20));
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 高光
+            ctx.fillStyle = CONFIG.colors.playerHighlight;
+            ctx.beginPath();
+            ctx.arc(-r * 0.35, -r * 0.35, r * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 眼睛 - 3D效果
+            const eyeOffsetX = 7, eyeOffsetY = -3, eyeRadius = 5;
+
+            // 眼白
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(-eyeOffsetX, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(eyeOffsetX, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 眼珠 - 根据状态变化
+            ctx.fillStyle = CONFIG.colors.playerFace;
+            const pupilOffset = game.state === 'jumping' && game.player.vy < 0 ? -1 : 1;
+            ctx.beginPath();
+            ctx.arc(-eyeOffsetX + pupilOffset, eyeOffsetY, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(eyeOffsetX + pupilOffset, eyeOffsetY, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 微笑 - 表情变化
+            ctx.strokeStyle = CONFIG.colors.playerFace;
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+
+            if (game.state === 'jumping' && game.player.vy < 0) {
+                // 上升时兴奋表情
+                ctx.beginPath();
+                ctx.arc(0, 0, 8, 0.1, Math.PI - 0.1);
+                ctx.stroke();
+            } else if (game.isPowering) {
+                // 蓄力时努力表情
+                ctx.beginPath();
+                ctx.moveTo(-6, 8);
+                ctx.lineTo(6, 8);
+                ctx.stroke();
+            } else {
+                // 正常微笑
+                ctx.beginPath();
+                ctx.arc(0, 3, 7, 0.15, Math.PI - 0.15);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        // 辅助函数
+        function roundRect3D(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function lightenColor(color, percent) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return '#' + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+
+        function darkenColor(color, percent) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) - amt;
+            const G = (num >> 8 & 0x00FF) - amt;
+            const B = (num & 0x0000FF) - amt;
+            return '#' + (0x1000000 + (R > 0 ? R : 0) * 0x10000 + (G > 0 ? G : 0) * 0x100 + (B > 0 ? B : 0)).toString(16).slice(1);
+        }
+
+        function gameLoop(timestamp) {
+            if (game.state === 'playing' || game.state === 'jumping') {
+                update(timestamp);
+            }
+            if (game.state !== 'menu') {
+                render();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
