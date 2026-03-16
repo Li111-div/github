@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>贪吃蛇 360°大对决</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/home-new.css">
+</head>
+<body>
+    <!-- 新手教程数据 -->
+    <script src="js/tutorial.js"></script>
+    <!-- 历史记录弹窗样式 -->
+    <link rel="stylesheet" href="css/history-modal.css">
+    <div id="game-container">
+        <!-- 启动页 - 全新设计 -->
+        <div id="start-page" class="page active">
+            <!-- 左侧区域：食物图鉴 + 设置按钮 -->
+            <div class="start-page-left">
+                <!-- 食物图鉴窗口 -->
+                <div class="info-window food-guide-window">
+                    <h3 class="window-title">🍎 食物图鉴</h3>
+                    <div class="food-guide-content">
+                        <div class="food-item">
+                            <div class="food-icon normal-food">🍎</div>
+                            <span class="food-name">普通豆豆</span>
+                            <span class="food-desc">+10 分</span>
+                        </div>
+                        <div class="food-item">
+                            <div class="food-icon big-food">⭐</div>
+                            <span class="food-name">超级豆豆</span>
+                            <span class="food-desc">+50 分</span>
+                        </div>
+                        <div class="food-item">
+                            <div class="food-icon ice-food">❄️</div>
+                            <span class="food-name">寒冰豆豆</span>
+                            <span class="food-desc">静止 3 秒</span>
+                        </div>
+                        <div class="food-item">
+                            <div class="food-icon speed-food">⚡</div>
+                            <span class="food-name">速度豆豆</span>
+                            <span class="food-desc">永久加速</span>
+                        </div>
+                        <div class="food-item">
+                            <div class="food-icon reverse-food">🔄</div>
+                            <span class="food-name">反向豆豆</span>
+                            <span class="food-desc">反转 3 秒</span>
+                        </div>
+                        <div class="food-item">
+                            <div class="food-icon invincible-food">👑</div>
+                            <span class="food-name">无敌豆豆</span>
+                            <span class="food-desc">无敌 5 秒</span>
+                        </div>
+                    </div>
+                </div>
+                    
+                <!-- 设置按钮 -->
+                <button id="settings-btn" class="btn-settings-home">⚙️ 游戏设置</button>
+            </div>
+                
+            <!-- 中间区域：游戏标题 + 皮肤展示 + 切换按钮 -->
+            <div class="start-page-center">
+                <!-- 游戏标题 -->
+                <div class="game-title-section">
+                    <h1 class="game-title-main">🐍 蛇吞豆豆计划 🐍</h1>
+                    <p class="game-subtitle">SNAKE FOOD PLAN</p>
+                </div>
+                    
+                <!-- 当前皮肤展示 -->
+                <div class="skin-preview-section">
+                    <div class="skin-preview-window">
+                        <div class="current-skin-display" id="current-skin-display">
+                            <!-- 动态显示当前皮肤 -->
+                        </div>
+                        <div class="skin-info">
+                            <h4 class="skin-name" id="current-skin-name">像素风</h4>
+                            <p class="skin-effect" id="current-skin-effect">经典风格</p>
+                        </div>
+                    </div>
+                </div>
+                    
+                <!-- 切换战服按钮 -->
+                <button id="change-skin-btn" class="btn-change-skin">🎨 切换战服</button>
+            </div>
+                
+            <!-- 右侧区域：排行榜 + 开始游戏按钮 -->
+            <div class="start-page-right">
+                <!-- 排行榜窗口 -->
+                <div class="info-window ranking-window">
+                    <h3 class="window-title">🏆 荣誉榜</h3>
+                    <div id="home-ranking-list" class="ranking-list-home">
+                        <!-- 排名由 JS 动态生成 -->
+                    </div>
+                    <button id="view-history-btn" class="btn-view-history">📜 查看全部</button>
+                </div>
+                    
+                <!-- 开始游戏大按钮 -->
+                <button id="start-btn" class="btn-start-game">
+                    <span class="start-btn-text">🎮 开始游戏</span>
+                </button>
+                    
+                <!-- 辅助按钮 -->
+                <div class="home-action-buttons">
+                    <button id="tutorial-btn" class="btn-home-action">🎓 教程</button>
+                    <button id="about-btn" class="btn-home-action">ℹ️ 关于</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模式选择页 -->
+        <div id="mode-page" class="page">
+            <h2>选择游戏模式</h2>
+            <div class="mode-cards">
+                <div class="mode-card" data-mode="classic">
+                    <div class="mode-icon">🎯</div>
+                    <h3>经典模式</h3>
+                    <p>固定速度，纯长度比拼</p>
+                </div>
+                <div class="mode-card" data-mode="fast">
+                    <div class="mode-icon">⚡</div>
+                    <h3>极速模式</h3>
+                    <p>速度提升50%，道具加速</p>
+                </div>
+                <div class="mode-card" data-mode="item">
+                    <div class="mode-icon">🎁</div>
+                    <h3>道具模式</h3>
+                    <p>随机增益道具，趣味竞技</p>
+                </div>
+                <div class="mode-card" data-mode="endless">
+                    <div class="mode-icon">♾️</div>
+                    <h3>无尽模式</h3>
+                    <p>无时间限制，存活越久分数越高</p>
+                </div>
+            </div>
+            
+            <!-- 难度选择（新增） -->
+            <div class="difficulty-select">
+                <label>游戏难度：</label>
+                <select id="game-difficulty">
+                    <option value="easy">简单 (5 条 AI)</option>
+                    <option value="normal" selected>普通 (9 条 AI)</option>
+                    <option value="hard">困难 (15 条 AI)</option>
+                </select>
+            </div>
+            <div class="time-select" id="time-select-container">
+                <label>游戏时长：</label>
+                <select id="game-time">
+                    <option value="60">60秒</option>
+                    <option value="120" selected>120秒</option>
+                    <option value="300">300秒</option>
+                </select>
+            </div>
+            <button id="mode-confirm-btn" class="btn btn-primary">确认开始</button>
+            <button class="btn btn-back back-to-start">返回</button>
+        </div>
+
+        <!-- 历史记录弹窗 -->
+        <div id="history-modal" class="history-modal">
+            <div class="history-modal-content">
+                <div class="history-modal-header">
+                    <h3 class="history-modal-title">📜 历史战绩排行</h3>
+                    <button class="history-modal-close" id="close-history-modal">×</button>
+                </div>
+                <div id="history-full-list">
+                    <!-- 完整历史记录由 JS 生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置页 -->
+        <div id="settings-page" class="page">
+            <h2>游戏设置</h2>
+
+            <div class="settings-section">
+                <h3>🐍 皮肤选择</h3>
+                <div class="skin-grid" id="skin-grid">
+                    <!-- 皮肤由JS动态生成 -->
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🖼️ 背景选择</h3>
+                <div class="bg-grid" id="bg-grid">
+                    <!-- 背景由JS动态生成 -->
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🎵 音效设置</h3>
+                <div class="sound-settings">
+                    <div class="sound-item">
+                        <label>背景音乐</label>
+                        <input type="range" id="bgm-volume" min="0" max="100" value="50">
+                        <span id="bgm-value">50%</span>
+                    </div>
+                    <div class="sound-item">
+                        <label>音效音量</label>
+                        <input type="range" id="sfx-volume" min="0" max="100" value="70">
+                        <span id="sfx-value">70%</span>
+                    </div>
+                    <label class="toggle-label">
+                        <input type="checkbox" id="bgm-mute" checked>
+                        开启背景音乐
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🚀 速度调节</h3>
+                <div class="speed-settings">
+                    <label>基础速度：</label>
+                    <div class="speed-buttons" id="speed-buttons">
+                        <button class="speed-btn" data-speed="1">1x</button>
+                        <button class="speed-btn" data-speed="2">2x</button>
+                        <button class="speed-btn" data-speed="3">3x</button>
+                        <button class="speed-btn" data-speed="4">4x</button>
+                        <button class="speed-btn" data-speed="5">5x</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🎮 摇杆设置</h3>
+                <div class="joystick-settings">
+                    <div class="setting-item">
+                        <label>摇杆颜色</label>
+                        <input type="color" id="joystick-color" value="#4ECDC4">
+                    </div>
+                    <div class="setting-item">
+                        <label>摇杆大小：<span id="joystick-size-value">120</span>px</label>
+                        <input type="range" id="joystick-size" min="80" max="200" value="120">
+                    </div>
+                    <div class="setting-item">
+                        <label>透明度：<span id="joystick-opacity-value">80</span>%</label>
+                        <input type="range" id="joystick-opacity" min="30" max="100" value="80">
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>🏠 主页背景</h3>
+                <div class="bg-grid" id="home-bg-grid">
+                    <!-- 主页背景由 JS 动态生成 -->
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>⚙️ 功能豆豆设置</h3>
+                <div class="form-group">
+                    <label for="enable-reverse">🔄 反向豆豆（操作反转 3 秒）</label>
+                    <input type="checkbox" id="enable-reverse" checked>
+                </div>
+                <div class="form-group">
+                    <label for="enable-invincible">👑 无敌豆豆（无敌 5 秒）</label>
+                    <input type="checkbox" id="enable-invincible" checked>
+                </div>
+                <div class="form-group">
+                    <label for="enable-ice">❄️ 寒冰豆豆（静止 3 秒）</label>
+                    <input type="checkbox" id="enable-ice" checked>
+                </div>
+                <div class="form-group">
+                    <label for="enable-speed">⚡ 速度豆豆（永久加速）</label>
+                    <input type="checkbox" id="enable-speed" checked>
+                </div>
+            </div>
+
+            <button class="btn btn-back back-to-start">返回</button>
+        </div>
+
+        <!-- 游戏主界面 -->
+        <div id="game-page" class="page">
+            <canvas id="game-canvas"></canvas>
+
+            <!-- 左上角实时排名 -->
+            <div id="ranking-panel" class="ranking-panel">
+                <div class="ranking-header">📊 实时排名 TOP10</div>
+                <div id="ranking-list" class="ranking-list">
+                    <!-- 排名由 JS 动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 右上角小地图 -->
+            <div id="minimap-container" class="minimap-container">
+                <canvas id="minimap-canvas"></canvas>
+                <div class="minimap-label">🗺️ 小地图</div>
+            </div>
+
+            <!-- 游戏 HUD -->
+            <div id="game-hud">
+                <div class="hud-top">
+                    <div class="hud-item">
+                        <span class="hud-label">⏱️ 时间</span>
+                        <span id="game-timer">120</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">🐍 长度</span>
+                        <span id="player-length">50</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">🏆 排名</span>
+                        <span id="player-rank">1/10</span>
+                    </div>
+                    <div class="hud-item">
+                        <span class="hud-label">❤️ 复活</span>
+                        <span id="revive-count">2</span>
+                    </div>
+                </div>
+                <!-- 击杀提示 -->
+                <div id="kill-notice" class="kill-notice"></div>
+                
+                <!-- 状态效果提示 -->
+                <div id="status-effects" class="status-effects">
+                    <div id="effect-reverse" class="status-effect reverse" style="display: none;">🔄 反向</div>
+                    <div id="effect-invincible" class="status-effect invincible" style="display: none;">👑 无敌</div>
+                    <div id="effect-frozen" class="status-effect frozen" style="display: none;">❄️ 冰冻</div>
+                </div>
+            </div>
+            
+            <!-- 加速按钮已移除，改用速度豆豆 -->
+
+            <!-- 虚拟摇杆 -->
+            <div id="joystick-container">
+                <div id="joystick-base">
+                    <div id="joystick-stick"></div>
+                </div>
+            </div>
+
+            <!-- 暂停按钮 -->
+            <button id="pause-btn" class="hud-btn">⏸️</button>
+        </div>
+
+        <!-- 结算页 -->
+        <div id="result-page" class="page">
+            <div class="result-container">
+                <h2 id="result-title">游戏结束</h2>
+                <!-- 退出游戏时的特殊标题 -->
+                <h3 id="quit-summary-title" style="display: none; color: #FFD700; font-size: 18px; margin-bottom: 10px;">🎮 退出游戏结算</h3>
+                <div class="result-rank">
+                    <span id="final-rank">#1</span>
+                </div>
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">最终长度</span>
+                        <span id="final-length" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">游戏时长</span>
+                        <span id="final-time" class="stat-value">0秒</span>
+                    </div>
+                </div>
+                <div class="result-message" id="result-message">
+                    恭喜获得第一名！
+                </div>
+                <div class="result-buttons">
+                    <button id="restart-btn" class="btn btn-primary">再来一局</button>
+                    <button class="btn btn-secondary back-to-start">返回主页</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 暂停菜单 -->
+        <div id="pause-menu" class="modal hidden">
+            <div class="modal-content">
+                <h2>游戏暂停</h2>
+                <button id="resume-btn" class="btn btn-primary">继续游戏</button>
+                <button id="quit-btn" class="btn btn-secondary">退出游戏</button>
+            </div>
+        </div>
+
+        <!-- 新手教程页 -->
+        <div id="tutorial-page" class="page">
+            <h2>🎓 新手教程</h2>
+            <div class="tutorial-container">
+                <div class="tutorial-slides" id="tutorial-slides">
+                    <!-- 教程幻灯片由 JS 动态生成 -->
+                </div>
+                <div class="tutorial-controls">
+                    <button id="tutorial-prev" class="btn-tutorial-nav">⬅️ 上一步</button>
+                    <div class="tutorial-indicators" id="tutorial-indicators"></div>
+                    <button id="tutorial-next" class="btn-tutorial-nav">下一步 ➡️</button>
+                </div>
+                <button id="tutorial-finish" class="btn btn-primary" style="margin-top: 20px;">完成教程</button>
+            </div>
+            <button class="btn btn-back back-to-start">返回</button>
+        </div>
+
+        <!-- 游戏介绍页 -->
+        <div id="about-page" class="page">
+            <h2>ℹ️ 游戏介绍</h2>
+            <div class="about-content">
+                <div class="about-section">
+                    <h3>🎮 游戏概述</h3>
+                    <p>《贪吃蛇 360°大对决》是一款经典的多人竞技游戏，支持多种游戏模式和丰富的自定义选项。在这个游戏中，你需要控制小蛇不断变长，同时避免撞到其他蛇的身体！</p>
+                </div>
+
+                <div class="about-section">
+                    <h3>🎯 游戏模式</h3>
+                    <div class="about-mode">
+                        <h4>🎯 经典模式</h4>
+                        <p>固定时间（60/120/300 秒），比拼最终长度。时间结束后根据长度排名。适合喜欢策略对战的玩家。</p>
+                    </div>
+                    <div class="about-mode">
+                        <h4>⚡ 极速模式</h4>
+                        <p>基础速度提升 50%，配合速度豆豆可瞬间爆发，更加考验反应和微操！刺激的对决模式。</p>
+                    </div>
+                    <div class="about-mode">
+                        <h4>🎁 道具模式</h4>
+                        <p>随机出现增益道具：加速、减速、无敌等，让战局充满变数，趣味竞技首选。</p>
+                    </div>
+                    <div class="about-mode">
+                        <h4>♾️ 无尽模式</h4>
+                        <p>无时间限制，存活越久分数越高，考验你的持久力和生存技巧！适合刷高分。</p>
+                    </div>
+                </div>
+
+                <div class="about-section">
+                    <h3>🎮 操作说明</h3>
+                    <ul class="about-list">
+                        <li><strong>鼠标/触摸：</strong>移动控制方向，360°自由转向</li>
+                        <li><strong>点击屏幕/摇杆按钮：</strong>显示虚拟摇杆</li>
+                        <li><strong>加速按钮（⚡）：</strong>消耗长度换取速度（长按持续加速）</li>
+                    </ul>
+                </div>
+
+                <div class="about-section">
+                    <h3>💡 游戏规则</h3>
+                    <ul class="about-list">
+                        <li>✅ <strong>吃食物：</strong>彩色豆豆会让你的蛇变长，普通豆豆 +10 分，超级豆豆 +50 分</li>
+                        <li>✅ <strong>击杀奖励：</strong>用头撞别人身体，对方死亡，你获得其长度一半的奖励</li>
+                        <li>❌ <strong>撞墙：</strong>撞到边界会死亡（有 2 次复活机会）</li>
+                        <li>❌ <strong>撞蛇：</strong>头部撞到别人身体会死亡</li>
+                        <li>⚠️ <strong>被别人撞：</strong>如果别人头部撞到你的身体，对方死亡，你获得积分奖励</li>
+                        <li>🍎 <strong>特殊豆豆：</strong>寒冰豆豆静止 3 秒、速度豆豆加速 30 秒、反向豆豆反转操作 3 秒、无敌豆豆免疫 10 秒</li>
+                    </ul>
+                </div>
+
+                <div class="about-section">
+                    <h3>🏆 难度选择</h3>
+                    <ul class="about-list">
+                        <li><strong>简单：</strong>5 条 AI 蛇，适合新手练习</li>
+                        <li><strong>普通：</strong>9 条 AI 蛇，平衡体验</li>
+                        <li><strong>困难：</strong>15 条 AI 蛇，极限挑战（排名显示前 20 名）</li>
+                    </ul>
+                </div>
+
+                <div class="about-section">
+                    <h3>✨ 特色功能</h3>
+                    <ul class="about-list">
+                        <li>🎨 <strong>精美皮肤：</strong>10 种炫酷皮肤，每种都有独特特效和颜色</li>
+                        <li>🌈 <strong>动态效果：</strong>彩虹流动、火焰闪烁、星空闪光等华丽视觉盛宴</li>
+                        <li>💾 <strong>历史记录：</strong>保存最佳成绩 TOP5，详细记录模式、难度、时长等信息</li>
+                        <li>🔊 <strong>音效系统：</strong>吃食物、击杀、碰撞等丰富音效，支持音量自定义</li>
+                        <li>📱 <strong>响应式设计：</strong>完美支持手机、平板、电脑各种设备，横屏竖屏都能玩</li>
+                        <li>🎮 <strong>虚拟摇杆：</strong>可自定义颜色和大小，移动端操作更流畅</li>
+                        <li>🗺️ <strong>小地图：</strong>实时显示战场态势，方便掌握全局</li>
+                    </ul>
+                </div>
+
+                <div class="about-section">
+                    <h3>🎓 技巧提示</h3>
+                    <ul class="about-list">
+                        <li>💡 开局 3 秒内无敌，可以快速抢食占领先机</li>
+                        <li>💡 绕圈走位可以诱骗其他蛇撞你，获得击杀奖励</li>
+                        <li>💡 残血时可以尝试反杀获得大量积分，逆风翻盘</li>
+                        <li>💡 无尽模式下，存活时间比长度更重要，苟住就是胜利</li>
+                        <li>💡 困难模式 AI 更多，但也更容易互相残杀，坐收渔翁之利</li>
+                        <li>💡 速度豆豆持续 30 秒，无敌豆豆持续 10 秒，合理使用道具</li>
+                        <li>💡 小地图可以观察敌人位置，提前规划路线</li>
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-back back-to-start">返回</button>
+        </div>
+    </div>
+
+    <script src="js/game.js"></script>
+</body>
+</html>
