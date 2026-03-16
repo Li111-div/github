@@ -1,0 +1,12 @@
+{
+  "name": "minesweeper-game",
+  "version": "1.0.0",
+  "description": "无垠扫雷：全域探索 - 超大型网页扫雷游戏",
+  "scripts": {
+    "start": "npx http-server -p 8080 -o",
+    "serve": "npx live-server --port=8080"
+  },
+  "keywords": ["minesweeper", "game", "web"],
+  "author": "",
+  "license": "MIT"
+}

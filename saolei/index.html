@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>无垠扫雷：全域探索</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 首页 -->
+    <div id="home-screen" class="screen active">
+        <header class="home-header">
+            <h1 class="game-title">无垠扫雷：全域探索</h1>
+        </header>
+        
+        <main class="home-main">
+            <section class="mode-section">
+                <h2 class="section-title">选择模式</h2>
+                <div class="mode-cards">
+                    <div class="mode-card" data-mode="beginner">
+                        <h3>新手</h3>
+                        <p>20×15 格 | 20 个地雷</p>
+                    </div>
+                    <div class="mode-card" data-mode="advanced">
+                        <h3>进阶</h3>
+                        <p>40×25 格 | 120 个地雷</p>
+                    </div>
+                    <div class="mode-card" data-mode="master">
+                        <h3>大师</h3>
+                        <p>60×40 格 | 400 个地雷</p>
+                    </div>
+                    <div class="mode-card" data-mode="timed">
+                        <h3>限时挑战</h3>
+                        <p>30×25 格 | 100 个地雷 | 20 分钟</p>
+                    </div>
+                    <div class="mode-card" data-mode="infinite">
+                        <h3>无限扩展</h3>
+                        <p>20×15 起始 | 8% 雷密度</p>
+                    </div>
+                    <div class="mode-card" data-mode="coop">
+                        <h3>组队协作</h3>
+                        <p>50×30 格 | 200 个地雷</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="achievements-preview">
+                <h2 class="section-title">成就预览</h2>
+                <div class="achievements-list" id="achievements-preview"></div>
+            </section>
+        </main>
+        
+        <footer class="home-footer">
+            <button class="btn btn-secondary" id="btn-customize">自定义设置</button>
+            <button class="btn btn-primary" id="btn-start">开始游戏</button>
+        </footer>
+    </div>
+    
+    <!-- 自定义设置页面 -->
+    <div id="customize-screen" class="screen">
+        <header class="screen-header">
+            <button class="btn-back" id="btn-back-home">← 返回首页</button>
+            <h2>自定义设置</h2>
+        </header>
+        
+        <main class="customize-main">
+            <section class="setting-section">
+                <h3>背景设置</h3>
+                <div class="background-options">
+                    <div class="bg-option" data-bg="solid">极简纯色</div>
+                    <div class="bg-option" data-bg="geometric">低饱和几何</div>
+                    <div class="bg-option" data-bg="natural">自然纹理</div>
+                    <label class="bg-option bg-upload">
+                        上传本地图片
+                        <input type="file" id="bg-upload" accept="image/*" hidden>
+                    </label>
+                </div>
+            </section>
+            
+            <section class="setting-section">
+                <h3>主题颜色</h3>
+                <div class="theme-options">
+                    <div class="theme-option" data-theme="quiet-blue" style="--theme-color: #5B9BD5">静谧蓝</div>
+                    <div class="theme-option" data-theme="wood-brown" style="--theme-color: #C4A574">原木棕</div>
+                    <div class="theme-option" data-theme="mint-green" style="--theme-color: #7CB9A8">薄荷绿</div>
+                    <div class="theme-option" data-theme="light-gray" style="--theme-color: #9E9E9E">浅灰黑</div>
+                    <div class="theme-option" data-theme="soft-pink" style="--theme-color: #E8B4BC">柔雾粉</div>
+                </div>
+                <div class="custom-color">
+                    <label>RGB 自定义：<input type="color" id="custom-color-picker" value="#5B9BD5"></label>
+                </div>
+            </section>
+        </main>
+        
+        <footer class="customize-footer">
+            <button class="btn btn-primary" id="btn-save-settings">保存设置</button>
+        </footer>
+    </div>
+    
+    <!-- 游戏界面 -->
+    <div id="game-screen" class="screen">
+        <header class="game-header">
+            <button class="btn-icon" id="btn-home">🏠</button>
+            <div class="game-info">
+                <span id="game-mode">模式：新手</span>
+                <span id="game-timer">时间：0s</span>
+                <span id="game-mines">地雷：0</span>
+            </div>
+            <div class="game-actions">
+                <button class="btn-icon" id="btn-theme" title="切换主题">🎨</button>
+                <button class="btn-icon" id="btn-pause" title="暂停">⏸️</button>
+            </div>
+        </header>
+        
+        <!-- 主题选择面板 -->
+        <div class="theme-panel" id="theme-panel">
+            <div class="theme-panel-header">
+                <span>选择主题</span>
+                <button class="btn-icon btn-close" id="btn-close-theme">✕</button>
+            </div>
+            <div class="theme-grid">
+                <div class="theme-item" data-theme="classic" style="--preview-bg: linear-gradient(145deg, #f0f8ff, #d0e0f0);">
+                    <div class="theme-preview"></div>
+                    <span>经典蓝</span>
+                </div>
+                <div class="theme-item" data-theme="dark" style="--preview-bg: linear-gradient(145deg, #3a3a3a, #1a1a1a);">
+                    <div class="theme-preview"></div>
+                    <span>暗黑模式</span>
+                </div>
+                <div class="theme-item" data-theme="wood" style="--preview-bg: linear-gradient(145deg, #FFF8E7, #E8D5B5);">
+                    <div class="theme-preview"></div>
+                    <span>暖色木质</span>
+                </div>
+                <div class="theme-item" data-theme="green" style="--preview-bg: linear-gradient(145deg, #F1F8E9, #C8E6C9);">
+                    <div class="theme-preview"></div>
+                    <span>清新绿</span>
+                </div>
+                <div class="theme-item" data-theme="pink" style="--preview-bg: linear-gradient(145deg, #FCE4EC, #F8BBD0);">
+                    <div class="theme-preview"></div>
+                    <span>樱花粉</span>
+                </div>
+                <div class="theme-item" data-theme="ocean" style="--preview-bg: linear-gradient(145deg, #E0F7FA, #B2EBF2);">
+                    <div class="theme-preview"></div>
+                    <span>海洋蓝</span>
+                </div>
+                <div class="theme-item" data-theme="purple" style="--preview-bg: linear-gradient(145deg, #F3E5F5, #E1BEE7);">
+                    <div class="theme-preview"></div>
+                    <span>紫色梦幻</span>
+                </div>
+            </div>
+        </div>
+        
+        <main class="game-main">
+            <div class="board-scroll-wrapper" id="board-scroll-wrapper">
+                <div class="board-container" id="board-container">
+                    <div class="board-wrapper" id="board-wrapper">
+                        <div class="board" id="board"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="game-footer">
+            <button class="btn btn-secondary" id="btn-help">帮助</button>
+            <button class="btn btn-secondary" id="btn-reset">重置</button>
+            <button class="btn btn-primary" id="btn-giveup">放弃</button>
+        </footer>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal-content">
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="modal-confirm">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
