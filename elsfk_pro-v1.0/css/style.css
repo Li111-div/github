@@ -1,0 +1,1400 @@
+/* CSS3 样式 - 经典像素风格 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #202020;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* 首页样式 - 暗色主题 */
+.home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 40px;
+    background-color: #000;
+    border: 4px solid #666;
+    position: relative;
+    overflow: hidden;
+    min-width: 800px;
+}
+
+/* 经典黑色背景 */
+.home-screen.bg-classic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+    z-index: 0;
+}
+
+/* 动态网格背景 */
+.home-screen.bg-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(102, 102, 102, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(102, 102, 102, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: gridScroll 10s linear infinite;
+    z-index: 0;
+}
+
+/* 星空背景 */
+.home-screen.bg-stars::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 50px 160px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 150px 200px;
+    animation: starsTwinkle 5s ease-in-out infinite;
+    z-index: 0;
+}
+
+/* 黑客帝国背景 */
+.home-screen.bg-matrix::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, 
+        rgba(0, 50, 0, 0.1) 0%, 
+        rgba(0, 100, 0, 0.2) 50%, 
+        rgba(0, 50, 0, 0.1) 100%);
+    background-size: 100% 100%;
+    animation: matrixFlow 8s linear infinite;
+    z-index: 0;
+}
+
+@keyframes gridScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 30px 30px; }
+}
+
+@keyframes starsTwinkle {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes matrixFlow {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+}
+
+.home-header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* 首页装饰元素 */
+.home-decorations {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* 漂浮的方块装饰 */
+.floating-block {
+    position: absolute;
+    opacity: 0.15;
+    animation: floatAround 8s ease-in-out infinite;
+}
+
+.floating-block:nth-child(1) {
+    top: 10%;
+    left: 5%;
+    width: 40px;
+    height: 40px;
+    background-color: #00FFFF;
+    animation-delay: 0s;
+}
+
+.floating-block:nth-child(2) {
+    top: 20%;
+    right: 10%;
+    width: 30px;
+    height: 30px;
+    background-color: #FF00FF;
+    animation-delay: 1s;
+}
+
+.floating-block:nth-child(3) {
+    bottom: 15%;
+    left: 8%;
+    width: 35px;
+    height: 35px;
+    background-color: #FFFF00;
+    animation-delay: 2s;
+}
+
+.floating-block:nth-child(4) {
+    bottom: 25%;
+    right: 5%;
+    width: 25px;
+    height: 25px;
+    background-color: #00FF00;
+    animation-delay: 3s;
+}
+
+.floating-block:nth-child(5) {
+    top: 50%;
+    left: 3%;
+    width: 20px;
+    height: 20px;
+    background-color: #FFA500;
+    animation-delay: 0.5s;
+}
+
+.floating-block:nth-child(6) {
+    top: 35%;
+    right: 3%;
+    width: 28px;
+    height: 28px;
+    background-color: #0000FF;
+    animation-delay: 1.5s;
+}
+
+@keyframes floatAround {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.15;
+    }
+    25% {
+        transform: translate(10px, -15px) rotate(90deg);
+        opacity: 0.25;
+    }
+    50% {
+        transform: translate(-5px, -25px) rotate(180deg);
+        opacity: 0.2;
+    }
+    75% {
+        transform: translate(15px, -10px) rotate(270deg);
+        opacity: 0.3;
+    }
+}
+
+/* 角落装饰 */
+.corner-decoration {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(0, 255, 255, 0.3);
+    z-index: 1;
+}
+
+.corner-decoration.top-left {
+    top: 10px;
+    left: 10px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.corner-decoration.top-right {
+    top: 10px;
+    right: 10px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.corner-decoration.bottom-left {
+    bottom: 10px;
+    left: 10px;
+    border-right: none;
+    border-top: none;
+}
+
+.corner-decoration.bottom-right {
+    bottom: 10px;
+    right: 10px;
+    border-left: none;
+    border-top: none;
+}
+
+/* 光晕效果 */
+.glow-effect {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, transparent 70%);
+    animation: glowPulse 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.glow-effect.left {
+    top: 20%;
+    left: -50px;
+}
+
+.glow-effect.right {
+    bottom: 30%;
+    right: -50px;
+    animation-delay: 2s;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+.game-title {
+    font-size: 56px;
+    color: var(--theme-primary, #fff);
+    text-shadow: 
+        3px 3px 0 #000,
+        -1px -1px 0 var(--theme-accent1, #00ffff),
+        1px -1px 0 var(--theme-accent2, #ff00ff),
+        -1px 1px 0 var(--theme-accent3, #ffff00),
+        1px 1px 0 var(--theme-accent4, #00ff00);
+    letter-spacing: 10px;
+    margin-bottom: 10px;
+    animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+    from {
+        text-shadow: 
+            3px 3px 0 #000,
+            -1px -1px 0 var(--theme-accent1, #00ffff),
+            1px -1px 0 var(--theme-accent2, #ff00ff),
+            -1px 1px 0 var(--theme-accent3, #ffff00),
+            1px 1px 0 var(--theme-accent4, #00ff00);
+    }
+    to {
+        text-shadow: 
+            3px 3px 0 #000,
+            -1px -1px 0 var(--theme-accent2, #ff00ff),
+            1px -1px 0 var(--theme-accent1, #00ffff),
+            -1px 1px 0 var(--theme-accent4, #00ff00),
+            1px 1px 0 var(--theme-accent3, #ffff00);
+    }
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #888;
+    letter-spacing: 6px;
+}
+
+.home-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 50px;
+    width: 100%;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.blocks-showcase {
+    display: grid;
+    grid-template-columns: repeat(4, 60px);
+    gap: 12px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border: 3px solid #444;
+}
+
+.showcase-block {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    animation: blockFloat 3s ease-in-out infinite;
+}
+
+.showcase-block:nth-child(1) { animation-delay: 0s; }
+.showcase-block:nth-child(2) { animation-delay: 0.5s; }
+.showcase-block:nth-child(3) { animation-delay: 1s; }
+.showcase-block:nth-child(4) { animation-delay: 1.5s; }
+
+@keyframes blockFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.menu-btn {
+    background: linear-gradient(180deg, #333 0%, #1a1a1a 100%);
+    border: 3px solid #666;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    padding: 15px 40px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    box-shadow: 0 4px 0 #222, 0 5px 10px rgba(0, 0, 0, 0.5);
+    transition: all 0.1s;
+    position: relative;
+    top: 0;
+    min-width: 200px;
+}
+
+.menu-btn:hover {
+    background: linear-gradient(180deg, #444 0%, #2a2a2a 100%);
+    border-color: #888;
+    box-shadow: 0 4px 0 #222, 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.menu-btn:active {
+    top: 4px;
+    box-shadow: 0 0 0 #222, 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.menu-btn.primary {
+    background: linear-gradient(180deg, #00aaaa 0%, #006666 100%);
+    border-color: #00cccc;
+}
+
+.menu-btn.primary:hover {
+    background: linear-gradient(180deg, #00cccc 0%, #008888 100%);
+}
+
+.view-more-btn {
+    background: none;
+    border: none;
+    color: #00ffff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 9px;
+    cursor: pointer;
+    margin-left: 10px;
+    text-decoration: underline;
+}
+
+.view-more-btn:hover {
+    color: #ffffff;
+}
+
+.right-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.controls-preview,
+.history-preview,
+.settings-preview {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border: 3px solid #444;
+    font-size: 10px;
+    line-height: 2.2;
+    color: #ccc;
+    min-width: 220px;
+}
+
+/* 设置面板样式 */
+.setting-item {
+    margin-bottom: 15px;
+}
+
+.setting-label {
+    color: #00ffff;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.setting-select {
+    width: 100%;
+    background-color: #222;
+    border: 2px solid #666;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.setting-select:hover {
+    border-color: #888;
+}
+
+.volume-control {
+    width: 100%;
+    margin-top: 5px;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 20px;
+    -webkit-appearance: none;
+    background: #222;
+    border: 2px solid #666;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #00ffff;
+    cursor: pointer;
+    border: 2px solid #fff;
+}
+
+.preview-title {
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #00ffff;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+}
+
+.history-list {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #333;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.no-history {
+    text-align: center;
+    color: #666;
+    font-size: 9px;
+}
+
+.game-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: var(--game-bg, #000);
+    border: 4px solid var(--game-border, #666);
+    transition: all 0.5s ease;
+}
+
+/* 主游戏区域 - 20x10 格子 */
+.main-board {
+    position: relative;
+    border: 4px solid var(--game-border, #fff);
+    background-color: var(--game-bg, #000);
+    transition: all 0.5s ease;
+}
+
+#gameCanvas {
+    display: block;
+}
+
+/* 右侧信息面板 */
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 150px;
+}
+
+.panel-section {
+    background-color: var(--panel-bg, #333);
+    padding: 15px;
+    border: 3px solid var(--panel-border, #666);
+    transition: all 0.5s ease;
+}
+
+.panel-label {
+    color: var(--text-primary, #fff);
+    font-size: 12px;
+    margin-bottom: 10px;
+    text-align: center;
+    transition: all 0.5s ease;
+}
+
+/* NEXT 预览区 - 4x4 格子 */
+#nextCanvas {
+    display: block;
+    margin: 0 auto;
+    background-color: var(--game-bg, #000);
+    border: 2px solid var(--game-border, #666);
+    transition: all 0.5s ease;
+}
+
+/* 得分、等级、行数显示 */
+.stat-value {
+    color: var(--text-primary, #fff);
+    font-size: 14px;
+    text-align: right;
+    letter-spacing: 2px;
+    transition: all 0.5s ease;
+}
+
+/* 暂停和游戏结束覆盖层 */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.overlay-text {
+    color: var(--text-primary, #fff);
+    font-size: 24px;
+    text-shadow: 2px 2px #ff0000;
+    transition: all 0.5s ease;
+}
+
+.overlay-subtext {
+    color: var(--text-secondary, #fff);
+    font-size: 12px;
+    transition: all 0.5s ease;
+}
+
+/* 升级主题提示（已移除） */
+/* .level-up-notification { ... } */
+
+/* 控制说明 */
+.controls {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--panel-bg, #333);
+    border: 3px solid var(--panel-border, #666);
+    color: var(--text-primary, #fff);
+    font-size: 10px;
+    line-height: 1.8;
+    transition: all 0.5s ease;
+}
+
+.controls-title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--theme-primary, #fff);
+    transition: all 0.5s ease;
+}
+
+/* 游戏控制按钮 */
+.game-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.control-btn {
+    background: linear-gradient(180deg, #444 0%, #222 100%);
+    border: 2px solid #666;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    box-shadow: 0 3px 0 #111;
+    transition: all 0.1s;
+}
+
+.control-btn:hover {
+    background: linear-gradient(180deg, #555 0%, #333 100%);
+    border-color: #888;
+}
+
+.control-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 #111;
+}
+
+.control-btn.pause {
+    background: linear-gradient(180deg, #0088cc 0%, #005588 100%);
+    border-color: #00aaff;
+}
+
+.control-btn.quit {
+    background: linear-gradient(180deg, #cc4444 0%, #882222 100%);
+    border-color: #ff6666;
+}
+
+/* 结算画面 - 独立界面 */
+.game-over-screen-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.98);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 300;
+}
+
+.game-over-title {
+    color: #ff0000;
+    font-size: 48px;
+    text-shadow: 4px 4px 0 #000;
+    margin-bottom: 50px;
+    letter-spacing: 8px;
+}
+
+.final-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.stat-box {
+    background-color: #1a1a1a;
+    border: 4px solid #444;
+    padding: 30px;
+    min-width: 200px;
+    text-align: center;
+}
+
+.stat-label {
+    color: #00ffff;
+    font-size: 12px;
+    margin-bottom: 15px;
+    text-align: center;
+    letter-spacing: 3px;
+}
+
+.stat-value-large {
+    color: #fff;
+    font-size: 32px;
+}
+
+.new-record {
+    color: #ffff00;
+    font-size: 16px;
+    margin-bottom: 30px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* 历史记录界面 */
+.history-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.98);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 200;
+    padding: 40px;
+}
+
+.history-screen-title {
+    color: #fff;
+    font-size: 32px;
+    text-shadow: 3px 3px 0 #000;
+    margin-bottom: 30px;
+    letter-spacing: 6px;
+}
+
+.history-table-container {
+    max-width: 800px;
+    width: 100%;
+    overflow-y: auto;
+    max-height: 60vh;
+    margin-bottom: 30px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10px;
+}
+
+.history-table th {
+    background-color: #222;
+    color: #00ffff;
+    padding: 15px;
+    text-align: center;
+    border: 2px solid #444;
+}
+
+.history-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.history-table tr:nth-child(odd) {
+    background-color: rgba(50, 50, 50, 0.3);
+}
+
+.history-table tr:nth-child(even) {
+    background-color: rgba(30, 30, 30, 0.3);
+}
+
+.history-table tr:hover {
+    background-color: rgba(0, 255, 255, 0.1);
+}
+
+.rank-badge {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.rank-1 { background-color: #ffd700; color: #000; }
+.rank-2 { background-color: #c0c0c0; color: #000; }
+.rank-3 { background-color: #cd7f32; color: #000; }
+
+.back-btn {
+    background: linear-gradient(180deg, #444 0%, #222 100%);
+    border: 3px solid #666;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    padding: 15px 40px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #111;
+}
+
+.back-btn:hover {
+    background: linear-gradient(180deg, #555 0%, #333 100%);
+}
+
+.back-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #111;
+}
+
+/* 方块消除动画 */
+.line-clear-anim {
+    animation: lineClearBreak 0.6s ease-out forwards;
+}
+
+@keyframes lineClearBreak {
+    0% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: brightness(1);
+    }
+    30% {
+        opacity: 0.8;
+        transform: translateX(-5px) scale(1.02);
+        filter: brightness(1.5);
+    }
+    60% {
+        opacity: 0.6;
+        transform: translateX(5px) scale(0.98);
+        filter: brightness(1.3);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0) scale(0.8);
+        filter: brightness(0);
+    }
+}
+
+/* 多行消除炫酷动画 */
+.multi-line-clear {
+    animation: multiLineExplode 0.8s ease-out forwards;
+}
+
+@keyframes multiLineExplode {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1) hue-rotate(0deg);
+    }
+    20% {
+        opacity: 0.9;
+        transform: scale(1.05);
+        filter: brightness(2) hue-rotate(45deg);
+    }
+    40% {
+        opacity: 0.7;
+        transform: scale(0.95);
+        filter: brightness(2.5) hue-rotate(90deg);
+    }
+    60% {
+        opacity: 0.5;
+        transform: scale(1.1);
+        filter: brightness(2) hue-rotate(135deg);
+    }
+    80% {
+        opacity: 0.3;
+        transform: scale(0.9);
+        filter: brightness(1.5) hue-rotate(180deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: brightness(0) hue-rotate(360deg);
+    }
+}
+
+/* 粒子爆炸效果 */
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleExplode 0.6s ease-out forwards;
+}
+
+@keyframes particleExplode {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* 设置界面 */
+.settings-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.98);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 200;
+    padding: 40px;
+}
+
+/* 难度选择界面 */
+.difficulty-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 150;
+    padding: 40px 20px;
+    overflow-y: auto;
+}
+
+.difficulty-title {
+    color: #fff;
+    font-size: 36px;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 0 #00ffff, -1px -1px 0 #ff00ff;
+    letter-spacing: 6px;
+}
+
+.difficulty-subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+.difficulty-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    max-width: 1000px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.difficulty-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 3px solid #444;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.difficulty-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.difficulty-card:hover::before {
+    left: 100%;
+}
+
+.difficulty-card:hover {
+    transform: translateY(-10px);
+    border-color: #00ffff;
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+}
+
+.difficulty-card.challenge:hover {
+    border-color: #ff00ff;
+    box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.card-title {
+    color: #fff;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.card-desc {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.card-info {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: left;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-item .label {
+    color: #888;
+    font-size: 11px;
+}
+
+.info-item .value {
+    color: #00ffff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.difficulty-card.challenge .info-item .value {
+    color: #ff00ff;
+}
+
+/* ==================== 设备选择界面 ==================== */
+.device-select-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 200;
+    padding: 40px 20px;
+    overflow-y: auto;
+}
+
+.device-select-content {
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+}
+
+.device-title {
+    color: #fff;
+    font-size: 36px;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 0 #00ffff, -1px -1px 0 #ff00ff;
+    letter-spacing: 6px;
+}
+
+.device-subtitle {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+.device-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    max-width: 700px;
+    margin: 0 auto 30px;
+}
+
+.device-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 3px solid #444;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.device-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.device-card:hover::before {
+    left: 100%;
+}
+
+.device-card:hover {
+    transform: translateY(-10px);
+    border-color: #00ffff;
+    box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+}
+
+.device-card.mobile:hover {
+    border-color: #ff00ff;
+    box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3);
+}
+
+.device-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.device-name {
+    color: #fff;
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.device-desc {
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.device-info {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: left;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-item .label {
+    color: #888;
+    font-size: 11px;
+}
+
+.info-item .value {
+    color: #00ffff;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.device-card.mobile .info-item .value {
+    color: #ff00ff;
+}
+
+/* ==================== 移动端控制面板 ==================== */
+.mobile-controls {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 3px solid #444;
+    border-radius: 10px;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    width: calc(100% - 40px);
+    max-width: 600px;
+}
+
+.control-zone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 2px solid #333;
+    border-radius: 8px;
+}
+
+.left-zone {
+    flex: 1;
+    min-width: 120px;
+}
+
+.center-zone {
+    flex: 1.5;
+    min-width: 150px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.center-zone:active {
+    background-color: rgba(50, 50, 50, 0.9);
+    transform: scale(0.98);
+}
+
+.zone-label {
+    color: #666;
+    font-size: 10px;
+    text-align: center;
+}
+
+.right-zone {
+    flex: 1;
+    min-width: 120px;
+}
+
+.direction-pad {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+
+.ctrl-btn {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 2px solid #555;
+    color: #fff;
+    padding: 15px 10px;
+    font-size: 16px;
+    font-family: 'Press Start 2P', cursive;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.ctrl-btn:active {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border-color: #00ffff;
+    transform: scale(0.95);
+}
+
+.rotate-btn {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #004444 0%, #002222 100%);
+    border-color: #00ffff;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.action-btn {
+    padding: 12px 10px;
+    font-size: 12px;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #004444 0%, #002222 100%);
+    border-color: #00ffff;
+    color: #00ffff;
+}
+
+.action-btn:active {
+    border-color: #ff00ff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .mobile-controls {
+        width: calc(100% - 20px);
+        bottom: 10px;
+    }
+    
+    .control-zone {
+        padding: 5px;
+    }
+    
+    .ctrl-btn {
+        padding: 10px 5px;
+        font-size: 14px;
+    }
+}
+
+/* 设置界面的设备选择按钮 */
+.device-reselect-btn {
+    background: linear-gradient(135deg, #004444 0%, #002222 100%);
+    border: 2px solid #00ffff;
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 12px;
+    font-family: 'Press Start 2P', cursive;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.device-reselect-btn:hover {
+    background: linear-gradient(135deg, #002222 0%, #004444 100%);
+    border-color: #ff00ff;
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.device-reselect-btn:active {
+    transform: translateY(0);
+}
+
+.settings-screen-title {
+    color: #fff;
+    font-size: 42px;
+    text-shadow: 3px 3px 0 #000;
+    margin-bottom: 40px;
+    letter-spacing: 6px;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+    align-items: center;
+    max-width: 1000px;
+    width: 100%;
+}
+
+.settings-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.settings-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.setting-card {
+    background-color: #1a1a1a;
+    border: 3px solid #444;
+    padding: 25px;
+    width: 100%;
+}
+
+.setting-card-title {
+    color: #00ffff;
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 2px solid #333;
+    padding-bottom: 15px;
+}
