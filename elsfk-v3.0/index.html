@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>经典俄罗斯方块</title>
+    <!-- 引入像素字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- 引入 CSS 样式 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 游戏机外壳（全局） -->
+    <div class="game-console-wrapper">
+        <!-- 左侧手柄面板（全局显示） -->
+        <div class="controller-panel left-controller">
+            <div class="controller-decorations">
+                <div class="decorative-buttons">
+                    <div class="deco-btn small">1P</div>
+                    <div class="deco-btn small">2P</div>
+                    <div class="deco-btn round"></div>
+                    <div class="deco-btn round"></div>
+                </div>
+                <div class="speaker-grill">
+                    <div class="speaker-line"></div>
+                    <div class="speaker-line"></div>
+                    <div class="speaker-line"></div>
+                    <div class="speaker-line"></div>
+                </div>
+                <div class="power-led">
+                    <div class="led-light"></div>
+                    <span class="led-label">POWER</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 中间内容区域 -->
+        <div class="content-area">
+            <!-- 首页界面 -->
+            <div id="homeScreen" class="home-screen">
+                <!-- 装饰元素 -->
+                <div class="home-decorations">
+                    <div class="floating-block"></div>
+                    <div class="floating-block"></div>
+                    <div class="floating-block"></div>
+                    <div class="floating-block"></div>
+                    <div class="floating-block"></div>
+                    <div class="floating-block"></div>
+                    <div class="corner-decoration top-left"></div>
+                    <div class="corner-decoration top-right"></div>
+                    <div class="corner-decoration bottom-left"></div>
+                    <div class="corner-decoration bottom-right"></div>
+                    <div class="glow-effect left"></div>
+                    <div class="glow-effect right"></div>
+                </div>
+                
+                <div class="home-header">
+                    <h1 class="game-title">TETRIS</h1>
+                    <div class="subtitle">经典俄罗斯方块</div>
+                </div>
+                
+                <div class="home-content">
+                    <div class="left-section">
+                        <div class="blocks-showcase">
+                            <canvas id="showcaseI" class="showcase-block" width="60" height="60"></canvas>
+                            <canvas id="showcaseT" class="showcase-block" width="60" height="60"></canvas>
+                            <canvas id="showcaseL" class="showcase-block" width="60" height="60"></canvas>
+                            <canvas id="showcaseZ" class="showcase-block" width="60" height="60"></canvas>
+                        </div>
+                        
+                        <div class="menu-buttons">
+                            <button class="menu-btn primary" onclick="showDifficultySelect()">开始游戏</button>
+                            <button class="menu-btn" onclick="showSettings()">游戏设置</button>
+                        </div>
+                    </div>
+                    
+                    <div class="right-section">
+                        <div class="controls-preview" id="historyPreview">
+                            <div class="preview-title" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>历史排名</span>
+                                <button class="view-more-btn" onclick="showHistoryScreen()">查看更多 ></button>
+                            </div>
+                            <ul class="history-list" id="historyListDisplay">
+                                <li class="no-history">暂无记录</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 历史记录界面 -->
+            <div id="historyScreen" class="history-screen">
+                <div class="history-screen-title">HISTORY RECORDS</div>
+                
+                <!-- 俄罗斯方块元素装饰 -->
+                <div class="tetromino-decoration t-piece"></div>
+                <div class="tetromino-decoration l-piece"></div>
+                <div class="tetromino-decoration i-piece"></div>
+                
+                <!-- 开挂模式单独表格 -->
+                <div class="history-section-title">🎯 开挂模式记录</div>
+                <div class="history-table-container">
+                    <table class="history-table extreme-table">
+                        <thead>
+                            <tr>
+                                <th width="80">排名</th>
+                                <th width="120">得分</th>
+                                <th width="80">等级</th>
+                                <th width="80">消行</th>
+                                <th width="150">使用方块</th>
+                                <th>达成时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="extremeTableBody">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 其他模式表格 -->
+                <div class="history-section-title">⚡ 其他模式记录</div>
+                <div class="history-table-container">
+                    <table class="history-table normal-table">
+                        <thead>
+                            <tr>
+                                <th width="80">排名</th>
+                                <th width="120">得分</th>
+                                <th width="80">等级</th>
+                                <th width="80">消行</th>
+                                <th width="100">难度</th>
+                                <th>达成时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <button class="back-btn" onclick="closeHistoryScreen()">返回首页</button>
+            </div>
+            
+            <!-- 设置界面 -->
+            <div id="settingsScreen" class="settings-screen">
+                <div class="settings-screen-title">GAME SETTINGS</div>
+                
+                <!-- 俄罗斯方块元素装饰 -->
+                <div class="tetromino-decoration s-piece"></div>
+                <div class="tetromino-decoration j-piece"></div>
+                <div class="tetromino-decoration o-piece"></div>
+                
+                <!-- 四宫格布局 -->
+                <div class="settings-grid">
+                    <div class="setting-card">
+                        <div class="setting-card-title">🎨 背景主题</div>
+                        <select class="setting-select" id="bgSelect" onchange="changeBackground()">
+                            <option value="classic">经典黑色</option>
+                            <option value="grid">动态网格</option>
+                            <option value="stars">星空背景</option>
+                            <option value="matrix">黑客帝国</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-card">
+                        <div class="setting-card-title">🔊 音量控制</div>
+                        <input type="range" class="volume-control" id="volumeSlider" min="0" max="100" value="50" onchange="changeVolume()">
+                        <div style="text-align: center; font-size: 12px; color: #00ffff; margin-top: 10px;" id="volumeValue">50%</div>
+                    </div>
+                    
+                    <div class="setting-card">
+                        <div class="setting-card-title">🟦 方块样式</div>
+                        <select class="setting-select" id="blockStyleSelect" onchange="changeBlockStyle()">
+                            <option value="classic">经典立体</option>
+                            <option value="flat">扁平风格</option>
+                            <option value="neon">霓虹灯效果</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-card">
+                        <div class="setting-card-title">ℹ️ 操作说明</div>
+                        <div style="font-size: 9px; line-height: 2.2; color: #ccc;">
+                            ← → : 左右移动<br>
+                            ↑ : 旋转方块<br>
+                            ↓ : 加速下落<br>
+                            空格 : 直接落底<br>
+                            P : 暂停/继续
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="back-btn" onclick="closeSettingsScreen()" style="margin-top: 40px; position: relative; z-index: 100;">返回首页</button>
+            </div>
+    
+    <!-- 难度选择界面 - 选项卡布局 -->
+    <div id="difficultyScreen" class="difficulty-screen">
+        <!-- 背景装饰方块 -->
+        <div class="bg-block bg-block-1"></div>
+        <div class="bg-block bg-block-2"></div>
+        <div class="bg-block bg-block-3"></div>
+        <div class="bg-block bg-block-4"></div>
+        <div class="bg-block bg-block-5"></div>
+        
+        <!-- 俄罗斯方块元素装饰 -->
+        <div class="tetromino-decoration t-piece"></div>
+        <div class="tetromino-decoration l-piece"></div>
+        <div class="tetromino-decoration i-piece"></div>
+        <div class="tetromino-decoration z-piece"></div>
+        
+        <div class="difficulty-header">
+            <div class="difficulty-title-container">
+                <h2 class="difficulty-title">选择难度</h2>
+                <p class="difficulty-subtitle">Choose Your Challenge</p>
+            </div>
+            <button class="back-btn" onclick="returnHomeFromDifficulty()">返回</button>
+        </div>
+        
+        <div class="difficulty-tabs-container">
+            <!-- 左侧模式列表 -->
+            <div class="difficulty-tabs">
+                <div class="difficulty-tab active" data-mode="easy" onclick="selectDifficultyTab('easy')">
+                    <div class="tab-icon">🌟</div>
+                    <div class="tab-name">简单</div>
+                </div>
+                <div class="difficulty-tab" data-mode="normal" onclick="selectDifficultyTab('normal')">
+                    <div class="tab-icon">⚡</div>
+                    <div class="tab-name">普通</div>
+                </div>
+                <div class="difficulty-tab" data-mode="hard" onclick="selectDifficultyTab('hard')">
+                    <div class="tab-icon">🔥</div>
+                    <div class="tab-name">困难</div>
+                </div>
+                <div class="difficulty-tab" data-mode="challenge" onclick="selectDifficultyTab('challenge')">
+                    <div class="tab-icon">💀</div>
+                    <div class="tab-name">挑战</div>
+                </div>
+                <div class="difficulty-tab" data-mode="extreme" onclick="selectDifficultyTab('extreme')">
+                    <div class="tab-icon">🎯</div>
+                    <div class="tab-name">开挂</div>
+                </div>
+            </div>
+            
+            <!-- 右侧详细信息 -->
+            <div class="difficulty-content">
+                <!-- 简单模式详情 -->
+                <div class="difficulty-detail active" id="detail-easy">
+                    <div class="detail-icon">🌟</div>
+                    <h3 class="detail-title">简单模式</h3>
+                    <p class="detail-subtitle">适合新手玩家</p>
+                    <div class="detail-preview">
+                        <canvas id="preview-easy" width="320" height="380"></canvas>
+                    </div>
+                    <div class="detail-info-grid">
+                        <div class="info-box">
+                            <div class="info-label">方块速度</div>
+                            <div class="info-value">慢速</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">推荐人群</div>
+                            <div class="info-value">初学者</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">初始等级</div>
+                            <div class="info-value">1 级</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">特点</div>
+                            <div class="info-value">容错率高</div>
+                        </div>
+                    </div>
+                    <button class="start-btn" onclick="window.startGame()">开始游戏</button>
+                </div>
+                
+                <!-- 普通模式详情 -->
+                <div class="difficulty-detail" id="detail-normal">
+                    <div class="detail-icon">⚡</div>
+                    <h3 class="detail-title">普通模式</h3>
+                    <p class="detail-subtitle">标准游戏体验</p>
+                    <div class="detail-preview">
+                        <canvas id="preview-normal" width="320" height="380"></canvas>
+                    </div>
+                    <div class="detail-info-grid">
+                        <div class="info-box">
+                            <div class="info-label">方块速度</div>
+                            <div class="info-value">中速</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">推荐人群</div>
+                            <div class="info-value">普通玩家</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">初始等级</div>
+                            <div class="info-value">1 级</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">特点</div>
+                            <div class="info-value">平衡体验</div>
+                        </div>
+                    </div>
+                    <button class="start-btn" onclick="window.startGame()">开始游戏</button>
+                </div>
+                
+                <!-- 困难模式详情 -->
+                <div class="difficulty-detail" id="detail-hard">
+                    <div class="detail-icon">🔥</div>
+                    <h3 class="detail-title">困难模式</h3>
+                    <p class="detail-subtitle">挑战你的极限</p>
+                    <div class="detail-preview">
+                        <canvas id="preview-hard" width="320" height="380"></canvas>
+                    </div>
+                    <div class="detail-info-grid">
+                        <div class="info-box">
+                            <div class="info-label">方块速度</div>
+                            <div class="info-value">快速</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">推荐人群</div>
+                            <div class="info-value">高手玩家</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">初始等级</div>
+                            <div class="info-value">5 级</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">特点</div>
+                            <div class="info-value">高速下落</div>
+                        </div>
+                    </div>
+                    <button class="start-btn" onclick="window.startGame()">开始游戏</button>
+                </div>
+                
+                <!-- 挑战模式详情 -->
+                <div class="difficulty-detail" id="detail-challenge">
+                    <div class="detail-icon">💀</div>
+                    <h3 class="detail-title">挑战模式</h3>
+                    <p class="detail-subtitle">极速动态难度</p>
+                    <div class="detail-preview">
+                        <canvas id="preview-challenge" width="320" height="380"></canvas>
+                    </div>
+                    <div class="detail-info-grid">
+                        <div class="info-box">
+                            <div class="info-label">方块速度</div>
+                            <div class="info-value">动态变化</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">推荐人群</div>
+                            <div class="info-value">极限玩家</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">初始等级</div>
+                            <div class="info-value">10 级</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">特点</div>
+                            <div class="info-value">随等级提升速度</div>
+                        </div>
+                    </div>
+                    <button class="start-btn" onclick="window.startGame()">开始游戏</button>
+                </div>
+                
+                <!-- 开挂模式详情 -->
+                <div class="difficulty-detail" id="detail-extreme">
+                    <div class="detail-icon">🎯</div>
+                    <h3 class="detail-title">开挂模式</h3>
+                    <p class="detail-subtitle">自定义方块狂欢</p>
+                    <div class="detail-preview">
+                        <canvas id="preview-extreme" width="320" height="380"></canvas>
+                    </div>
+                    <div class="detail-info-grid">
+                        <div class="info-box">
+                            <div class="info-label">方块类型</div>
+                            <div class="info-value">自由选择</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">推荐人群</div>
+                            <div class="info-value">解压玩家</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">初始等级</div>
+                            <div class="info-value">10 级</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="info-label">得分倍数</div>
+                            <div class="info-value">10 倍</div>
+                        </div>
+                    </div>
+                    <div class="extreme-options">
+                        <button class="extreme-btn" onclick="toggleExtremeType('I')">
+                            <div class="extreme-icon">▯</div>
+                            <div class="extreme-label">竖条</div>
+                        </button>
+                        <button class="extreme-btn" onclick="toggleExtremeType('O')">
+                            <div class="extreme-icon">▢</div>
+                            <div class="extreme-label">方块</div>
+                        </button>
+                        <button class="extreme-btn" onclick="toggleExtremeType('T')">
+                            <div class="extreme-icon">⊥</div>
+                            <div class="extreme-label">T 形</div>
+                        </button>
+                        <button class="extreme-btn" onclick="toggleExtremeType('L')">
+                            <div class="extreme-icon">⌐</div>
+                            <div class="extreme-label">L 形</div>
+                        </button>
+                        <button class="extreme-btn" onclick="toggleExtremeType('J')">
+                            <div class="extreme-icon">Γ</div>
+                            <div class="extreme-label">J 形</div>
+                        </button>
+                        <button class="extreme-btn" onclick="toggleExtremeType('S')">
+                            <div class="extreme-icon">Ｚ</div>
+                            <div class="extreme-label">S 形</div>
+                        </button>
+                        <button class="extreme-btn" onclick="toggleExtremeType('Z')">
+                            <div class="extreme-icon">Ｚ</div>
+                            <div class="extreme-label">Z 形</div>
+                        </button>
+                    </div>
+                    <div class="extreme-selection-info">
+                        <span id="selectedTypesDisplay">已选择：无</span>
+                    </div>
+                    <button class="start-btn" onclick="startGameWithExtreme()">开始游戏</button>
+                    <div id="extremeWarning" class="extreme-warning" style="display: none;">⚠️ 请至少选择 1 种方块类型！</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 结算画面 - 独立界面 -->
+    <div id="gameOverScreenFixed" class="game-over-screen-fixed">
+        <div class="game-over-title">GAME OVER</div>
+        <div class="final-stats">
+            <div class="stat-box">
+                <div class="stat-label">得分</div>
+                <div class="stat-value-large" id="finalScore">00000000</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">等级</div>
+                <div class="stat-value-large" id="finalLevel">00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">消行</div>
+                <div class="stat-value-large" id="finalLines">0000</div>
+            </div>
+        </div>
+        <div id="newRecordMsg" class="new-record" style="display: none;">新纪录！</div>
+        <button class="menu-btn primary" onclick="returnHome()">返回首页</button>
+    </div>
+    
+    <!-- 游戏界面 -->
+    <div id="gameInterface" style="display: none;">
+        <!-- 中间游戏区域 -->
+        <div class="game-screen-area">
+            <div class="main-board">
+                <canvas id="gameCanvas" width="300" height="600"></canvas>
+                <!-- 暂停覆盖层 -->
+                <div id="pauseOverlay" class="overlay">
+                    <div class="overlay-text">已暂停</div>
+                    <div class="overlay-subtext">按 P 键继续</div>
+                </div>
+                <!-- 游戏结束覆盖层 -->
+                <div id="gameOverOverlay" class="overlay" style="display: none;">
+                    <div class="overlay-text">游戏结束</div>
+                    <div class="overlay-subtext">按空格键重新开始</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧信息面板和手柄 -->
+        <div class="right-section">
+            <div class="side-panel">
+                    <!-- 上排：下一个 + 下下一个 -->
+                    <div class="panel-section" style="display: flex; gap: 10px;">
+                        <div style="flex: 1;">
+                            <div class="panel-label">下一个</div>
+                            <canvas id="nextCanvas" width="100" height="100"></canvas>
+                        </div>
+                        <div style="flex: 1;">
+                            <div class="panel-label">下下一个</div>
+                            <canvas id="nextNextCanvas" width="100" height="100"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- SCORE 得分 -->
+                    <div class="panel-section">
+                        <div class="panel-label">得分</div>
+                        <div id="scoreDisplay" class="stat-value">00000000</div>
+                    </div>
+
+                    <!-- LEVEL 等级 -->
+                    <div class="panel-section">
+                        <div class="panel-label">等级</div>
+                        <div id="levelDisplay" class="stat-value">00</div>
+                    </div>
+
+                    <!-- LINES 消除行数 -->
+                    <div class="panel-section">
+                        <div class="panel-label">消行</div>
+                        <div id="linesDisplay" class="stat-value">0000</div>
+                    </div>
+
+                    <!-- 暂停按钮和结束游戏按钮 -->
+                    <div class="panel-section" style="margin-top: 20px;">
+                        <div style="display: flex; gap: 10px;">
+                            <button id="pauseBtn" class="control-btn pause" onclick="togglePause()" style="flex: 1;">暂停</button>
+                            <button id="endGameBtn" class="control-btn end" onclick="endGame()" style="flex: 1;">结束游戏</button>
+                        </div>
+                    </div>
+            </div>
+            
+            <!-- 右侧手柄面板 -->
+            <div class="controller-panel right-controller">
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入 JavaScript 文件 -->
+    <script src="js/constants.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/controller.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+    
+    <!-- 页面加载后初始化 -->
+    <script>
+        // 打开难度选择界面
+        function openDifficulty() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('difficultyScreen').style.display = 'flex';
+            
+            // 默认选择第一个选项卡（简单模式）
+            selectDifficultyTab('easy');
+        }
+        
+        // 检查 startGame 是否正确导出
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('检查 window.startGame:', typeof window.startGame);
+            console.log('检查 window.tetris:', window.tetris);
+            if (typeof window.startGame !== 'function') {
+                console.error('错误：window.startGame 未定义！');
+            }
+        });
+    </script>
+</body>
+</html>
