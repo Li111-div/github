@@ -327,6 +327,12 @@ function showHistory() {
  * 显示历史记录界面（完整列表）
  */
 function showHistoryScreen() {
+    // 先隐藏所有其他界面
+    document.getElementById('homeScreen').style.display = 'none';
+    document.getElementById('difficultyScreen').style.display = 'none';
+    document.getElementById('settingsScreen').style.display = 'none';
+    document.getElementById('gameInterface').style.display = 'none';
+    
     const historyScreen = document.getElementById('historyScreen');
     const extremeTableBody = document.getElementById('extremeTableBody');
     const normalTableBody = document.getElementById('historyTableBody');
