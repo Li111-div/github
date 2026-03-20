@@ -347,6 +347,11 @@ function showHistoryScreen() {
     } else {
         let html = '';
         extremeRecords.forEach((record, index) => {
+            // ✅ 安全检查：跳过无效记录
+            if (!record || record.score === null || record.score === undefined) {
+                return; // 跳过这条记录
+            }
+            
             let rankHtml = '';
             if (index === 0) rankHtml = '<span class="rank-badge rank-1">1</span>';
             else if (index === 1) rankHtml = '<span class="rank-badge rank-2">2</span>';
@@ -370,13 +375,18 @@ function showHistoryScreen() {
                 ).join(' + ') : 
                 '未知';
             
+            // ✅ 安全转换：确保数值类型正确
+            const score = Number(record.score) || 0;
+            const level = Number(record.level) || 1;
+            const lines = Number(record.lines) || 0;
+            
             html += `<tr>
                 <td>${rankHtml}</td>
-                <td style="color: #00ff00; font-weight: bold;">${record.score.toString().padStart(8, '0')}</td>
-                <td style="color: #ffff00;">${record.level.toString().padStart(2, '0')}</td>
-                <td style="color: #00ffff;">${record.lines.toString().padStart(4, '0')}</td>
+                <td style="color: #00ff00; font-weight: bold;">${score.toString().padStart(8, '0')}</td>
+                <td style="color: #ffff00;">${level.toString().padStart(2, '0')}</td>
+                <td style="color: #00ffff;">${lines.toString().padStart(4, '0')}</td>
                 <td>${typesHtml}</td>
-                <td style="color: #888;">${record.date}</td>
+                <td style="color: #888;">${record.date || '未知'}</td>
             </tr>`;
         });
         extremeTableBody.innerHTML = html;
@@ -388,6 +398,11 @@ function showHistoryScreen() {
     } else {
         let html = '';
         normalRecords.forEach((record, index) => {
+            // ✅ 安全检查：跳过无效记录
+            if (!record || record.score === null || record.score === undefined) {
+                return; // 跳过这条记录
+            }
+            
             let rankHtml = '';
             if (index === 0) rankHtml = '<span class="rank-badge rank-1">1</span>';
             else if (index === 1) rankHtml = '<span class="rank-badge rank-2">2</span>';
@@ -403,13 +418,18 @@ function showHistoryScreen() {
             };
             const difficultyHtml = difficultyMap[record.difficulty] || '<span style="color: #888;">普通</span>';
             
+            // ✅ 安全转换：确保数值类型正确
+            const score = Number(record.score) || 0;
+            const level = Number(record.level) || 1;
+            const lines = Number(record.lines) || 0;
+            
             html += `<tr>
                 <td>${rankHtml}</td>
-                <td style="color: #00ff00; font-weight: bold;">${record.score.toString().padStart(8, '0')}</td>
-                <td style="color: #ffff00;">${record.level.toString().padStart(2, '0')}</td>
-                <td style="color: #00ffff;">${record.lines.toString().padStart(4, '0')}</td>
+                <td style="color: #00ff00; font-weight: bold;">${score.toString().padStart(8, '0')}</td>
+                <td style="color: #ffff00;">${level.toString().padStart(2, '0')}</td>
+                <td style="color: #00ffff;">${lines.toString().padStart(4, '0')}</td>
                 <td>${difficultyHtml}</td>
-                <td style="color: #888;">${record.date}</td>
+                <td style="color: #888;">${record.date || '未知'}</td>
             </tr>`;
         });
         normalTableBody.innerHTML = html;
