@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>俄罗斯方块 - Tetris</title>
+    
+    <!-- 引入像素风格字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==================== 基础样式重置 ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* ==================== 游戏主题配色 ==================== */
+        :root {
+            --bg-dark: #121212;
+            --bg-panel: #1e1e1e;
+            --border-color: #333;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --grid-line: #2a2a2a;
+            
+            /* 方块颜色 */
+            --color-I: #00f5ff; /* 青色 */
+            --color-O: #ffeb3b; /* 黄色 */
+            --color-T: #9c27b0; /* 紫色 */
+            --color-L: #ff9800; /* 橙色 */
+            --color-J: #2196f3; /* 蓝色 */
+            --color-S: #4caf50; /* 绿色 */
+            --color-Z: #f44336; /* 红色 */
+            
+            /* 像素字体 */
+            --pixel-font: 'Press Start 2P', 'Courier New', monospace;
+        }
+
+        /* ==================== 页面布局 ==================== */
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: var(--pixel-font);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        .game-container {
+            display: flex;
+            gap: 20px;
+            padding: 15px;
+            background-color: var(--bg-panel);
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ==================== 左侧游戏画布 ==================== */
+        .game-board {
+            position: relative;
+        }
+
+        #gameCanvas {
+            background-color: #0a0a0a;
+            border: 3px solid var(--border-color);
+            border-radius: 5px;
+            display: block;
+        }
+
+        /* ==================== 右侧信息面板 ==================== */
+        .info-panel {
+            width: 180px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-box {
+            background-color: #0a0a0a;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .info-box h3 {
+            color: var(--text-secondary);
+            font-size: 8px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+
+        .info-box .value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--color-I);
+        }
+        
+        /* 主题显示 */
+        .theme-box {
+            transition: all 0.3s ease;
+        }
+        
+        .theme-name {
+            font-size: 10px !important;
+            transition: color 0.3s ease;
+        }
+        
+        /* 主题切换提示 */
+        .theme-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* 下一个方块预览 */
+        .next-preview {
+            text-align: center;
+        }
+
+        #nextCanvas {
+            background-color: #050505;
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            margin-top: 8px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* 操作说明 */
+        .controls {
+            font-size: 8px;
+            line-height: 2;
+        }
+
+        .controls .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .controls .key {
+            display: inline-block;
+            background-color: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 7px;
+            min-width: 40px;
+            text-align: center;
+            margin-right: 6px;
+        }
+
+        .controls .desc {
+            color: var(--text-secondary);
+        }
+
+        /* 游戏状态 */
+        .game-status {
+            text-align: center;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 10px;
+        }
+
+        .status-playing {
+            background-color: #1b5e20;
+            color: #4caf50;
+        }
+
+        .status-paused {
+            background-color: #e65100;
+            color: #ff9800;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        .status-over {
+            background-color: #b71c1c;
+            color: #f44336;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 10px;
+            font-family: var(--pixel-font);
+            font-weight: bold;
+            background-color: #333;
+            color: var(--text-primary);
+            border: 2px solid #555;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn:hover {
+            background-color: #4a4a4a;
+            border-color: var(--color-I);
+            color: var(--color-I);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+            background-color: #555;
+        }
+
+        .btn-restart {
+            background-color: #2d2d2d;
+        }
+
+        /* ==================== 虚拟按键（移动端） ==================== */
+        .virtual-controls {
+            display: none;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .v-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--text-primary);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.1s;
+        }
+
+        .v-btn:active, .v-btn.active {
+            background-color: #444;
+            border-color: var(--color-I);
+            color: var(--color-I);
+            transform: scale(0.95);
+        }
+
+        .v-btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .v-btn-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* ==================== 行消除动画 ==================== */
+        @keyframes lineClear {
+            0% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.3; transform: scaleY(1.1); background: #fff; }
+            100% { opacity: 1; transform: scaleY(1); }
+        }
+
+        @keyframes flashRow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(2); }
+        }
+
+        /* ==================== 新游戏提示动画 ==================== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .overlay-text {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* ==================== 响应式布局 ==================== */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+                overflow-y: auto;
+            }
+
+            .game-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+                padding: 15px;
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .game-board {
+                order: 1;
+            }
+
+            #gameCanvas {
+                width: 100%;
+                max-width: 300px;
+                height: auto;
+            }
+
+            .info-panel {
+                order: 2;
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .info-box {
+                flex: 1;
+                min-width: calc(50% - 5px);
+            }
+
+            .info-box.next-preview {
+                min-width: 100%;
+            }
+
+            .controls {
+                display: none;
+            }
+
+            .game-status {
+                order: -1;
+                width: 100%;
+            }
+
+            .btn {
+                font-size: 9px;
+                padding: 8px;
+            }
+
+            .info-box h3 {
+                font-size: 7px;
+            }
+
+            .info-box .value {
+                font-size: 14px;
+            }
+
+            #nextCanvas {
+                width: 80px;
+                height: 80px;
+            }
+
+            /* 显示虚拟按键 */
+            .virtual-controls {
+                display: flex;
+                order: 3;
+                width: 100%;
+            }
+        }
+
+        /* ==================== 最高分高亮 ==================== */
+        .high-score {
+            color: #ffd700 !important;
+        }
+
+        .new-record {
+            animation: pulse 0.5s ease-in-out 3;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- 左侧游戏画布 -->
+        <div class="game-board">
+            <canvas id="gameCanvas" width="300" height="600"></canvas>
+        </div>
+        
+        <!-- 右侧信息面板 -->
+        <div class="info-panel">
+            <!-- 游戏状态 -->
+            <div id="gameStatus" class="game-status status-playing">游戏中</div>
+            
+            <!-- 当前得分 -->
+            <div class="info-box">
+                <h3>得分</h3>
+                <div id="score" class="value">0</div>
+            </div>
+            
+            <!-- 最高分 -->
+            <div class="info-box">
+                <h3>最高分</h3>
+                <div id="highScore" class="value high-score">0</div>
+            </div>
+            
+            <!-- 当前主题 -->
+            <div class="info-box theme-box">
+                <h3>主题</h3>
+                <div id="themeName" class="value theme-name">经典霓虹</div>
+            </div>
+            
+            <!-- 主题切换提示 -->
+            <div id="themeNotification" class="theme-notification"></div>
+            
+            <!-- 消除行数 -->
+            <div class="info-box">
+                <h3>消除行数</h3>
+                <div id="lines" class="value">0</div>
+            </div>
+            
+            <!-- 下一个方块 -->
+            <div class="info-box next-preview">
+                <h3>下一个</h3>
+                <canvas id="nextCanvas" width="100" height="100"></canvas>
+            </div>
+            
+            <!-- 操作说明 -->
+            <div class="info-box controls">
+                <h3>操作</h3>
+                <div class="row"><span class="key">←/→</span><span class="desc">移动</span></div>
+                <div class="row"><span class="key">↑</span><span class="desc">旋转</span></div>
+                <div class="row"><span class="key">↓</span><span class="desc">加速</span></div>
+                <div class="row"><span class="key">空格</span><span class="desc">落底</span></div>
+                <div class="row"><span class="key">P</span><span class="desc">暂停</span></div>
+                <div class="row"><span class="key">R</span><span class="desc">重开</span></div>
+            </div>
+            
+            <!-- 开始/重新开始按钮 -->
+            <button id="startBtn" class="btn">开始游戏</button>
+        </div>
+        
+        <!-- 虚拟按键（移动端） -->
+        <div class="virtual-controls">
+            <div class="v-btn-row">
+                <button class="v-btn" id="vLeft" aria-label="向左移动">
+                    <svg class="v-btn-icon" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/></svg>
+                </button>
+                <button class="v-btn" id="vRotate" aria-label="旋转">
+                    <svg class="v-btn-icon" viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+                <button class="v-btn" id="vRight" aria-label="向右移动">
+                    <svg class="v-btn-icon" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg>
+                </button>
+            </div>
+            <div class="v-btn-row">
+                <button class="v-btn" id="vDown" aria-label="加速下落">
+                    <svg class="v-btn-icon" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </button>
+                <button class="v-btn" id="vDrop" aria-label="直接落底">
+                    <svg class="v-btn-icon" viewBox="0 0 24 24"><path d="M16 13h-3V3h-2v10H8l4 4 4-4zM4 19v2h16v-2H4z"/></svg>
+                </button>
+                <button class="v-btn" id="vPause" aria-label="暂停">
+                    <svg class="v-btn-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 游戏配置常量 ====================
+        const COLS = 10;           // 游戏区域列数
+        const ROWS = 20;           // 游戏区域行数
+        const BLOCK_SIZE = 30;     // 每个格子的像素大小
+        const PREVIEW_SIZE = 25;   // 预览区域格子大小
+
+        // ==================== 方块形状定义 ====================
+        const SHAPES = {
+            I: { shape: [[1, 1, 1, 1]], color: '#00f5ff' },
+            O: { shape: [[1, 1], [1, 1]], color: '#ffeb3b' },
+            T: { shape: [[0, 1, 0], [1, 1, 1]], color: '#9c27b0' },
+            L: { shape: [[1, 0], [1, 0], [1, 1]], color: '#ff9800' },
+            J: { shape: [[0, 1], [0, 1], [1, 1]], color: '#2196f3' },
+            S: { shape: [[0, 1, 1], [1, 1, 0]], color: '#4caf50' },
+            Z: { shape: [[1, 1, 0], [0, 1, 1]], color: '#f44336' }
+        };
+
+        const SHAPE_TYPES = Object.keys(SHAPES);
+
+        // ==================== 计分规则 ====================
+        // ==================== 计分规则 ====================
+        const SCORE_TABLE = { 1: 125, 2: 375, 3: 750, 4: 1250 };
+
+        // ==================== 20种主题配色方案 ====================
+        const THEMES = [
+            // 主题0: 经典霓虹（默认）
+            {
+                name: '经典霓虹',
+                colors: { I: '#00f5ff', O: '#ffeb3b', T: '#9c27b0', L: '#ff9800', J: '#2196f3', S: '#4caf50', Z: '#f44336' },
+                accent: '#00f5ff'
+            },
+            // 主题1: 夕阳熔金
+            {
+                name: '夕阳熔金',
+                colors: { I: '#ff6b35', O: '#f7c59f', T: '#d64045', L: '#ff9f1c', J: '#e71d36', S: '#ffbe0b', Z: '#fb5607' },
+                accent: '#ff6b35'
+            },
+            // 主题2: 森林秘境
+            {
+                name: '森林秘境',
+                colors: { I: '#2d6a4f', O: '#95d5b2', T: '#1b4332', L: '#52b788', J: '#40916c', S: '#74c69d', Z: '#b7e4c7' },
+                accent: '#52b788'
+            },
+            // 主题3: 深海珍珠
+            {
+                name: '深海珍珠',
+                colors: { I: '#0077b6', O: '#90e0ef', T: '#03045e', L: '#00b4d8', J: '#023e8a', S: '#48cae4', Z: '#0096c7' },
+                accent: '#00b4d8'
+            },
+            // 主题4: 极光幻彩
+            {
+                name: '极光幻彩',
+                colors: { I: '#7400b8', O: '#e0aaff', T: '#5e60ce', L: '#6930c3', J: '#5390d9', S: '#4ea8de', Z: '#48bfe3' },
+                accent: '#7400b8'
+            },
+            // 主题5: 糖果乐园
+            {
+                name: '糖果乐园',
+                colors: { I: '#ff85a1', O: '#ffc6ff', T: '#bdb2ff', L: '#ffc8dd', J: '#a0c4ff', S: '#bde0fe', Z: '#ffafcc' },
+                accent: '#ff85a1'
+            },
+            // 主题6: 赛博朋克
+            {
+                name: '赛博朋克',
+                colors: { I: '#f72585', O: '#ffd60a', T: '#7209b7', L: '#ff006e', J: '#3a0ca3', S: '#4cc9f0', Z: '#4361ee' },
+                accent: '#f72585'
+            },
+            // 主题7: 复古电视
+            {
+                name: '复古电视',
+                colors: { I: '#00ff41', O: '#008f11', T: '#003b00', L: '#00cc00', J: '#005c09', S: '#39ff14', Z: '#32cd32' },
+                accent: '#00ff41'
+            },
+            // 主题8: 火山熔岩
+            {
+                name: '火山熔岩',
+                colors: { I: '#ff4500', O: '#ffa500', T: '#8b0000', L: '#ff6347', J: '#dc143c', S: '#ff8c00', Z: '#ff0000' },
+                accent: '#ff4500'
+            },
+            // 主题9: 冰雪奇缘
+            {
+                name: '冰雪奇缘',
+                colors: { I: '#e0ffff', O: '#b0e0e6', T: '#4682b4', L: '#87ceeb', J: '#1e90ff', S: '#add8e6', Z: '#00bfff' },
+                accent: '#87ceeb'
+            },
+            // 主题10: 星空银河
+            {
+                name: '星空银河',
+                colors: { I: '#e6e6fa', O: '#dda0dd', T: '#4b0082', L: '#9370db', J: '#6a5acd', S: '#8a2be2', Z: '#ba55d3' },
+                accent: '#9370db'
+            },
+            // 主题11: 热带水果
+            {
+                name: '热带水果',
+                colors: { I: '#ff6384', O: '#ffcd56', T: '#9966ff', L: '#ff9f40', J: '#36a2eb', S: '#4bc0c0', Z: '#ff6384' },
+                accent: '#ff6384'
+            },
+            // 主题12: 霓虹东京
+            {
+                name: '霓虹东京',
+                colors: { I: '#00ffff', O: '#ffff00', T: '#ff00ff', L: '#ff8c00', J: '#0080ff', S: '#00ff80', Z: '#ff0080' },
+                accent: '#00ffff'
+            },
+            // 主题13: 蒸汽波
+            {
+                name: '蒸汽波',
+                colors: { I: '#ff71ce', O: '#01cdfe', T: '#b967ff', L: '#05ffa1', J: '#fffb96', S: '#01cdfe', Z: '#ff71ce' },
+                accent: '#ff71ce'
+            },
+            // 主题14: 复古游戏
+            {
+                name: '复古游戏',
+                colors: { I: '#9bbc0f', O: '#8bac0f', T: '#306230', L: '#0f380f', J: '#9bbc0f', S: '#8bac0f', Z: '#306230' },
+                accent: '#9bbc0f'
+            },
+            // 主题15: 玫瑰金
+            {
+                name: '玫瑰金',
+                colors: { I: '#e8b4b8', O: '#f5d5cb', T: '#aa4a44', L: '#d4a373', J: '#bc6c25', S: '#dda15e', Z: '#cdb4db' },
+                accent: '#e8b4b8'
+            },
+            // 主题16: 电气蓝
+            {
+                name: '电气蓝',
+                colors: { I: '#00d4ff', O: '#0099ff', T: '#0066cc', L: '#33ccff', J: '#0055aa', S: '#66ddff', Z: '#0077dd' },
+                accent: '#00d4ff'
+            },
+            // 主题17: 暗夜骑士
+            {
+                name: '暗夜骑士',
+                colors: { I: '#808080', O: '#c0c0c0', T: '#404040', L: '#a0a0a0', J: '#606060', S: '#909090', Z: '#707070' },
+                accent: '#a0a0a0'
+            },
+            // 主题18: 彩虹派对
+            {
+                name: '彩虹派对',
+                colors: { I: '#ff0000', O: '#ff8000', T: '#ffff00', L: '#00ff00', J: '#0000ff', S: '#8000ff', Z: '#ff00ff' },
+                accent: '#ff00ff'
+            },
+            // 主题19: 极简黑白
+            {
+                name: '极简黑白',
+                colors: { I: '#ffffff', O: '#e0e0e0', T: '#404040', L: '#c0c0c0', J: '#606060', S: '#a0a0a0', Z: '#808080' },
+                accent: '#ffffff'
+            }
+        ];
+
+        // ==================== 游戏状态变量 ====================
+        let canvas, ctx, nextCanvas, nextCtx;
+        let board;
+        let currentPiece, nextPiece;
+        let score = 0, lines = 0, highScore = 0;
+        let gameLoop = null;
+        let isPlaying = false, isPaused = false;
+        let dropInterval = 1000, lastDropTime = 0;
+        let currentThemeIndex = 0;  // 当前主题索引
+        let lastThemeScore = 0;     // 上次切换主题时的分数
+        
+        // ==================== 动画状态变量 ====================
+        let landingAnimation = null;   // 落地动画状态
+        let clearAnimation = null;     // 消除动画状态
+        let particles = [];            // 粒子效果数组
+        let shockwaves = [];           // 冲击波效果数组
+        let flashEffect = null;        // 屏幕闪光效果
+        let comboCount = 0;            // 连击计数
+        let lastClearTime = 0;         // 上次消除时间
+        let screenShake = { x: 0, y: 0, intensity: 0 }; // 屏幕震动
+        let glowPulse = 0;             // 全局发光脉冲
+
+        // ==================== 主题切换函数 ====================
+        function applyTheme(themeIndex) {
+            const theme = THEMES[themeIndex % THEMES.length];
+            
+            // 更新CSS变量
+            const root = document.documentElement;
+            root.style.setProperty('--color-I', theme.colors.I);
+            root.style.setProperty('--color-O', theme.colors.O);
+            root.style.setProperty('--color-T', theme.colors.T);
+            root.style.setProperty('--color-L', theme.colors.L);
+            root.style.setProperty('--color-J', theme.colors.J);
+            root.style.setProperty('--color-S', theme.colors.S);
+            root.style.setProperty('--color-Z', theme.colors.Z);
+            
+            // 更新SHAPES中的颜色
+            SHAPES.I.color = theme.colors.I;
+            SHAPES.O.color = theme.colors.O;
+            SHAPES.T.color = theme.colors.T;
+            SHAPES.L.color = theme.colors.L;
+            SHAPES.J.color = theme.colors.J;
+            SHAPES.S.color = theme.colors.S;
+            SHAPES.Z.color = theme.colors.Z;
+            
+            // 更新当前方块的颜色（如果在游戏中）
+            if (currentPiece) {
+                currentPiece.color = theme.colors[currentPiece.type];
+            }
+            if (nextPiece) {
+                nextPiece.color = theme.colors[nextPiece.type];
+            }
+            
+            // 更新主题名称显示
+            updateThemeDisplay(theme.name, themeIndex);
+        }
+        
+        function updateThemeDisplay(themeName, index) {
+            const themeEl = document.getElementById('themeName');
+            if (themeEl) {
+                themeEl.textContent = themeName;
+                themeEl.style.color = THEMES[index % THEMES.length].accent;
+            }
+        }
+        
+        function checkThemeChange() {
+            // 每5000分切换一次主题
+            const themeThreshold = 5000;
+            const newThemeScore = Math.floor(score / themeThreshold);
+            
+            if (newThemeScore > lastThemeScore) {
+                const themesPassed = newThemeScore - lastThemeScore;
+                currentThemeIndex = (currentThemeIndex + themesPassed) % THEMES.length;
+                lastThemeScore = newThemeScore;
+                applyTheme(currentThemeIndex);
+                
+                // 显示主题切换提示
+                showThemeNotification();
+            }
+        }
+        
+        function showThemeNotification() {
+            const theme = THEMES[currentThemeIndex];
+            const notification = document.getElementById('themeNotification');
+            if (notification) {
+                notification.textContent = `主题切换: ${theme.name}`;
+                notification.style.animation = 'none';
+                notification.offsetHeight; // 触发重绘
+                notification.style.animation = 'fadeIn 0.5s ease-out, fadeOut 0.5s ease-in 2s forwards';
+            }
+        }
+
+        // ==================== 初始化函数 ====================
+        function init() {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            nextCanvas = document.getElementById('nextCanvas');
+            nextCtx = nextCanvas.getContext('2d');
+            
+            // 加载最高分
+            loadHighScore();
+            
+            // 应用初始主题
+            applyTheme(0);
+            
+            // 绑定按钮事件
+            document.getElementById('startBtn').addEventListener('click', startGame);
+            
+            // 绑定键盘事件
+            document.addEventListener('keydown', handleKeyPress);
+            
+            // 绑定虚拟按键
+            bindVirtualControls();
+            
+            // 初始化游戏区域
+            resetBoard();
+            
+            // 绘制初始状态
+            draw();
+            drawNextPiece();
+        }
+
+        // ==================== 最高分存储 ====================
+        function loadHighScore() {
+            try {
+                highScore = parseInt(localStorage.getItem('tetris_highscore')) || 0;
+                document.getElementById('highScore').textContent = highScore;
+            } catch (e) {
+                highScore = 0;
+            }
+        }
+
+        function saveHighScore() {
+            try {
+                if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem('tetris_highscore', highScore.toString());
+                    document.getElementById('highScore').textContent = highScore;
+                    document.getElementById('highScore').classList.add('new-record');
+                    setTimeout(() => {
+                        document.getElementById('highScore').classList.remove('new-record');
+                    }, 1500);
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        // ==================== 虚拟按键绑定 ====================
+        function bindVirtualControls() {
+            const vButtons = {
+                'vLeft': () => movePiece(-1, 0),
+                'vRight': () => movePiece(1, 0),
+                'vRotate': () => rotateCurrentPiece(),
+                'vDown': () => softDrop(),
+                'vDrop': () => hardDrop(),
+                'vPause': () => { if (isPlaying) togglePause(); }
+            };
+
+            Object.keys(vButtons).forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    // 触摸事件
+                    btn.addEventListener('touchstart', (e) => {
+                        e.preventDefault();
+                        btn.classList.add('active');
+                        vButtons[id]();
+                    });
+                    btn.addEventListener('touchend', () => {
+                        btn.classList.remove('active');
+                    });
+                    // 鼠标事件（用于测试）
+                    btn.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        vButtons[id]();
+                    });
+                }
+            });
+        }
+
+        // ==================== 重置游戏区域 ====================
+        function resetBoard() {
+            board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
+        }
+
+        // ==================== 方块操作 ====================
+        function createPiece(type) {
+            const shapeData = SHAPES[type];
+            return {
+                type: type,
+                shape: shapeData.shape.map(row => [...row]),
+                color: shapeData.color,
+                x: Math.floor(COLS / 2) - Math.ceil(shapeData.shape[0].length / 2),
+                y: 0
+            };
+        }
+
+        function randomPiece() {
+            const type = SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)];
+            return createPiece(type);
+        }
+
+        function rotatePiece(piece) {
+            const rows = piece.shape.length;
+            const cols = piece.shape[0].length;
+            const rotated = [];
+            
+            for (let col = 0; col < cols; col++) {
+                const newRow = [];
+                for (let row = rows - 1; row >= 0; row--) {
+                    newRow.push(piece.shape[row][col]);
+                }
+                rotated.push(newRow);
+            }
+            return rotated;
+        }
+
+        function isValidMove(piece, offsetX = 0, offsetY = 0, newShape = null) {
+            const shape = newShape || piece.shape;
+            const newX = piece.x + offsetX;
+            const newY = piece.y + offsetY;
+            
+            for (let row = 0; row < shape.length; row++) {
+                for (let col = 0; col < shape[row].length; col++) {
+                    if (shape[row][col]) {
+                        const boardX = newX + col;
+                        const boardY = newY + row;
+                        
+                        if (boardX < 0 || boardX >= COLS || boardY >= ROWS) return false;
+                        if (boardY >= 0 && board[boardY][boardX]) return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        function placePiece() {
+            // 收集放置的位置用于落地动画
+            const placedPositions = [];
+            
+            for (let row = 0; row < currentPiece.shape.length; row++) {
+                for (let col = 0; col < currentPiece.shape[row].length; col++) {
+                    if (currentPiece.shape[row][col]) {
+                        const boardY = currentPiece.y + row;
+                        const boardX = currentPiece.x + col;
+                        if (boardY >= 0) {
+                            board[boardY][boardX] = currentPiece.color;
+                            placedPositions.push({ x: boardX, y: boardY, color: currentPiece.color });
+                        }
+                    }
+                }
+            }
+            
+            // 触发落地动画
+            triggerLandingAnimation(placedPositions);
+        }
+        
+        // ==================== 落地动画 ====================
+        function triggerLandingAnimation(positions) {
+            landingAnimation = {
+                positions: positions,
+                scale: 1.3,
+                alpha: 1,
+                duration: 200,
+                startTime: performance.now()
+            };
+            
+            // 计算方块中心位置
+            let centerX = 0, centerY = 0;
+            positions.forEach(pos => {
+                centerX += pos.x;
+                centerY += pos.y;
+            });
+            centerX = (centerX / positions.length) * BLOCK_SIZE + BLOCK_SIZE / 2;
+            centerY = (centerY / positions.length) * BLOCK_SIZE + BLOCK_SIZE / 2;
+            
+            // 添加冲击波效果
+            shockwaves.push({
+                x: centerX,
+                y: centerY,
+                radius: 10,
+                maxRadius: 80,
+                alpha: 0.8,
+                color: currentPiece ? currentPiece.color : '#00f5ff'
+            });
+            
+            // 生成落地粒子 - 更丰富的效果
+            positions.forEach(pos => {
+                const px = pos.x * BLOCK_SIZE + BLOCK_SIZE / 2;
+                const py = pos.y * BLOCK_SIZE + BLOCK_SIZE;
+                
+                // 火花粒子
+                for (let i = 0; i < 5; i++) {
+                    const angle = Math.random() * Math.PI; // 向上的扇形
+                    const speed = Math.random() * 6 + 2;
+                    particles.push({
+                        x: px,
+                        y: py,
+                        vx: Math.cos(angle - Math.PI/2) * speed,
+                        vy: Math.sin(angle - Math.PI/2) * speed - 2,
+                        color: pos.color,
+                        life: 1,
+                        size: Math.random() * 4 + 2,
+                        type: 'spark'
+                    });
+                }
+                
+                // 光晕粒子
+                particles.push({
+                    x: px,
+                    y: py - BLOCK_SIZE/2,
+                    vx: 0,
+                    vy: -0.5,
+                    color: pos.color,
+                    life: 1,
+                    size: 12,
+                    type: 'glow'
+                });
+            });
+            
+            // 轻微屏幕震动
+            screenShake.intensity = 2;
+        }
+
+        // ==================== 行消除 ====================
+        function clearLines() {
+            // 检测所有满行
+            const rowsToClear = [];
+            for (let row = ROWS - 1; row >= 0; row--) {
+                if (board[row].every(cell => cell !== 0)) {
+                    rowsToClear.push(row);
+                }
+            }
+            
+            const clearedCount = rowsToClear.length;
+            
+            // 触发消除动画
+            if (clearedCount > 0) {
+                triggerClearAnimation(rowsToClear, clearedCount);
+                
+                // 延迟删除，让动画播放
+                setTimeout(() => {
+                    // 过滤掉满行
+                    board = board.filter((row, index) => !rowsToClear.includes(index));
+                    // 在顶部添加对应数量的空行
+                    for (let i = 0; i < clearedCount; i++) {
+                        board.unshift(Array(COLS).fill(0));
+                    }
+                }, 200);
+            }
+            
+            return clearedCount;
+        }
+        
+        // ==================== 消除动画 ====================
+        function triggerClearAnimation(rowsToClear, clearedCount) {
+            const now = performance.now();
+            
+            // 检查连击
+            if (now - lastClearTime < 1000) {
+                comboCount++;
+            } else {
+                comboCount = 1;
+            }
+            lastClearTime = now;
+            
+            clearAnimation = {
+                rows: rowsToClear,
+                progress: 0,
+                duration: 300,
+                startTime: now,
+                clearedCount: clearedCount,
+                combo: comboCount
+            };
+            
+            // 添加屏幕闪光效果
+            flashEffect = {
+                alpha: 0.4,
+                color: clearedCount >= 4 ? '#ffd700' : '#ffffff',
+                duration: 200,
+                startTime: now
+            };
+            
+            // 屏幕震动（消除越多越强烈）
+            screenShake.intensity = clearedCount * 3 + comboCount * 2;
+            
+            // 为每行添加冲击波
+            rowsToClear.forEach(row => {
+                shockwaves.push({
+                    x: canvas.width / 2,
+                    y: row * BLOCK_SIZE + BLOCK_SIZE / 2,
+                    radius: 5,
+                    maxRadius: 150,
+                    alpha: 0.6,
+                    color: THEMES[currentThemeIndex].accent
+                });
+            });
+            
+            // 生成消除粒子效果 - 更炫酷
+            rowsToClear.forEach(row => {
+                for (let col = 0; col < COLS; col++) {
+                    const color = board[row][col];
+                    if (color) {
+                        const px = col * BLOCK_SIZE + BLOCK_SIZE / 2;
+                        const py = row * BLOCK_SIZE + BLOCK_SIZE / 2;
+                        
+                        // 爆炸粒子
+                        for (let i = 0; i < 8; i++) {
+                            const angle = (i / 8) * Math.PI * 2;
+                            const speed = Math.random() * 8 + 4;
+                            particles.push({
+                                x: px,
+                                y: py,
+                                vx: Math.cos(angle) * speed,
+                                vy: Math.sin(angle) * speed,
+                                color: color,
+                                life: 1,
+                                size: Math.random() * 5 + 3,
+                                type: 'explosion'
+                            });
+                        }
+                        
+                        // 星星粒子
+                        if (Math.random() > 0.5) {
+                            particles.push({
+                                x: px,
+                                y: py,
+                                vx: (Math.random() - 0.5) * 4,
+                                vy: Math.random() * -6 - 2,
+                                color: '#ffffff',
+                                life: 1,
+                                size: 8,
+                                type: 'star'
+                            });
+                        }
+                        
+                        // 光环粒子
+                        particles.push({
+                            x: px,
+                            y: py,
+                            vx: 0,
+                            vy: -1,
+                            color: color,
+                            life: 1,
+                            size: 15,
+                            type: 'ring'
+                        });
+                    }
+                }
+            });
+            
+            // Tetris 特效
+            if (clearedCount === 4) {
+                for (let i = 0; i < 30; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 10,
+                        vy: (Math.random() - 0.5) * 10,
+                        color: ['#ffd700', '#ff6b6b', '#4ecdc4', '#a855f7'][Math.floor(Math.random() * 4)],
+                        life: 1,
+                        size: Math.random() * 8 + 4,
+                        type: 'sparkle'
+                    });
+                }
+            }
+        }
+        
+        // ==================== 更新动画 ====================
+        function updateAnimations() {
+            const now = performance.now();
+            
+            // 更新全局发光脉冲
+            glowPulse = (Math.sin(now / 200) + 1) / 2;
+            
+            // 更新落地动画
+            if (landingAnimation) {
+                const elapsed = now - landingAnimation.startTime;
+                const progress = Math.min(elapsed / landingAnimation.duration, 1);
+                // 弹性缓动
+                const elastic = 1 - Math.pow(2, -10 * progress) * Math.cos(progress * Math.PI * 2);
+                landingAnimation.scale = 1.3 - 0.3 * elastic;
+                landingAnimation.alpha = 1 - progress * 0.3;
+                
+                if (progress >= 1) {
+                    landingAnimation = null;
+                }
+            }
+            
+            // 更新消除动画
+            if (clearAnimation) {
+                const elapsed = now - clearAnimation.startTime;
+                clearAnimation.progress = Math.min(elapsed / clearAnimation.duration, 1);
+                
+                if (clearAnimation.progress >= 1) {
+                    clearAnimation = null;
+                }
+            }
+            
+            // 更新冲击波
+            shockwaves = shockwaves.filter(sw => {
+                sw.radius += 6;
+                sw.alpha -= 0.03;
+                return sw.alpha > 0 && sw.radius < sw.maxRadius;
+            });
+            
+            // 更新闪光效果
+            if (flashEffect) {
+                const elapsed = now - flashEffect.startTime;
+                const progress = elapsed / flashEffect.duration;
+                flashEffect.alpha = 0.4 * (1 - progress);
+                if (progress >= 1) flashEffect = null;
+            }
+            
+            // 更新屏幕震动
+            if (screenShake.intensity > 0) {
+                screenShake.x = (Math.random() - 0.5) * screenShake.intensity;
+                screenShake.y = (Math.random() - 0.5) * screenShake.intensity;
+                screenShake.intensity *= 0.85;
+                if (screenShake.intensity < 0.1) {
+                    screenShake.intensity = 0;
+                    screenShake.x = 0;
+                    screenShake.y = 0;
+                }
+            }
+            
+            // 更新粒子
+            particles = particles.filter(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                
+                // 不同类型粒子的物理效果
+                if (p.type === 'explosion') {
+                    p.vy += 0.15;
+                    p.vx *= 0.98;
+                } else if (p.type === 'spark') {
+                    p.vy += 0.3;
+                } else if (p.type === 'star') {
+                    p.vy += 0.1;
+                    p.vx *= 0.95;
+                } else if (p.type === 'ring') {
+                    p.size += 0.5;
+                } else if (p.type === 'glow') {
+                    p.size *= 0.95;
+                } else if (p.type === 'sparkle') {
+                    p.vy += 0.2;
+                    p.vx *= 0.97;
+                }
+                
+                p.life -= 0.02;
+                return p.life > 0;
+            });
+        }
+
+        function updateScore(clearedLines) {
+            if (clearedLines > 0) {
+                score += SCORE_TABLE[clearedLines] || 0;
+                lines += clearedLines;
+                
+                document.getElementById('score').textContent = score;
+                document.getElementById('lines').textContent = lines;
+                
+                const level = Math.floor(lines / 10);
+                dropInterval = Math.max(100, 1000 - level * 100);
+                
+                // 检查是否需要切换主题
+                checkThemeChange();
+            }
+        }
+
+        function checkGameOver() {
+            for (let col = 0; col < COLS; col++) {
+                if (board[0][col] !== 0) return true;
+            }
+            return false;
+        }
+
+        // ==================== 游戏主循环 ====================
+        function gameUpdate(timestamp) {
+            if (!isPlaying || isPaused) {
+                // 即使暂停也更新动画和绘制，保证动画流畅
+                updateAnimations();
+                draw();
+                gameLoop = requestAnimationFrame(gameUpdate);
+                return;
+            }
+            
+            if (timestamp - lastDropTime > dropInterval) {
+                lastDropTime = timestamp;
+                
+                if (isValidMove(currentPiece, 0, 1)) {
+                    currentPiece.y++;
+                } else {
+                    placePiece();
+                    const cleared = clearLines();
+                    updateScore(cleared);
+                    
+                    if (checkGameOver()) {
+                        gameOver();
+                        return;
+                    }
+                    
+                    currentPiece = nextPiece;
+                    nextPiece = randomPiece();
+                    drawNextPiece();
+                }
+            }
+            
+            updateAnimations();
+            draw();
+            gameLoop = requestAnimationFrame(gameUpdate);
+        }
+
+        // ==================== 绘制函数 ====================
+        function draw() {
+            // 应用屏幕震动
+            ctx.save();
+            ctx.translate(screenShake.x, screenShake.y);
+            
+            // 清空画布
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(-10, -10, canvas.width + 20, canvas.height + 20);
+            
+            // 绘制网格
+            ctx.strokeStyle = '#1a1a1a';
+            ctx.lineWidth = 1;
+            for (let row = 0; row <= ROWS; row++) {
+                ctx.beginPath();
+                ctx.moveTo(0, row * BLOCK_SIZE);
+                ctx.lineTo(canvas.width, row * BLOCK_SIZE);
+                ctx.stroke();
+            }
+            for (let col = 0; col <= COLS; col++) {
+                ctx.beginPath();
+                ctx.moveTo(col * BLOCK_SIZE, 0);
+                ctx.lineTo(col * BLOCK_SIZE, canvas.height);
+                ctx.stroke();
+            }
+            
+            // 绘制已放置的方块
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLS; col++) {
+                    if (board[row][col]) {
+                        // 消除动画效果
+                        if (clearAnimation && clearAnimation.rows.includes(row)) {
+                            const progress = clearAnimation.progress;
+                            // 彩虹闪烁效果
+                            const hue = (progress * 360 + row * 30 + col * 30) % 360;
+                            const flash = Math.sin(progress * Math.PI * 8) > 0;
+                            
+                            if (flash) {
+                                ctx.globalAlpha = 1;
+                                ctx.fillStyle = `hsl(${hue}, 100%, 70%)`;
+                                ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
+                                ctx.shadowBlur = 25;
+                                ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                                ctx.shadowBlur = 0;
+                            } else {
+                                ctx.globalAlpha = 0.4;
+                                drawBlock(ctx, col, row, board[row][col], BLOCK_SIZE);
+                            }
+                            ctx.globalAlpha = 1;
+                        } else {
+                            // 方块发光脉冲效果
+                            const glow = 0.3 + glowPulse * 0.2;
+                            ctx.shadowColor = board[row][col];
+                            ctx.shadowBlur = 5 + glowPulse * 5;
+                            drawBlock(ctx, col, row, board[row][col], BLOCK_SIZE);
+                            ctx.shadowBlur = 0;
+                        }
+                    }
+                }
+            }
+            
+            // 绘制冲击波
+            shockwaves.forEach(sw => {
+                ctx.globalAlpha = sw.alpha;
+                ctx.strokeStyle = sw.color;
+                ctx.lineWidth = 3;
+                ctx.shadowColor = sw.color;
+                ctx.shadowBlur = 10;
+                ctx.beginPath();
+                ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            });
+            
+            // 绘制落地动画
+            if (landingAnimation) {
+                landingAnimation.positions.forEach(pos => {
+                    const px = pos.x * BLOCK_SIZE;
+                    const py = pos.y * BLOCK_SIZE;
+                    ctx.globalAlpha = landingAnimation.alpha;
+                    ctx.fillStyle = pos.color;
+                    ctx.shadowColor = pos.color;
+                    ctx.shadowBlur = 20;
+                    const offset = (1 - landingAnimation.scale) * BLOCK_SIZE / 2;
+                    ctx.fillRect(px + offset, py + offset, BLOCK_SIZE * landingAnimation.scale - 2, BLOCK_SIZE * landingAnimation.scale - 2);
+                    ctx.shadowBlur = 0;
+                    ctx.globalAlpha = 1;
+                });
+            }
+            
+            // 绘制粒子效果
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life;
+                
+                if (p.type === 'star') {
+                    // 星星形状
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 8;
+                    drawStar(ctx, p.x, p.y, 5, p.size * p.life, p.size * p.life / 2);
+                    ctx.shadowBlur = 0;
+                } else if (p.type === 'ring') {
+                    // 光环
+                    ctx.strokeStyle = p.color;
+                    ctx.lineWidth = 2;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 5;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.shadowBlur = 0;
+                } else if (p.type === 'glow') {
+                    // 光晕
+                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+                    gradient.addColorStop(0, p.color);
+                    gradient.addColorStop(1, 'transparent');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (p.type === 'sparkle') {
+                    // 闪烁粒子
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 15;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                } else {
+                    // 默认圆形粒子
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 5;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+                
+                ctx.globalAlpha = 1;
+            });
+            
+            // 绘制屏幕闪光
+            if (flashEffect) {
+                ctx.globalAlpha = flashEffect.alpha;
+                ctx.fillStyle = flashEffect.color;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.globalAlpha = 1;
+            }
+            
+            // 绘制投影
+            if (currentPiece) {
+                drawGhost();
+                
+                // 绘制当前方块
+                for (let row = 0; row < currentPiece.shape.length; row++) {
+                    for (let col = 0; col < currentPiece.shape[row].length; col++) {
+                        if (currentPiece.shape[row][col]) {
+                            drawBlock(
+                                ctx,
+                                currentPiece.x + col,
+                                currentPiece.y + row,
+                                currentPiece.color,
+                                BLOCK_SIZE
+                            );
+                        }
+                    }
+                }
+            }
+            
+            // 暂停提示
+            if (isPaused) {
+                drawOverlay('游戏暂停', '#ff9800');
+            }
+            
+            // 连击提示
+            if (clearAnimation && clearAnimation.combo > 1) {
+                ctx.globalAlpha = 1 - clearAnimation.progress;
+                ctx.fillStyle = '#ffd700';
+                ctx.font = 'bold 24px "Press Start 2P", monospace';
+                ctx.textAlign = 'center';
+                ctx.shadowColor = '#ff6b00';
+                ctx.shadowBlur = 10;
+                ctx.fillText(`${clearAnimation.combo}x COMBO!`, canvas.width / 2, 100);
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            }
+            
+            // Tetris 特效文字
+            if (clearAnimation && clearAnimation.clearedCount === 4) {
+                ctx.globalAlpha = 1 - clearAnimation.progress;
+                ctx.fillStyle = '#ff6b6b';
+                ctx.font = 'bold 32px "Press Start 2P", monospace';
+                ctx.textAlign = 'center';
+                ctx.shadowColor = '#ffd700';
+                ctx.shadowBlur = 20;
+                ctx.fillText('TETRIS!', canvas.width / 2, canvas.height / 2);
+                ctx.shadowBlur = 0;
+                ctx.globalAlpha = 1;
+            }
+            
+            ctx.restore(); // 恢复屏幕震动
+        }
+        
+        // ==================== 绘制星星形状 ====================
+        function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
+            let rot = Math.PI / 2 * 3;
+            let x = cx;
+            let y = cy;
+            const step = Math.PI / spikes;
+            
+            ctx.beginPath();
+            ctx.moveTo(cx, cy - outerRadius);
+            
+            for (let i = 0; i < spikes; i++) {
+                x = cx + Math.cos(rot) * outerRadius;
+                y = cy + Math.sin(rot) * outerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+                
+                x = cx + Math.cos(rot) * innerRadius;
+                y = cy + Math.sin(rot) * innerRadius;
+                ctx.lineTo(x, y);
+                rot += step;
+            }
+            
+            ctx.lineTo(cx, cy - outerRadius);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawGhost() {
+            let ghostY = currentPiece.y;
+            while (isValidMove(currentPiece, 0, ghostY - currentPiece.y + 1)) {
+                ghostY++;
+            }
+            
+            // 绘制更显眼的投影
+            for (let row = 0; row < currentPiece.shape.length; row++) {
+                for (let col = 0; col < currentPiece.shape[row].length; col++) {
+                    if (currentPiece.shape[row][col]) {
+                        const px = (currentPiece.x + col) * BLOCK_SIZE;
+                        const py = (ghostY + row) * BLOCK_SIZE;
+                        
+                        // 半透明填充
+                        ctx.globalAlpha = 0.4;
+                        ctx.fillStyle = currentPiece.color;
+                        ctx.fillRect(px + 2, py + 2, BLOCK_SIZE - 4, BLOCK_SIZE - 4);
+                        
+                        // 发光边框效果
+                        ctx.globalAlpha = 0.9;
+                        ctx.strokeStyle = currentPiece.color;
+                        ctx.lineWidth = 3;
+                        ctx.shadowColor = currentPiece.color;
+                        ctx.shadowBlur = 8;
+                        ctx.strokeRect(px + 2, py + 2, BLOCK_SIZE - 4, BLOCK_SIZE - 4);
+                        ctx.shadowBlur = 0;
+                        
+                        // 内部交叉线标记
+                        ctx.globalAlpha = 0.6;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(px + 8, py + 8);
+                        ctx.lineTo(px + BLOCK_SIZE - 8, py + BLOCK_SIZE - 8);
+                        ctx.moveTo(px + BLOCK_SIZE - 8, py + 8);
+                        ctx.lineTo(px + 8, py + BLOCK_SIZE - 8);
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            ctx.globalAlpha = 1;
+        }
+
+        function drawBlock(context, x, y, color, size) {
+            const px = x * size;
+            const py = y * size;
+            
+            // 方块主体
+            context.fillStyle = color;
+            context.fillRect(px + 1, py + 1, size - 2, size - 2);
+            
+            // 高光（左上）
+            context.fillStyle = 'rgba(255, 255, 255, 0.35)';
+            context.fillRect(px + 1, py + 1, size - 2, 3);
+            context.fillRect(px + 1, py + 1, 3, size - 2);
+            
+            // 阴影（右下）
+            context.fillStyle = 'rgba(0, 0, 0, 0.35)';
+            context.fillRect(px + size - 4, py + 1, 3, size - 2);
+            context.fillRect(px + 1, py + size - 4, size - 2, 3);
+        }
+
+        function drawOverlay(text, color) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = color;
+            ctx.font = 'bold 20px "Press Start 2P", monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+        }
+
+        function drawNextPiece() {
+            nextCtx.fillStyle = '#050505';
+            nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+            
+            if (!nextPiece) return;
+            
+            const shape = nextPiece.shape;
+            const offsetX = (nextCanvas.width - shape[0].length * PREVIEW_SIZE) / 2;
+            const offsetY = (nextCanvas.height - shape.length * PREVIEW_SIZE) / 2;
+            
+            for (let row = 0; row < shape.length; row++) {
+                for (let col = 0; col < shape[row].length; col++) {
+                    if (shape[row][col]) {
+                        const px = offsetX + col * PREVIEW_SIZE;
+                        const py = offsetY + row * PREVIEW_SIZE;
+                        
+                        nextCtx.fillStyle = nextPiece.color;
+                        nextCtx.fillRect(px + 2, py + 2, PREVIEW_SIZE - 4, PREVIEW_SIZE - 4);
+                        
+                        nextCtx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                        nextCtx.fillRect(px + 2, py + 2, PREVIEW_SIZE - 4, 2);
+                        nextCtx.fillRect(px + 2, py + 2, 2, PREVIEW_SIZE - 4);
+                    }
+                }
+            }
+        }
+
+        // ==================== 操作函数 ====================
+        function movePiece(dx, dy) {
+            if (!isPlaying || isPaused) return;
+            if (isValidMove(currentPiece, dx, dy)) {
+                currentPiece.x += dx;
+                currentPiece.y += dy;
+                draw();
+            }
+        }
+
+        function rotateCurrentPiece() {
+            if (!isPlaying || isPaused) return;
+            const rotated = rotatePiece(currentPiece);
+            if (isValidMove(currentPiece, 0, 0, rotated)) {
+                currentPiece.shape = rotated;
+                draw();
+            }
+        }
+
+        function softDrop() {
+            if (!isPlaying || isPaused) return;
+            if (isValidMove(currentPiece, 0, 1)) {
+                currentPiece.y++;
+                score += 1; // 软降加分
+                document.getElementById('score').textContent = score;
+                draw();
+            }
+        }
+
+        function hardDrop() {
+            if (!isPlaying || isPaused) return;
+            let dropDistance = 0;
+            while (isValidMove(currentPiece, 0, dropDistance + 1)) {
+                dropDistance++;
+            }
+            currentPiece.y += dropDistance;
+            score += dropDistance * 2; // 硬降加分
+            document.getElementById('score').textContent = score;
+            
+            placePiece();
+            const cleared = clearLines();
+            updateScore(cleared);
+            
+            if (checkGameOver()) {
+                gameOver();
+            } else {
+                currentPiece = nextPiece;
+                nextPiece = randomPiece();
+                drawNextPiece();
+                draw();
+            }
+        }
+
+        // ==================== 键盘控制 ====================
+        function handleKeyPress(e) {
+            // R键重新开始（任何时候都可用）
+            if (e.key === 'r' || e.key === 'R') {
+                startGame();
+                return;
+            }
+            
+            if (!isPlaying) return;
+            
+            // P键暂停
+            if (e.key === 'p' || e.key === 'P') {
+                togglePause();
+                return;
+            }
+            
+            if (isPaused) return;
+            
+            switch (e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    movePiece(-1, 0);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    movePiece(1, 0);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    rotateCurrentPiece();
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    softDrop();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    hardDrop();
+                    break;
+            }
+        }
+
+        // ==================== 游戏控制 ====================
+        function togglePause() {
+            isPaused = !isPaused;
+            const statusEl = document.getElementById('gameStatus');
+            
+            if (isPaused) {
+                statusEl.textContent = '已暂停';
+                statusEl.className = 'game-status status-paused';
+                cancelAnimationFrame(gameLoop);
+                draw(); // 显示暂停覆盖层
+            } else {
+                statusEl.textContent = '游戏中';
+                statusEl.className = 'game-status status-playing';
+                lastDropTime = performance.now();
+                gameLoop = requestAnimationFrame(gameUpdate);
+            }
+        }
+
+        function startGame() {
+            resetBoard();
+            score = 0;
+            lines = 0;
+            dropInterval = 1000;
+            isPlaying = true;
+            isPaused = false;
+            
+            // 重置主题
+            currentThemeIndex = 0;
+            lastThemeScore = 0;
+            applyTheme(0);
+            
+            // 重置动画状态
+            landingAnimation = null;
+            clearAnimation = null;
+            particles = [];
+            shockwaves = [];
+            flashEffect = null;
+            comboCount = 0;
+            lastClearTime = 0;
+            screenShake = { x: 0, y: 0, intensity: 0 };
+            glowPulse = 0;
+            
+            document.getElementById('score').textContent = '0';
+            document.getElementById('lines').textContent = '0';
+            document.getElementById('gameStatus').textContent = '游戏中';
+            document.getElementById('gameStatus').className = 'game-status status-playing';
+            document.getElementById('startBtn').textContent = '重新开始';
+            
+            currentPiece = randomPiece();
+            nextPiece = randomPiece();
+            drawNextPiece();
+            
+            lastDropTime = performance.now();
+            if (gameLoop) cancelAnimationFrame(gameLoop);
+            gameLoop = requestAnimationFrame(gameUpdate);
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            cancelAnimationFrame(gameLoop);
+            
+            // 保存最高分
+            const isNewRecord = saveHighScore();
+            
+            // 更新状态
+            const statusEl = document.getElementById('gameStatus');
+            statusEl.textContent = '游戏结束';
+            statusEl.className = 'game-status status-over';
+            document.getElementById('startBtn').textContent = '再来一局';
+            
+            // 绘制结束画面
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#f44336';
+            ctx.font = 'bold 16px "Press Start 2P", monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('游戏结束', canvas.width / 2, canvas.height / 2 - 40);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '12px "Press Start 2P", monospace';
+            ctx.fillText(`得分: ${score}`, canvas.width / 2, canvas.height / 2);
+            
+            if (isNewRecord) {
+                ctx.fillStyle = '#ffd700';
+                ctx.fillText('新纪录!', canvas.width / 2, canvas.height / 2 + 30);
+            }
+            
+            ctx.fillStyle = '#888';
+            ctx.font = '10px "Press Start 2P", monospace';
+            ctx.fillText('按 R 重新开始', canvas.width / 2, canvas.height / 2 + 70);
+        }
+
+        // ==================== 启动 ====================
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
