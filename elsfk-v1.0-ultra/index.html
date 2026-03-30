@@ -113,6 +113,17 @@
             transition: color 0.3s ease;
         }
         
+        /* 音乐显示 */
+        .music-box {
+            transition: all 0.3s ease;
+        }
+        
+        .music-name {
+            font-size: 9px !important;
+            color: #a855f7;
+            transition: color 0.3s ease;
+        }
+        
         /* 主题切换提示 */
         .theme-notification {
             position: fixed;
@@ -428,6 +439,12 @@
                 <div id="themeName" class="value theme-name">经典霓虹</div>
             </div>
             
+            <!-- 当前音乐 -->
+            <div class="info-box music-box">
+                <h3>音乐</h3>
+                <div id="musicName" class="value music-name">♪ Classic Tetris</div>
+            </div>
+            
             <!-- 主题切换提示 -->
             <div id="themeNotification" class="theme-notification"></div>
             
@@ -644,6 +661,850 @@
         let currentThemeIndex = 0;  // 当前主题索引
         let lastThemeScore = 0;     // 上次切换主题时的分数
         
+        // ==================== 音效系统 ====================
+        let audioContext = null;
+        let isMuted = false;
+        let bgmPlaying = false;
+        let bgmIntervalId = null;
+        let masterGain = null;
+        let reverbNode = null;
+        
+        // 初始化音频上下文
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // 创建主音量控制
+                masterGain = audioContext.createGain();
+                masterGain.gain.setValueAtTime(0.6, audioContext.currentTime);
+                masterGain.connect(audioContext.destination);
+                
+                // 创建简单的混响效果
+                createReverb();
+            }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+        
+        // 创建混响效果
+        function createReverb() {
+            const convolver = audioContext.createConvolver();
+            const rate = audioContext.sampleRate;
+            const length = rate * 1.5;
+            const impulse = audioContext.createBuffer(2, length, rate);
+            
+            for (let channel = 0; channel < 2; channel++) {
+                const channelData = impulse.getChannelData(channel);
+                for (let i = 0; i < length; i++) {
+                    channelData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2);
+                }
+            }
+            convolver.buffer = impulse;
+            reverbNode = convolver;
+        }
+        
+        // 播放音符（增强版）
+        function playNote(frequency, duration, options = {}) {
+            if (isMuted || !audioContext) return;
+            
+            const {
+                type = 'sine',
+                volume = 0.3,
+                delay = 0,
+                attack = 0.01,
+                decay = 0.1,
+                sustain = 0.5,
+                release = 0.2,
+                detune = 0,
+                harmonics = []
+            } = options;
+            
+            const now = audioContext.currentTime + delay;
+            
+            // 创建主振荡器
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(frequency, now);
+            oscillator.detune.setValueAtTime(detune, now);
+            
+            // 滤波器设置
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(frequency * 4, now);
+            filter.Q.setValueAtTime(1, now);
+            
+            // ADSR 包络
+            gainNode.gain.setValueAtTime(0, now);
+            gainNode.gain.linearRampToValueAtTime(volume, now + attack);
+            gainNode.gain.linearRampToValueAtTime(volume * sustain, now + attack + decay);
+            gainNode.gain.setValueAtTime(volume * sustain, now + duration - release);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+            
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(masterGain);
+            
+            oscillator.start(now);
+            oscillator.stop(now + duration + 0.1);
+            
+            // 添加谐波
+            harmonics.forEach((harmonic, i) => {
+                if (harmonic > 0) {
+                    const harmOsc = audioContext.createOscillator();
+                    const harmGain = audioContext.createGain();
+                    harmOsc.type = 'sine';
+                    harmOsc.frequency.setValueAtTime(frequency * (i + 2), now);
+                    harmGain.gain.setValueAtTime(harmonic * volume * 0.5, now);
+                    harmOsc.connect(harmGain);
+                    harmGain.connect(masterGain);
+                    harmOsc.start(now);
+                    harmOsc.stop(now + duration + 0.1);
+                }
+            });
+        }
+        
+        // 播放和弦（增强版）
+        function playChord(frequencies, duration, options = {}) {
+            const { type = 'sine', volume = 0.2, spread = 0.02 } = options;
+            frequencies.forEach((freq, i) => {
+                playNote(freq, duration, {
+                    type,
+                    volume: volume * (1 - i * 0.1),
+                    delay: i * spread,
+                    attack: 0.02,
+                    decay: 0.1,
+                    sustain: 0.6,
+                    release: 0.3
+                });
+            });
+        }
+        
+        // 播放琶音
+        function playArpeggio(frequencies, duration, options = {}) {
+            const { type = 'sine', volume = 0.25, speed = 0.08 } = options;
+            const noteDuration = duration / frequencies.length;
+            frequencies.forEach((freq, i) => {
+                playNote(freq, noteDuration * 1.5, {
+                    type,
+                    volume: volume * (1 - i * 0.05),
+                    delay: i * speed,
+                    attack: 0.01,
+                    decay: 0.05,
+                    sustain: 0.7,
+                    release: 0.2
+                });
+            });
+        }
+        
+        // 方块落下音效（改进版 - 更有质感）
+        function playDropSound() {
+            if (isMuted || !audioContext) return;
+            
+            const now = audioContext.currentTime;
+            
+            // 主音 - 低沉有力的"咚"
+            playNote(80, 0.25, {
+                type: 'sine',
+                volume: 0.45,
+                attack: 0.005,
+                decay: 0.1,
+                sustain: 0.3,
+                release: 0.15
+            });
+            
+            // 泛音 - 增加厚度
+            playNote(160, 0.15, {
+                type: 'triangle',
+                volume: 0.2,
+                attack: 0.003,
+                decay: 0.05,
+                sustain: 0.2,
+                release: 0.1
+            });
+            
+            // 高频点击声
+            playNote(800, 0.08, {
+                type: 'sine',
+                volume: 0.08,
+                attack: 0.001,
+                decay: 0.02,
+                sustain: 0.1,
+                release: 0.05
+            });
+            
+            // 噪声撞击效果
+            const noiseBuffer = audioContext.createBuffer(1, audioContext.sampleRate * 0.08, audioContext.sampleRate);
+            const noiseData = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < noiseData.length; i++) {
+                noiseData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (noiseData.length * 0.15));
+            }
+            
+            const noiseSource = audioContext.createBufferSource();
+            noiseSource.buffer = noiseBuffer;
+            
+            const noiseFilter = audioContext.createBiquadFilter();
+            noiseFilter.type = 'bandpass';
+            noiseFilter.frequency.setValueAtTime(200, now);
+            noiseFilter.Q.setValueAtTime(2, now);
+            
+            const noiseGain = audioContext.createGain();
+            noiseGain.gain.setValueAtTime(0.12, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+            
+            noiseSource.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(masterGain);
+            noiseSource.start(now);
+        }
+        
+        // 消除音效（改进版 - 更华丽的和弦）
+        function playClearSound(lineCount) {
+            if (isMuted || !audioContext) return;
+            
+            const majorChord = [1, 1.25, 1.5, 2]; // 大三和弦比例
+            const perfectChord = [1, 1.5, 2]; // 纯五度
+            
+            if (lineCount === 1) {
+                // 单行消除 - 清脆明亮的C和弦
+                playChord([523, 659, 784], 0.25, {
+                    type: 'sine',
+                    volume: 0.25,
+                    spread: 0.02
+                });
+                // 添加高频泛音
+                playNote(1047, 0.15, {
+                    type: 'sine',
+                    volume: 0.12,
+                    delay: 0.05,
+                    attack: 0.01,
+                    decay: 0.05,
+                    sustain: 0.5,
+                    release: 0.1
+                });
+            } else if (lineCount === 2) {
+                // 双行消除 - 琶音上行
+                playArpeggio([523, 659, 784, 1047], 0.35, {
+                    type: 'sine',
+                    volume: 0.28,
+                    speed: 0.06
+                });
+                // 低音支撑
+                playNote(262, 0.3, {
+                    type: 'triangle',
+                    volume: 0.15,
+                    attack: 0.01,
+                    decay: 0.1,
+                    sustain: 0.4,
+                    release: 0.15
+                });
+            } else if (lineCount === 3) {
+                // 三行消除 - 华丽的D大调琶音
+                playArpeggio([587, 740, 880, 1175, 1480], 0.5, {
+                    type: 'sine',
+                    volume: 0.3,
+                    speed: 0.08
+                });
+                // 添加和弦垫音
+                playChord([294, 370, 440], 0.4, {
+                    type: 'sine',
+                    volume: 0.12,
+                    spread: 0.03
+                });
+                // 闪耀音
+                playNote(1760, 0.3, {
+                    type: 'sine',
+                    volume: 0.08,
+                    delay: 0.2,
+                    attack: 0.01,
+                    decay: 0.1,
+                    sustain: 0.3,
+                    release: 0.2
+                });
+            } else if (lineCount === 4) {
+                // Tetris! - 超级华丽的音效
+                // 主旋律 - 上升的琶音
+                playArpeggio([523, 659, 784, 1047, 1319, 1568, 2093], 0.8, {
+                    type: 'sine',
+                    volume: 0.35,
+                    speed: 0.1
+                });
+                
+                // 和弦支撑
+                setTimeout(() => {
+                    playChord([523, 659, 784, 1047], 0.6, {
+                        type: 'sine',
+                        volume: 0.15,
+                        spread: 0.02
+                    });
+                }, 300);
+                
+                // 低音轰鸣
+                playNote(65, 0.8, {
+                    type: 'sine',
+                    volume: 0.25,
+                    attack: 0.02,
+                    decay: 0.2,
+                    sustain: 0.5,
+                    release: 0.3
+                });
+                playNote(130, 0.6, {
+                    type: 'triangle',
+                    volume: 0.2,
+                    attack: 0.02,
+                    decay: 0.15,
+                    sustain: 0.4,
+                    release: 0.2
+                });
+                
+                // 高频闪耀
+                setTimeout(() => {
+                    playNote(2637, 0.5, {
+                        type: 'sine',
+                        volume: 0.1,
+                        attack: 0.01,
+                        decay: 0.1,
+                        sustain: 0.4,
+                        release: 0.3
+                    });
+                    playNote(3136, 0.6, {
+                        type: 'sine',
+                        volume: 0.08,
+                        delay: 0.1,
+                        attack: 0.01,
+                        decay: 0.1,
+                        sustain: 0.3,
+                        release: 0.3
+                    });
+                }, 500);
+            }
+        }
+        
+        // 按钮点击音效（改进版 - 更清脆）
+        function playClickSound() {
+            if (isMuted || !audioContext) return;
+            
+            // 清脆的点击声
+            playNote(1200, 0.06, {
+                type: 'sine',
+                volume: 0.15,
+                attack: 0.001,
+                decay: 0.02,
+                sustain: 0.2,
+                release: 0.03
+            });
+            playNote(1500, 0.04, {
+                type: 'sine',
+                volume: 0.1,
+                delay: 0.01,
+                attack: 0.001,
+                decay: 0.01,
+                sustain: 0.1,
+                release: 0.02
+            });
+        }
+        
+        // 移动音效（改进版）
+        function playMoveSound() {
+            if (isMuted || !audioContext) return;
+            
+            playNote(350, 0.04, {
+                type: 'sine',
+                volume: 0.08,
+                attack: 0.002,
+                decay: 0.01,
+                sustain: 0.3,
+                release: 0.02
+            });
+        }
+        
+        // 旋转音效（改进版）
+        function playRotateSound() {
+            if (isMuted || !audioContext) return;
+            
+            playNote(500, 0.08, {
+                type: 'sine',
+                volume: 0.12,
+                attack: 0.003,
+                decay: 0.02,
+                sustain: 0.4,
+                release: 0.04
+            });
+            playNote(600, 0.06, {
+                type: 'sine',
+                volume: 0.08,
+                delay: 0.02,
+                attack: 0.002,
+                decay: 0.01,
+                sustain: 0.3,
+                release: 0.03
+            });
+        }
+        
+        // 硬降音效
+        function playHardDropSound() {
+            if (isMuted || !audioContext) return;
+            
+            // 快速下降的滑音
+            const now = audioContext.currentTime;
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, now);
+            osc.frequency.exponentialRampToValueAtTime(100, now + 0.15);
+            
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+            
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(now);
+            osc.stop(now + 0.15);
+            
+            // 落地声
+            playDropSound();
+        }
+        
+        // 游戏结束音效（改进版 - 更悲伤的下行旋律）
+        function playGameOverSound() {
+            if (isMuted || !audioContext) return;
+            
+            // 下行的悲伤旋律
+            const melody = [392, 370, 349, 330, 294, 262, 247, 220];
+            melody.forEach((freq, i) => {
+                playNote(freq, 0.4, {
+                    type: 'sine',
+                    volume: 0.25 - i * 0.02,
+                    delay: i * 0.25,
+                    attack: 0.02,
+                    decay: 0.1,
+                    sustain: 0.5,
+                    release: 0.25
+                });
+            });
+            
+            // 低沉的结束和弦
+            setTimeout(() => {
+                playChord([110, 165, 220], 1.2, {
+                    type: 'sine',
+                    volume: 0.15,
+                    spread: 0.05
+                });
+            }, melody.length * 250);
+        }
+        
+        // 开始游戏音效（改进版 - 欢快的上行）
+        function playStartSound() {
+            if (isMuted || !audioContext) return;
+            
+            // 欢快的琶音
+            playArpeggio([262, 330, 392, 523, 659, 784], 0.5, {
+                type: 'sine',
+                volume: 0.28,
+                speed: 0.08
+            });
+            
+            // 明亮的和弦
+            setTimeout(() => {
+                playChord([523, 659, 784], 0.4, {
+                    type: 'sine',
+                    volume: 0.2,
+                    spread: 0.02
+                });
+            }, 300);
+        }
+        
+        // 主题切换音效（改进版）
+        function playThemeChangeSound() {
+            if (isMuted || !audioContext) return;
+            
+            playArpeggio([440, 554, 659, 880], 0.35, {
+                type: 'sine',
+                volume: 0.22,
+                speed: 0.06
+            });
+        }
+        
+        // 连击音效
+        function playComboSound(comboCount) {
+            if (isMuted || !audioContext || comboCount <= 1) return;
+            
+            // 根据连击数变化音高
+            const baseFreq = 600 + comboCount * 50;
+            playNote(baseFreq, 0.15, {
+                type: 'sine',
+                volume: 0.2,
+                attack: 0.01,
+                decay: 0.05,
+                sustain: 0.5,
+                release: 0.1
+            });
+            playNote(baseFreq * 1.5, 0.12, {
+                type: 'sine',
+                volume: 0.15,
+                delay: 0.03,
+                attack: 0.01,
+                decay: 0.04,
+                sustain: 0.4,
+                release: 0.08
+            });
+        }
+        
+        // ==================== 背景音乐系统 ====================
+        // 5种不同风格的背景音乐
+        const BGM_TRACKS = [
+            {
+                name: "Classic Tetris",
+                bpm: 120,
+                swing: 0,
+                melody: [
+                    // 俄罗斯方块经典主题曲
+                    [698, 698, 0, 698, 0, 523, 698, 0, 784, 0, 0, 0, 392, 0, 0, 0],
+                    [523, 0, 0, 392, 0, 0, 330, 0, 0, 440, 0, 494, 523, 0, 587, 494],
+                    [440, 0, 0, 349, 0, 440, 0, 494, 523, 0, 0, 0, 698, 0, 0, 0],
+                    [784, 0, 0, 698, 0, 0, 587, 0, 0, 523, 0, 0, 587, 0, 0, 494]
+                ],
+                bass: [
+                    [131, 0, 131, 0, 131, 0, 131, 0, 165, 0, 165, 0, 165, 0, 165, 0],
+                    [175, 0, 175, 0, 175, 0, 175, 0, 147, 0, 147, 0, 147, 0, 147, 0],
+                    [165, 0, 165, 0, 165, 0, 165, 0, 131, 0, 131, 0, 131, 0, 131, 0],
+                    [147, 0, 147, 0, 147, 0, 147, 0, 131, 0, 131, 0, 131, 0, 131, 0]
+                ],
+                melodyType: 'square',
+                bassType: 'triangle',
+                melodyVolume: 0.09,
+                bassVolume: 0.12
+            },
+            {
+                name: "Neon Dreams",
+                bpm: 128,
+                swing: 0.1,
+                melody: [
+                    // 电子合成器风格
+                    [494, 0, 494, 0, 494, 0, 392, 0, 494, 0, 587, 0, 494, 0, 392, 0],
+                    [392, 0, 494, 0, 587, 0, 659, 0, 587, 0, 494, 0, 392, 0, 330, 0],
+                    [330, 0, 392, 0, 494, 0, 587, 0, 659, 0, 784, 0, 659, 0, 587, 0],
+                    [494, 0, 392, 0, 330, 0, 392, 0, 494, 0, 587, 0, 494, 0, 392, 0]
+                ],
+                bass: [
+                    [98, 0, 0, 98, 0, 0, 98, 0, 123, 0, 0, 123, 0, 0, 123, 0],
+                    [131, 0, 0, 131, 0, 0, 131, 0, 110, 0, 0, 110, 0, 0, 110, 0],
+                    [123, 0, 0, 123, 0, 0, 123, 0, 98, 0, 0, 98, 0, 0, 98, 0],
+                    [110, 0, 0, 110, 0, 0, 110, 0, 98, 0, 0, 98, 0, 0, 98, 0]
+                ],
+                arpeggio: [
+                    [1976, 0, 1976, 0, 1976, 0, 1568, 0, 1976, 0, 2349, 0, 1976, 0, 1568, 0],
+                    [1568, 0, 1976, 0, 2349, 0, 2637, 0, 2349, 0, 1976, 0, 1568, 0, 1319, 0],
+                    [1319, 0, 1568, 0, 1976, 0, 2349, 0, 2637, 0, 3136, 0, 2637, 0, 2349, 0],
+                    [1976, 0, 1568, 0, 1319, 0, 1568, 0, 1976, 0, 2349, 0, 1976, 0, 1568, 0]
+                ],
+                melodyType: 'sawtooth',
+                bassType: 'sine',
+                melodyVolume: 0.07,
+                bassVolume: 0.14
+            },
+            {
+                name: "Zen Garden",
+                bpm: 90,
+                swing: 0,
+                melody: [
+                    // 轻柔舒缓风格
+                    [523, 0, 0, 0, 587, 0, 0, 0, 659, 0, 0, 0, 587, 0, 0, 0],
+                    [494, 0, 0, 0, 523, 0, 0, 0, 587, 0, 0, 0, 523, 0, 0, 0],
+                    [440, 0, 0, 0, 494, 0, 0, 0, 523, 0, 0, 0, 494, 0, 0, 0],
+                    [392, 0, 0, 0, 440, 0, 0, 0, 494, 0, 0, 0, 440, 0, 0, 0]
+                ],
+                bass: [
+                    [262, 0, 0, 0, 0, 0, 0, 0, 330, 0, 0, 0, 0, 0, 0, 0],
+                    [247, 0, 0, 0, 0, 0, 0, 0, 294, 0, 0, 0, 0, 0, 0, 0],
+                    [220, 0, 0, 0, 0, 0, 0, 0, 262, 0, 0, 0, 0, 0, 0, 0],
+                    [196, 0, 0, 0, 0, 0, 0, 0, 220, 0, 0, 0, 0, 0, 0, 0]
+                ],
+                pad: [
+                    [262, 0, 0, 0, 0, 0, 0, 0, 330, 0, 0, 0, 0, 0, 0, 0],
+                    [247, 0, 0, 0, 0, 0, 0, 0, 294, 0, 0, 0, 0, 0, 0, 0],
+                    [220, 0, 0, 0, 0, 0, 0, 0, 262, 0, 0, 0, 0, 0, 0, 0],
+                    [196, 0, 0, 0, 0, 0, 0, 0, 220, 0, 0, 0, 0, 0, 0, 0]
+                ],
+                melodyType: 'sine',
+                bassType: 'sine',
+                melodyVolume: 0.12,
+                bassVolume: 0.08
+            },
+            {
+                name: "Retro Wave",
+                bpm: 140,
+                swing: 0,
+                melody: [
+                    // 8-bit复古风格
+                    [330, 330, 392, 330, 0, 294, 330, 0, 392, 330, 294, 262, 294, 330, 0, 0],
+                    [294, 294, 330, 294, 0, 262, 294, 0, 330, 294, 262, 220, 262, 294, 0, 0],
+                    [262, 262, 294, 262, 0, 220, 262, 0, 294, 262, 220, 196, 220, 262, 0, 0],
+                    [220, 220, 262, 220, 0, 196, 220, 0, 262, 220, 196, 165, 196, 220, 0, 0]
+                ],
+                bass: [
+                    [165, 0, 165, 0, 165, 0, 165, 0, 196, 0, 196, 0, 196, 0, 196, 0],
+                    [147, 0, 147, 0, 147, 0, 147, 0, 175, 0, 175, 0, 175, 0, 175, 0],
+                    [131, 0, 131, 0, 131, 0, 131, 0, 165, 0, 165, 0, 165, 0, 165, 0],
+                    [110, 0, 110, 0, 110, 0, 110, 0, 131, 0, 131, 0, 131, 0, 131, 0]
+                ],
+                drum: [
+                    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0],
+                    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0],
+                    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0],
+                    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0]
+                ],
+                melodyType: 'square',
+                bassType: 'triangle',
+                melodyVolume: 0.1,
+                bassVolume: 0.12
+            },
+            {
+                name: "Arcade Hero",
+                bpm: 135,
+                swing: 0,
+                melody: [
+                    // 英雄史诗风格
+                    [392, 0, 523, 392, 0, 587, 0, 659, 784, 0, 659, 587, 523, 0, 392, 0],
+                    [440, 0, 523, 440, 0, 587, 0, 659, 784, 0, 659, 587, 523, 0, 440, 0],
+                    [494, 0, 587, 494, 0, 659, 0, 784, 880, 0, 784, 659, 587, 0, 494, 0],
+                    [523, 0, 659, 523, 0, 784, 0, 880, 988, 0, 880, 784, 659, 0, 523, 0]
+                ],
+                bass: [
+                    [196, 0, 196, 0, 196, 0, 196, 0, 262, 0, 262, 0, 262, 0, 262, 0],
+                    [220, 0, 220, 0, 220, 0, 220, 0, 262, 0, 262, 0, 262, 0, 262, 0],
+                    [247, 0, 247, 0, 247, 0, 247, 0, 294, 0, 294, 0, 294, 0, 294, 0],
+                    [262, 0, 262, 0, 262, 0, 262, 0, 330, 0, 330, 0, 330, 0, 330, 0]
+                ],
+                harmony: [
+                    [392, 0, 0, 392, 0, 0, 0, 494, 523, 0, 494, 0, 392, 0, 0, 0],
+                    [440, 0, 0, 440, 0, 0, 0, 523, 587, 0, 523, 0, 440, 0, 0, 0],
+                    [494, 0, 0, 494, 0, 0, 0, 587, 659, 0, 587, 0, 494, 0, 0, 0],
+                    [523, 0, 0, 523, 0, 0, 0, 659, 784, 0, 659, 0, 523, 0, 0, 0]
+                ],
+                melodyType: 'sawtooth',
+                bassType: 'triangle',
+                melodyVolume: 0.08,
+                bassVolume: 0.13
+            }
+        ];
+        
+        let currentBgmIndex = 0;
+        let bgmBeatIndex = 0;
+        let bgmSectionIndex = 0;
+        
+        // 播放8-bit鼓点
+        function playDrumSound() {
+            if (!audioContext) return;
+            
+            const now = audioContext.currentTime;
+            
+            // 噪声生成器
+            const bufferSize = audioContext.sampleRate * 0.05;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.2));
+            }
+            
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.setValueAtTime(1000, now);
+            
+            const gain = audioContext.createGain();
+            gain.gain.setValueAtTime(0.15, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(masterGain);
+            noise.start(now);
+        }
+        
+        // 播放BGM的一个节拍
+        function playBGMBeat() {
+            if (!bgmPlaying || isMuted || !isPlaying || isPaused || !audioContext) return;
+            
+            const track = BGM_TRACKS[currentBgmIndex];
+            const melodyNote = track.melody[bgmSectionIndex][bgmBeatIndex];
+            const bassNote = track.bass[bgmSectionIndex][bgmBeatIndex];
+            
+            // 播放旋律
+            if (melodyNote > 0) {
+                playNote(melodyNote, 0.2, {
+                    type: track.melodyType,
+                    volume: track.melodyVolume,
+                    attack: 0.01,
+                    decay: 0.06,
+                    sustain: 0.4,
+                    release: 0.12,
+                    detune: Math.random() * 4 - 2
+                });
+                // 泛音
+                playNote(melodyNote * 2, 0.1, {
+                    type: 'sine',
+                    volume: track.melodyVolume * 0.3,
+                    attack: 0.01,
+                    decay: 0.04,
+                    sustain: 0.2,
+                    release: 0.06
+                });
+            }
+            
+            // 播放低音
+            if (bassNote > 0) {
+                playNote(bassNote, 0.25, {
+                    type: track.bassType,
+                    volume: track.bassVolume,
+                    attack: 0.01,
+                    decay: 0.08,
+                    sustain: 0.5,
+                    release: 0.15
+                });
+            }
+            
+            // 播放琶音（如果存在）
+            if (track.arpeggio) {
+                const arpNote = track.arpeggio[bgmSectionIndex][bgmBeatIndex];
+                if (arpNote > 0) {
+                    playNote(arpNote, 0.08, {
+                        type: 'sine',
+                        volume: 0.04,
+                        attack: 0.005,
+                        decay: 0.02,
+                        sustain: 0.3,
+                        release: 0.04
+                    });
+                }
+            }
+            
+            // 播放和声（如果存在）
+            if (track.harmony) {
+                const harmNote = track.harmony[bgmSectionIndex][bgmBeatIndex];
+                if (harmNote > 0) {
+                    playNote(harmNote, 0.15, {
+                        type: 'triangle',
+                        volume: 0.05,
+                        attack: 0.02,
+                        decay: 0.05,
+                        sustain: 0.3,
+                        release: 0.08
+                    });
+                }
+            }
+            
+            // 播放Pad（如果存在）
+            if (track.pad) {
+                const padNote = track.pad[bgmSectionIndex][bgmBeatIndex];
+                if (padNote > 0) {
+                    playNote(padNote, 0.5, {
+                        type: 'sine',
+                        volume: 0.04,
+                        attack: 0.1,
+                        decay: 0.2,
+                        sustain: 0.6,
+                        release: 0.3
+                    });
+                    playNote(padNote * 1.5, 0.5, {
+                        type: 'sine',
+                        volume: 0.02,
+                        attack: 0.1,
+                        decay: 0.2,
+                        sustain: 0.5,
+                        release: 0.3
+                    });
+                }
+            }
+            
+            // 播放鼓点（如果存在）
+            if (track.drum) {
+                const drumHit = track.drum[bgmSectionIndex][bgmBeatIndex];
+                if (drumHit > 0) {
+                    playDrumSound();
+                }
+            }
+            
+            // 移动到下一拍
+            bgmBeatIndex++;
+            if (bgmBeatIndex >= 16) {
+                bgmBeatIndex = 0;
+                bgmSectionIndex++;
+                if (bgmSectionIndex >= track.melody.length) {
+                    bgmSectionIndex = 0;
+                }
+            }
+        }
+        
+        // 切换背景音乐
+        function switchBGM(newIndex) {
+            const wasPlaying = bgmPlaying;
+            stopBGM();
+            currentBgmIndex = newIndex % BGM_TRACKS.length;
+            bgmBeatIndex = 0;
+            bgmSectionIndex = 0;
+            
+            // 显示音乐切换提示
+            showBGMNotification();
+            
+            if (wasPlaying && isPlaying && !isPaused) {
+                startBGM();
+            }
+        }
+        
+        // 显示BGM切换提示
+        function showBGMNotification() {
+            const track = BGM_TRACKS[currentBgmIndex];
+            const notification = document.getElementById('bgmNotification');
+            if (notification) {
+                notification.textContent = `♪ ${track.name}`;
+                notification.style.animation = 'none';
+                notification.offsetHeight;
+                notification.style.animation = 'fadeIn 0.5s ease-out, fadeOut 0.5s ease-in 2s forwards';
+            }
+        }
+        
+        // 开始背景音乐
+        function startBGM() {
+            if (isMuted || !audioContext || bgmPlaying) return;
+            
+            bgmPlaying = true;
+            
+            const track = BGM_TRACKS[currentBgmIndex];
+            const beatInterval = 60000 / track.bpm / 4; // 16分音符
+            
+            bgmIntervalId = setInterval(playBGMBeat, beatInterval);
+        }
+        
+        // 停止背景音乐
+        function stopBGM() {
+            bgmPlaying = false;
+            if (bgmIntervalId) {
+                clearInterval(bgmIntervalId);
+                bgmIntervalId = null;
+            }
+        }
+        
+        // 切换静音
+        function toggleMute() {
+            isMuted = !isMuted;
+            const muteBtn = document.getElementById('muteBtn');
+            if (muteBtn) {
+                muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            }
+            if (isMuted) {
+                stopBGM();
+            } else if (isPlaying && !isPaused) {
+                startBGM();
+            }
+            return isMuted;
+        }
+        
         // ==================== 动画状态变量 ====================
         let landingAnimation = null;   // 落地动画状态
         let clearAnimation = null;     // 消除动画状态
@@ -699,7 +1560,7 @@
         }
         
         function checkThemeChange() {
-            // 每5000分切换一次主题
+            // 每5000分切换一次主题和音乐
             const themeThreshold = 5000;
             const newThemeScore = Math.floor(score / themeThreshold);
             
@@ -709,16 +1570,41 @@
                 lastThemeScore = newThemeScore;
                 applyTheme(currentThemeIndex);
                 
+                // 切换背景音乐（5首音乐循环）
+                const newBgmIndex = newThemeScore % BGM_TRACKS.length;
+                if (newBgmIndex !== currentBgmIndex) {
+                    switchBGM(newBgmIndex);
+                }
+                
                 // 显示主题切换提示
                 showThemeNotification();
             }
         }
         
         function showThemeNotification() {
+            // 播放主题切换音效
+            playThemeChangeSound();
+            
             const theme = THEMES[currentThemeIndex];
+            const track = BGM_TRACKS[currentBgmIndex];
+            
+            // 更新主题名称显示
+            const themeNameEl = document.getElementById('themeName');
+            if (themeNameEl) {
+                themeNameEl.textContent = theme.name;
+                themeNameEl.style.color = theme.accent;
+            }
+            
+            // 更新音乐名称显示
+            const musicNameEl = document.getElementById('musicName');
+            if (musicNameEl) {
+                musicNameEl.textContent = `♪ ${track.name}`;
+            }
+            
+            // 显示切换提示
             const notification = document.getElementById('themeNotification');
             if (notification) {
-                notification.textContent = `主题切换: ${theme.name}`;
+                notification.textContent = `${theme.name} ♪ ${track.name}`;
                 notification.style.animation = 'none';
                 notification.offsetHeight; // 触发重绘
                 notification.style.animation = 'fadeIn 0.5s ease-out, fadeOut 0.5s ease-in 2s forwards';
@@ -739,7 +1625,20 @@
             applyTheme(0);
             
             // 绑定按钮事件
-            document.getElementById('startBtn').addEventListener('click', startGame);
+            document.getElementById('startBtn').addEventListener('click', () => {
+                initAudio();
+                playClickSound();
+                startGame();
+            });
+            
+            // 绑定静音按钮
+            const muteBtn = document.getElementById('muteBtn');
+            if (muteBtn) {
+                muteBtn.addEventListener('click', () => {
+                    initAudio();
+                    toggleMute();
+                });
+            }
             
             // 绑定键盘事件
             document.addEventListener('keydown', handleKeyPress);
@@ -784,22 +1683,26 @@
         // ==================== 虚拟按键绑定 ====================
         function bindVirtualControls() {
             const vButtons = {
-                'vLeft': () => movePiece(-1, 0),
-                'vRight': () => movePiece(1, 0),
-                'vRotate': () => rotateCurrentPiece(),
-                'vDown': () => softDrop(),
-                'vDrop': () => hardDrop(),
-                'vPause': () => { if (isPlaying) togglePause(); }
+                'vLeft': { action: () => movePiece(-1, 0), sound: playMoveSound },
+                'vRight': { action: () => movePiece(1, 0), sound: playMoveSound },
+                'vRotate': { action: () => rotateCurrentPiece(), sound: playRotateSound },
+                'vDown': { action: () => softDrop(), sound: playMoveSound },
+                'vDrop': { action: () => { hardDrop(); playHardDropSound(); }, sound: null },
+                'vPause': { action: () => { if (isPlaying) togglePause(); }, sound: playClickSound }
             };
 
             Object.keys(vButtons).forEach(id => {
                 const btn = document.getElementById(id);
+                const config = vButtons[id];
                 if (btn) {
                     // 触摸事件
                     btn.addEventListener('touchstart', (e) => {
                         e.preventDefault();
                         btn.classList.add('active');
-                        vButtons[id]();
+                        const result = config.action();
+                        if (result !== false && config.sound) {
+                            config.sound();
+                        }
                     });
                     btn.addEventListener('touchend', () => {
                         btn.classList.remove('active');
@@ -807,7 +1710,10 @@
                     // 鼠标事件（用于测试）
                     btn.addEventListener('mousedown', (e) => {
                         e.preventDefault();
-                        vButtons[id]();
+                        const result = config.action();
+                        if (result !== false && config.sound) {
+                            config.sound();
+                        }
                     });
                 }
             });
@@ -892,6 +1798,9 @@
         
         // ==================== 落地动画 ====================
         function triggerLandingAnimation(positions) {
+            // 播放落地音效
+            playDropSound();
+            
             landingAnimation = {
                 positions: positions,
                 scale: 1.3,
@@ -989,11 +1898,16 @@
         
         // ==================== 消除动画 ====================
         function triggerClearAnimation(rowsToClear, clearedCount) {
+            // 播放消除音效
+            playClearSound(clearedCount);
+            
             const now = performance.now();
             
             // 检查连击
             if (now - lastClearTime < 1000) {
                 comboCount++;
+                // 播放连击音效
+                playComboSound(comboCount);
             } else {
                 comboCount = 1;
             }
@@ -1636,6 +2550,8 @@
         function handleKeyPress(e) {
             // R键重新开始（任何时候都可用）
             if (e.key === 'r' || e.key === 'R') {
+                initAudio();
+                playClickSound();
                 startGame();
                 return;
             }
@@ -1644,6 +2560,7 @@
             
             // P键暂停
             if (e.key === 'p' || e.key === 'P') {
+                playClickSound();
                 togglePause();
                 return;
             }
@@ -1653,23 +2570,24 @@
             switch (e.key) {
                 case 'ArrowLeft':
                     e.preventDefault();
-                    movePiece(-1, 0);
+                    if (movePiece(-1, 0)) playMoveSound();
                     break;
                 case 'ArrowRight':
                     e.preventDefault();
-                    movePiece(1, 0);
+                    if (movePiece(1, 0)) playMoveSound();
                     break;
                 case 'ArrowUp':
                     e.preventDefault();
-                    rotateCurrentPiece();
+                    if (rotateCurrentPiece()) playRotateSound();
                     break;
                 case 'ArrowDown':
                     e.preventDefault();
-                    softDrop();
+                    if (softDrop()) playMoveSound();
                     break;
                 case ' ':
                     e.preventDefault();
                     hardDrop();
+                    playHardDropSound();
                     break;
             }
         }
@@ -1683,11 +2601,13 @@
                 statusEl.textContent = '已暂停';
                 statusEl.className = 'game-status status-paused';
                 cancelAnimationFrame(gameLoop);
+                stopBGM();
                 draw(); // 显示暂停覆盖层
             } else {
                 statusEl.textContent = '游戏中';
                 statusEl.className = 'game-status status-playing';
                 lastDropTime = performance.now();
+                startBGM();
                 gameLoop = requestAnimationFrame(gameUpdate);
             }
         }
@@ -1700,10 +2620,27 @@
             isPlaying = true;
             isPaused = false;
             
+            // 播放开始音效
+            playStartSound();
+            
+            // 重置背景音乐
+            currentBgmIndex = 0;
+            bgmBeatIndex = 0;
+            bgmSectionIndex = 0;
+            
+            // 开始背景音乐
+            startBGM();
+            
             // 重置主题
             currentThemeIndex = 0;
             lastThemeScore = 0;
             applyTheme(0);
+            
+            // 更新音乐显示
+            const musicNameEl = document.getElementById('musicName');
+            if (musicNameEl) {
+                musicNameEl.textContent = `♪ ${BGM_TRACKS[0].name}`;
+            }
             
             // 重置动画状态
             landingAnimation = null;
@@ -1733,7 +2670,11 @@
 
         function gameOver() {
             isPlaying = false;
+            stopBGM();
             cancelAnimationFrame(gameLoop);
+            
+            // 播放游戏结束音效
+            playGameOverSound();
             
             // 保存最高分
             const isNewRecord = saveHighScore();
