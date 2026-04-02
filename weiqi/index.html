@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双人围棋对战 - WebRTC局域网联机</title>
+    
+    <!--
+    ============================================================
+    双人围棋对战游戏 - 使用说明
+    ============================================================
+    
+    这是一个基于 WebRTC 的双人围棋对战游戏，无需服务器，
+    通过局域网（LAN）实现浏览器点对点直连。
+    
+    【使用步骤】
+    
+    玩家 A（创建房间方）：
+    1. 打开网页，点击"创建房间"按钮
+    2. 网页会生成一串 WebRTC Offer 信令文本，显示在下方文本框中
+    3. 复制这段文本，通过微信/QQ/邮件等方式发送给玩家 B
+    
+    玩家 B（加入房间方）：
+    1. 打开网页，在"加入房间"区域粘贴玩家 A 发来的 Offer 文本
+    2. 点击"加入房间"按钮
+    3. 网页会生成 WebRTC Answer 信令文本，显示在下方文本框中
+    4. 复制这段 Answer 文本，发回给玩家 A
+    
+    玩家 A（确认连接）：
+    1. 在"确认连接"区域粘贴玩家 B 发来的 Answer 文本
+    2. 点击"确认连接"按钮
+    3. 等待几秒，连接建立后即可开始对战
+    
+    【游戏规则】
+    - 黑方先手，双方轮流落子
+    - 支持提子、打劫判断
+    - 悔棋和重新开始需要对方确认
+    
+    ============================================================
+    -->
+    
+    <style>
+        /* ==================== 全局样式 ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* ==================== 游戏面板 ==================== */
+        .game-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .current-player {
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+        
+        .player-indicator.black {
+            background: #000;
+        }
+        
+        .player-indicator.white {
+            background: #fff;
+        }
+        
+        .game-status {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .connection-status {
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        
+        .connection-status.disconnected {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .connection-status.connecting {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .connection-status.connected {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        /* ==================== 棋盘样式 ==================== */
+        #board-container {
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        #go-board {
+            display: block;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        #go-board.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        /* ==================== 控制按钮 ==================== */
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #e0e0e0;
+        }
+        
+        .btn-danger {
+            background: #ef5350;
+            color: #fff;
+        }
+        
+        .btn-danger:hover:not(:disabled) {
+            background: #e53935;
+        }
+        
+        .btn-success {
+            background: #66bb6a;
+            color: #fff;
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            background: #43a047;
+        }
+        
+        /* ==================== WebRTC 连接面板 ==================== */
+        .webrtc-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 400px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        
+        .webrtc-panel h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .connection-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        
+        .connection-section h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .signal-textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+        
+        .signal-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .signal-textarea.output {
+            background: #fff;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .hint-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+        
+        /* ==================== 游戏记录 ==================== */
+        .game-log {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .game-log h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .log-content {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .log-entry {
+            padding: 2px 0;
+        }
+        
+        /* ==================== 提示消息 ==================== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .toast.info {
+            background: #2196f3;
+        }
+        
+        .toast.success {
+            background: #4caf50;
+        }
+        
+        .toast.error {
+            background: #f44336;
+        }
+        
+        .toast.warning {
+            background: #ff9800;
+        }
+        
+        /* ==================== 弹窗 ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .modal-content h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .modal-content p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        /* ==================== 响应式设计 ==================== */
+        @media (max-width: 1200px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .webrtc-panel {
+                width: 100%;
+                max-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>围棋对战 - WebRTC 局域网联机</h1>
+    
+    <div class="container">
+        <!-- 游戏主面板 -->
+        <div class="game-panel">
+            <div class="game-info">
+                <div class="current-player">
+                    <span>当前回合：</span>
+                    <div class="player-indicator black" id="current-player-indicator"></div>
+                    <span id="current-player-text">黑方</span>
+                </div>
+                <div class="game-status" id="game-status">等待连接...</div>
+                <span class="connection-status disconnected" id="connection-status">未连接</span>
+            </div>
+            
+            <div id="board-container">
+                <canvas id="go-board" width="570" height="570"></canvas>
+            </div>
+            
+            <div class="game-controls">
+                <button class="btn btn-secondary" id="btn-undo" disabled>请求悔棋</button>
+                <button class="btn btn-secondary" id="btn-pass">弃权（Pass）</button>
+                <button class="btn btn-danger" id="btn-restart" disabled>重新开始</button>
+                <button class="btn btn-primary" id="btn-end-game">结束游戏计算胜负</button>
+            </div>
+            
+            <div class="game-log">
+                <h3>游戏记录</h3>
+                <div class="log-content" id="log-content">
+                    <div class="log-entry">游戏初始化完成，等待玩家连接...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- WebRTC 连接面板 -->
+        <div class="webrtc-panel">
+            <h2>联机设置</h2>
+            
+            <!-- 创建房间 -->
+            <div class="connection-section">
+                <h3>1. 创建房间（房主）</h3>
+                <div class="button-group">
+                    <button class="btn btn-primary" id="btn-create-room">创建房间</button>
+                </div>
+                <textarea class="signal-textarea output" id="offer-output" readonly placeholder="点击"创建房间"后，Offer 信令将显示在这里..."></textarea>
+                <button class="btn btn-secondary" id="btn-copy-offer">复制 Offer</button>
+                <p class="hint-text">创建房间后，将生成的 Offer 发送给对方</p>
+            </div>
+            
+            <!-- 加入房间 -->
+            <div class="connection-section">
+                <h3>2. 加入房间（访客）</h3>
+                <textarea class="signal-textarea" id="offer-input" placeholder="粘贴对方发来的 Offer 信令..."></textarea>
+                <div class="button-group">
+                    <button class="btn btn-success" id="btn-join-room">加入房间</button>
+                </div>
+                <textarea class="signal-textarea output" id="answer-output" readonly placeholder="加入房间后，Answer 信令将显示在这里..."></textarea>
+                <button class="btn btn-secondary" id="btn-copy-answer">复制 Answer</button>
+                <p class="hint-text">加入房间后，将生成的 Answer 发回给房主</p>
+            </div>
+            
+            <!-- 确认连接 -->
+            <div class="connection-section">
+                <h3>3. 确认连接（房主）</h3>
+                <textarea class="signal-textarea" id="answer-input" placeholder="粘贴对方发来的 Answer 信令..."></textarea>
+                <div class="button-group">
+                    <button class="btn btn-success" id="btn-confirm-connection">确认连接</button>
+                </div>
+                <p class="hint-text">房主收到 Answer 后，粘贴并点击确认建立连接</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 弹窗 -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">提示</h3>
+            <p id="modal-message">消息内容</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="modal-cancel">取消</button>
+                <button class="btn btn-primary" id="modal-confirm">确认</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast 提示 -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+    /**
+     * ============================================================
+     * 双人围棋对战游戏 - JavaScript 核心代码
+     * ============================================================
+     * 
+     * 核心模块：
+     * 1. GoGame - 围棋游戏逻辑类
+     * 2. WebRTCManager - WebRTC 连接管理
+     * 3. GameUI - 用户界面交互
+     * 4. 主程序入口
+     */
+
+    // ==================== 围棋游戏逻辑类 ====================
+    /**
+     * GoGame 类 - 实现标准围棋规则
+     * 
+     * 主要功能：
+     * - 棋盘状态管理
+     * - 落子合法性判断
+     * - 气的计算（递归查找连通块及其气）
+     * - 提子逻辑
+     * - 打劫判断（禁止全局同形）
+     * - 终局胜负计算（中国规则数子法）
+     */
+    class GoGame {
+        constructor(boardSize = 19) {
+            this.boardSize = boardSize;
+            this.board = [];          // 棋盘状态：0=空, 1=黑, 2=白
+            this.currentPlayer = 1;   // 当前玩家：1=黑, 2=白
+            this.history = [];        // 历史记录，用于悔棋和打劫判断
+            this.captures = { 1: 0, 2: 0 };  // 提子计数
+            this.koPoint = null;      // 打劫点（禁止立即落子的位置）
+            this.lastMove = null;     // 最后一步落子位置
+            this.passCount = 0;       // 连续弃权次数
+            this.gameEnded = false;   // 游戏是否结束
+            
+            this.initBoard();
+        }
+        
+        /**
+         * 初始化棋盘
+         */
+        initBoard() {
+            this.board = [];
+            for (let i = 0; i < this.boardSize; i++) {
+                this.board[i] = [];
+                for (let j = 0; j < this.boardSize; j++) {
+                    this.board[i][j] = 0;
+                }
+            }
+        }
+        
+        /**
+         * 重置游戏
+         */
+        reset() {
+            this.initBoard();
+            this.currentPlayer = 1;
+            this.history = [];
+            this.captures = { 1: 0, 2: 0 };
+            this.koPoint = null;
+            this.lastMove = null;
+            this.passCount = 0;
+            this.gameEnded = false;
+        }
+        
+        /**
+         * 获取棋盘状态快照（用于打劫判断）
+         */
+        getBoardSnapshot() {
+            return this.board.map(row => [...row]);
+        }
+        
+        /**
+         * 检查两个棋盘状态是否相同（用于打劫判断）
+         */
+        isSameBoard(board1, board2) {
+            for (let i = 0; i < this.boardSize; i++) {
+                for (let j = 0; j < this.boardSize; j++) {
+                    if (board1[i][j] !== board2[i][j]) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        
+        /**
+         * 检查位置是否在棋盘范围内
+         */
+        isValidPosition(x, y) {
+            return x >= 0 && x < this.boardSize && y >= 0 && y < this.boardSize;
+        }
+        
+        /**
+         * 获取相邻位置（上下左右）
+         */
+        getNeighbors(x, y) {
+            const neighbors = [];
+            const directions = [[0, -1], [0, 1], [-1, 0], [1, 0]]; // 上下左右
+            
+            for (const [dx, dy] of directions) {
+                const nx = x + dx;
+                const ny = y + dy;
+                if (this.isValidPosition(nx, ny)) {
+                    neighbors.push([nx, ny]);
+                }
+            }
+            return neighbors;
+        }
+        
+        /**
+         * 计算一个棋子群的气（连通块周围空点数量）
+         * 
+         * 使用广度优先搜索（BFS）找到连通块，并统计其气
+         * 
+         * @param {number} startX - 起始点 x 坐标
+         * @param {number} startY - 起始点 y 坐标
+         * @returns {Object} - { group: 棋子群位置数组, liberties: 气的数量 }
+         */
+        calculateGroup(startX, startY) {
+            const color = this.board[startX][startY];
+            if (color === 0) {
+                return { group: [], liberties: 0 };
+            }
+            
+            const group = [];           // 棋子群
+            const liberties = new Set(); // 气的位置集合
+            const visited = new Set();   // 已访问的位置
+            
+            // BFS 队列
+            const queue = [[startX, startY]];
+            visited.add(`${startX},${startY}`);
+            
+            while (queue.length > 0) {
+                const [x, y] = queue.shift();
+                group.push([x, y]);
+                
+                // 遍历相邻位置
+                for (const [nx, ny] of this.getNeighbors(x, y)) {
+                    const key = `${nx},${ny}`;
+                    
+                    if (visited.has(key)) continue;
+                    visited.add(key);
+                    
+                    const neighborColor = this.board[nx][ny];
+                    
+                    if (neighborColor === 0) {
+                        // 空位，是一个气
+                        liberties.add(key);
+                    } else if (neighborColor === color) {
+                        // 同色棋子，加入队列继续搜索
+                        queue.push([nx, ny]);
+                    }
+                    // 异色棋子，忽略
+                }
+            }
+            
+            return {
+                group: group,
+                liberties: liberties.size
+            };
+        }
+        
+        /**
+         * 移除没有气的棋子群
+         * 
+         * @param {number} color - 要检查的棋子颜色
+         * @returns {Array} - 被移除的棋子位置数组
+         */
+        removeDeadStones(color) {
+            const removed = [];
+            const visited = new Set();
+            
+            // 遍历整个棋盘
+            for (let i = 0; i < this.boardSize; i++) {
+                for (let j = 0; j < this.boardSize; j++) {
+                    if (this.board[i][j] === color && !visited.has(`${i},${j}`)) {
+                        const { group, liberties } = this.calculateGroup(i, j);
+                        
+                        // 标记已访问
+                        for (const [x, y] of group) {
+                            visited.add(`${x},${y}`);
+                        }
+                        
+                        // 如果没有气，移除整个棋子群
+                        if (liberties === 0) {
+                            for (const [x, y] of group) {
+                                this.board[x][y] = 0;
+                                removed.push([x, y]);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return removed;
+        }
+        
+        /**
+         * 尝试落子
+         * 
+         * @param {number} x - x 坐标
+         * @param {number} y - y 坐标
+         * @param {number} player - 玩家颜色（1=黑, 2=白）
+         * @returns {Object} - { success: boolean, message: string, captured: Array }
+         */
+        makeMove(x, y, player) {
+            // 检查游戏是否已结束
+            if (this.gameEnded) {
+                return { success: false, message: '游戏已结束' };
+            }
+            
+            // 检查是否轮到该玩家
+            if (player !== this.currentPlayer) {
+                return { success: false, message: '不是你的回合' };
+            }
+            
+            // 检查位置是否有效
+            if (!this.isValidPosition(x, y)) {
+                return { success: false, message: '无效的位置' };
+            }
+            
+            // 检查位置是否已有棋子
+            if (this.board[x][y] !== 0) {
+                return { success: false, message: '该位置已有棋子' };
+            }
+            
+            // 检查打劫（禁止立即在打劫点落子）
+            if (this.koPoint && this.koPoint[0] === x && this.koPoint[1] === y) {
+                return { success: false, message: '打劫禁着点，请先在别处落子' };
+            }
+            
+            // 保存当前棋盘状态（用于可能的回滚和打劫判断）
+            const previousBoard = this.getBoardSnapshot();
+            const previousCaptures = { ...this.captures };
+            
+            // 临时落子
+            this.board[x][y] = player;
+            
+            // 尝试提子（检查对方棋子是否被提）
+            const opponent = player === 1 ? 2 : 1;
+            const captured = this.removeDeadStones(opponent);
+            
+            // 检查自杀（落子后自己是否没有气）
+            const { liberties } = this.calculateGroup(x, y);
+            if (liberties === 0) {
+                // 自杀禁手，回滚
+                this.board[x][y] = 0;
+                this.captures = previousCaptures;
+                return { success: false, message: '禁止自杀' };
+            }
+            
+            // 检查打劫（是否形成劫争）
+            // 如果只提了一个子，且落子后该位置如果被对方立即落子会形成相同局面
+            let newKoPoint = null;
+            if (captured.length === 1) {
+                // 保存当前状态
+                const currentBoard = this.getBoardSnapshot();
+                
+                // 模拟对方在提子位置落子
+                const [cx, cy] = captured[0];
+                this.board[cx][cy] = opponent;
+                
+                // 检查是否能提回刚才的棋子
+                const recaptured = this.removeDeadStones(player);
+                
+                if (recaptured.length === 1 && recaptured[0][0] === x && recaptured[0][1] === y) {
+                    // 形成劫争，设置打劫点
+                    newKoPoint = [cx, cy];
+                }
+                
+                // 恢复棋盘状态
+                this.board = currentBoard;
+                this.board[x][y] = player;
+                this.board[cx][cy] = 0;
+            }
+            
+            // 检查全局同形（更严格的打劫判断）
+            // 检查当前局面是否在历史中出现过
+            const currentBoard = this.getBoardSnapshot();
+            for (const hist of this.history) {
+                if (this.isSameBoard(hist.board, currentBoard)) {
+                    // 全局同形，禁止落子
+                    this.board = previousBoard;
+                    this.captures = previousCaptures;
+                    return { success: false, message: '禁止全局同形' };
+                }
+            }
+            
+            // 落子成功，更新状态
+            this.history.push({
+                board: previousBoard,
+                captures: previousCaptures,
+                koPoint: this.koPoint,
+                lastMove: this.lastMove,
+                currentPlayer: this.currentPlayer
+            });
+            
+            // 更新提子计数
+            this.captures[player] += captured.length;
+            
+            // 更新状态
+            this.koPoint = newKoPoint;
+            this.lastMove = [x, y];
+            this.currentPlayer = opponent;
+            this.passCount = 0;  // 重置弃权计数
+            
+            return {
+                success: true,
+                message: '落子成功',
+                captured: captured
+            };
+        }
+        
+        /**
+         * 弃权（Pass）
+         * 
+         * @param {number} player - 弃权的玩家
+         * @returns {Object} - { success: boolean, message: string, gameEnded: boolean }
+         */
+        pass(player) {
+            if (this.gameEnded) {
+                return { success: false, message: '游戏已结束' };
+            }
+            
+            if (player !== this.currentPlayer) {
+                return { success: false, message: '不是你的回合' };
+            }
+            
+            // 保存历史
+            this.history.push({
+                board: this.getBoardSnapshot(),
+                captures: { ...this.captures },
+                koPoint: this.koPoint,
+                lastMove: this.lastMove,
+                currentPlayer: this.currentPlayer
+            });
+            
+            this.passCount++;
+            this.currentPlayer = this.currentPlayer === 1 ? 2 : 1;
+            this.koPoint = null;  // 弃权后解除打劫
+            
+            // 双方连续弃权，游戏结束
+            if (this.passCount >= 2) {
+                this.gameEnded = true;
+                return { success: true, message: '双方连续弃权，游戏结束', gameEnded: true };
+            }
+            
+            return { success: true, message: '弃权成功', gameEnded: false };
+        }
+        
+        /**
+         * 悔棋
+         * 
+         * @returns {Object} - { success: boolean, message: string }
+         */
+        undo() {
+            if (this.history.length === 0) {
+                return { success: false, message: '没有可以悔的棋' };
+            }
+            
+            if (this.gameEnded) {
+                return { success: false, message: '游戏已结束，无法悔棋' };
+            }
+            
+            // 恢复上一个状态
+            const lastState = this.history.pop();
+            this.board = lastState.board;
+            this.captures = lastState.captures;
+            this.koPoint = lastState.koPoint;
+            this.lastMove = lastState.lastMove;
+            this.currentPlayer = lastState.currentPlayer;
+            this.passCount = 0;
+            
+            return { success: true, message: '悔棋成功' };
+        }
+        
+        /**
+         * 计算胜负（中国规则数子法）
+         * 
+         * 中国规则：棋子数 + 地（围住的空点）多者胜
+         * 黑方贴 3.75 子（7.5 目）
+         * 
+         * @returns {Object} - { winner: string, blackScore: number, whiteScore: number, details: Object }
+         */
+        calculateScore() {
+            // 简化版计算：数子法
+            // 实际计算需要考虑地域归属，这里采用简化算法
+            
+            const territory = { 1: 0, 2: 0 };  // 地域
+            const stones = { 1: 0, 2: 0 };     // 棋子数
+            const visited = new Set();
+            
+            // 统计棋子数
+            for (let i = 0; i < this.boardSize; i++) {
+                for (let j = 0; j < this.boardSize; j++) {
+                    const color = this.board[i][j];
+                    if (color !== 0) {
+                        stones[color]++;
+                    }
+                }
+            }
+            
+            // 计算地域（空点属于被谁包围）
+            for (let i = 0; i < this.boardSize; i++) {
+                for (let j = 0; j < this.boardSize; j++) {
+                    if (this.board[i][j] === 0 && !visited.has(`${i},${j}`)) {
+                        // BFS 找到连通的空区域
+                        const region = [];
+                        const queue = [[i, j]];
+                        visited.add(`${i},${j}`);
+                        let owner = 0;  // 0=未确定, 1=黑, 2=白, 3=公共
+                        
+                        while (queue.length > 0) {
+                            const [x, y] = queue.shift();
+                            region.push([x, y]);
+                            
+                            for (const [nx, ny] of this.getNeighbors(x, y)) {
+                                const key = `${nx},${ny}`;
+                                if (visited.has(key)) continue;
+                                
+                                const color = this.board[nx][ny];
+                                if (color === 0) {
+                                    visited.add(key);
+                                    queue.push([nx, ny]);
+                                } else {
+                                    // 遇到棋子，确定归属
+                                    if (owner === 0) {
+                                        owner = color;
+                                    } else if (owner !== color) {
+                                        owner = 3;  // 公共区域
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // 将空区域归属给对应的玩家
+                        if (owner === 1 || owner === 2) {
+                            territory[owner] += region.length;
+                        }
+                    }
+                }
+            }
+            
+            // 计算总得分
+            // 中国规则：棋子数 + 地域
+            const blackScore = stones[1] + territory[1];
+            const whiteScore = stones[2] + territory[2] + this.captures[2];  // 白方加上提子
+            
+            // 黑方贴 3.75 子（相当于 7.5 目）
+            const komi = 3.75;
+            const blackFinal = blackScore - komi;
+            const whiteFinal = whiteScore;
+            
+            const winner = blackFinal > whiteFinal ? '黑方' : '白方';
+            const diff = Math.abs(blackFinal - whiteFinal);
+            
+            return {
+                winner: winner,
+                blackScore: blackFinal.toFixed(2),
+                whiteScore: whiteFinal.toFixed(2),
+                diff: diff.toFixed(2),
+                details: {
+                    blackStones: stones[1],
+                    blackTerritory: territory[1],
+                    whiteStones: stones[2],
+                    whiteTerritory: territory[2],
+                    whiteCaptures: this.captures[2],
+                    komi: komi
+                }
+            };
+        }
+    }
+
+    // ==================== WebRTC 连接管理 ====================
+    /**
+     * WebRTCManager 类 - 管理 WebRTC DataChannel 连接
+     * 
+     * 实现浏览器点对点直连，无需服务器
+     * 通过手动交换 SDP 信令建立连接
+     */
+    class WebRTCManager {
+        constructor(onMessage, onConnectionChange) {
+            this.peerConnection = null;
+            this.dataChannel = null;
+            this.isInitiator = false;  // 是否是房间创建者
+            this.onMessage = onMessage;
+            this.onConnectionChange = onConnectionChange;
+            this.connectionState = 'disconnected';  // disconnected, connecting, connected
+            
+            // STUN/TURN 服务器配置
+            // 使用公共 STUN 服务器，用于 NAT 穿透
+            this.rtcConfig = {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' },
+                    { urls: 'stun:stun2.l.google.com:19302' }
+                ]
+            };
+        }
+        
+        /**
+         * 创建房间（生成 Offer）
+         * 
+         * @returns {Promise<string>} - SDP Offer 字符串
+         */
+        async createRoom() {
+            this.isInitiator = true;
+            this.updateConnectionState('connecting');
+            
+            // 创建 RTCPeerConnection
+            this.peerConnection = new RTCPeerConnection(this.rtcConfig);
+            
+            // 创建 DataChannel（发起方创建）
+            this.dataChannel = this.peerConnection.createDataChannel('game', {
+                ordered: true  // 保证消息顺序
+            });
+            this.setupDataChannel(this.dataChannel);
+            
+            // 监听 ICE 候选
+            const iceCandidates = [];
+            this.peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    iceCandidates.push(event.candidate.toJSON());
+                }
+            };
+            
+            // 创建 Offer
+            const offer = await this.peerConnection.createOffer();
+            await this.peerConnection.setLocalDescription(offer);
+            
+            // 等待 ICE 收集完成
+            await this.waitForIceGathering();
+            
+            // 返回完整的 SDP（包含 ICE 候选）
+            const sdp = {
+                type: 'offer',
+                sdp: this.peerConnection.localDescription.sdp,
+                iceCandidates: iceCandidates
+            };
+            
+            return JSON.stringify(sdp);
+        }
+        
+        /**
+         * 加入房间（处理 Offer，生成 Answer）
+         * 
+         * @param {string} offerString - SDP Offer 字符串
+         * @returns {Promise<string>} - SDP Answer 字符串
+         */
+        async joinRoom(offerString) {
+            this.isInitiator = false;
+            this.updateConnectionState('connecting');
+            
+            // 解析 Offer
+            const offer = JSON.parse(offerString);
+            
+            // 创建 RTCPeerConnection
+            this.peerConnection = new RTCPeerConnection(this.rtcConfig);
+            
+            // 监听 DataChannel（接收方监听）
+            this.peerConnection.ondatachannel = (event) => {
+                this.dataChannel = event.channel;
+                this.setupDataChannel(this.dataChannel);
+            };
+            
+            // 监听 ICE 候选
+            const iceCandidates = [];
+            this.peerConnection.onicecandidate = (event) => {
+                if (event.candidate) {
+                    iceCandidates.push(event.candidate.toJSON());
+                }
+            };
+            
+            // 设置远程描述
+            await this.peerConnection.setRemoteDescription({
+                type: offer.type,
+                sdp: offer.sdp
+            });
+            
+            // 添加远程 ICE 候选
+            if (offer.iceCandidates) {
+                for (const candidate of offer.iceCandidates) {
+                    await this.peerConnection.addIceCandidate(candidate);
+                }
+            }
+            
+            // 创建 Answer
+            const answer = await this.peerConnection.createAnswer();
+            await this.peerConnection.setLocalDescription(answer);
+            
+            // 等待 ICE 收集完成
+            await this.waitForIceGathering();
+            
+            // 返回完整的 SDP
+            const sdp = {
+                type: 'answer',
+                sdp: this.peerConnection.localDescription.sdp,
+                iceCandidates: iceCandidates
+            };
+            
+            return JSON.stringify(sdp);
+        }
+        
+        /**
+         * 确认连接（处理 Answer）
+         * 
+         * @param {string} answerString - SDP Answer 字符串
+         */
+        async confirmConnection(answerString) {
+            const answer = JSON.parse(answerString);
+            
+            // 设置远程描述
+            await this.peerConnection.setRemoteDescription({
+                type: answer.type,
+                sdp: answer.sdp
+            });
+            
+            // 添加远程 ICE 候选
+            if (answer.iceCandidates) {
+                for (const candidate of answer.iceCandidates) {
+                    await this.peerConnection.addIceCandidate(candidate);
+                }
+            }
+        }
+        
+        /**
+         * 等待 ICE 收集完成
+         */
+        waitForIceGathering() {
+            return new Promise((resolve) => {
+                if (this.peerConnection.iceGatheringState === 'complete') {
+                    resolve();
+                } else {
+                    const checkState = () => {
+                        if (this.peerConnection.iceGatheringState === 'complete') {
+                            this.peerConnection.removeEventListener('icegatheringstatechange', checkState);
+                            resolve();
+                        }
+                    };
+                    this.peerConnection.addEventListener('icegatheringstatechange', checkState);
+                    
+                    // 超时处理（最多等待 5 秒）
+                    setTimeout(() => {
+                        this.peerConnection.removeEventListener('icegatheringstatechange', checkState);
+                        resolve();
+                    }, 5000);
+                }
+            });
+        }
+        
+        /**
+         * 设置 DataChannel 事件处理
+         */
+        setupDataChannel(channel) {
+            channel.onopen = () => {
+                this.updateConnectionState('connected');
+                console.log('DataChannel 已打开');
+            };
+            
+            channel.onclose = () => {
+                this.updateConnectionState('disconnected');
+                console.log('DataChannel 已关闭');
+            };
+            
+            channel.onerror = (error) => {
+                console.error('DataChannel 错误:', error);
+                this.updateConnectionState('disconnected');
+            };
+            
+            channel.onmessage = (event) => {
+                try {
+                    const message = JSON.parse(event.data);
+                    this.onMessage(message);
+                } catch (e) {
+                    console.error('解析消息失败:', e);
+                }
+            };
+        }
+        
+        /**
+         * 发送消息
+         * 
+         * @param {Object} message - 要发送的消息对象
+         */
+        send(message) {
+            if (this.dataChannel && this.dataChannel.readyState === 'open') {
+                this.dataChannel.send(JSON.stringify(message));
+                return true;
+            }
+            return false;
+        }
+        
+        /**
+         * 更新连接状态
+         */
+        updateConnectionState(state) {
+            this.connectionState = state;
+            this.onConnectionChange(state);
+        }
+        
+        /**
+         * 获取连接状态
+         */
+        isConnected() {
+            return this.connectionState === 'connected';
+        }
+        
+        /**
+         * 关闭连接
+         */
+        close() {
+            if (this.dataChannel) {
+                this.dataChannel.close();
+                this.dataChannel = null;
+            }
+            if (this.peerConnection) {
+                this.peerConnection.close();
+                this.peerConnection = null;
+            }
+            this.updateConnectionState('disconnected');
+        }
+    }
+
+    // ==================== 用户界面交互 ====================
+    /**
+     * GameUI 类 - 管理用户界面交互
+     */
+    class GameUI {
+        constructor() {
+            // 游戏实例
+            this.game = new GoGame(19);
+            
+            // WebRTC 实例
+            this.webrtc = new WebRTCManager(
+                this.handleMessage.bind(this),
+                this.handleConnectionChange.bind(this)
+            );
+            
+            // 玩家信息
+            this.myColor = null;  // 1=黑, 2=白
+            this.isMyTurn = false;
+            
+            // Canvas 相关
+            this.canvas = document.getElementById('go-board');
+            this.ctx = this.canvas.getContext('2d');
+            this.cellSize = 30;  // 格子大小
+            this.padding = 15;   // 边距
+            
+            // 待处理的请求
+            this.pendingRequest = null;
+            
+            // 初始化
+            this.init();
+        }
+        
+        /**
+         * 初始化
+         */
+        init() {
+            this.setupCanvas();
+            this.bindEvents();
+            this.render();
+        }
+        
+        /**
+         * 设置 Canvas
+         */
+        setupCanvas() {
+            // 计算 Canvas 大小
+            // 19x19 棋盘，有 18 个格子，加上边距
+            const size = this.cellSize * 18 + this.padding * 2;
+            this.canvas.width = size;
+            this.canvas.height = size;
+        }
+        
+        /**
+         * 绑定事件
+         */
+        bindEvents() {
+            // 棋盘点击事件
+            this.canvas.addEventListener('click', this.handleBoardClick.bind(this));
+            
+            // 控制按钮
+            document.getElementById('btn-undo').addEventListener('click', () => this.requestUndo());
+            document.getElementById('btn-pass').addEventListener('click', () => this.handlePass());
+            document.getElementById('btn-restart').addEventListener('click', () => this.requestRestart());
+            document.getElementById('btn-end-game').addEventListener('click', () => this.endGame());
+            
+            // WebRTC 按钮
+            document.getElementById('btn-create-room').addEventListener('click', () => this.createRoom());
+            document.getElementById('btn-join-room').addEventListener('click', () => this.joinRoom());
+            document.getElementById('btn-confirm-connection').addEventListener('click', () => this.confirmConnection());
+            document.getElementById('btn-copy-offer').addEventListener('click', () => this.copyText('offer-output'));
+            document.getElementById('btn-copy-answer').addEventListener('click', () => this.copyText('answer-output'));
+            
+            // 弹窗按钮
+            document.getElementById('modal-confirm').addEventListener('click', () => this.handleModalConfirm());
+            document.getElementById('modal-cancel').addEventListener('click', () => this.handleModalCancel());
+        }
+        
+        /**
+         * 渲染棋盘
+         */
+        render() {
+            const ctx = this.ctx;
+            const size = this.canvas.width;
+            
+            // 清空画布
+            ctx.clearRect(0, 0, size, size);
+            
+            // 绘制棋盘背景
+            ctx.fillStyle = '#DEB887';  // 棋盘木色
+            ctx.fillRect(0, 0, size, size);
+            
+            // 绘制网格线
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i < 19; i++) {
+                // 横线
+                ctx.beginPath();
+                ctx.moveTo(this.padding, this.padding + i * this.cellSize);
+                ctx.lineTo(size - this.padding, this.padding + i * this.cellSize);
+                ctx.stroke();
+                
+                // 竖线
+                ctx.beginPath();
+                ctx.moveTo(this.padding + i * this.cellSize, this.padding);
+                ctx.lineTo(this.padding + i * this.cellSize, size - this.padding);
+                ctx.stroke();
+            }
+            
+            // 绘制星位（天元和四个角的星位）
+            const starPoints = [
+                [3, 3], [3, 9], [3, 15],
+                [9, 3], [9, 9], [9, 15],
+                [15, 3], [15, 9], [15, 15]
+            ];
+            
+            ctx.fillStyle = '#000';
+            for (const [x, y] of starPoints) {
+                ctx.beginPath();
+                ctx.arc(
+                    this.padding + x * this.cellSize,
+                    this.padding + y * this.cellSize,
+                    4, 0, Math.PI * 2
+                );
+                ctx.fill();
+            }
+            
+            // 绘制棋子
+            for (let i = 0; i < 19; i++) {
+                for (let j = 0; j < 19; j++) {
+                    const color = this.game.board[i][j];
+                    if (color !== 0) {
+                        this.drawStone(i, j, color);
+                    }
+                }
+            }
+            
+            // 绘制最后落子标记
+            if (this.game.lastMove) {
+                const [x, y] = this.game.lastMove;
+                const cx = this.padding + x * this.cellSize;
+                const cy = this.padding + y * this.cellSize;
+                
+                ctx.strokeStyle = this.game.board[x][y] === 1 ? '#fff' : '#000';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // 更新玩家指示器
+            this.updatePlayerIndicator();
+        }
+        
+        /**
+         * 绘制棋子
+         */
+        drawStone(x, y, color) {
+            const ctx = this.ctx;
+            const cx = this.padding + x * this.cellSize;
+            const cy = this.padding + y * this.cellSize;
+            const radius = this.cellSize * 0.45;
+            
+            // 绘制阴影
+            ctx.beginPath();
+            ctx.arc(cx + 2, cy + 2, radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fill();
+            
+            // 绘制棋子
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            
+            if (color === 1) {
+                // 黑子
+                ctx.fillStyle = '#000';
+            } else {
+                // 白子
+                ctx.fillStyle = '#fff';
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+            }
+            
+            ctx.fill();
+            if (color === 2) {
+                ctx.stroke();
+            }
+        }
+        
+        /**
+         * 处理棋盘点击
+         */
+        handleBoardClick(event) {
+            // 检查连接状态
+            if (!this.webrtc.isConnected()) {
+                this.showToast('请先建立连接', 'warning');
+                return;
+            }
+            
+            // 检查是否轮到自己
+            if (!this.isMyTurn) {
+                this.showToast('不是你的回合', 'warning');
+                return;
+            }
+            
+            // 检查游戏是否结束
+            if (this.game.gameEnded) {
+                this.showToast('游戏已结束', 'warning');
+                return;
+            }
+            
+            // 计算点击位置
+            const rect = this.canvas.getBoundingClientRect();
+            const x = Math.round((event.clientX - rect.left - this.padding) / this.cellSize);
+            const y = Math.round((event.clientY - rect.top - this.padding) / this.cellSize);
+            
+            // 尝试落子
+            const result = this.game.makeMove(x, y, this.myColor);
+            
+            if (result.success) {
+                // 渲染棋盘
+                this.render();
+                
+                // 发送落子消息给对方
+                this.webrtc.send({
+                    type: 'move',
+                    x: x,
+                    y: y,
+                    player: this.myColor
+                });
+                
+                // 记录日志
+                this.addLog(`${this.myColor === 1 ? '黑方' : '白方'} 落子 (${x}, ${y})`);
+                
+                // 更新回合
+                this.isMyTurn = false;
+                this.updatePlayerIndicator();
+                
+                // 如果有提子，记录
+                if (result.captured.length > 0) {
+                    this.addLog(`提子 ${result.captured.length} 枚`);
+                }
+            } else {
+                this.showToast(result.message, 'error');
+            }
+        }
+        
+        /**
+         * 处理弃权
+         */
+        handlePass() {
+            if (!this.webrtc.isConnected()) {
+                this.showToast('请先建立连接', 'warning');
+                return;
+            }
+            
+            if (!this.isMyTurn) {
+                this.showToast('不是你的回合', 'warning');
+                return;
+            }
+            
+            const result = this.game.pass(this.myColor);
+            
+            if (result.success) {
+                this.addLog(`${this.myColor === 1 ? '黑方' : '白方'} 弃权`);
+                
+                // 发送弃权消息
+                this.webrtc.send({
+                    type: 'pass',
+                    player: this.myColor
+                });
+                
+                this.isMyTurn = false;
+                this.updatePlayerIndicator();
+                
+                if (result.gameEnded) {
+                    this.handleGameEnd();
+                }
+            }
+        }
+        
+        /**
+         * 请求悔棋
+         */
+        requestUndo() {
+            if (!this.webrtc.isConnected()) {
+                this.showToast('请先建立连接', 'warning');
+                return;
+            }
+            
+            if (this.game.history.length === 0) {
+                this.showToast('没有可以悔的棋', 'warning');
+                return;
+            }
+            
+            // 发送悔棋请求
+            this.webrtc.send({
+                type: 'undo_request'
+            });
+            
+            this.showToast('已发送悔棋请求，等待对方确认...', 'info');
+        }
+        
+        /**
+         * 请求重新开始
+         */
+        requestRestart() {
+            if (!this.webrtc.isConnected()) {
+                this.showToast('请先建立连接', 'warning');
+                return;
+            }
+            
+            // 发送重新开始请求
+            this.webrtc.send({
+                type: 'restart_request'
+            });
+            
+            this.showToast('已发送重新开始请求，等待对方确认...', 'info');
+        }
+        
+        /**
+         * 结束游戏
+         */
+        endGame() {
+            if (!this.webrtc.isConnected()) {
+                this.showToast('请先建立连接', 'warning');
+                return;
+            }
+            
+            this.game.gameEnded = true;
+            this.handleGameEnd();
+            
+            // 通知对方
+            this.webrtc.send({
+                type: 'game_end'
+            });
+        }
+        
+        /**
+         * 处理游戏结束
+         */
+        handleGameEnd() {
+            const result = this.game.calculateScore();
+            
+            const message = `游戏结束！\n\n` +
+                `黑方: ${result.blackScore} 子\n` +
+                `白方: ${result.whiteScore} 子\n\n` +
+                `${result.winner} 胜 ${result.diff} 子`;
+            
+            alert(message);
+            this.addLog(`游戏结束，${result.winner}胜 ${result.diff} 子`);
+        }
+        
+        /**
+         * 创建房间
+         */
+        async createRoom() {
+            try {
+                const offer = await this.webrtc.createRoom();
+                document.getElementById('offer-output').value = offer;
+                this.myColor = 1;  // 创建者为黑方
+                this.isMyTurn = true;
+                this.addLog('创建房间成功，等待对方加入...');
+                this.showToast('房间创建成功，请复制 Offer 发送给对方', 'success');
+            } catch (error) {
+                console.error('创建房间失败:', error);
+                this.showToast('创建房间失败: ' + error.message, 'error');
+            }
+        }
+        
+        /**
+         * 加入房间
+         */
+        async joinRoom() {
+            const offerInput = document.getElementById('offer-input').value.trim();
+            
+            if (!offerInput) {
+                this.showToast('请粘贴对方发来的 Offer', 'warning');
+                return;
+            }
+            
+            try {
+                const answer = await this.webrtc.joinRoom(offerInput);
+                document.getElementById('answer-output').value = answer;
+                this.myColor = 2;  // 加入者为白方
+                this.isMyTurn = false;
+                this.addLog('加入房间成功，等待连接确认...');
+                this.showToast('加入成功，请复制 Answer 发回给对方', 'success');
+            } catch (error) {
+                console.error('加入房间失败:', error);
+                this.showToast('加入房间失败: ' + error.message, 'error');
+            }
+        }
+        
+        /**
+         * 确认连接
+         */
+        async confirmConnection() {
+            const answerInput = document.getElementById('answer-input').value.trim();
+            
+            if (!answerInput) {
+                this.showToast('请粘贴对方发来的 Answer', 'warning');
+                return;
+            }
+            
+            try {
+                await this.webrtc.confirmConnection(answerInput);
+                this.addLog('正在建立连接...');
+                this.showToast('连接建立中...', 'info');
+            } catch (error) {
+                console.error('确认连接失败:', error);
+                this.showToast('确认连接失败: ' + error.message, 'error');
+            }
+        }
+        
+        /**
+         * 复制文本
+         */
+        copyText(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.value;
+            
+            if (!text) {
+                this.showToast('没有内容可复制', 'warning');
+                return;
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                this.showToast('复制成功', 'success');
+            }).catch(() => {
+                // 备用方案
+                element.select();
+                document.execCommand('copy');
+                this.showToast('复制成功', 'success');
+            });
+        }
+        
+        /**
+         * 处理接收到的消息
+         */
+        handleMessage(message) {
+            console.log('收到消息:', message);
+            
+            switch (message.type) {
+                case 'move':
+                    // 对方落子
+                    const result = this.game.makeMove(message.x, message.y, message.player);
+                    if (result.success) {
+                        this.render();
+                        this.addLog(`${message.player === 1 ? '黑方' : '白方'} 落子 (${message.x}, ${message.y})`);
+                        this.isMyTurn = true;
+                        this.updatePlayerIndicator();
+                    }
+                    break;
+                    
+                case 'pass':
+                    // 对方弃权
+                    const passResult = this.game.pass(message.player);
+                    this.addLog(`${message.player === 1 ? '黑方' : '白方'} 弃权`);
+                    this.isMyTurn = true;
+                    this.updatePlayerIndicator();
+                    
+                    if (passResult.gameEnded) {
+                        this.handleGameEnd();
+                    }
+                    break;
+                    
+                case 'undo_request':
+                    // 对方请求悔棋
+                    this.showModal(
+                        '悔棋请求',
+                        '对方请求悔棋，是否同意？',
+                        () => {
+                            // 同意悔棋
+                            const undoResult = this.game.undo();
+                            if (undoResult.success) {
+                                this.game.undo();  // 再悔一步（悔掉自己的）
+                                this.render();
+                                this.addLog('双方同意悔棋');
+                                this.webrtc.send({ type: 'undo_accepted' });
+                                this.isMyTurn = this.game.currentPlayer === this.myColor;
+                                this.updatePlayerIndicator();
+                            }
+                        },
+                        () => {
+                            // 拒绝悔棋
+                            this.webrtc.send({ type: 'undo_rejected' });
+                        }
+                    );
+                    break;
+                    
+                case 'undo_accepted':
+                    this.showToast('对方同意悔棋', 'success');
+                    this.game.undo();
+                    this.render();
+                    this.addLog('双方同意悔棋');
+                    this.isMyTurn = this.game.currentPlayer === this.myColor;
+                    this.updatePlayerIndicator();
+                    break;
+                    
+                case 'undo_rejected':
+                    this.showToast('对方拒绝悔棋', 'warning');
+                    break;
+                    
+                case 'restart_request':
+                    // 对方请求重新开始
+                    this.showModal(
+                        '重新开始请求',
+                        '对方请求重新开始游戏，是否同意？',
+                        () => {
+                            // 同意重新开始
+                            this.game.reset();
+                            this.render();
+                            this.isMyTurn = this.myColor === 1;
+                            this.updatePlayerIndicator();
+                            this.addLog('游戏重新开始');
+                            this.webrtc.send({ type: 'restart_accepted' });
+                        },
+                        () => {
+                            // 拒绝重新开始
+                            this.webrtc.send({ type: 'restart_rejected' });
+                        }
+                    );
+                    break;
+                    
+                case 'restart_accepted':
+                    this.showToast('对方同意重新开始', 'success');
+                    this.game.reset();
+                    this.render();
+                    this.isMyTurn = this.myColor === 1;
+                    this.updatePlayerIndicator();
+                    this.addLog('游戏重新开始');
+                    break;
+                    
+                case 'restart_rejected':
+                    this.showToast('对方拒绝重新开始', 'warning');
+                    break;
+                    
+                case 'game_end':
+                    this.handleGameEnd();
+                    break;
+            }
+        }
+        
+        /**
+         * 处理连接状态变化
+         */
+        handleConnectionChange(state) {
+            const statusEl = document.getElementById('connection-status');
+            const gameStatusEl = document.getElementById('game-status');
+            
+            statusEl.className = 'connection-status ' + state;
+            
+            switch (state) {
+                case 'disconnected':
+                    statusEl.textContent = '未连接';
+                    gameStatusEl.textContent = '等待连接...';
+                    this.canvas.classList.add('disabled');
+                    break;
+                    
+                case 'connecting':
+                    statusEl.textContent = '连接中...';
+                    gameStatusEl.textContent = '正在建立连接...';
+                    this.canvas.classList.add('disabled');
+                    break;
+                    
+                case 'connected':
+                    statusEl.textContent = '已连接';
+                    gameStatusEl.textContent = '连接成功，可以开始游戏！';
+                    this.canvas.classList.remove('disabled');
+                    this.addLog('WebRTC 连接建立成功');
+                    this.showToast('连接成功！', 'success');
+                    break;
+            }
+        }
+        
+        /**
+         * 更新玩家指示器
+         */
+        updatePlayerIndicator() {
+            const indicator = document.getElementById('current-player-indicator');
+            const text = document.getElementById('current-player-text');
+            
+            indicator.className = 'player-indicator ' + (this.game.currentPlayer === 1 ? 'black' : 'white');
+            text.textContent = this.game.currentPlayer === 1 ? '黑方' : '白方';
+        }
+        
+        /**
+         * 显示 Toast 提示
+         */
+        showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        /**
+         * 显示弹窗
+         */
+        showModal(title, message, onConfirm, onCancel) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('modal').classList.add('show');
+            
+            this.pendingRequest = { onConfirm, onCancel };
+        }
+        
+        /**
+         * 处理弹窗确认
+         */
+        handleModalConfirm() {
+            document.getElementById('modal').classList.remove('show');
+            if (this.pendingRequest && this.pendingRequest.onConfirm) {
+                this.pendingRequest.onConfirm();
+            }
+            this.pendingRequest = null;
+        }
+        
+        /**
+         * 处理弹窗取消
+         */
+        handleModalCancel() {
+            document.getElementById('modal').classList.remove('show');
+            if (this.pendingRequest && this.pendingRequest.onCancel) {
+                this.pendingRequest.onCancel();
+            }
+            this.pendingRequest = null;
+        }
+        
+        /**
+         * 添加日志
+         */
+        addLog(message) {
+            const logContent = document.getElementById('log-content');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            const time = new Date();
+            const timeStr = time.getHours().toString().padStart(2, '0') + ':' +
+                          time.getMinutes().toString().padStart(2, '0') + ':' +
+                          time.getSeconds().toString().padStart(2, '0');
+            
+            entry.textContent = `[${timeStr}] ${message}`;
+            logContent.appendChild(entry);
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+    }
+
+    // ==================== 主程序入口 ====================
+    // 页面加载完成后初始化游戏
+    document.addEventListener('DOMContentLoaded', () => {
+        window.gameUI = new GameUI();
+    });
+    </script>
+</body>
+</html>
