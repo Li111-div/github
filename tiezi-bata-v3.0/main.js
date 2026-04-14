@@ -1295,6 +1295,7 @@ async function submitComment() {
     }
     
     // 测试阶段不限制评论数量
+    const today = getTodayDate();
     
     const content = document.getElementById('commentContent').value.trim();
     
