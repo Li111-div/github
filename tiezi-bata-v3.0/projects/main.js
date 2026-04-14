@@ -1270,7 +1270,7 @@ function renderComments(comments, postCategory = 'chat') {
     
     noComments.classList.add('hidden');
     container.innerHTML = comments.map(comment => `
-        <div class="comment-card animate-fade-in">
+        <div class="comment-card animate-fade-in" data-comment-id="${comment.id}">
             <div class="flex items-start gap-3">
                 <div class="w-8 h-8 rounded-lg ${AVATARS[comment.avatar] || AVATARS.avatar1} flex items-center justify-center flex-shrink-0 text-white">
                     <i class="ri-user-line text-xs"></i>
@@ -1292,6 +1292,9 @@ function renderComments(comments, postCategory = 'chat') {
             </div>
         </div>
     `).join('');
+    
+    // 更新评论数
+    document.getElementById('commentCount').textContent = comments.length;
 }
 
 async function submitComment() {
@@ -1343,16 +1346,18 @@ async function submitComment() {
         user_id: currentUser.id,
         username: currentUser.username,
         anonymous_name: isLoveComment ? '匿名用户' : currentUser.anonymous_name,
-        avatar: currentUser.avatar || 'avatar1',
         content: content,
         created_at: new Date().toISOString()
     };
     
     // 尝试保存到云端
     try {
-        await supabaseClient
+        const { error } = await supabaseClient
             .from('comments')
             .insert(commentData);
+        if (error) {
+            console.warn('云端评论失败:', error);
+        }
     } catch (e) {
         console.warn('云端评论失败，使用本地存储');
     }
@@ -1453,12 +1458,26 @@ async function deleteComment(commentId) {
         LocalDB.deleteComment(commentId);
         
         showToast('评论已删除', 'success');
+        
+        // 尝试动画删除评论卡片
         const commentCard = document.querySelector(`[data-comment-id="${commentId}"]`);
         if (commentCard) {
             commentCard.style.transform = 'translateX(100%)';
             commentCard.style.opacity = '0';
             setTimeout(() => commentCard.remove(), 300);
+            // 更新评论数
+            const countEl = document.getElementById('commentCount');
+            if (countEl) {
+                countEl.textContent = Math.max(0, parseInt(countEl.textContent) - 1);
+            }
         }
+        
+        // 如果在帖子详情页，刷新评论列表
+        if (currentPostId) {
+            const comments = LocalDB.getComments(currentPostId);
+            renderComments(comments, document.querySelector('#postDetailPage .category-tag')?.textContent?.includes('表白') ? 'love' : 'chat');
+        }
+        
     } catch (err) {
         console.error('删除评论失败:', err);
         showToast('删除失败，请重试', 'error');
@@ -1596,7 +1615,7 @@ async function loadMyComments() {
                         <span class="text-xs" style="color: var(--text-secondary);">
                             回复: ${escapeHtml(comment.posts?.title || '无标题帖子')}
                         </span>
-                        <button onclick="App.deleteComment('${comment.id}')" class="text-xs" style="color: var(--warning);">删除</button>
+                        <button onclick="deleteMyComment('${comment.id}')" class="text-xs" style="color: var(--warning);">删除</button>
                     </div>
                 </div>
             `;
@@ -1604,6 +1623,38 @@ async function loadMyComments() {
         
     } catch (err) {
         console.error('加载我的评论失败:', err);
+    }
+}
+
+// 删除我的评论（从我的评论页面）
+async function deleteMyComment(commentId) {
+    if (!currentUser) {
+        showToast('请先登录', 'warning');
+        return;
+    }
+    
+    try {
+        // 删除云端
+        try {
+            await supabaseClient
+                .from('comments')
+                .delete()
+                .eq('id', commentId)
+                .eq('user_id', currentUser.id);
+        } catch (e) {
+            console.warn('云端删除失败');
+        }
+        
+        // 删除本地
+        LocalDB.deleteComment(commentId);
+        
+        showToast('评论已删除', 'success');
+        loadMyComments(); // 刷新评论列表
+        loadMyPosts(); // 刷新我的发布（评论数可能变化）
+        
+    } catch (err) {
+        console.error('删除评论失败:', err);
+        showToast('删除失败', 'error');
     }
 }
 
@@ -2571,6 +2622,7 @@ window.dislikePost = dislikePost;
 window.deletePost = deletePost;
 window.submitComment = submitComment;
 window.deleteComment = deleteComment;
+window.deleteMyComment = deleteMyComment;
 window.showReportModal = showReportModal;
 window.submitReport = submitReport;
 window.closeReportModal = closeReportModal;
