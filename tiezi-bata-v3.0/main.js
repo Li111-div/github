@@ -91,6 +91,43 @@ const LocalDB = {
         VOTES: 'campus_votes'  // 用户点赞/踩记录
     },
 
+    // 清理本地数据，与云端同步
+    async syncLocalData() {
+        try {
+            // 同步帖子
+            const { data: cloudPosts } = await supabaseClient.from('posts').select('*');
+            if (cloudPosts) {
+                localStorage.setItem('campus_posts', JSON.stringify(cloudPosts));
+            }
+            
+            // 同步评论
+            const { data: cloudComments } = await supabaseClient.from('comments').select('*');
+            if (cloudComments) {
+                localStorage.setItem('campus_comments', JSON.stringify(cloudComments));
+            }
+            
+            // 同步用户
+            const { data: cloudUsers } = await supabaseClient.from('user_profiles').select('*');
+            if (cloudUsers) {
+                localStorage.setItem('campus_users', JSON.stringify(cloudUsers));
+            }
+            
+            // 同步收藏
+            const { data: cloudFavorites } = await supabaseClient.from('favorites').select('*');
+            if (cloudFavorites) {
+                localStorage.setItem('campus_favorites', JSON.stringify(cloudFavorites));
+            }
+            
+            // 同步投票
+            const { data: cloudVotes } = await supabaseClient.from('campus_votes').select('*');
+            if (cloudVotes) {
+                localStorage.setItem('campus_votes', JSON.stringify(cloudVotes));
+            }
+        } catch (e) {
+            console.warn('同步本地数据失败:', e);
+        }
+    },
+    
     // 初始化本地数据
     init() {
         if (!localStorage.getItem(this.KEYS.POSTS)) {
@@ -315,13 +352,41 @@ const CATEGORIES = {
 };
 
 // 头像配置
-const AVATARS = {
-    avatar1: 'bg-gradient-to-br from-pink-400 to-rose-500',
-    avatar2: 'bg-gradient-to-br from-blue-400 to-indigo-500',
-    avatar3: 'bg-gradient-to-br from-green-400 to-emerald-500',
-    avatar4: 'bg-gradient-to-br from-amber-400 to-orange-500',
-    avatar5: 'bg-gradient-to-br from-purple-400 to-violet-500'
-};
+const AVATARS = [
+    { bg: 'bg-gradient-to-br from-pink-400 to-rose-500', icon: 'ri-user-heart-line' },
+    { bg: 'bg-gradient-to-br from-blue-400 to-indigo-500', icon: 'ri-user-star-line' },
+    { bg: 'bg-gradient-to-br from-green-400 to-emerald-500', icon: 'ri-leaf-line' },
+    { bg: 'bg-gradient-to-br from-amber-400 to-orange-500', icon: 'ri-sun-line' },
+    { bg: 'bg-gradient-to-br from-purple-400 to-violet-500', icon: 'ri-star-line' },
+    { bg: 'bg-gradient-to-br from-cyan-400 to-teal-500', icon: 'ri-water-flash-line' },
+    { bg: 'bg-gradient-to-br from-red-400 to-red-600', icon: 'ri-fire-line' },
+    { bg: 'bg-gradient-to-br from-rose-400 to-pink-500', icon: 'ri-heart-line' },
+    { bg: 'bg-gradient-to-br from-indigo-400 to-purple-500', icon: 'ri-moon-line' },
+    { bg: 'bg-gradient-to-br from-yellow-400 to-amber-500', icon: 'ri-flashlight-line' },
+    { bg: 'bg-gradient-to-br from-emerald-400 to-cyan-500', icon: 'ri-drop-line' },
+    { bg: 'bg-gradient-to-br from-fuchsia-400 to-pink-500', icon: 'ri-bear-smile-line' },
+    { bg: 'bg-gradient-to-br from-sky-400 to-blue-500', icon: 'ri-cloud-line' },
+    { bg: 'bg-gradient-to-br from-lime-400 to-green-500', icon: 'ri-bird-line' },
+    { bg: 'bg-gradient-to-br from-orange-400 to-red-500', icon: 'ri-firefox-line' },
+    { bg: 'bg-gradient-to-br from-slate-400 to-slate-600', icon: 'ri-moon-cloudy-line' },
+    { bg: 'bg-gradient-to-br from-violet-400 to-indigo-500', icon: 'ri-shining-line' },
+    { bg: 'bg-gradient-to-br from-rose-500 to-pink-600', icon: 'ri-heart-2-line' },
+    { bg: 'bg-gradient-to-br from-amber-500 to-yellow-500', icon: 'ri-sun-cloudy-line' },
+    { bg: 'bg-gradient-to-br from-teal-400 to-emerald-500', icon: 'ri-plant-line' }
+];
+
+// 获取随机头像
+function getRandomAvatar() {
+    return AVATARS[Math.floor(Math.random() * AVATARS.length)];
+}
+
+// 获取用户头像配置
+function getAvatarConfig(avatarIndex) {
+    if (avatarIndex && AVATARS[avatarIndex]) {
+        return AVATARS[avatarIndex];
+    }
+    return AVATARS[0];
+}
 
 // ==================== 全局状态 ====================
 let currentUser = null;
@@ -618,7 +683,7 @@ async function register() {
             username: username,
             password: password,
             anonymous_name: generateAnonymousName(),
-            avatar: 'avatar1',
+            avatar: Math.floor(Math.random() * AVATARS.length),
             created_at: new Date().toISOString(),
             is_active: true,
             today_post_count: 0,
@@ -761,10 +826,16 @@ async function loadPosts(reset = true) {
         
         const { data: cloudPosts, error } = await query;
         
-        // 如果云端获取失败或无数据，使用本地数据
-        let posts = cloudPosts;
-        if (error || !posts || posts.length === 0) {
-            posts = LocalDB.getPosts(currentCategory, currentSort, POSTS_PER_PAGE, postsOffset);
+        // 如果云端获取成功，用云端数据完全覆盖本地
+        if (!error && cloudPosts) {
+            localStorage.setItem('campus_posts', JSON.stringify(cloudPosts));
+            posts = cloudPosts;
+        } else if (cloudPosts && cloudPosts.length > 0) {
+            posts = cloudPosts;
+        } else {
+            // 云端无数据，清空本地
+            localStorage.setItem('campus_posts', JSON.stringify([]));
+            posts = [];
         }
         
         document.getElementById('skeletonLoader').classList.add('hidden');
@@ -778,10 +849,19 @@ async function loadPosts(reset = true) {
         
         document.getElementById('emptyState').classList.add('hidden');
         
-        // 为每个帖子获取评论数
+        // 为每个帖子获取评论数（从云端获取）
         for (let post of posts) {
-            const comments = LocalDB.getComments(post.id);
-            post.comments = comments;
+            try {
+                const { data: cloudComments } = await supabaseClient
+                    .from('comments')
+                    .select('id')
+                    .eq('post_id', post.id);
+                post.commentCount = cloudComments?.length || 0;
+            } catch (e) {
+                // 云端获取失败，使用本地评论数
+                const localComments = LocalDB.getComments(post.id);
+                post.commentCount = localComments.length;
+            }
         }
         
         const postList = document.getElementById('postList');
@@ -796,21 +876,9 @@ async function loadPosts(reset = true) {
     } catch (err) {
         document.getElementById('skeletonLoader').classList.add('hidden');
         console.error('加载帖子失败:', err);
-        // 云端失败时直接使用本地数据
-        const localPosts = LocalDB.getPosts(currentCategory, currentSort, POSTS_PER_PAGE, postsOffset);
-        
-        if (localPosts.length > 0) {
-            const postList = document.getElementById('postList');
-            localPosts.forEach((post, index) => {
-                const postCard = createPostCard(post);
-                postCard.style.animationDelay = `${index * 0.1}s`;
-                postList.appendChild(postCard);
-            });
-            postsOffset += localPosts.length;
-            document.getElementById('emptyState').classList.add('hidden');
-        } else {
-            document.getElementById('emptyState').classList.remove('hidden');
-        }
+        // 云端失败时清空本地并显示空状态
+        localStorage.setItem('campus_posts', JSON.stringify([]));
+        document.getElementById('emptyState').classList.remove('hidden');
     }
 }
 
@@ -823,7 +891,7 @@ function createPostCard(post) {
     const category = CATEGORIES[post.category] || CATEGORIES.chat;
     const isLove = post.category === 'love';
     const displayName = post.anonymous_name || '匿名用户';
-    const commentCount = post.comments?.length || 0;
+    const commentCount = post.commentCount || 0;
     const isOwner = currentUser && currentUser.id === post.user_id;
     
     if (isHidden) {
@@ -836,8 +904,8 @@ function createPostCard(post) {
     
     card.innerHTML = `
         <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded-xl ${AVATARS[post.avatar] || AVATARS.avatar1} flex items-center justify-center flex-shrink-0 text-white">
-                <i class="ri-user-line"></i>
+            <div class="w-10 h-10 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                <i class="${getAvatarConfig(post.avatar).icon}"></i>
             </div>
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1 flex-wrap">
@@ -1195,7 +1263,7 @@ function renderPostDetail(post, comments) {
     
     container.innerHTML = `
         <div class="flex items-start gap-3 mb-4">
-            <div class="w-12 h-12 rounded-xl ${AVATARS[post.avatar] || AVATARS.avatar1} flex items-center justify-center flex-shrink-0 text-white">
+            <div class="w-12 h-12 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
                 <i class="ri-user-line text-lg"></i>
             </div>
             <div class="flex-1">
@@ -1268,8 +1336,8 @@ function renderComments(comments, postCategory = 'chat') {
     container.innerHTML = comments.map(comment => `
         <div class="comment-card animate-fade-in" data-comment-id="${comment.id}">
             <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg ${AVATARS[comment.avatar] || AVATARS.avatar1} flex items-center justify-center flex-shrink-0 text-white">
-                    <i class="ri-user-line text-xs"></i>
+                <div class="w-8 h-8 rounded-lg ${getAvatarConfig(comment.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                    <i class="${getAvatarConfig(comment.avatar).icon} text-xs"></i>
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2 mb-1">
@@ -1415,7 +1483,7 @@ async function submitComment() {
     commentCard.className = 'comment-card animate-bounce-in';
     commentCard.innerHTML = `
         <div class="flex items-start gap-3">
-            <div class="w-8 h-8 rounded-lg ${AVATARS[currentUser.avatar] || AVATARS.avatar1} flex items-center justify-center flex-shrink-0 text-white">
+            <div class="w-8 h-8 rounded-lg ${getAvatarConfig(currentUser.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
                 <i class="ri-user-line text-xs"></i>
             </div>
             <div class="flex-1 min-w-0">
@@ -1961,6 +2029,9 @@ const App = {
             showToast('数据库连接失败，请刷新重试', 'error');
         }
         
+        // 初始化时同步本地数据与云端
+        this.syncLocalData();
+        
         const isLoggedIn = await checkAuthStatus();
         
         if (isLoggedIn) {
@@ -1974,7 +2045,7 @@ const App = {
         this.bindGlobalEvents();
         this.bindInputCounters();
         
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        window.matchMedia('(prefers-color-scheme: dark').addEventListener('change', () => {
             if (currentTheme === 'system') {
                 applyTheme('system');
             }
@@ -1998,84 +2069,130 @@ const App = {
     bindPullToRefresh() {
         let startY = 0;
         let currentY = 0;
-        let isPulling = false;
+        let isPullDown = false;
         let isLoadingMore = false;
         let pullDistance = 0;
+        let lastScrollTop = 0;
+        let pullDownThreshold = 120;
+        let pullUpThreshold = 100;
         
         const homePage = document.getElementById('homePage');
         const pullRefresh = document.getElementById('pullRefresh');
+        const pullRefreshIcon = document.getElementById('pullRefreshIcon');
+        const pullRefreshText = document.getElementById('pullRefreshText');
         const loadMoreIndicator = document.getElementById('loadMoreIndicator');
         const postList = document.getElementById('postList');
         
         if (!homePage) return;
         
+        lastScrollTop = window.scrollY;
+        
         homePage.addEventListener('touchstart', (e) => {
-            // 只有在首页且在顶部或附近时才启用下拉刷新
-            if (window.scrollY <= 10) {
-                startY = e.touches[0].pageY;
-                isPulling = true;
-            }
+            startY = e.touches[0].pageY;
+            currentY = startY;
+            isPullDown = false;
+            pullDistance = 0;
+            lastScrollTop = window.scrollY;
         }, { passive: true });
         
         homePage.addEventListener('touchmove', (e) => {
-            if (!isPulling) return;
-            
             currentY = e.touches[0].pageY;
             pullDistance = currentY - startY;
             
-            // 下拉刷新
-            if (pullDistance > 0 && window.scrollY <= 10) {
-                e.preventDefault();
-                const progress = Math.min(pullDistance / 80, 1);
-                pullRefresh.style.opacity = progress;
-                pullRefresh.classList.remove('hidden');
-                
-                if (pullDistance >= 80) {
-                    pullRefresh.querySelector('span').textContent = '松开刷新';
-                } else {
-                    pullRefresh.querySelector('span').textContent = '下拉刷新';
-                }
-            }
-            
-            // 上拉加载更多 - 检测是否滑到底部
-            const scrollHeight = document.documentElement.scrollHeight;
             const scrollTop = window.scrollY;
-            const clientHeight = window.innerHeight;
             
-            if (pullDistance < 0 && scrollHeight - scrollTop - clientHeight < 100 && !isLoadingMore) {
-                const lastPost = postList.lastElementChild;
-                if (lastPost) {
-                    isLoadingMore = true;
-                    loadMoreIndicator.classList.remove('hidden');
-                    loadPosts(false).then(() => {
-                        isLoadingMore = false;
-                        loadMoreIndicator.classList.add('hidden');
-                    });
+            // 下拉刷新
+            if (pullDistance > 0 && scrollTop <= 5) {
+                if (pullDistance > 30) {
+                    e.preventDefault();
+                    isPullDown = true;
+                    
+                    // 丝滑的阻尼效果
+                    const dampedDistance = pullDistance * Math.pow(0.95, Math.max(0, pullDistance - 80));
+                    const progress = Math.min(dampedDistance / pullDownThreshold, 1);
+                    
+                    pullRefresh.style.opacity = progress;
+                    pullRefresh.style.transform = `translateY(${dampedDistance * 0.3 - 20}px)`;
+                    pullRefresh.classList.remove('hidden');
+                    
+                    // 箭头旋转动画
+                    if (dampedDistance >= pullDownThreshold) {
+                        pullRefreshIcon.style.transform = 'rotate(180deg)';
+                        pullRefreshText.textContent = '松开刷新';
+                    } else {
+                        pullRefreshIcon.style.transform = `rotate(${progress * 180}deg)`;
+                        pullRefreshText.textContent = '下拉刷新';
+                    }
                 }
+            } else {
+                isPullDown = false;
+                pullRefresh.style.opacity = '0';
+                pullRefresh.style.transform = 'translateY(-20px)';
             }
         }, { passive: false });
         
         homePage.addEventListener('touchend', () => {
-            if (!isPulling) return;
-            
-            // 下拉刷新触发
-            if (pullDistance > 80) {
-                pullRefresh.querySelector('span').textContent = '刷新中...';
+            if (isPullDown && pullDistance >= pullDownThreshold) {
+                pullRefreshIcon.style.transform = 'rotate(360deg)';
+                pullRefreshText.textContent = '刷新中...';
+                pullRefreshIcon.className = 'ri-loader-4-line text-xl transition-transform duration-300';
+                pullRefreshIcon.style.animation = 'spin 1s linear infinite';
+                
                 loadPosts(true).then(() => {
+                    // 恢复箭头
+                    pullRefreshIcon.className = 'ri-arrow-down-s-line text-xl transition-transform duration-300';
+                    pullRefreshIcon.style.animation = 'none';
+                    
                     setTimeout(() => {
-                        pullRefresh.classList.add('hidden');
-                        pullRefresh.style.opacity = '';
-                    }, 500);
+                        pullRefresh.style.opacity = '0';
+                        pullRefresh.style.transform = 'translateY(-20px)';
+                        setTimeout(() => {
+                            pullRefresh.classList.add('hidden');
+                            pullRefreshIcon.style.transform = 'rotate(0deg)';
+                        }, 300);
+                    }, 300);
                 });
             } else {
-                pullRefresh.classList.add('hidden');
-                pullRefresh.style.opacity = '';
+                pullRefresh.style.opacity = '0';
+                pullRefresh.style.transform = 'translateY(-20px)';
+                setTimeout(() => pullRefresh.classList.add('hidden'), 300);
             }
             
-            isPulling = false;
+            isPullDown = false;
             pullDistance = 0;
-            startY = 0;
-            currentY = 0;
+        }, { passive: true });
+        
+        // 上拉加载
+        window.addEventListener('scroll', () => {
+            if (isLoadingMore) return;
+            
+            const scrollTop = window.scrollY;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+            const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+            
+            if (distanceFromBottom < pullUpThreshold && scrollTop > lastScrollTop) {
+                const lastPost = postList.lastElementChild;
+                if (lastPost) {
+                    isLoadingMore = true;
+                    loadMoreIndicator.style.opacity = '1';
+                    loadMoreIndicator.style.transform = 'translateY(0)';
+                    loadMoreIndicator.classList.remove('hidden');
+                    
+                    loadPosts(false).then(() => {
+                        setTimeout(() => {
+                            loadMoreIndicator.style.opacity = '0';
+                            loadMoreIndicator.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                loadMoreIndicator.classList.add('hidden');
+                                isLoadingMore = false;
+                            }, 300);
+                        }, 200);
+                    });
+                }
+            }
+            
+            lastScrollTop = scrollTop;
         }, { passive: true });
     },
     
@@ -2197,7 +2314,8 @@ const App = {
             
             const profileAvatar = document.getElementById('profileAvatar');
             if (profileAvatar) {
-                profileAvatar.className = `w-16 h-16 rounded-2xl flex items-center justify-center text-2xl text-white ${AVATARS[currentUser.avatar] || AVATARS.avatar1}`;
+                profileAvatar.className = `w-16 h-16 rounded-2xl flex items-center justify-center text-2xl text-white ${getAvatarConfig(currentUser.avatar).bg}`;
+                profileAvatar.innerHTML = `<i class="${getAvatarConfig(currentUser.avatar).icon}"></i>`;
             }
             
             // 更新未读通知红点

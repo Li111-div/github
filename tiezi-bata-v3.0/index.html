@@ -224,10 +224,10 @@
                 </button>
 
                 <!-- 下拉刷新指示器 -->
-                <div id="pullRefresh" class="hidden py-4 text-center">
-                    <div class="inline-flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
-                        <i class="ri-arrow-down-line animate-bounce"></i>
-                        <span>下拉刷新</span>
+                <div id="pullRefresh" class="hidden py-4 text-center" style="transform: translateY(-20px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <div class="inline-flex items-center gap-3 text-sm px-4 py-2 rounded-full" style="background: var(--bg-secondary); color: var(--text-secondary);">
+                        <i class="ri-arrow-down-s-line text-xl transition-transform duration-300" id="pullRefreshIcon"></i>
+                        <span id="pullRefreshText">下拉刷新</span>
                     </div>
                 </div>
 
@@ -244,9 +244,9 @@
                 </div>
 
                 <!-- 上拉加载指示器 -->
-                <div id="loadMoreIndicator" class="hidden py-4 text-center">
-                    <div class="inline-flex items-center gap-2 text-sm" style="color: var(--text-secondary);">
-                        <i class="ri-loader-4-line animate-spin"></i>
+                <div id="loadMoreIndicator" class="hidden py-6 text-center" style="transform: translateY(20px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                    <div class="inline-flex items-center gap-3 text-sm px-4 py-2 rounded-full" style="background: var(--bg-secondary); color: var(--text-secondary);">
+                        <div class="w-4 h-4 border-2 rounded-full" style="border-color: var(--text-secondary); border-top-color: transparent; animation: spin 1s linear infinite;"></div>
                         <span>加载中...</span>
                     </div>
                 </div>
@@ -409,6 +409,14 @@
         <!-- ========== 个人中心 ========== -->
         <div id="profilePage" class="hidden min-h-screen pt-20 pb-8 px-4">
             <div class="max-w-3xl mx-auto">
+                <!-- 返回按钮和标题 -->
+                <div class="flex items-center gap-3 mb-6">
+                    <button onclick="App.goHome()" class="p-2 rounded-lg nav-btn transition-all">
+                        <i class="ri-arrow-left-line text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold page-title">我的</h2>
+                </div>
+
                 <!-- 用户信息卡片 -->
                 <div class="card rounded-2xl p-6 mb-6">
                     <div class="flex items-center gap-4 mb-4">
@@ -610,73 +618,63 @@
             <div class="max-w-3xl mx-auto">
                 <!-- 顶部导航 -->
                 <div class="flex items-center gap-4 mb-6">
-                    <button onclick="App.goBack()" class="p-2 rounded-lg nav-btn transition-all">
+                    <button onclick="App.goHome()" class="p-2 rounded-lg nav-btn transition-all">
                         <i class="ri-arrow-left-line text-xl"></i>
                     </button>
                     <h2 class="text-xl font-bold page-title">社区规则</h2>
                 </div>
 
-                <div class="card rounded-2xl p-6 space-y-6">
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <i class="ri-file-text-line text-lg primary-text"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold form-label mb-1">发帖与评论规则</h4>
-                            <p class="text-sm form-hint leading-relaxed">每日发帖上限为5条，评论上限为10条，请文明发言，尊重他人。</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
-                            <i class="ri-prohibited-line text-lg text-red-500"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold form-label mb-1">内容规范</h4>
-                            <p class="text-sm form-hint leading-relaxed">禁止发布涉及政治敏感、色情低俗、暴力恐怖、违法犯罪等内容。系统会自动屏蔽敏感词汇。</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-love/10 flex items-center justify-center flex-shrink-0">
-                            <i class="ri-hand-heart-line text-lg love-text"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold form-label mb-1">尊重与友善</h4>
-                            <p class="text-sm form-hint leading-relaxed">请尊重其他用户，友善交流。禁止人身攻击、侮辱谩骂、恶意诋毁等行为。</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center flex-shrink-0">
-                            <i class="ri-shield-check-line text-lg text-amber-500"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold form-label mb-1">隐私保护</h4>
-                            <p class="text-sm form-hint leading-relaxed">请勿泄露自己或他人的真实姓名、电话、地址等隐私信息，以免造成不必要的麻烦。</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                            <i class="ri-thumb-down-line text-lg secondary-text"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold form-label mb-1">踩帖机制</h4>
-                            <p class="text-sm form-hint leading-relaxed">每个帖子都有踩按钮，当踩的数量超过10条时，帖子内容将被自动隐藏。请文明对待每一篇帖子。</p>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-                            <i class="ri-heart-line text-lg text-cyan-500"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold form-label mb-1">表白墙特殊规则</h4>
-                            <p class="text-sm form-hint leading-relaxed">表白墙内容强制匿名显示，请真诚表达，尊重他人隐私。</p>
-                        </div>
-                    </div>
-
+                <div class="card rounded-2xl p-6 space-y-4 text-sm form-hint leading-relaxed">
+                    <h3 class="font-bold text-base text-center mb-4">校园论坛 & 表白墙 · 注意事项</h3>
+                    
+                    <h4 class="font-semibold form-label mt-3">一、平台说明</h4>
+                    <p>本平台为非官方、非营利性学生自发搭建的匿名交流平台，所有内容仅代表用户个人观点，与学校、教师无任何关联。</p>
+                    <p>平台采用全自动运行模式，无人工管理员，所有内容审核、封禁均由系统自动完成。</p>
+                    <p>所有帖子、评论、图片发布满 24 小时自动永久删除，平台不存储、不备份任何数据。</p>
+                    
+                    <h4 class="font-semibold form-label mt-3">二、匿名与隐私规则</h4>
+                    <p>平台采用纯匿名模式，不收集、不存储用户真实姓名、班级、手机号、位置等任何个人信息。</p>
+                    <p>表白墙板块强制匿名，不显示任何发布者信息，严禁主动暴露他人或自身隐私。</p>
+                    <p>平台不会记录用户 IP、设备信息，全力保护用户隐私安全。</p>
+                    
+                    <h4 class="font-semibold form-label mt-3">三、内容发布规范（严禁以下内容）</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>严禁发布违法违规、涉政、暴力、色情、低俗、虚假信息；</li>
+                        <li>严禁辱骂、攻击、诽谤他人，严禁人身攻击、恶意引战；</li>
+                        <li>严禁泄露他人姓名、班级、宿舍、照片、联系方式等隐私信息；</li>
+                        <li>严禁提及学校、教师、职工真实全称，不做关联指向；</li>
+                        <li>严禁发布广告、推广、兼职、刷单、交易等商业信息；</li>
+                        <li>严禁发布刷屏、灌水、无意义重复内容，占用平台资源。</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold form-label mt-3">四、使用行为规则</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>每人每日发帖限 5 条、评论限 10 条，请勿恶意刷屏；</li>
+                        <li>禁止使用外挂、脚本等工具批量操作平台；</li>
+                        <li>禁止恶意踩帖、举报，干扰正常交流秩序；</li>
+                        <li>未登录用户仅可浏览，登录后才可发帖、评论。</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold form-label mt-3">五、违规处理规则</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>发布违规内容：系统自动拦截，帖子 / 评论直接隐藏；</li>
+                        <li>多次违规：自动限制发帖、评论权限，阶梯式封禁；</li>
+                        <li>严重违规：永久封禁账号，不予解封；</li>
+                        <li>违规内容将被立即清理，不做任何通知与保留。</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold form-label mt-3">六、免责声明</h4>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>平台仅提供匿名交流空间，不对用户发布内容负责；</li>
+                        <li>用户发布内容引发的任何纠纷、责任，由发布者自行承担；</li>
+                        <li>因网络、服务器等问题导致数据丢失、服务中断，平台不承担责任；</li>
+                        <li>未成年人使用本平台，需遵守法律法规及校园规范。</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold form-label mt-3">七、其他说明</h4>
+                    <p>平台保留随时调整规则、功能、服务的权利；</p>
+                    <p>继续使用本平台，即视为已阅读并同意以上所有注意事项。</p>
+                    
                     <!-- 数据管理 -->
                     <div class="mt-6 pt-4" style="border-top: 1px solid var(--border-color);">
                         <h4 class="font-semibold form-label mb-3 flex items-center gap-2">
@@ -712,7 +710,7 @@
             <div class="max-w-2xl mx-auto">
                 <!-- 顶部导航 -->
                 <div class="flex items-center gap-4 mb-6">
-                    <button onclick="App.goBack()" class="p-2 rounded-lg nav-btn transition-all">
+                    <button onclick="App.goHome()" class="p-2 rounded-lg nav-btn transition-all">
                         <i class="ri-arrow-left-line text-xl"></i>
                     </button>
                     <h2 class="text-xl font-bold page-title">Bug反馈</h2>

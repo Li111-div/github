@@ -434,9 +434,17 @@
             <section id="usersTab" class="tab-content hidden">
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-2xl font-bold">用户管理</h1>
-                    <button onclick="loadUsers()" class="btn btn-outline">
-                        <i class="ri-refresh-line"></i> 刷新
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="banAllUsers()" class="btn btn-warning">
+                            <i class="ri-shield-user-line"></i> 封禁所有用户
+                        </button>
+                        <button onclick="deleteAllUsers()" class="btn btn-danger">
+                            <i class="ri-delete-bin-line"></i> 删除所有用户
+                        </button>
+                        <button onclick="loadUsers()" class="btn btn-outline">
+                            <i class="ri-refresh-line"></i> 刷新
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="stat-card overflow-hidden">
@@ -469,6 +477,9 @@
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-2xl font-bold">帖子管理</h1>
                     <div class="flex gap-2">
+                        <button onclick="deleteAllPosts()" class="btn btn-danger">
+                            <i class="ri-delete-bin-line"></i> 清空所有帖子
+                        </button>
                         <select id="postFilter" onchange="loadPosts()" class="input-field" style="width: auto;">
                             <option value="all">全部板块</option>
                             <option value="chat">校园闲聊</option>
@@ -513,9 +524,14 @@
             <section id="commentsTab" class="tab-content hidden">
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-2xl font-bold">评论管理</h1>
-                    <button onclick="loadComments()" class="btn btn-outline">
-                        <i class="ri-refresh-line"></i> 刷新
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="deleteAllComments()" class="btn btn-danger">
+                            <i class="ri-delete-bin-line"></i> 清空所有评论
+                        </button>
+                        <button onclick="loadComments()" class="btn btn-outline">
+                            <i class="ri-refresh-line"></i> 刷新
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="stat-card overflow-hidden">
@@ -547,9 +563,14 @@
             <section id="feedbackTab" class="tab-content hidden">
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-2xl font-bold">反馈管理</h1>
-                    <button onclick="loadFeedback()" class="btn btn-outline">
-                        <i class="ri-refresh-line"></i> 刷新
-                    </button>
+                    <div class="flex gap-2">
+                        <button onclick="deleteAllFeedback()" class="btn btn-danger">
+                            <i class="ri-delete-bin-line"></i> 清空所有反馈
+                        </button>
+                        <button onclick="loadFeedback()" class="btn btn-outline">
+                            <i class="ri-refresh-line"></i> 刷新
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="stat-card overflow-hidden">
@@ -875,11 +896,68 @@
                     if (success) {
                         showToast(shouldUnban ? '用户已解封' : '用户已封禁', 'success');
                         loadUsers();
+                        initDashboard();
                     } else {
                         showToast('操作失败', 'error');
                     }
                 }
             );
+        }
+
+        // 封禁所有用户
+        async function banAllUsers() {
+            showConfirmModal('确定要封禁所有用户吗？封禁后所有用户将无法登录和发帖！', async () => {
+                showToast('正在处理...', 'warning');
+                try {
+                    const users = await fetchFromCloud('user_profiles');
+                    let updated = 0;
+                    for (const user of users) {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?id=eq.${user.id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                                'Content-Type': 'application/json',
+                                'Prefer': 'return=minimal'
+                            },
+                            body: JSON.stringify({ is_active: false })
+                        });
+                        if (response.ok) updated++;
+                    }
+                    showToast(`已封禁 ${updated} 个用户`, 'success');
+                    loadUsers();
+                    initDashboard();
+                } catch (error) {
+                    showToast('操作失败', 'error');
+                }
+            });
+        }
+
+        // 删除所有用户
+        async function deleteAllUsers() {
+            showConfirmModal('⚠️ 危险操作！确定要删除所有用户吗？此操作不可撤销！', async () => {
+                showToast('正在删除...', 'warning');
+                try {
+                    const users = await fetchFromCloud('user_profiles');
+                    let deleted = 0;
+                    for (const user of users) {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/user_profiles?id=eq.${user.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                                'Prefer': 'return=minimal'
+                            }
+                        });
+                        if (response.ok) deleted++;
+                    }
+                    showToast(`已删除 ${deleted} 个用户`, 'success');
+                    loadUsers();
+                    initDashboard();
+                } catch (error) {
+                    showToast('删除失败', 'error');
+                }
+            });
         }
 
         // 加载帖子列表
@@ -921,12 +999,54 @@
         // 删除帖子
         async function deletePost(postId) {
             showConfirmModal('确定要删除此帖子吗？此操作不可撤销。', async () => {
-                const success = await deleteFromCloud('posts', postId);
-                if (success) {
-                    showToast('帖子已删除', 'success');
-                    loadPosts();
-                } else {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${postId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        }
+                    });
+                    if (response.ok) {
+                        showToast('帖子已删除', 'success');
+                        loadPosts();
+                        initDashboard();
+                    } else {
+                        const err = await response.json();
+                        showToast('删除失败: ' + (err.message || '未知错误'), 'error');
+                    }
+                } catch (error) {
+                    console.error('删除帖子失败:', error);
                     showToast('删除失败', 'error');
+                }
+            });
+        }
+
+        // 清空所有帖子
+        async function deleteAllPosts() {
+            showConfirmModal('确定要清空所有帖子吗？此操作不可撤销！', async () => {
+                showToast('正在清空...', 'warning');
+                try {
+                    const posts = await fetchFromCloud('posts');
+                    let deleted = 0;
+                    for (const post of posts) {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/posts?id=eq.${post.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                                'Prefer': 'return=minimal'
+                            }
+                        });
+                        if (response.ok) deleted++;
+                    }
+                    showToast(`已清空 ${deleted} 条帖子`, 'success');
+                    loadPosts();
+                    initDashboard();
+                } catch (error) {
+                    console.error('清空帖子失败:', error);
+                    showToast('清空失败', 'error');
                 }
             });
         }
@@ -960,12 +1080,54 @@
         // 删除评论
         async function deleteComment(commentId) {
             showConfirmModal('确定要删除此评论吗？此操作不可撤销。', async () => {
-                const success = await deleteFromCloud('comments', commentId);
-                if (success) {
-                    showToast('评论已删除', 'success');
-                    loadComments();
-                } else {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/comments?id=eq.${commentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        }
+                    });
+                    if (response.ok) {
+                        showToast('评论已删除', 'success');
+                        loadComments();
+                        initDashboard();
+                    } else {
+                        const err = await response.json();
+                        showToast('删除失败: ' + (err.message || '未知错误'), 'error');
+                    }
+                } catch (error) {
+                    console.error('删除评论失败:', error);
                     showToast('删除失败', 'error');
+                }
+            });
+        }
+
+        // 清空所有评论
+        async function deleteAllComments() {
+            showConfirmModal('确定要清空所有评论吗？此操作不可撤销！', async () => {
+                showToast('正在清空...', 'warning');
+                try {
+                    const comments = await fetchFromCloud('comments');
+                    let deleted = 0;
+                    for (const comment of comments) {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/comments?id=eq.${comment.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                                'Prefer': 'return=minimal'
+                            }
+                        });
+                        if (response.ok) deleted++;
+                    }
+                    showToast(`已清空 ${deleted} 条评论`, 'success');
+                    loadComments();
+                    initDashboard();
+                } catch (error) {
+                    console.error('清空评论失败:', error);
+                    showToast('清空失败', 'error');
                 }
             });
         }
@@ -1000,12 +1162,55 @@
         // 删除反馈
         async function deleteFeedback(feedbackId) {
             showConfirmModal('确定要删除此反馈吗？', async () => {
-                const success = await deleteFromCloud('feedbacks', feedbackId);
-                if (success) {
-                    showToast('反馈已删除', 'success');
-                    loadFeedback();
-                } else {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/feedbacks?id=eq.${feedbackId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        }
+                    });
+                    if (response.ok) {
+                        showToast('反馈已删除', 'success');
+                        loadFeedback();
+                        initDashboard();
+                    } else {
+                        const err = await response.json();
+                        showToast('删除失败: ' + (err.message || '未知错误'), 'error');
+                    }
+                } catch (error) {
+                    console.error('删除反馈失败:', error);
                     showToast('删除失败', 'error');
+                }
+            });
+        }
+
+        // 清空所有反馈
+        async function deleteAllFeedback() {
+            showConfirmModal('确定要清空所有反馈吗？此操作不可撤销！', async () => {
+                showToast('正在清空...', 'warning');
+                try {
+                    // 先获取所有反馈
+                    const feedbacks = await fetchFromCloud('feedbacks');
+                    let deleted = 0;
+                    for (const feedback of feedbacks) {
+                        const response = await fetch(`${SUPABASE_URL}/rest/v1/feedbacks?id=eq.${feedback.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                                'Prefer': 'return=minimal'
+                            }
+                        });
+                        if (response.ok) deleted++;
+                    }
+                    showToast(`已清空 ${deleted} 条反馈`, 'success');
+                    loadFeedback();
+                    initDashboard();
+                } catch (error) {
+                    console.error('清空反馈失败:', error);
+                    showToast('清空失败', 'error');
                 }
             });
         }
