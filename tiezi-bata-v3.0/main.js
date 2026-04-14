@@ -888,12 +888,8 @@ async function createPost() {
         return;
     }
     
-    // 检查每日发帖限制
+    // 测试阶段不限制发帖数量，但保留计数用于显示
     const today = getTodayDate();
-    if (currentUser.last_post_date === today && currentUser.today_post_count >= 5) {
-        showToast('今日发帖已达上限（5条）', 'warning');
-        return;
-    }
     
     const title = document.getElementById('postTitle').value.trim();
     const content = document.getElementById('postContent').value.trim();
