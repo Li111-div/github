@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园树洞 - 匿名论坛</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.min.css">
+</head>
+<body class="min-h-screen font-sans">
+    <!-- 主容器 -->
+    <div id="app" class="relative z-10 min-h-screen">
+        
+        <!-- ========== 顶部导航栏 ========== -->
+        <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-bar">
+            <div class="max-w-6xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="App.goHome()">
+                        <div class="w-10 h-10 rounded-xl logo-icon flex items-center justify-center">
+                            <i class="ri-heart-2-fill text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold nav-title">校园树洞</h1>
+                            <p class="text-xs nav-subtitle opacity-60">匿名 · 真实 · 有温度</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <!-- 主题切换按钮 -->
+                        <button onclick="App.toggleThemeMenu()" class="p-2 rounded-lg nav-btn transition-all" title="切换主题">
+                            <i class="ri-sun-line text-lg theme-icon-light"></i>
+                            <i class="ri-moon-line text-lg theme-icon-dark hidden"></i>
+                        </button>
+                        <button onclick="App.showPage('rules')" class="p-2 rounded-lg nav-btn transition-all" title="规则">
+                            <i class="ri-information-line text-lg"></i>
+                        </button>
+                        <button id="userMenuBtn" onclick="App.toggleUserMenu()" class="hidden p-2 rounded-lg nav-btn transition-all">
+                            <i class="ri-user-line text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 主题选择菜单 -->
+        <div id="themeDropdown" class="hidden fixed top-16 right-4 z-50 mt-2 w-48 rounded-xl dropdown-menu shadow-xl overflow-hidden">
+            <div class="p-3 border-b dropdown-divider">
+                <p class="text-sm font-medium dropdown-text">选择主题</p>
+            </div>
+            <div class="p-2">
+                <button onclick="App.setTheme('system')" class="theme-option w-full px-3 py-2 text-left text-sm rounded-lg flex items-center gap-3 transition-all" data-theme="system">
+                    <i class="ri-computer-line"></i>
+                    <span class="dropdown-text">跟随系统</span>
+                    <i class="ri-check-line ml-auto check-icon hidden"></i>
+                </button>
+                <button onclick="App.setTheme('light')" class="theme-option w-full px-3 py-2 text-left text-sm rounded-lg flex items-center gap-3 transition-all" data-theme="light">
+                    <i class="ri-sun-line"></i>
+                    <span class="dropdown-text">浅色模式</span>
+                    <i class="ri-check-line ml-auto check-icon hidden"></i>
+                </button>
+                <button onclick="App.setTheme('dark')" class="theme-option w-full px-3 py-2 text-left text-sm rounded-lg flex items-center gap-3 transition-all" data-theme="dark">
+                    <i class="ri-moon-line"></i>
+                    <span class="dropdown-text">深色模式</span>
+                    <i class="ri-check-line ml-auto check-icon hidden"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 用户下拉菜单 -->
+        <div id="userDropdown" class="hidden fixed top-16 right-4 z-50 mt-2 w-56 rounded-xl dropdown-menu shadow-xl overflow-hidden">
+            <div class="p-3 border-b dropdown-divider">
+                <p class="text-sm font-medium dropdown-text" id="dropdownUsername">用户名</p>
+                <p class="text-xs dropdown-text opacity-60" id="dropdownUserStatus">状态</p>
+            </div>
+            <div class="p-2">
+                <button onclick="App.showPage('profile')" class="w-full px-3 py-2 text-left text-sm dropdown-text hover:bg-primary/10 rounded-lg transition-all flex items-center gap-2">
+                    <i class="ri-user-line"></i> 个人中心
+                </button>
+                <button onclick="App.showPage('settings')" class="w-full px-3 py-2 text-left text-sm dropdown-text hover:bg-primary/10 rounded-lg transition-all flex items-center gap-2">
+                    <i class="ri-settings-line"></i> 设置
+                </button>
+                <button onclick="App.logout()" class="w-full px-3 py-2 text-left text-sm text-red-500 hover:bg-red-500/10 rounded-lg transition-all flex items-center gap-2">
+                    <i class="ri-logout-box-line"></i> 退出登录
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== 登录/注册页面 ========== -->
+        <div id="authPage" class="min-h-screen flex items-center justify-center px-4 pt-20">
+            <div class="w-full max-w-md">
+                <!-- Logo -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl logo-icon mb-4">
+                        <i class="ri-heart-2-fill text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-black auth-title mb-2">校园树洞</h2>
+                    <p class="auth-subtitle opacity-60">匿名分享，真实表达</p>
+                </div>
+
+                <!-- Tab切换 -->
+                <div class="auth-tabs rounded-2xl p-1.5 mb-6">
+                    <div class="grid grid-cols-2 gap-1">
+                        <button onclick="App.switchAuthTab('login')" id="loginTab" class="auth-tab active py-3 rounded-xl text-sm font-semibold transition-all">
+                            登录
+                        </button>
+                        <button onclick="App.switchAuthTab('register')" id="registerTab" class="auth-tab py-3 rounded-xl text-sm font-semibold transition-all">
+                            注册
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 登录表单 -->
+                <div id="loginForm" class="auth-card rounded-2xl p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium auth-label mb-2">用户名</label>
+                            <input type="text" id="loginUsername" placeholder="输入用户名" 
+                                class="auth-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium auth-label mb-2">密码</label>
+                            <input type="password" id="loginPassword" placeholder="输入密码" 
+                                class="auth-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                        </div>
+                        <button onclick="App.login()" class="w-full py-3.5 primary-btn rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                            <span>登录</span>
+                            <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 注册表单 -->
+                <div id="registerForm" class="hidden auth-card rounded-2xl p-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium auth-label mb-2">设置用户名</label>
+                            <input type="text" id="registerUsername" placeholder="3-20位字母数字" 
+                                class="auth-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium auth-label mb-2">设置密码</label>
+                            <input type="password" id="registerPassword" placeholder="6位以上" 
+                                class="auth-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium auth-label mb-2">确认密码</label>
+                            <input type="password" id="registerConfirmPassword" placeholder="再次输入密码" 
+                                class="auth-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                        </div>
+                        <div class="warning-box rounded-xl p-4">
+                            <p class="text-xs warning-text leading-relaxed">
+                                <i class="ri-shield-check-line mr-1"></i>请遵守社区规则，文明发言。每日发帖上限为5条，评论上限为10条。
+                            </p>
+                        </div>
+                        <button onclick="App.register()" class="w-full py-3.5 love-btn rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                            <span>注册</span>
+                            <i class="ri-user-add-line"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 提示 -->
+                <p class="text-center auth-subtitle opacity-40 text-xs mt-6">
+                    点击"登录"即表示同意 <button onclick="App.showPage('rules')" class="primary-text hover:underline">《社区规则》</button>
+                </p>
+            </div>
+        </div>
+
+        <!-- ========== 首页 ========== -->
+        <div id="homePage" class="hidden min-h-screen pt-20 pb-8 px-4">
+            <div class="max-w-6xl mx-auto">
+                <!-- 排序和筛选 -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex gap-2">
+                        <button onclick="App.setSort('latest')" id="sortLatest" class="sort-btn active px-3 py-1.5 rounded-lg text-sm font-medium transition-all">
+                            <i class="ri-time-line mr-1"></i>最新
+                        </button>
+                        <button onclick="App.setSort('hottest')" id="sortHottest" class="sort-btn px-3 py-1.5 rounded-lg text-sm font-medium transition-all">
+                            <i class="ri-fire-line mr-1"></i>最热
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 板块导航 -->
+                <div class="mb-6 overflow-x-auto pb-2">
+                    <div class="flex gap-2 min-w-max">
+                        <button onclick="App.filterByCategory('all')" class="category-btn active px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all" data-category="all">
+                            <i class="ri-home-4-line mr-1"></i> 全部
+                        </button>
+                        <button onclick="App.filterByCategory('chat')" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all" data-category="chat">
+                            <i class="ri-chat-3-line mr-1"></i> 校园闲聊
+                        </button>
+                        <button onclick="App.filterByCategory('study')" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all" data-category="study">
+                            <i class="ri-book-open-line mr-1"></i> 学习求助
+                        </button>
+                        <button onclick="App.filterByCategory('love')" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all" data-category="love">
+                            <i class="ri-heart-line mr-1"></i> 表白墙
+                        </button>
+                        <button onclick="App.filterByCategory('lost')" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all" data-category="lost">
+                            <i class="ri-search-line mr-1"></i> 失物招领
+                        </button>
+                        <button onclick="App.filterByCategory('friend')" class="category-btn px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all" data-category="friend">
+                            <i class="ri-user-add-line mr-1"></i> 交友脱单
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 发帖按钮 -->
+                <button onclick="App.showPage('createPost')" class="fixed bottom-6 right-6 z-40 w-14 h-14 primary-btn rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform group">
+                    <i class="ri-add-line text-2xl"></i>
+                    <div class="absolute -top-12 right-0 post-tooltip px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                        发布帖子
+                    </div>
+                </button>
+
+                <!-- 骨架屏加载 -->
+                <div id="skeletonLoader" class="hidden space-y-4">
+                    <div class="skeleton-card rounded-xl p-4"></div>
+                    <div class="skeleton-card rounded-xl p-4"></div>
+                    <div class="skeleton-card rounded-xl p-4"></div>
+                </div>
+
+                <!-- 帖子列表 -->
+                <div id="postList" class="space-y-4">
+                    <!-- 动态生成 -->
+                </div>
+
+                <!-- 加载更多 -->
+                <div id="loadMoreContainer" class="mt-6 text-center hidden">
+                    <button onclick="App.loadMorePosts()" class="px-6 py-2.5 skeleton-btn rounded-xl transition-all">
+                        加载更多
+                    </button>
+                </div>
+
+                <!-- 空状态 -->
+                <div id="emptyState" class="hidden text-center py-16">
+                    <div class="text-6xl mb-4"><i class="ri-inbox-line"></i></div>
+                    <h3 class="text-xl font-semibold empty-title mb-2">暂无帖子</h3>
+                    <p class="empty-text">成为第一个分享的人吧~</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 发帖页面 ========== -->
+        <div id="createPostPage" class="hidden min-h-screen pt-20 pb-8 px-4">
+            <div class="max-w-2xl mx-auto">
+                <!-- 顶部导航 -->
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="App.goHome()" class="p-2 rounded-lg nav-btn transition-all">
+                        <i class="ri-arrow-left-line text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold page-title">发布帖子</h2>
+                </div>
+
+                <!-- 发帖表单 -->
+                <div class="card rounded-2xl p-6 space-y-5">
+                    <!-- 板块选择 -->
+                    <div>
+                        <label class="block text-sm font-medium form-label mb-3">选择板块</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="App.selectCategory('chat')" class="post-category-btn p-4 rounded-xl border-2 text-left transition-all hover:border-primary/50" data-category="chat">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="ri-chat-3-line text-lg chat-color"></i>
+                                    <span class="font-medium form-label">校园闲聊</span>
+                                </div>
+                                <p class="text-xs form-hint">分享校园生活点滴</p>
+                            </button>
+                            <button onclick="App.selectCategory('study')" class="post-category-btn p-4 rounded-xl border-2 text-left transition-all hover:border-primary/50" data-category="study">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="ri-book-open-line text-lg study-color"></i>
+                                    <span class="font-medium form-label">学习求助</span>
+                                </div>
+                                <p class="text-xs form-hint">有问题尽管问</p>
+                            </button>
+                            <button onclick="App.selectCategory('love')" class="post-category-btn p-4 rounded-xl border-2 text-left transition-all hover:border-primary/50" data-category="love">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="ri-heart-line text-lg love-color"></i>
+                                    <span class="font-medium form-label">表白墙</span>
+                                </div>
+                                <p class="text-xs form-hint">勇敢说出心里话</p>
+                            </button>
+                            <button onclick="App.selectCategory('lost')" class="post-category-btn p-4 rounded-xl border-2 text-left transition-all hover:border-primary/50" data-category="lost">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="ri-search-line text-lg lost-color"></i>
+                                    <span class="font-medium form-label">失物招领</span>
+                                </div>
+                                <p class="text-xs form-hint">寻找或归还物品</p>
+                            </button>
+                            <button onclick="App.selectCategory('friend')" class="post-category-btn p-4 rounded-xl border-2 text-left transition-all hover:border-primary/50 col-span-2" data-category="friend">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <i class="ri-user-add-line text-lg friend-color"></i>
+                                    <span class="font-medium form-label">交友脱单</span>
+                                </div>
+                                <p class="text-xs form-hint">认识更多小伙伴</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 标题 -->
+                    <div>
+                        <label class="block text-sm font-medium form-label mb-2">标题 <span class="form-hint">(选填，不超过30字)</span></label>
+                        <input type="text" id="postTitle" maxlength="30" placeholder="给帖子起个标题吧~" 
+                            class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                        <p class="text-xs form-hint mt-1 text-right"><span id="titleCount">0</span>/30</p>
+                    </div>
+
+                    <!-- 内容 -->
+                    <div>
+                        <label class="block text-sm font-medium form-label mb-2">内容 <span class="form-hint">(不超过200字)</span></label>
+                        <textarea id="postContent" rows="6" maxlength="200" placeholder="分享你的想法..." 
+                            class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"></textarea>
+                        <p class="text-xs form-hint mt-1 text-right"><span id="contentCount">0</span>/200</p>
+                    </div>
+
+                    <!-- 每日发帖限制提示 -->
+                    <div id="postLimitWarning" class="hidden warning-box rounded-xl p-4">
+                        <p class="text-sm warning-text flex items-center gap-2">
+                            <i class="ri-alert-line text-lg"></i>
+                            <span id="postLimitText">今日发帖已达上限</span>
+                        </p>
+                    </div>
+
+                    <!-- 发布按钮 -->
+                    <button onclick="App.createPost()" id="submitPostBtn" class="w-full py-3.5 primary-btn rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                        <i class="ri-send-plane-line"></i>
+                        <span>发布帖子</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 帖子详情页 ========== -->
+        <div id="postDetailPage" class="hidden min-h-screen pt-20 pb-8 px-4">
+            <div class="max-w-3xl mx-auto">
+                <!-- 顶部导航 -->
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="App.goHome()" class="p-2 rounded-lg nav-btn transition-all">
+                        <i class="ri-arrow-left-line text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold page-title">帖子详情</h2>
+                    <div class="ml-auto flex gap-2">
+                        <button onclick="App.showReportModal(currentPostId)" class="p-2 rounded-lg nav-btn transition-all" title="举报">
+                            <i class="ri-alert-line"></i>
+                        </button>
+                        <button onclick="App.toggleFavorite(currentPostId)" id="favoriteBtn" class="p-2 rounded-lg nav-btn transition-all hidden" title="收藏">
+                            <i class="ri-star-line"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 帖子内容 -->
+                <div id="postDetailContent" class="card rounded-2xl p-6 mb-6">
+                    <!-- 动态生成 -->
+                </div>
+
+                <!-- 评论区 -->
+                <div class="card rounded-2xl p-6">
+                    <h3 class="text-lg font-bold form-label mb-4 flex items-center gap-2">
+                        <i class="ri-chat-3-line text-primary"></i>
+                        评论区
+                        <span id="commentCount" class="text-sm font-normal form-hint">0</span>
+                    </h3>
+
+                    <!-- 评论区提示 -->
+                    <div id="loveCommentTip" class="hidden mb-4 love-tip rounded-xl p-3">
+                        <p class="text-xs love-text flex items-center gap-2">
+                            <i class="ri-heart-fill"></i>
+                            所有评论均为匿名，请文明发言
+                        </p>
+                    </div>
+
+                    <!-- 评论输入 -->
+                    <div id="commentInputContainer" class="mb-6">
+                        <textarea id="commentContent" rows="3" maxlength="200" placeholder="写下你的评论..." 
+                            class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"></textarea>
+                        <div class="flex items-center justify-between mt-3">
+                            <p class="text-xs form-hint"><span id="commentInputCount">0</span>/200</p>
+                            <button onclick="App.submitComment()" id="submitCommentBtn" class="px-5 py-2 primary-btn rounded-lg font-medium transition-all shadow-sm">
+                                发布评论
+                            </button>
+                        </div>
+                        <div id="commentLimitWarning" class="hidden mt-2 text-xs warning-text">
+                            <i class="ri-alert-line mr-1"></i>今日评论已达上限（10条）
+                        </div>
+                    </div>
+
+                    <!-- 评论列表 -->
+                    <div id="commentList" class="space-y-4">
+                        <!-- 动态生成 -->
+                    </div>
+
+                    <!-- 无评论状态 -->
+                    <div id="noComments" class="hidden text-center py-8">
+                        <div class="text-4xl mb-2"><i class="ri-chat-smile-3-line"></i></div>
+                        <p class="empty-text">还没有评论，来抢沙发吧~</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 个人中心 ========== -->
+        <div id="profilePage" class="hidden min-h-screen pt-20 pb-8 px-4">
+            <div class="max-w-3xl mx-auto">
+                <!-- 用户信息卡片 -->
+                <div class="card rounded-2xl p-6 mb-6">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div id="profileAvatar" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl text-white">
+                            <i class="ri-user-line"></i>
+                        </div>
+                        <div>
+                            <h2 id="profileUsername" class="text-xl font-bold page-title">用户名</h2>
+                            <p id="profileStatus" class="text-sm success-text">状态</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="stat-card rounded-xl p-3">
+                            <p id="profileTodayPosts" class="text-2xl font-bold secondary-text">0</p>
+                            <p class="text-xs form-hint">今日发帖</p>
+                        </div>
+                        <div class="stat-card rounded-xl p-3">
+                            <p id="profileTodayComments" class="text-2xl font-bold love-text">0</p>
+                            <p class="text-xs form-hint">今日评论</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人中心导航 -->
+                <div class="card rounded-2xl overflow-hidden mb-6">
+                    <button onclick="App.showProfileTab('comments')" class="profile-tab w-full px-4 py-3 text-left flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 transition-all" data-tab="comments">
+                        <i class="ri-chat-3-line text-lg"></i>
+                        <span class="form-label">我的评论</span>
+                        <i class="ri-arrow-right-s-line ml-auto form-hint"></i>
+                    </button>
+                    <button onclick="App.showProfileTab('favorites')" class="profile-tab w-full px-4 py-3 text-left flex items-center gap-3 border-b border-slate-200 dark:border-slate-700 transition-all" data-tab="favorites">
+                        <i class="ri-star-line text-lg"></i>
+                        <span class="form-label">我的收藏</span>
+                        <i class="ri-arrow-right-s-line ml-auto form-hint"></i>
+                    </button>
+                    <button onclick="App.showProfileTab('notifications')" class="profile-tab w-full px-4 py-3 text-left flex items-center gap-3 transition-all" data-tab="notifications">
+                        <i class="ri-notification-3-line text-lg"></i>
+                        <span class="form-label">通知中心</span>
+                        <span id="unreadBadge" class="hidden ml-auto px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">0</span>
+                        <i class="ri-arrow-right-s-line ml-auto form-hint"></i>
+                    </button>
+                </div>
+
+                <!-- 内容区域 -->
+                <div id="profileContent" class="card rounded-2xl p-6">
+                    <!-- 我的评论 -->
+                    <div id="myCommentsTab" class="tab-content hidden">
+                        <h3 class="text-lg font-bold form-label mb-4 flex items-center gap-2">
+                            <i class="ri-chat-3-line"></i> 我的评论
+                        </h3>
+                        <div id="myCommentList" class="space-y-4">
+                            <!-- 动态生成 -->
+                        </div>
+                        <div id="noMyComments" class="hidden text-center py-8">
+                            <div class="text-4xl mb-2"><i class="ri-chat-smile-3-line"></i></div>
+                            <p class="empty-text">你还没有发表任何评论</p>
+                        </div>
+                    </div>
+
+                    <!-- 我的收藏 -->
+                    <div id="myFavoritesTab" class="tab-content hidden">
+                        <h3 class="text-lg font-bold form-label mb-4 flex items-center gap-2">
+                            <i class="ri-star-line"></i> 我的收藏
+                        </h3>
+                        <div id="myFavoriteList" class="space-y-4">
+                            <!-- 动态生成 -->
+                        </div>
+                        <div id="noMyFavorites" class="hidden text-center py-8">
+                            <div class="text-4xl mb-2"><i class="ri-star-line"></i></div>
+                            <p class="empty-text">你还没有收藏任何帖子</p>
+                        </div>
+                    </div>
+
+                    <!-- 通知中心 -->
+                    <div id="notificationsTab" class="tab-content hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-bold form-label flex items-center gap-2">
+                                <i class="ri-notification-3-line"></i> 通知中心
+                            </h3>
+                            <button onclick="App.markAllRead()" class="text-xs primary-text hover:underline">全部已读</button>
+                        </div>
+                        <div id="notificationList" class="space-y-3">
+                            <!-- 动态生成 -->
+                        </div>
+                        <div id="noNotifications" class="hidden text-center py-8">
+                            <div class="text-4xl mb-2"><i class="ri-notification-off-line"></i></div>
+                            <p class="empty-text">暂无新通知</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 设置页面 ========== -->
+        <div id="settingsPage" class="hidden min-h-screen pt-20 pb-8 px-4">
+            <div class="max-w-3xl mx-auto">
+                <!-- 顶部导航 -->
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="App.goBack()" class="p-2 rounded-lg nav-btn transition-all">
+                        <i class="ri-arrow-left-line text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold page-title">设置</h2>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- 外观设置 -->
+                    <div class="card rounded-2xl overflow-hidden">
+                        <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                            <h3 class="font-medium form-label flex items-center gap-2">
+                                <i class="ri-palette-line"></i> 外观设置
+                            </h3>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-sm form-hint mb-3">选择主题模式</p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="App.setTheme('system')" class="theme-btn p-3 rounded-xl border-2 text-center transition-all" data-theme="system">
+                                    <i class="ri-computer-line text-xl mb-1"></i>
+                                    <p class="text-xs form-label">跟随系统</p>
+                                </button>
+                                <button onclick="App.setTheme('light')" class="theme-btn p-3 rounded-xl border-2 text-center transition-all" data-theme="light">
+                                    <i class="ri-sun-line text-xl mb-1"></i>
+                                    <p class="text-xs form-label">浅色模式</p>
+                                </button>
+                                <button onclick="App.setTheme('dark')" class="theme-btn p-3 rounded-xl border-2 text-center transition-all" data-theme="dark">
+                                    <i class="ri-moon-line text-xl mb-1"></i>
+                                    <p class="text-xs form-label">深色模式</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 账号设置 -->
+                    <div class="card rounded-2xl overflow-hidden">
+                        <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                            <h3 class="font-medium form-label flex items-center gap-2">
+                                <i class="ri-user-settings-line"></i> 账号设置
+                            </h3>
+                        </div>
+                        <div class="divide-y divide-slate-200 dark:divide-slate-700">
+                            <button onclick="App.showEditNameModal()" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                                <span class="form-label">修改昵称</span>
+                                <i class="ri-arrow-right-s-line form-hint"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 关于 -->
+                    <div class="card rounded-2xl overflow-hidden">
+                        <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                            <h3 class="font-medium form-label flex items-center gap-2">
+                                <i class="ri-information-line"></i> 关于
+                            </h3>
+                        </div>
+                        <div class="divide-y divide-slate-200 dark:divide-slate-700">
+                            <button onclick="App.showPage('rules')" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                                <span class="form-label">社区规则</span>
+                                <i class="ri-arrow-right-s-line form-hint"></i>
+                            </button>
+                            <button onclick="App.showPrivacyModal()" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                                <span class="form-label">隐私声明</span>
+                                <i class="ri-arrow-right-s-line form-hint"></i>
+                            </button>
+                            <div class="px-4 py-3 flex items-center justify-between">
+                                <span class="form-label">版本</span>
+                                <span class="form-hint">v1.0.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 退出登录 -->
+                    <button onclick="App.logout()" class="w-full py-3 danger-btn rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+                        <i class="ri-logout-box-line"></i> 退出登录
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 规则声明页 ========== -->
+        <div id="rulesPage" class="hidden min-h-screen pt-20 pb-8 px-4">
+            <div class="max-w-3xl mx-auto">
+                <!-- 顶部导航 -->
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="App.goBack()" class="p-2 rounded-lg nav-btn transition-all">
+                        <i class="ri-arrow-left-line text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold page-title">社区规则</h2>
+                </div>
+
+                <div class="card rounded-2xl p-6 space-y-6">
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            <i class="ri-file-text-line text-lg primary-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold form-label mb-1">发帖与评论规则</h4>
+                            <p class="text-sm form-hint leading-relaxed">每日发帖上限为5条，评论上限为10条，请文明发言，尊重他人。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                            <i class="ri-prohibited-line text-lg text-red-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold form-label mb-1">内容规范</h4>
+                            <p class="text-sm form-hint leading-relaxed">禁止发布涉及政治敏感、色情低俗、暴力恐怖、违法犯罪等内容。系统会自动屏蔽敏感词汇。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-love/10 flex items-center justify-center flex-shrink-0">
+                            <i class="ri-hand-heart-line text-lg love-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold form-label mb-1">尊重与友善</h4>
+                            <p class="text-sm form-hint leading-relaxed">请尊重其他用户，友善交流。禁止人身攻击、侮辱谩骂、恶意诋毁等行为。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center flex-shrink-0">
+                            <i class="ri-shield-check-line text-lg text-amber-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold form-label mb-1">隐私保护</h4>
+                            <p class="text-sm form-hint leading-relaxed">请勿泄露自己或他人的真实姓名、电话、地址等隐私信息，以免造成不必要的麻烦。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                            <i class="ri-thumb-down-line text-lg secondary-text"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold form-label mb-1">踩帖机制</h4>
+                            <p class="text-sm form-hint leading-relaxed">每个帖子都有踩按钮，当踩的数量超过10条时，帖子内容将被自动隐藏。请文明对待每一篇帖子。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+                            <i class="ri-heart-line text-lg text-cyan-500"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold form-label mb-1">表白墙特殊规则</h4>
+                            <p class="text-sm form-hint leading-relaxed">表白墙内容强制匿名显示，请真诚表达，尊重他人隐私。</p>
+                        </div>
+                    </div>
+
+                    <!-- 数据管理 -->
+                    <div class="mt-6 pt-4" style="border-top: 1px solid var(--border-color);">
+                        <h4 class="font-semibold form-label mb-3 flex items-center gap-2">
+                            <i class="ri-database-2-line text-primary"></i> 数据管理
+                        </h4>
+                        <div class="flex gap-3">
+                            <button onclick="App.exportData()" class="flex-1 py-2 px-4 primary-btn rounded-lg transition-all flex items-center justify-center gap-2">
+                                <i class="ri-download-line"></i> 导出数据
+                            </button>
+                            <button onclick="document.getElementById('importFile').click()" class="flex-1 py-2 px-4 secondary-btn rounded-lg transition-all flex items-center justify-center gap-2">
+                                <i class="ri-upload-line"></i> 导入数据
+                            </button>
+                            <input type="file" id="importFile" accept=".json" class="hidden" onchange="App.importData(this)">
+                        </div>
+                        <p class="text-xs form-hint mt-2">导出数据后可导入到其他设备，数据仅保存在本地</p>
+                    </div>
+
+                    <!-- 免责声明 -->
+                    <div class="danger-box rounded-xl p-4 mt-6">
+                        <h4 class="font-semibold warning-text mb-2 flex items-center gap-2">
+                            <i class="ri-alert-line"></i> 免责声明
+                        </h4>
+                        <p class="text-sm form-hint leading-relaxed">
+                            本论坛为校园匿名交流平台，用户发布的言论纯属个人行为，不代表本平台立场。本平台不对用户发布的内容承担任何法律责任。用户需对自己的言行负责。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast提示 -->
+    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 card text-white rounded-xl shadow-2xl transform -translate-y-4 opacity-0 transition-all duration-300 pointer-events-none">
+        <span id="toastMessage">提示信息</span>
+    </div>
+
+    <!-- Loading遮罩 -->
+    <div id="loadingOverlay" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center hidden">
+        <div class="w-12 h-12 border-4 border-white/20 border-t-primary rounded-full animate-spin"></div>
+    </div>
+
+    <!-- 确认弹窗 -->
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="App.closeConfirmModal()"></div>
+        <div class="relative w-full max-w-sm card rounded-2xl p-6 animate-bounce-in">
+            <h3 id="confirmTitle" class="text-lg font-bold form-label mb-2">确认操作</h3>
+            <p id="confirmMessage" class="text-sm form-hint mb-6">确定要执行此操作吗？</p>
+            <div class="flex gap-3">
+                <button onclick="App.closeConfirmModal()" class="flex-1 py-2 skeleton-btn rounded-lg transition-all">取消</button>
+                <button onclick="App.confirmAction()" id="confirmBtn" class="flex-1 py-2 danger-btn rounded-lg transition-all">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 举报弹窗 -->
+    <div id="reportModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="App.closeReportModal()"></div>
+        <div class="relative w-full max-w-md card rounded-2xl p-6 animate-bounce-in">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold form-label flex items-center gap-2">
+                    <i class="ri-alert-line text-red-500"></i> 举报帖子
+                </h3>
+                <button onclick="App.closeReportModal()" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="space-y-3 mb-6">
+                <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all">
+                    <input type="radio" name="reportReason" value="ads" class="w-4 h-4 primary-text">
+                    <span class="form-label">广告推广</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all">
+                    <input type="radio" name="reportReason" value="spam" class="w-4 h-4 primary-text">
+                    <span class="form-label">言语辱骂</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all">
+                    <input type="radio" name="reportReason" value="privacy" class="w-4 h-4 primary-text">
+                    <span class="form-label">隐私泄露</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all">
+                    <input type="radio" name="reportReason" value="illegal" class="w-4 h-4 primary-text">
+                    <span class="form-label">违法违规</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-all">
+                    <input type="radio" name="reportReason" value="other" class="w-4 h-4 primary-text">
+                    <span class="form-label">其他</span>
+                </label>
+            </div>
+            <div class="mb-6">
+                <label class="block text-sm font-medium form-label mb-2">补充说明 <span class="form-hint">(可选)</span></label>
+                <textarea id="reportDetail" rows="3" placeholder="请详细描述问题..." class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"></textarea>
+            </div>
+            <button onclick="App.submitReport()" class="w-full py-3 danger-btn rounded-xl font-medium transition-all">
+                提交举报
+            </button>
+        </div>
+    </div>
+
+    <!-- 网络异常弹窗 -->
+    <div id="networkErrorModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="relative w-full max-w-sm card rounded-2xl p-6 animate-bounce-in text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
+                <i class="ri-wifi-off-line text-3xl text-red-500"></i>
+            </div>
+            <h3 class="text-lg font-bold form-label mb-2">网络异常</h3>
+            <p class="text-sm form-hint mb-6">请检查网络连接后重试</p>
+            <div class="flex gap-3">
+                <button onclick="App.closeNetworkError()" class="flex-1 py-2 skeleton-btn rounded-lg transition-all">关闭</button>
+                <button onclick="App.retryAction()" class="flex-1 py-2 primary-btn rounded-lg transition-all">重试</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改昵称弹窗 -->
+    <div id="editNameModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="App.closeEditNameModal()"></div>
+        <div class="relative w-full max-w-sm card rounded-2xl p-6 animate-bounce-in">
+            <h3 class="text-lg font-bold form-label mb-4 flex items-center gap-2">
+                <i class="ri-edit-line"></i> 修改昵称
+            </h3>
+            <input type="text" id="newNickname" maxlength="20" placeholder="输入新昵称" 
+                class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all mb-4">
+            <div class="flex gap-3">
+                <button onclick="App.closeEditNameModal()" class="flex-1 py-2 skeleton-btn rounded-lg transition-all">取消</button>
+                <button onclick="App.saveNickname()" class="flex-1 py-2 primary-btn rounded-lg transition-all">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 隐私声明弹窗 -->
+    <div id="privacyModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/50" onclick="App.closePrivacyModal()"></div>
+        <div class="relative w-full max-w-md max-h-[80vh] overflow-y-auto card rounded-2xl p-6 animate-bounce-in">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold form-label flex items-center gap-2">
+                    <i class="ri-shield-check-line"></i> 隐私声明
+                </h3>
+                <button onclick="App.closePrivacyModal()" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="text-sm form-hint space-y-4">
+                <p>我们非常重视您的个人隐私。在使用校园树洞服务时，我们可能会收集您提供的信息。</p>
+                <p><strong class="form-label">信息收集：</strong>我们收集用户名、昵称等您主动提供的信息，用于服务提供。</p>
+                <p><strong class="form-label">信息安全：</strong>您的密码经过加密存储，我们不会向第三方透露您的个人信息。</p>
+                <p><strong class="form-label">匿名机制：</strong>表白墙等板块强制匿名发布，保护您的真实身份。</p>
+                <p><strong class="form-label">数据删除：</strong>您可以联系管理员删除您的账户和个人数据。</p>
+            </div>
+            <button onclick="App.closePrivacyModal()" class="w-full mt-6 py-2 primary-btn rounded-lg transition-all">我知道了</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="main.js"></script>
+</body>
+</html>
