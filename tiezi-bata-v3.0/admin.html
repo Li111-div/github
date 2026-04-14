@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园树洞 - 管理后台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-green: #22c55e;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --accent-purple: #a855f7;
+            --border-color: #475569;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            transition: transform 0.3s;
+            z-index: 100;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-260px);
+        }
+        
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            transition: margin-left 0.3s;
+        }
+        
+        .main-content.expanded {
+            margin-left: 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background: var(--bg-secondary);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-success { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--accent-amber); }
+        .badge-info { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-danger { background: var(--accent-red); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-warning { background: var(--accent-amber); color: white; }
+        .btn-warning:hover { background: #d97706; }
+        .btn-info { background: var(--accent-blue); color: white; }
+        .btn-info:hover { background: #2563eb; }
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); }
+        .btn-outline:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a2e 100%);
+        }
+        
+        .login-box {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 40px;
+            width: 400px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            width: 500px;
+            max-width: 90%;
+            border: 1px solid var(--border-color);
+        }
+        
+        .loading-spinner {
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            z-index: 2000;
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .toast-success { background: var(--accent-green); }
+        .toast-error { background: var(--accent-red); }
+        .toast-warning { background: var(--accent-amber); }
+        
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 200;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-260px);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录页面 -->
+    <div id="loginPage" class="login-container">
+        <div class="login-box">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center mx-auto mb-4">
+                    <i class="ri-admin-line text-3xl text-blue-500"></i>
+                </div>
+                <h1 class="text-2xl font-bold mb-2">管理后台</h1>
+                <p class="text-sm" style="color: var(--text-secondary);">校园树洞管理系统</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm mb-2" style="color: var(--text-secondary);">管理员账号</label>
+                    <input type="text" id="loginUsername" class="input-field" placeholder="请输入账号">
+                </div>
+                <div>
+                    <label class="block text-sm mb-2" style="color: var(--text-secondary);">登录密码</label>
+                    <input type="password" id="loginPassword" class="input-field" placeholder="请输入密码">
+                </div>
+                <button onclick="adminLogin()" class="btn btn-info w-full justify-center py-3 mt-4">
+                    <i class="ri-login-box-line"></i> 登录
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理后台 -->
+    <div id="adminPanel" class="hidden">
+        <!-- 移动端菜单按钮 -->
+        <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="ri-menu-line text-xl"></i>
+        </button>
+
+        <!-- 侧边栏 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="p-5 border-b" style="border-color: var(--border-color);">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                        <i class="ri-admin-line text-xl text-blue-500"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold">管理后台</h2>
+                        <p class="text-xs" style="color: var(--text-secondary);">校园树洞系统</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="py-4">
+                <div class="nav-item active" onclick="switchTab('dashboard')" data-tab="dashboard">
+                    <i class="ri-dashboard-line"></i>
+                    <span>控制台概览</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('users')" data-tab="users">
+                    <i class="ri-user-settings-line"></i>
+                    <span>用户管理</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('posts')" data-tab="posts">
+                    <i class="ri-file-list-3-line"></i>
+                    <span>帖子管理</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('comments')" data-tab="comments">
+                    <i class="ri-chat-3-line"></i>
+                    <span>评论管理</span>
+                </div>
+                <div class="nav-item" onclick="switchTab('feedback')" data-tab="feedback">
+                    <i class="ri-feedback-line"></i>
+                    <span>反馈管理</span>
+                </div>
+            </nav>
+            
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t" style="border-color: var(--border-color);">
+                <button onclick="adminLogout()" class="nav-item w-full border-0 border-l-transparent">
+                    <i class="ri-logout-box-line"></i>
+                    <span>退出登录</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content p-6">
+            <!-- 控制台概览 -->
+            <section id="dashboardTab" class="tab-content">
+                <h1 class="text-2xl font-bold mb-6">控制台概览</h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                                <i class="ri-user-line text-xl text-blue-500"></i>
+                            </div>
+                            <span class="badge badge-info" id="userCount">加载中</span>
+                        </div>
+                        <p class="text-sm mb-1" style="color: var(--text-secondary);">用户总数</p>
+                        <p class="text-2xl font-bold" id="userCountNum">0</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+                                <i class="ri-file-list-line text-xl text-green-500"></i>
+                            </div>
+                            <span class="badge badge-success" id="activePosts">活跃</span>
+                        </div>
+                        <p class="text-sm mb-1" style="color: var(--text-secondary);">帖子总数</p>
+                        <p class="text-2xl font-bold" id="postCountNum">0</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                                <i class="ri-chat-3-line text-xl text-purple-500"></i>
+                            </div>
+                            <span class="badge badge-info" id="commentCount">加载中</span>
+                        </div>
+                        <p class="text-sm mb-1" style="color: var(--text-secondary);">评论总数</p>
+                        <p class="text-2xl font-bold" id="commentCountNum">0</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                                <i class="ri-feedback-line text-xl text-amber-500"></i>
+                            </div>
+                            <span class="badge badge-warning" id="feedbackCount">待处理</span>
+                        </div>
+                        <p class="text-sm mb-1" style="color: var(--text-secondary);">反馈总数</p>
+                        <p class="text-2xl font-bold" id="feedbackCountNum">0</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="stat-card">
+                        <h3 class="font-bold mb-4">系统状态</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--bg-primary);">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    <span>数据库连接</span>
+                                </div>
+                                <span class="badge badge-success">正常</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--bg-primary);">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    <span>API 服务</span>
+                                </div>
+                                <span class="badge badge-success">正常</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--bg-primary);">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                                    <span>存储服务</span>
+                                </div>
+                                <span class="badge badge-success">正常</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3 class="font-bold mb-4">最近操作</h3>
+                        <div id="recentActivity" class="space-y-3">
+                            <p class="text-sm" style="color: var(--text-secondary);">暂无操作记录</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 用户管理 -->
+            <section id="usersTab" class="tab-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold">用户管理</h1>
+                    <button onclick="loadUsers()" class="btn btn-outline">
+                        <i class="ri-refresh-line"></i> 刷新
+                    </button>
+                </div>
+                
+                <div class="stat-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>用户ID</th>
+                                    <th>用户名</th>
+                                    <th>匿名名称</th>
+                                    <th>注册时间</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center py-8">
+                                        <div class="loading-spinner mx-auto"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 帖子管理 -->
+            <section id="postsTab" class="tab-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold">帖子管理</h1>
+                    <div class="flex gap-2">
+                        <select id="postFilter" onchange="loadPosts()" class="input-field" style="width: auto;">
+                            <option value="all">全部板块</option>
+                            <option value="chat">校园闲聊</option>
+                            <option value="study">学习求助</option>
+                            <option value="love">表白墙</option>
+                            <option value="lost">失物招领</option>
+                            <option value="friend">交友脱单</option>
+                        </select>
+                        <button onclick="loadPosts()" class="btn btn-outline">
+                            <i class="ri-refresh-line"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stat-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>帖子ID</th>
+                                    <th>标题</th>
+                                    <th>板块</th>
+                                    <th>作者</th>
+                                    <th>发布时间</th>
+                                    <th>点赞/踩</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="postsTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center py-8">
+                                        <div class="loading-spinner mx-auto"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 评论管理 -->
+            <section id="commentsTab" class="tab-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold">评论管理</h1>
+                    <button onclick="loadComments()" class="btn btn-outline">
+                        <i class="ri-refresh-line"></i> 刷新
+                    </button>
+                </div>
+                
+                <div class="stat-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>评论ID</th>
+                                    <th>内容</th>
+                                    <th>所属帖子</th>
+                                    <th>评论者</th>
+                                    <th>评论时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="commentsTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center py-8">
+                                        <div class="loading-spinner mx-auto"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 反馈管理 -->
+            <section id="feedbackTab" class="tab-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold">反馈管理</h1>
+                    <button onclick="loadFeedback()" class="btn btn-outline">
+                        <i class="ri-refresh-line"></i> 刷新
+                    </button>
+                </div>
+                
+                <div class="stat-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>反馈ID</th>
+                                    <th>类型</th>
+                                    <th>内容</th>
+                                    <th>反馈者</th>
+                                    <th>联系方式</th>
+                                    <th>时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedbackTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center py-8">
+                                        <div class="loading-spinner mx-auto"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 确认对话框 -->
+    <div id="confirmModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 class="text-lg font-bold mb-4">确认操作</h3>
+            <p id="confirmMessage" class="mb-6" style="color: var(--text-secondary);"></p>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeConfirmModal()" class="btn btn-outline">取消</button>
+                <button id="confirmBtn" class="btn btn-danger">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast提示 -->
+    <div id="toastContainer"></div>
+
+    <script>
+        // Supabase 配置
+        const SUPABASE_URL = 'https://br-cute-duck-832d841d.supabase2.aidap-global.cn-beijing.volces.com';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjMzNTY2NDcyNDUsInJvbGUiOiJhbm9uIn0.0vB7A5Eb9FgSqIU9jyc9Rbh0qoajSr9z0Gnzyj16GyE';
+
+        // 管理员凭证
+        const ADMIN_USERNAME = 'administrator';
+        const ADMIN_PASSWORD = 'ydyy123456';
+
+        // 检查登录状态
+        function checkLoginStatus() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
+            if (isLoggedIn === 'true') {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                initDashboard();
+            }
+        }
+
+        // 管理员登录
+        function adminLogin() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                showToast('请输入账号和密码', 'error');
+                return;
+            }
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                initDashboard();
+                showToast('登录成功，欢迎管理员', 'success');
+            } else {
+                showToast('账号或密码错误', 'error');
+            }
+        }
+
+        // 管理员登出
+        function adminLogout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // 切换标签页
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tab + 'Tab').classList.remove('hidden');
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+            // 加载对应数据
+            switch (tab) {
+                case 'dashboard': initDashboard(); break;
+                case 'users': loadUsers(); break;
+                case 'posts': loadPosts(); break;
+                case 'comments': loadComments(); break;
+                case 'feedback': loadFeedback(); break;
+            }
+
+            // 关闭移动端侧边栏
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        // 切换侧边栏（移动端）
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Toast提示
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<i class="ri-${type === 'success' ? 'check-line' : type === 'error' ? 'error-warning-line' : 'alert-line'}"></i> ${message}`;
+            container.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // 确认对话框
+        let confirmCallback = null;
+        function showConfirmModal(message, callback) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmModal').classList.remove('hidden');
+            confirmCallback = callback;
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+            confirmCallback = null;
+        }
+
+        document.getElementById('confirmBtn').onclick = () => {
+            if (confirmCallback) confirmCallback();
+            closeConfirmModal();
+        };
+
+        // 格式化时间
+        function formatTimeAgo(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            
+            if (diff < 60) return '刚刚';
+            if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
+            if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+            if (diff < 2592000) return Math.floor(diff / 86400) + '天前';
+            return date.toLocaleDateString('zh-CN');
+        }
+
+        // 截断文本
+        function truncate(text, length = 30) {
+            if (!text) return '-';
+            return text.length > length ? text.substring(0, length) + '...' : text;
+        }
+
+        // 板块名称映射
+        const CATEGORY_NAMES = {
+            chat: '校园闲聊',
+            study: '学习求助',
+            love: '表白墙',
+            lost: '失物招领',
+            friend: '交友脱单'
+        };
+
+        // 反馈类型映射
+        const FEEDBACK_TYPES = {
+            bug: 'Bug问题',
+            feature: '功能建议',
+            content: '内容问题',
+            other: '其他'
+        };
+
+        // 获取云端数据
+        async function fetchFromCloud(table) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                return await response.json();
+            } catch (error) {
+                console.error(`获取${table}失败:`, error);
+                return [];
+            }
+        }
+
+        // 删除云端数据
+        async function deleteFromCloud(table, id) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Prefer': 'return=minimal'
+                    }
+                });
+                return response.ok;
+            } catch (error) {
+                console.error(`删除${table}失败:`, error);
+                return false;
+            }
+        }
+
+        // 更新云端数据
+        async function updateCloud(table, id, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(data)
+                });
+                return response.ok;
+            } catch (error) {
+                console.error(`更新${table}失败:`, error);
+                return false;
+            }
+        }
+
+        // 初始化控制台
+        async function initDashboard() {
+            const users = await fetchFromCloud('user_profiles');
+            const posts = await fetchFromCloud('posts');
+            const comments = await fetchFromCloud('comments');
+            const feedbacks = await fetchFromCloud('feedbacks');
+
+            document.getElementById('userCountNum').textContent = users.length;
+            document.getElementById('postCountNum').textContent = posts.length;
+            document.getElementById('commentCountNum').textContent = comments.length;
+            document.getElementById('feedbackCountNum').textContent = feedbacks.length;
+
+            // 最近活动
+            const allItems = [
+                ...users.map(u => ({ type: 'user', data: u, time: u.created_at })),
+                ...posts.map(p => ({ type: 'post', data: p, time: p.created_at })),
+                ...comments.map(c => ({ type: 'comment', data: c, time: c.created_at })),
+                ...feedbacks.map(f => ({ type: 'feedback', data: f, time: f.created_at }))
+            ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5);
+
+            const activityEl = document.getElementById('recentActivity');
+            if (allItems.length === 0) {
+                activityEl.innerHTML = '<p class="text-sm" style="color: var(--text-secondary);">暂无操作记录</p>';
+            } else {
+                activityEl.innerHTML = allItems.map(item => {
+                    const icons = { user: 'user', post: 'file-list', comment: 'chat-3', feedback: 'feedback' };
+                    const colors = { user: 'blue', post: 'green', comment: 'purple', feedback: 'amber' };
+                    return `
+                        <div class="flex items-center justify-between p-3 rounded-lg" style="background: var(--bg-primary);">
+                            <div class="flex items-center gap-3">
+                                <i class="ri-${icons[item.type]}-line text-${colors[item.type]}-500"></i>
+                                <span class="text-sm">${item.type === 'user' ? '用户' : item.type === 'post' ? '帖子' : item.type === 'comment' ? '评论' : '反馈'}: ${truncate(item.data.username || item.data.title || item.data.content, 20)}</span>
+                            </div>
+                            <span class="text-xs" style="color: var(--text-secondary);">${formatTimeAgo(item.time)}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // 加载用户列表
+        async function loadUsers() {
+            const users = await fetchFromCloud('user_profiles');
+            const tbody = document.getElementById('usersTableBody');
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8" style="color: var(--text-secondary);">暂无用户数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td class="text-xs" style="color: var(--text-secondary);">${user.id.substring(0, 8)}...</td>
+                    <td>${user.username || '-'}</td>
+                    <td>${user.anonymous_name || '-'}</td>
+                    <td class="text-sm" style="color: var(--text-secondary);">${formatTimeAgo(user.created_at)}</td>
+                    <td>
+                        <span class="badge ${user.is_active === false ? 'badge-danger' : 'badge-success'}">
+                            ${user.is_active === false ? '已封禁' : '正常'}
+                        </span>
+                    </td>
+                    <td>
+                        ${user.is_active === false ? 
+                            `<button onclick="toggleUserBan('${user.id}', true)" class="btn btn-info" style="padding: 4px 8px; font-size: 12px;">
+                                <i class="ri-shield-check-line"></i> 解封
+                            </button>` :
+                            `<button onclick="toggleUserBan('${user.id}', false)" class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;">
+                                <i class="ri-shield-user-line"></i> 封禁
+                            </button>`
+                        }
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 封禁/解封用户
+        async function toggleUserBan(userId, shouldUnban) {
+            showConfirmModal(
+                shouldUnban ? '确定要解封此用户吗？' : '确定要封禁此用户吗？封禁后该用户将无法登录和发帖。',
+                async () => {
+                    const success = await updateCloud('user_profiles', userId, { is_active: shouldUnban });
+                    if (success) {
+                        showToast(shouldUnban ? '用户已解封' : '用户已封禁', 'success');
+                        loadUsers();
+                    } else {
+                        showToast('操作失败', 'error');
+                    }
+                }
+            );
+        }
+
+        // 加载帖子列表
+        async function loadPosts() {
+            let posts = await fetchFromCloud('posts');
+            const filter = document.getElementById('postFilter')?.value || 'all';
+            
+            if (filter !== 'all') {
+                posts = posts.filter(p => p.category === filter);
+            }
+
+            const tbody = document.getElementById('postsTableBody');
+
+            if (posts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8" style="color: var(--text-secondary);">暂无帖子数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = posts.map(post => `
+                <tr>
+                    <td class="text-xs" style="color: var(--text-secondary);">${post.id.substring(0, 8)}...</td>
+                    <td class="max-w-xs">${truncate(post.title, 25)}</td>
+                    <td><span class="badge badge-info">${CATEGORY_NAMES[post.category] || post.category}</span></td>
+                    <td>${post.anonymous_name || '-'}</td>
+                    <td class="text-sm" style="color: var(--text-secondary);">${formatTimeAgo(post.created_at)}</td>
+                    <td class="text-sm">
+                        <span style="color: var(--accent-green);">↑${post.upvotes || 0}</span> / 
+                        <span style="color: var(--accent-red);">↓${post.downvotes || 0}</span>
+                    </td>
+                    <td>
+                        <button onclick="deletePost('${post.id}')" class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;">
+                            <i class="ri-delete-bin-line"></i> 删除
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 删除帖子
+        async function deletePost(postId) {
+            showConfirmModal('确定要删除此帖子吗？此操作不可撤销。', async () => {
+                const success = await deleteFromCloud('posts', postId);
+                if (success) {
+                    showToast('帖子已删除', 'success');
+                    loadPosts();
+                } else {
+                    showToast('删除失败', 'error');
+                }
+            });
+        }
+
+        // 加载评论列表
+        async function loadComments() {
+            const comments = await fetchFromCloud('comments');
+            const tbody = document.getElementById('commentsTableBody');
+
+            if (comments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8" style="color: var(--text-secondary);">暂无评论数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = comments.map(comment => `
+                <tr>
+                    <td class="text-xs" style="color: var(--text-secondary);">${comment.id.substring(0, 8)}...</td>
+                    <td class="max-w-xs">${truncate(comment.content, 40)}</td>
+                    <td class="text-xs" style="color: var(--text-secondary);">${comment.post_id?.substring(0, 8) || '-'}...</td>
+                    <td>${comment.anonymous_name || '-'}</td>
+                    <td class="text-sm" style="color: var(--text-secondary);">${formatTimeAgo(comment.created_at)}</td>
+                    <td>
+                        <button onclick="deleteComment('${comment.id}')" class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;">
+                            <i class="ri-delete-bin-line"></i> 删除
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 删除评论
+        async function deleteComment(commentId) {
+            showConfirmModal('确定要删除此评论吗？此操作不可撤销。', async () => {
+                const success = await deleteFromCloud('comments', commentId);
+                if (success) {
+                    showToast('评论已删除', 'success');
+                    loadComments();
+                } else {
+                    showToast('删除失败', 'error');
+                }
+            });
+        }
+
+        // 加载反馈列表
+        async function loadFeedback() {
+            const feedbacks = await fetchFromCloud('feedbacks');
+            const tbody = document.getElementById('feedbackTableBody');
+
+            if (feedbacks.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8" style="color: var(--text-secondary);">暂无反馈数据</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = feedbacks.map(feedback => `
+                <tr>
+                    <td class="text-xs" style="color: var(--text-secondary);">${feedback.id.substring(0, 8)}...</td>
+                    <td><span class="badge badge-warning">${FEEDBACK_TYPES[feedback.type] || feedback.type}</span></td>
+                    <td class="max-w-xs" title="${feedback.content}">${truncate(feedback.content, 30)}</td>
+                    <td>${feedback.user_name || '-'}</td>
+                    <td class="text-sm" style="color: var(--text-secondary);">${feedback.contact || '-'}</td>
+                    <td class="text-sm" style="color: var(--text-secondary);">${formatTimeAgo(feedback.created_at)}</td>
+                    <td>
+                        <button onclick="deleteFeedback('${feedback.id}')" class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;">
+                            <i class="ri-delete-bin-line"></i> 删除
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 删除反馈
+        async function deleteFeedback(feedbackId) {
+            showConfirmModal('确定要删除此反馈吗？', async () => {
+                const success = await deleteFromCloud('feedbacks', feedbackId);
+                if (success) {
+                    showToast('反馈已删除', 'success');
+                    loadFeedback();
+                } else {
+                    showToast('删除失败', 'error');
+                }
+            });
+        }
+
+        // 键盘事件
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const loginPage = document.getElementById('loginPage');
+                if (!loginPage.classList.contains('hidden')) {
+                    adminLogin();
+                }
+            }
+        });
+
+        // 初始化
+        checkLoginStatus();
+    </script>
+</body>
+</html>
