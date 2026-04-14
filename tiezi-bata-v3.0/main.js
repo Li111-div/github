@@ -1128,7 +1128,7 @@ async function viewPostDetail(postId) {
     let comments = [];
     
     try {
-        // 优先从云端获取
+        // 优先从云端获取帖子
         const { data, error } = await supabaseClient
             .from('posts')
             .select('*')
@@ -1137,30 +1137,36 @@ async function viewPostDetail(postId) {
         
         if (!error && data) {
             post = data;
-            
-            const { data: commentData, error: commentError } = await supabaseClient
-                .from('comments')
-                .select('*')
-                .eq('post_id', postId);
-            
-            if (!commentError && commentData && commentData.length > 0) {
-                comments = commentData;
-            } else {
-                // 云端评论获取失败或为空，使用本地评论
-                comments = LocalDB.getComments(postId);
-            }
         }
     } catch (e) {
-        console.warn('云端获取帖子失败，使用本地数据');
+        console.warn('云端获取帖子失败');
     }
     
-    // 如果云端失败，使用本地数据
+    // 如果云端帖子获取失败，使用本地帖子
     if (!post) {
         post = LocalDB.getPost(postId);
+    }
+    
+    // 获取评论（无论帖子来自云端还是本地）
+    try {
+        const { data: cloudComments, error: commentError } = await supabaseClient
+            .from('comments')
+            .select('*')
+            .eq('post_id', postId)
+            .order('created_at', { ascending: true });
+        
+        if (!commentError && cloudComments && cloudComments.length > 0) {
+            comments = cloudComments;
+        } else {
+            // 云端评论为空或获取失败，使用本地评论
+            comments = LocalDB.getComments(postId);
+        }
+    } catch (e) {
+        // 网络错误，直接使用本地评论
         comments = LocalDB.getComments(postId);
     }
     
-    // 确保评论不为空
+    // 如果评论为空，尝试本地评论
     if (comments.length === 0) {
         comments = LocalDB.getComments(postId);
     }
@@ -2044,6 +2050,58 @@ const App = {
         commentInput?.addEventListener('input', () => {
             commentCount.textContent = commentInput.value.length;
         });
+        
+        const feedbackInput = document.getElementById('feedbackContent');
+        const feedbackCount = document.getElementById('feedbackCount');
+        feedbackInput?.addEventListener('input', () => {
+            feedbackCount.textContent = feedbackInput.value.length;
+        });
+    },
+    
+    submitFeedback() {
+        const type = document.getElementById('feedbackType').value;
+        const content = document.getElementById('feedbackContent').value.trim();
+        const contact = document.getElementById('feedbackContact').value.trim();
+        
+        if (!content) {
+            showToast('请输入问题描述', 'warning');
+            return;
+        }
+        
+        const feedback = {
+            id: LocalDB.uuid(),
+            type,
+            content,
+            contact,
+            user_id: currentUser?.id || 'guest',
+            user_name: currentUser?.anonymous_name || '游客',
+            created_at: new Date().toISOString()
+        };
+        
+        // 保存到本地
+        const feedbacks = JSON.parse(localStorage.getItem('campus_feedbacks') || '[]');
+        feedbacks.unshift(feedback);
+        localStorage.setItem('campus_feedbacks', JSON.stringify(feedbacks));
+        
+        // 如果已登录，也保存到云端
+        if (currentUser) {
+            supabaseClient.from('feedbacks').insert({
+                id: feedback.id,
+                type: feedback.type,
+                content: feedback.content,
+                contact: feedback.contact,
+                user_id: feedback.user_id,
+                user_name: feedback.user_name,
+                created_at: feedback.created_at
+            }).then(({ error }) => {
+                if (error) console.warn('云端反馈保存失败:', error);
+            });
+        }
+        
+        showToast('感谢您的反馈！', 'success');
+        document.getElementById('feedbackContent').value = '';
+        document.getElementById('feedbackContact').value = '';
+        document.getElementById('feedbackCount').textContent = '0';
     },
     
     switchAuthTab(tab) {
@@ -2105,8 +2163,8 @@ const App = {
     },
     
     showPage(page) {
-        ['authPage', 'homePage', 'createPostPage', 'postDetailPage', 'profilePage', 'settingsPage', 'rulesPage'].forEach(id => {
-            document.getElementById(id).classList.add('hidden');
+        ['authPage', 'homePage', 'createPostPage', 'postDetailPage', 'profilePage', 'settingsPage', 'rulesPage', 'feedbackPage'].forEach(id => {
+            document.getElementById(id)?.classList.add('hidden');
         });
         
         switch (page) {
@@ -2147,6 +2205,12 @@ const App = {
                 break;
             case 'rules':
                 document.getElementById('rulesPage').classList.remove('hidden');
+                break;
+            case 'feedback':
+                document.getElementById('feedbackPage').classList.remove('hidden');
+                document.getElementById('feedbackContent').value = '';
+                document.getElementById('feedbackContact').value = '';
+                document.getElementById('feedbackCount').textContent = '0';
                 break;
         }
         

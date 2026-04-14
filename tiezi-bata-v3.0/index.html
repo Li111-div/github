@@ -31,6 +31,10 @@
                     </div>
                     
                     <div class="flex items-center gap-2">
+                        <!-- Bug反馈按钮 -->
+                        <button onclick="App.showPage('feedback')" class="p-2 rounded-lg nav-btn transition-all" title="Bug反馈">
+                            <i class="ri-bug-line text-lg"></i>
+                        </button>
                         <!-- 主题切换按钮 -->
                         <button onclick="App.toggleThemeMenu()" class="p-2 rounded-lg nav-btn transition-all" title="切换主题">
                             <i class="ri-sun-line text-lg theme-icon-light"></i>
@@ -699,6 +703,66 @@
                             本论坛为校园匿名交流平台，用户发布的言论纯属个人行为，不代表本平台立场。本平台不对用户发布的内容承担任何法律责任。用户需对自己的言行负责。
                         </p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== Bug反馈页面 ========== -->
+        <div id="feedbackPage" class="hidden min-h-screen pt-20 pb-8 px-4">
+            <div class="max-w-2xl mx-auto">
+                <!-- 顶部导航 -->
+                <div class="flex items-center gap-4 mb-6">
+                    <button onclick="App.goBack()" class="p-2 rounded-lg nav-btn transition-all">
+                        <i class="ri-arrow-left-line text-xl"></i>
+                    </button>
+                    <h2 class="text-xl font-bold page-title">Bug反馈</h2>
+                </div>
+
+                <div class="card rounded-2xl p-6 space-y-5">
+                    <div class="text-center py-4">
+                        <div class="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-3">
+                            <i class="ri-bug-line text-3xl text-amber-500"></i>
+                        </div>
+                        <h3 class="text-lg font-bold form-label mb-1">遇到问题了？</h3>
+                        <p class="text-sm form-hint">告诉我们您遇到的问题，我们会尽快修复</p>
+                    </div>
+
+                    <!-- 问题类型 -->
+                    <div>
+                        <label class="block text-sm font-medium form-label mb-2">问题类型</label>
+                        <select id="feedbackType" class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                            <option value="bug">Bug问题</option>
+                            <option value="feature">功能建议</option>
+                            <option value="content">内容问题</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+
+                    <!-- 问题描述 -->
+                    <div>
+                        <label class="block text-sm font-medium form-label mb-2">问题描述</label>
+                        <textarea id="feedbackContent" rows="5" maxlength="500" placeholder="请详细描述您遇到的问题..." 
+                            class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all resize-none"></textarea>
+                        <p class="text-xs form-hint mt-1 text-right"><span id="feedbackCount">0</span>/500</p>
+                    </div>
+
+                    <!-- 联系方式（可选） -->
+                    <div>
+                        <label class="block text-sm font-medium form-label mb-2">联系方式（选填）</label>
+                        <input type="text" id="feedbackContact" placeholder="邮箱或联系方式" 
+                            class="form-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
+                        <p class="text-xs form-hint mt-1">如有需要，我们可以通过此方式联系您</p>
+                    </div>
+
+                    <!-- 提交按钮 -->
+                    <button onclick="App.submitFeedback()" class="w-full py-3.5 primary-btn rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                        <i class="ri-send-plane-line"></i>
+                        <span>提交反馈</span>
+                    </button>
+
+                    <p class="text-xs form-hint text-center">
+                        感谢您的反馈，我们会认真对待每一条意见
+                    </p>
                 </div>
             </div>
         </div>
