@@ -353,26 +353,26 @@ const CATEGORIES = {
 
 // 头像配置
 const AVATARS = [
-    { bg: 'bg-gradient-to-br from-pink-400 to-rose-500', icon: 'ri-user-heart-line' },
-    { bg: 'bg-gradient-to-br from-blue-400 to-indigo-500', icon: 'ri-user-star-line' },
-    { bg: 'bg-gradient-to-br from-green-400 to-emerald-500', icon: 'ri-leaf-line' },
-    { bg: 'bg-gradient-to-br from-amber-400 to-orange-500', icon: 'ri-sun-line' },
-    { bg: 'bg-gradient-to-br from-purple-400 to-violet-500', icon: 'ri-star-line' },
-    { bg: 'bg-gradient-to-br from-cyan-400 to-teal-500', icon: 'ri-water-flash-line' },
-    { bg: 'bg-gradient-to-br from-red-400 to-red-600', icon: 'ri-fire-line' },
-    { bg: 'bg-gradient-to-br from-rose-400 to-pink-500', icon: 'ri-heart-line' },
-    { bg: 'bg-gradient-to-br from-indigo-400 to-purple-500', icon: 'ri-moon-line' },
-    { bg: 'bg-gradient-to-br from-yellow-400 to-amber-500', icon: 'ri-flashlight-line' },
-    { bg: 'bg-gradient-to-br from-emerald-400 to-cyan-500', icon: 'ri-drop-line' },
-    { bg: 'bg-gradient-to-br from-fuchsia-400 to-pink-500', icon: 'ri-bear-smile-line' },
-    { bg: 'bg-gradient-to-br from-sky-400 to-blue-500', icon: 'ri-cloud-line' },
-    { bg: 'bg-gradient-to-br from-lime-400 to-green-500', icon: 'ri-bird-line' },
-    { bg: 'bg-gradient-to-br from-orange-400 to-red-500', icon: 'ri-firefox-line' },
-    { bg: 'bg-gradient-to-br from-slate-400 to-slate-600', icon: 'ri-moon-cloudy-line' },
-    { bg: 'bg-gradient-to-br from-violet-400 to-indigo-500', icon: 'ri-shining-line' },
-    { bg: 'bg-gradient-to-br from-rose-500 to-pink-600', icon: 'ri-heart-2-line' },
-    { bg: 'bg-gradient-to-br from-amber-500 to-yellow-500', icon: 'ri-sun-cloudy-line' },
-    { bg: 'bg-gradient-to-br from-teal-400 to-emerald-500', icon: 'ri-plant-line' }
+    { bg: 'bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400', icon: 'ri-user-heart-line' },
+    { bg: 'bg-gradient-to-br from-sky-200 via-sky-300 to-indigo-300', icon: 'ri-user-star-line' },
+    { bg: 'bg-gradient-to-br from-cyan-200 via-blue-200 to-sky-300', icon: 'ri-leaf-line' },
+    { bg: 'bg-gradient-to-br from-indigo-200 via-blue-200 to-blue-300', icon: 'ri-sun-line' },
+    { bg: 'bg-gradient-to-br from-blue-200 via-indigo-200 to-blue-300', icon: 'ri-star-line' },
+    { bg: 'bg-gradient-to-br from-sky-200 via-cyan-200 to-blue-300', icon: 'ri-water-flash-line' },
+    { bg: 'bg-gradient-to-br from-blue-200 to-cyan-300', icon: 'ri-fire-line' },
+    { bg: 'bg-gradient-to-br from-indigo-200 via-blue-200 to-sky-300', icon: 'ri-heart-line' },
+    { bg: 'bg-gradient-to-br from-cyan-200 to-sky-300', icon: 'ri-moon-line' },
+    { bg: 'bg-gradient-to-br from-blue-200 via-sky-200 to-indigo-300', icon: 'ri-flashlight-line' },
+    { bg: 'bg-gradient-to-br from-sky-200 to-blue-300', icon: 'ri-drop-line' },
+    { bg: 'bg-gradient-to-br from-blue-200 via-indigo-200 to-blue-300', icon: 'ri-bear-smile-line' },
+    { bg: 'bg-gradient-to-br from-cyan-200 via-sky-200 to-blue-300', icon: 'ri-cloud-line' },
+    { bg: 'bg-gradient-to-br from-indigo-200 to-sky-300', icon: 'ri-bird-line' },
+    { bg: 'bg-gradient-to-br from-blue-200 to-indigo-300', icon: 'ri-firefox-line' },
+    { bg: 'bg-gradient-to-br from-sky-200 via-cyan-200 to-blue-300', icon: 'ri-moon-cloudy-line' },
+    { bg: 'bg-gradient-to-br from-cyan-200 via-blue-200 to-sky-300', icon: 'ri-shining-line' },
+    { bg: 'bg-gradient-to-br from-blue-200 via-sky-200 to-indigo-300', icon: 'ri-heart-2-line' },
+    { bg: 'bg-gradient-to-br from-indigo-200 via-cyan-200 to-blue-300', icon: 'ri-sun-cloudy-line' },
+    { bg: 'bg-gradient-to-br from-sky-200 to-blue-300', icon: 'ri-plant-line' }
 ];
 
 // 获取随机头像
@@ -468,17 +468,66 @@ function toggleThemeMenu() {
 }
 
 // ==================== 工具函数 ====================
+// Toast 模态框
 function showToast(message, type = 'info') {
-    const toast = document.getElementById('toast');
-    const toastMessage = document.getElementById('toastMessage');
+    const modal = document.getElementById('toastModal');
+    const content = document.getElementById('toastContent');
+    const icon = document.getElementById('toastIcon');
+    const msg = document.getElementById('toastMessage');
     
-    toast.className = `toast toast-${type}`;
-    toastMessage.textContent = message;
-    toast.classList.add('show');
+    // 设置消息内容
+    msg.textContent = message;
+    
+    // 设置图标和颜色
+    const configs = {
+        success: {
+            bg: 'bg-gradient-to-br from-green-400 to-emerald-500',
+            icon: '<i class="ri-checkbox-circle-fill text-3xl text-white"></i>'
+        },
+        error: {
+            bg: 'bg-gradient-to-br from-red-400 to-rose-500',
+            icon: '<i class="ri-close-circle-fill text-3xl text-white"></i>'
+        },
+        warning: {
+            bg: 'bg-gradient-to-br from-amber-400 to-orange-500',
+            icon: '<i class="ri-alert-fill text-3xl text-white"></i>'
+        },
+        info: {
+            bg: 'bg-gradient-to-br from-blue-400 to-indigo-500',
+            icon: '<i class="ri-information-fill text-3xl text-white"></i>'
+        }
+    };
+    
+    const config = configs[type] || configs.info;
+    icon.className = `w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${config.bg}`;
+    icon.innerHTML = config.icon;
+    
+    // 显示模态框
+    modal.classList.remove('hidden');
+    // 丝滑动画：先显示，再添加动画类
+    requestAnimationFrame(() => {
+        content.style.transform = 'scale(1)';
+        content.style.opacity = '1';
+    });
+    
+    // 3秒后自动关闭
+    clearTimeout(window.toastTimeout);
+    window.toastTimeout = setTimeout(() => {
+        hideToastModal();
+    }, 3000);
+}
+
+function hideToastModal() {
+    const modal = document.getElementById('toastModal');
+    const content = document.getElementById('toastContent');
+    
+    // 丝滑关闭动画
+    content.style.transform = 'scale(0.9)';
+    content.style.opacity = '0';
     
     setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
+        modal.classList.add('hidden');
+    }, 300);
 }
 
 function showLoading() {
@@ -569,6 +618,12 @@ async function initSupabase() {
 
 // ==================== 认证相关 ====================
 async function login() {
+    // 检查规则是否已同意
+    if (!document.getElementById('rulesAgreed').checked) {
+        App.showRulesAgreement();
+        return;
+    }
+    
     const username = document.getElementById('loginUsername').value.trim();
     const password = document.getElementById('loginPassword').value;
     
@@ -622,6 +677,12 @@ async function login() {
 }
 
 async function register() {
+    // 检查规则是否已同意
+    if (!document.getElementById('rulesAgreed').checked) {
+        App.showRulesAgreement();
+        return;
+    }
+    
     const username = document.getElementById('registerUsername').value.trim();
     const password = document.getElementById('registerPassword').value;
     const confirmPassword = document.getElementById('registerConfirmPassword').value;
@@ -987,7 +1048,7 @@ async function createPost() {
             user_id: currentUser.id,
             username: currentUser.username,
             anonymous_name: selectedPostCategory === 'love' ? '匿名用户' : currentUser.anonymous_name,
-            title: selectedPostCategory === 'love' ? '' : title,
+            title: title || '匿名表白',
             content: content,
             category: selectedPostCategory,
             upvotes: 0,
@@ -2061,139 +2122,6 @@ const App = {
                 document.getElementById('themeDropdown').classList.add('hidden');
             }
         });
-        
-        // 下拉刷新和上拉加载
-        this.bindPullToRefresh();
-    },
-    
-    bindPullToRefresh() {
-        let startY = 0;
-        let currentY = 0;
-        let isPullDown = false;
-        let isLoadingMore = false;
-        let pullDistance = 0;
-        let lastScrollTop = 0;
-        let pullDownThreshold = 120;
-        let pullUpThreshold = 100;
-        
-        const homePage = document.getElementById('homePage');
-        const pullRefresh = document.getElementById('pullRefresh');
-        const pullRefreshIcon = document.getElementById('pullRefreshIcon');
-        const pullRefreshText = document.getElementById('pullRefreshText');
-        const loadMoreIndicator = document.getElementById('loadMoreIndicator');
-        const postList = document.getElementById('postList');
-        
-        if (!homePage) return;
-        
-        lastScrollTop = window.scrollY;
-        
-        homePage.addEventListener('touchstart', (e) => {
-            startY = e.touches[0].pageY;
-            currentY = startY;
-            isPullDown = false;
-            pullDistance = 0;
-            lastScrollTop = window.scrollY;
-        }, { passive: true });
-        
-        homePage.addEventListener('touchmove', (e) => {
-            currentY = e.touches[0].pageY;
-            pullDistance = currentY - startY;
-            
-            const scrollTop = window.scrollY;
-            
-            // 下拉刷新
-            if (pullDistance > 0 && scrollTop <= 5) {
-                if (pullDistance > 30) {
-                    e.preventDefault();
-                    isPullDown = true;
-                    
-                    // 丝滑的阻尼效果
-                    const dampedDistance = pullDistance * Math.pow(0.95, Math.max(0, pullDistance - 80));
-                    const progress = Math.min(dampedDistance / pullDownThreshold, 1);
-                    
-                    pullRefresh.style.opacity = progress;
-                    pullRefresh.style.transform = `translateY(${dampedDistance * 0.3 - 20}px)`;
-                    pullRefresh.classList.remove('hidden');
-                    
-                    // 箭头旋转动画
-                    if (dampedDistance >= pullDownThreshold) {
-                        pullRefreshIcon.style.transform = 'rotate(180deg)';
-                        pullRefreshText.textContent = '松开刷新';
-                    } else {
-                        pullRefreshIcon.style.transform = `rotate(${progress * 180}deg)`;
-                        pullRefreshText.textContent = '下拉刷新';
-                    }
-                }
-            } else {
-                isPullDown = false;
-                pullRefresh.style.opacity = '0';
-                pullRefresh.style.transform = 'translateY(-20px)';
-            }
-        }, { passive: false });
-        
-        homePage.addEventListener('touchend', () => {
-            if (isPullDown && pullDistance >= pullDownThreshold) {
-                pullRefreshIcon.style.transform = 'rotate(360deg)';
-                pullRefreshText.textContent = '刷新中...';
-                pullRefreshIcon.className = 'ri-loader-4-line text-xl transition-transform duration-300';
-                pullRefreshIcon.style.animation = 'spin 1s linear infinite';
-                
-                loadPosts(true).then(() => {
-                    // 恢复箭头
-                    pullRefreshIcon.className = 'ri-arrow-down-s-line text-xl transition-transform duration-300';
-                    pullRefreshIcon.style.animation = 'none';
-                    
-                    setTimeout(() => {
-                        pullRefresh.style.opacity = '0';
-                        pullRefresh.style.transform = 'translateY(-20px)';
-                        setTimeout(() => {
-                            pullRefresh.classList.add('hidden');
-                            pullRefreshIcon.style.transform = 'rotate(0deg)';
-                        }, 300);
-                    }, 300);
-                });
-            } else {
-                pullRefresh.style.opacity = '0';
-                pullRefresh.style.transform = 'translateY(-20px)';
-                setTimeout(() => pullRefresh.classList.add('hidden'), 300);
-            }
-            
-            isPullDown = false;
-            pullDistance = 0;
-        }, { passive: true });
-        
-        // 上拉加载
-        window.addEventListener('scroll', () => {
-            if (isLoadingMore) return;
-            
-            const scrollTop = window.scrollY;
-            const scrollHeight = document.documentElement.scrollHeight;
-            const clientHeight = window.innerHeight;
-            const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-            
-            if (distanceFromBottom < pullUpThreshold && scrollTop > lastScrollTop) {
-                const lastPost = postList.lastElementChild;
-                if (lastPost) {
-                    isLoadingMore = true;
-                    loadMoreIndicator.style.opacity = '1';
-                    loadMoreIndicator.style.transform = 'translateY(0)';
-                    loadMoreIndicator.classList.remove('hidden');
-                    
-                    loadPosts(false).then(() => {
-                        setTimeout(() => {
-                            loadMoreIndicator.style.opacity = '0';
-                            loadMoreIndicator.style.transform = 'translateY(20px)';
-                            setTimeout(() => {
-                                loadMoreIndicator.classList.add('hidden');
-                                isLoadingMore = false;
-                            }, 300);
-                        }, 200);
-                    });
-                }
-            }
-            
-            lastScrollTop = scrollTop;
-        }, { passive: true });
     },
     
     bindInputCounters() {
@@ -2335,6 +2263,9 @@ const App = {
         switch (page) {
             case 'auth':
                 document.getElementById('authPage').classList.remove('hidden');
+                // 重置规则同意状态
+                document.getElementById('rulesAgreed').checked = false;
+                document.getElementById('rulesAgreedModal').checked = false;
                 break;
             case 'home':
                 document.getElementById('homePage').classList.remove('hidden');
@@ -2527,6 +2458,23 @@ const App = {
     retryAction() { retryActionHandler(); },
     closeConfirmModal() { closeConfirmModal(); },
     confirmAction() { confirmAction(); },
+    showRulesAgreement() { 
+        document.getElementById('rulesAgreementModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    },
+    closeRulesAgreement() { 
+        document.getElementById('rulesAgreementModal').classList.add('hidden');
+        document.body.style.overflow = '';
+    },
+    confirmRulesAgreement() { 
+        const modalCheckbox = document.getElementById('rulesAgreedModal');
+        if (!modalCheckbox.checked) {
+            showToast('请先勾选"我已阅读并完全理解"', 'warning');
+            return;
+        }
+        document.getElementById('rulesAgreed').checked = true;
+        this.closeRulesAgreement();
+    },
     
     async likePostDetail(postId) {
         if (!currentUser) {
