@@ -32,9 +32,10 @@
                     
                     <div id="navActions" class="flex items-center gap-1">
                         <!-- 好友中心按钮 -->
-                        <button onclick="App.showPage('friends')" class="hidden flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg nav-btn transition-all" title="好友中心">
+                        <button onclick="App.showPage('friends')" class="hidden relative flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg nav-btn transition-all" title="好友中心" style="position: relative;">
                             <i class="ri-user-follow-line text-sm"></i>
                             <span class="text-[9px] opacity-60">好友</span>
+                            <span id="friendUnreadBadge" class="hidden absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
                         </button>
                         <!-- Bug反馈按钮 -->
                         <button onclick="App.showPage('feedback')" class="hidden flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg nav-btn transition-all" title="Bug反馈">

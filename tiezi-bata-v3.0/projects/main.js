@@ -525,7 +525,40 @@ const LocalDB = {
             return [];
         }
     },
-
+    
+    // 获取未读消息数量
+    async getUnreadCount(userId) {
+        if (!supabaseClient || !supabaseClient.isConnected) return 0;
+        
+        try {
+            // 获取与我相关的消息中，对方发送的且我未读的
+            const { data: messages } = await supabaseClient
+                .from('messages')
+                .select('id, is_read, to_id')
+                .eq('to_id', userId)
+                .eq('is_read', false);
+            
+            return messages ? messages.length : 0;
+        } catch (e) {
+            return 0;
+        }
+    },
+    
+    // 标记消息为已读
+    async markMessagesRead(userId) {
+        if (!supabaseClient || !supabaseClient.isConnected) return;
+        
+        try {
+            await supabaseClient
+                .from('messages')
+                .update({ is_read: true })
+                .eq('to_id', userId)
+                .eq('is_read', false);
+        } catch (e) {
+            console.error('标记消息已读失败', e);
+        }
+    },
+    
     async sendMessage(fromUser, toId, toName, toAvatar, content) {
         try {
             const { error } = await supabaseClient.from('messages').insert({
@@ -2536,6 +2569,32 @@ const App = {
             
             // 更新未读通知红点
             updateUnreadBadge();
+            
+            // 检查未读消息，显示红点
+            this.checkUnreadMessages();
+            
+            // 设置定时检查未读消息
+            if (!this._unreadCheckInterval) {
+                this._unreadCheckInterval = setInterval(() => {
+                    if (currentUser) {
+                        this.checkUnreadMessages();
+                    }
+                }, 5000);
+            }
+        }
+    },
+    
+    async checkUnreadMessages() {
+        if (!currentUser) return;
+        
+        const count = await LocalDB.getUnreadCount(currentUser.id);
+        const badge = document.getElementById('friendUnreadBadge');
+        if (badge) {
+            if (count > 0) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
         }
     },
     
@@ -2852,6 +2911,12 @@ const App = {
         loginTip.classList.add('hidden');
         tabs.classList.remove('hidden');
         
+        // 标记消息为已读，隐藏红点
+        if (currentUser) {
+            LocalDB.markMessagesRead(currentUser.id);
+            document.getElementById('friendUnreadBadge').classList.add('hidden');
+        }
+        
         // 默认显示申请列表
         this.switchFriendsTab('requests');
     },
@@ -3084,6 +3149,12 @@ const App = {
         document.getElementById('chatFriendAvatar').className = `w-10 h-10 rounded-xl ${getAvatarConfig(friendAvatar).bg} flex items-center justify-center flex-shrink-0 text-white`;
         document.getElementById('chatFriendAvatar').innerHTML = `<i class="${getAvatarConfig(friendAvatar).icon}"></i>`;
         this.loadChatMessages();
+        
+        // 标记与该好友的消息为已读
+        if (currentUser) {
+            LocalDB.markMessagesRead(currentUser.id);
+            document.getElementById('friendUnreadBadge').classList.add('hidden');
+        }
         
         // 设置定时器，每2秒自动刷新消息
         this._chatRefreshInterval = setInterval(() => {
