@@ -291,6 +291,16 @@ const LocalDB = {
             localStorage.setItem(this.KEYS.USERS, JSON.stringify(users));
         }
     },
+    
+    async updateUserProfile(id, updates) {
+        // 更新本地
+        this.updateUser(id, updates);
+        
+        // 更新云端
+        if (supabaseClient && supabaseClient.isConnected) {
+            await supabaseClient.from('user_profiles').update(updates).eq('id', id);
+        }
+    },
 
     // Favorites 操作
     getFavorites(userId) {
@@ -1216,7 +1226,7 @@ function createPostCard(post) {
     }
     
     // 检查是否是好友（从帖子获取的用户信息）
-    const canAddFriend = !isOwner && !isLove && currentUser && post.user_id && post.username;
+    const canAddFriend = !isOwner && currentUser && post.user_id && post.username;
     
     card.innerHTML = `
         <div class="flex items-start gap-3">
@@ -1592,7 +1602,7 @@ function renderPostDetail(post, comments) {
     const isLove = post.category === 'love';
     const isHidden = post.downvotes >= 10;
     const isOwner = currentUser && currentUser.id === post.user_id;
-    const canAddFriend = !isOwner && !isLove && currentUser && post.user_id && post.username;
+    const canAddFriend = !isOwner && currentUser && post.user_id && post.username;
     
     // 检查用户是否已点赞/踩
     const userVote = currentUser ? LocalDB.getUserVote(post.id, currentUser.id) : null;
@@ -1681,7 +1691,7 @@ function renderComments(comments, postCategory = 'chat') {
     
 	    noComments.classList.add('hidden');
 	    container.innerHTML = comments.map(comment => {
-	        const canAdd = !isLove && currentUser && currentUser.id !== comment.user_id && comment.user_id;
+	        const canAdd = currentUser && currentUser.id !== comment.user_id && comment.user_id;
 	        const onclick = canAdd ? `onclick="App.showFriendRequestModal('${comment.user_id}','${escapeHtml(comment.anonymous_name)}','${comment.avatar||0}')"` : '';
 	        return '<div class="comment-card animate-fade-in" data-comment-id="' + comment.id + '">' +
 	            '<div class="flex items-start gap-3">' +
@@ -2763,6 +2773,56 @@ const App = {
         document.getElementById('newFeaturesModal').classList.add('hidden');
         document.body.style.overflow = '';
     },
+    showSettings() {
+        document.getElementById('settingsPage').classList.remove('hidden');
+        
+        if (currentUser) {
+            document.getElementById('settingsUsername').value = currentUser.username || '';
+            document.getElementById('settingsAnonymousName').textContent = currentUser.anonymous_name || '-';
+            document.getElementById('settingsCreatedAt').textContent = currentUser.created_at ? formatTimeAgo(currentUser.created_at) : '-';
+            document.getElementById('settingsStatus').textContent = '正常';
+            document.getElementById('settingsStatus').className = 'success-text';
+        }
+    },
+    closeSettings() {
+        document.getElementById('settingsPage').classList.add('hidden');
+    },
+    async saveUsername() {
+        if (!currentUser) {
+            showToast('请先登录', 'warning');
+            return;
+        }
+        
+        const newUsername = document.getElementById('settingsUsername').value.trim();
+        
+        if (!newUsername) {
+            showToast('请输入用户名', 'warning');
+            return;
+        }
+        
+        if (newUsername.length < 3 || newUsername.length > 20) {
+            showToast('用户名需3-20位', 'warning');
+            return;
+        }
+        
+        if (!/^[a-zA-Z0-9_]+$/.test(newUsername)) {
+            showToast('用户名只能包含字母、数字、下划线', 'warning');
+            return;
+        }
+        
+        // 更新本地数据
+        currentUser.username = newUsername;
+        localStorage.setItem('campus_user', JSON.stringify(currentUser));
+        
+        // 更新云端
+        try {
+            await LocalDB.updateUserProfile(currentUser.id, { username: newUsername });
+            showToast('用户名修改成功', 'success');
+            App.closeSettings();
+        } catch (error) {
+            showToast('修改失败，请重试', 'error');
+        }
+    },
     confirmRulesAgreement() { 
         const modalCheckbox = document.getElementById('rulesAgreedModal');
         if (!modalCheckbox.checked) {
@@ -3067,9 +3127,9 @@ const App = {
                         <i class="${getAvatarConfig(msg.from_avatar || 0).icon} text-sm"></i>
                     </div>
                 `}
-                <div class="max-w-[70%] ${isMe ? 'bg-primary text-white' : ''} px-4 py-2 rounded-2xl ${isMe ? 'rounded-br-md' : 'rounded-bl-md'}" style="${isMe ? '' : 'background: var(--bg-secondary); color: var(--text-primary);'}">
-                    <p class="break-all">${escapeHtml(msg.content)}</p>
-                    <p class="text-xs ${isMe ? 'text-white/70' : 'form-hint'} mt-1">${formatTimeAgo(msg.created_at)}</p>
+                <div class="max-w-[70%] px-4 py-2 rounded-2xl ${isMe ? 'rounded-br-md chat-my-msg' : 'rounded-bl-md'}" ${isMe ? '' : `style="background: var(--bg-secondary); color: var(--text-primary);"`}>
+                    <p class="break-all" style="color: ${isMe ? 'var(--on-primary)' : 'inherit'};">${escapeHtml(msg.content)}</p>
+                    <p class="text-xs ${isMe ? '' : 'form-hint'} mt-1" style="color: ${isMe ? 'var(--on-primary)' : 'inherit'}; opacity: 0.7;">${formatTimeAgo(msg.created_at)}</p>
                 </div>
                 ${isMe ? `
                     <div class="w-8 h-8 rounded-lg ${getAvatarConfig(currentUser.avatar).bg} flex items-center justify-center flex-shrink-0 text-white ml-2">
