@@ -760,25 +760,29 @@
         </div>
 
         <!-- ========== 聊天页面 ========== -->
-        <div id="chatPage" class="hidden min-h-screen flex flex-col">
+        <div id="chatPage" class="hidden fixed inset-0 z-20 flex flex-col" style="background: var(--bg-primary);">
             <!-- 顶部导航 -->
-            <div class="sticky top-0 z-10 px-4 py-3 flex items-center gap-3" style="background: var(--bg-card); border-bottom: 1px solid var(--border-color);">
-                <button onclick="App.closeChat()" class="p-2 rounded-lg nav-btn transition-all">
-                    <i class="ri-arrow-left-line text-xl"></i>
+            <div class="sticky top-0 z-10 px-4 py-3 flex items-center gap-3 shadow-sm" style="background: var(--bg-card); border-bottom: 1px solid var(--border-color);">
+                <button onclick="App.closeChat()" class="flex items-center gap-1 px-3 py-2 rounded-xl transition-all primary-btn">
+                    <i class="ri-arrow-left-s-line text-lg"></i>
+                    <span class="text-sm font-medium">返回</span>
                 </button>
                 <div id="chatFriendAvatar" class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-white">
                     <!-- 头像由JS设置 -->
                 </div>
-                <h3 id="chatFriendName" class="font-bold form-label truncate"></h3>
+                <div class="flex-1 min-w-0">
+                    <h3 id="chatFriendName" class="font-bold form-label truncate"></h3>
+                    <p class="text-xs form-hint">好友聊天</p>
+                </div>
             </div>
             
             <!-- 消息列表 -->
-            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-1">
+            <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-1" style="background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);">
                 <!-- 消息由JS动态生成 -->
             </div>
             
             <!-- 输入框 -->
-            <div class="p-4 flex items-end gap-3" style="background: var(--bg-card); border-top: 1px solid var(--border-color);">
+            <div class="p-4 flex items-end gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]" style="background: var(--bg-card); border-top: 1px solid var(--border-color);">
                 <textarea id="chatInput" rows="1" class="flex-1 px-4 py-3 rounded-xl border transition-all form-input resize-none" placeholder="输入消息..." onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();App.sendChatMessage();}" style="max-height: 120px;"></textarea>
                 <button onclick="App.sendChatMessage()" class="p-3 primary-btn rounded-xl transition-all flex-shrink-0">
                     <i class="ri-send-plane-fill"></i>
@@ -938,6 +942,82 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- 新功能介绍弹窗 -->
+    <div id="newFeaturesModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="App.closeNewFeaturesModal()"></div>
+        <div class="relative w-full max-w-md max-h-[85vh] card rounded-2xl overflow-hidden flex flex-col">
+            <div class="p-4 border-b dropdown-divider flex items-center justify-between">
+                <h3 class="font-bold text-lg form-label flex items-center gap-2">
+                    <i class="ri-sparkling-line text-primary"></i> 新功能介绍
+                </h3>
+                <button onclick="App.closeNewFeaturesModal()" class="p-2 rounded-lg hover:bg-black/10 transition-all">
+                    <i class="ri-close-line text-xl form-label"></i>
+                </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <!-- 更新内容 -->
+                <div class="p-4 rounded-xl" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h4 class="font-semibold text-white mb-2 flex items-center gap-2">
+                        <i class="ri-star-line"></i> 新功能介绍
+                    </h4>
+                    <p class="text-sm text-white/90 leading-relaxed">
+                        欢迎使用校园树洞！本次更新带来了多项优化，让我们一起来看看吧~
+                    </p>
+                </div>
+                <!-- 功能1：好友申请系统 -->
+                <div class="p-4 rounded-xl" style="background: var(--bg-secondary);">
+                    <h4 class="font-semibold form-label mb-2 flex items-center gap-2">
+                        <i class="ri-user-heart-line text-pink-500"></i> 新增好友申请系统
+                    </h4>
+                    <p class="text-sm form-hint leading-relaxed">
+                        点击任意帖子或评论用户的头像/名字，即可发送好友申请。对方同意后可在首页右上角点击"好友"进入好友界面，与好友开始聊天！
+                    </p>
+                </div>
+                <!-- 功能2：实时聊天 -->
+                <div class="p-4 rounded-xl" style="background: var(--bg-secondary);">
+                    <h4 class="font-semibold form-label mb-2 flex items-center gap-2">
+                        <i class="ri-chat-smile-3-line text-green-500"></i> 实时聊天功能
+                    </h4>
+                    <p class="text-sm form-hint leading-relaxed">
+                        成为好友后，在好友中心点击聊天按钮，即可进入独立聊天界面，支持发送消息和查看聊天记录。
+                    </p>
+                </div>
+                <!-- 功能3：界面优化 -->
+                <div class="p-4 rounded-xl" style="background: var(--bg-secondary);">
+                    <h4 class="font-semibold form-label mb-2 flex items-center gap-2">
+                        <i class="ri-palette-line text-purple-500"></i> 界面设计优化
+                    </h4>
+                    <p class="text-sm form-hint leading-relaxed">
+                        全新的视觉设计，更加人性化的交互体验，更流畅的动画效果，让使用更加舒适。
+                    </p>
+                </div>
+                <!-- 功能4：主题切换 -->
+                <div class="p-4 rounded-xl" style="background: var(--bg-secondary);">
+                    <h4 class="font-semibold form-label mb-2 flex items-center gap-2">
+                        <i class="ri-sun-cloudy-line text-amber-500"></i> 主题模式切换
+                    </h4>
+                    <p class="text-sm form-hint leading-relaxed">
+                        点击右上角主题按钮，支持浅色/深色模式切换，还可跟随系统设置自动切换。
+                    </p>
+                </div>
+                <!-- 功能4：Bug修复 -->
+                <div class="p-4 rounded-xl" style="background: var(--bg-secondary);">
+                    <h4 class="font-semibold form-label mb-2 flex items-center gap-2">
+                        <i class="ri-bug-2-line text-emerald-500"></i> 问题修复
+                    </h4>
+                    <p class="text-sm form-hint leading-relaxed">
+                        修复了多项已知问题，提升了系统稳定性和用户体验。
+                    </p>
+                </div>
+            </div>
+            <div class="p-4 border-t dropdown-divider">
+                <button onclick="App.closeNewFeaturesModal()" class="w-full py-3 primary-btn rounded-xl font-semibold transition-all">
+                    我知道了
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Toast模态框 -->

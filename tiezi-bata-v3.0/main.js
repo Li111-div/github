@@ -899,6 +899,11 @@ async function login() {
     showToast('登录成功！', 'success');
     App.updateUIForLoggedInUser();
     App.goHome();
+    
+    // 显示新功能介绍弹窗
+    setTimeout(() => {
+        App.showNewFeaturesModal();
+    }, 500);
 }
 
 async function register() {
@@ -2748,6 +2753,14 @@ const App = {
     },
     closeRulesAgreement() { 
         document.getElementById('rulesAgreementModal').classList.add('hidden');
+        document.body.style.overflow = '';
+    },
+    showNewFeaturesModal() {
+        document.getElementById('newFeaturesModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    },
+    closeNewFeaturesModal() {
+        document.getElementById('newFeaturesModal').classList.add('hidden');
         document.body.style.overflow = '';
     },
     confirmRulesAgreement() { 
