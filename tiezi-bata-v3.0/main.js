@@ -88,7 +88,10 @@ const LocalDB = {
         USERS: 'campus_users',
         FAVORITES: 'campus_favorites',
         NOTIFICATIONS: 'campus_notifications',
-        VOTES: 'campus_votes'  // 用户点赞/踩记录
+        VOTES: 'campus_votes',  // 用户点赞/踩记录
+        FRIENDS: 'campus_friends',  // 好友列表
+        FRIEND_REQUESTS: 'campus_friend_requests',  // 好友申请
+        MESSAGES: 'campus_messages'  // 聊天消息
     },
 
     // 清理本地数据，与云端同步
@@ -307,6 +310,228 @@ const LocalDB = {
             favorites.push({ id: this.uuid(), post_id: postId, user_id: userId, created_at: new Date().toISOString() });
             localStorage.setItem(this.KEYS.FAVORITES, JSON.stringify(favorites));
             return true;
+        }
+    },
+
+    // Friends 操作
+    getFriends(userId) {
+        const friends = JSON.parse(localStorage.getItem(this.KEYS.FRIENDS) || '[]');
+        return friends.filter(f => f.user_id === userId)
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    },
+
+    addFriend(userId, friendId, friendName, friendAvatar) {
+        const friends = JSON.parse(localStorage.getItem(this.KEYS.FRIENDS) || '[]');
+        // 检查是否已经存在
+        const exists = friends.find(f => f.user_id === userId && f.friend_id === friendId);
+        if (exists) {
+            return false;
+        }
+        friends.push({
+            id: this.uuid(),
+            user_id: userId,
+            friend_id: friendId,
+            friend_name: friendName,
+            friend_avatar: friendAvatar,
+            created_at: new Date().toISOString()
+        });
+        localStorage.setItem(this.KEYS.FRIENDS, JSON.stringify(friends));
+        return true;
+    },
+
+    removeFriend(friendId) {
+        const friends = JSON.parse(localStorage.getItem(this.KEYS.FRIENDS) || '[]');
+        const index = friends.findIndex(f => f.id === friendId);
+        if (index !== -1) {
+            friends.splice(index, 1);
+            localStorage.setItem(this.KEYS.FRIENDS, JSON.stringify(friends));
+        }
+    },
+
+    // 好友申请操作（云端）
+    async getFriendRequests(userId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('friend_requests')
+                .select('*')
+                .eq('to_user_id', userId)
+                .eq('status', 'pending')
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            return data || [];
+        } catch (e) {
+            // 降级到本地
+            const requests = JSON.parse(localStorage.getItem(this.KEYS.FRIEND_REQUESTS) || '[]');
+            return requests.filter(r => r.to_user_id === userId && r.status === 'pending')
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        }
+    },
+
+    async sendFriendRequest(fromUser, toUserId, toUserName, toUserAvatar, message) {
+        try {
+            // 检查是否已是好友
+            const { data: existingFriends } = await supabaseClient
+                .from('friends')
+                .select('id')
+                .eq('user_id', fromUser.id)
+                .eq('friend_id', toUserId)
+                .single();
+            
+            if (existingFriends) {
+                return { success: false, message: '你们已经是好友了' };
+            }
+            
+            // 检查是否已发送过申请
+            const { data: existingRequest } = await supabaseClient
+                .from('friend_requests')
+                .select('id')
+                .eq('from_user_id', fromUser.id)
+                .eq('to_user_id', toUserId)
+                .eq('status', 'pending')
+                .single();
+            
+            if (existingRequest) {
+                return { success: false, message: '已发送过好友申请，请等待对方确认' };
+            }
+            
+            const { error } = await supabaseClient.from('friend_requests').insert({
+                from_user_id: fromUser.id,
+                from_user_name: fromUser.anonymous_name || '匿名用户',
+                from_user_avatar: fromUser.avatar || 0,
+                to_user_id: toUserId,
+                to_user_name: toUserName,
+                to_user_avatar: toUserAvatar,
+                message: message || '',
+                status: 'pending'
+            });
+            
+            if (error) throw error;
+            return { success: true };
+        } catch (e) {
+            return { success: false, message: '发送失败，请重试' };
+        }
+    },
+
+    async acceptFriendRequest(requestId, userId, user) {
+        try {
+            // 获取申请信息
+            const { data: request, error: fetchError } = await supabaseClient
+                .from('friend_requests')
+                .select('*')
+                .eq('id', requestId)
+                .eq('to_user_id', userId)
+                .single();
+            
+            if (fetchError || !request) {
+                return { success: false, message: '无效的申请' };
+            }
+            
+            // 更新申请状态
+            await supabaseClient
+                .from('friend_requests')
+                .update({ status: 'accepted' })
+                .eq('id', requestId);
+            
+            // 添加双向好友关系到 posts 表
+            await supabaseClient.from('friends').insert({
+                user_id: request.from_user_id,
+                friend_id: request.to_user_id,
+                friend_name: request.to_user_name,
+                friend_avatar: request.to_user_avatar
+            });
+            
+            await supabaseClient.from('friends').insert({
+                user_id: request.to_user_id,
+                friend_id: request.from_user_id,
+                friend_name: request.from_user_name,
+                friend_avatar: request.from_user_avatar
+            });
+            
+            return { success: true };
+        } catch (e) {
+            return { success: false, message: '操作失败，请重试' };
+        }
+    },
+
+    async rejectFriendRequest(requestId, userId) {
+        try {
+            await supabaseClient
+                .from('friend_requests')
+                .update({ status: 'rejected' })
+                .eq('id', requestId)
+                .eq('to_user_id', userId);
+            
+            return { success: true };
+        } catch (e) {
+            return { success: false };
+        }
+    },
+
+    async getFriends(userId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('friends')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            return data || [];
+        } catch (e) {
+            return [];
+        }
+    },
+
+    async removeFriend(userId, friendId) {
+        try {
+            // 删除双向好友关系
+            await supabaseClient.from('friends').delete()
+                .eq('user_id', userId)
+                .eq('friend_id', friendId);
+            
+            await supabaseClient.from('friends').delete()
+                .eq('user_id', friendId)
+                .eq('friend_id', userId);
+            
+            return true;
+        } catch (e) {
+            return false;
+        }
+    },
+
+    // 聊天消息操作（云端）
+    async getMessages(userId, friendId) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('messages')
+                .select('*')
+                .or(`and(from_id.eq.${userId},to_id.eq.${friendId}),and(from_id.eq.${friendId},to_id.eq.${userId})`)
+                .order('created_at', { ascending: true });
+            
+            if (error) throw error;
+            return data || [];
+        } catch (e) {
+            return [];
+        }
+    },
+
+    async sendMessage(fromUser, toId, toName, toAvatar, content) {
+        try {
+            const { error } = await supabaseClient.from('messages').insert({
+                from_id: fromUser.id,
+                from_name: fromUser.anonymous_name || '匿名用户',
+                from_avatar: fromUser.avatar || 0,
+                to_id: toId,
+                to_name: toName,
+                to_avatar: toAvatar,
+                content: content
+            });
+            
+            if (error) throw error;
+            return { success: true };
+        } catch (e) {
+            return { success: false };
         }
     },
 
@@ -810,7 +1035,6 @@ function logout() {
     showToast('已退出登录', 'info');
     App.updateUIForLoggedOutUser();
     App.showPage('auth');
-    document.getElementById('userDropdown').classList.add('hidden');
 }
 
 async function checkAuthStatus() {
@@ -882,6 +1106,7 @@ async function loadPosts(reset = true) {
         if (currentSort === 'latest') {
             query = query.order('created_at', { ascending: false });
         } else {
+            // 最热排序：按 (点赞数 + 评论数) 降序
             query = query.order('upvotes', { ascending: false });
         }
         
@@ -925,6 +1150,15 @@ async function loadPosts(reset = true) {
             }
         }
         
+        // 最热排序：按 (点赞数 + 评论数) 降序
+        if (currentSort === 'hot') {
+            posts.sort((a, b) => {
+                const hotA = (a.upvotes || 0) + (a.commentCount || 0);
+                const hotB = (b.upvotes || 0) + (b.commentCount || 0);
+                return hotB - hotA;
+            });
+        }
+        
         const postList = document.getElementById('postList');
         posts.forEach((post, index) => {
             const postCard = createPostCard(post);
@@ -945,8 +1179,16 @@ async function loadPosts(reset = true) {
 
 function createPostCard(post) {
     const card = document.createElement('div');
-    card.className = 'post-card';
+    card.className = 'post-card cursor-pointer';
     card.dataset.postId = post.id;
+    
+    // 点击卡片进入详情页
+    card.addEventListener('click', (e) => {
+        // 阻止按钮和头像的冒泡
+        if (e.target.closest('button')) return;
+        if (e.target.closest('.avatar-btn')) return;
+        App.viewPostDetail(post.id);
+    });
     
     const isHidden = post.downvotes >= 10;
     const category = CATEGORIES[post.category] || CATEGORIES.chat;
@@ -954,6 +1196,11 @@ function createPostCard(post) {
     const displayName = post.anonymous_name || '匿名用户';
     const commentCount = post.commentCount || 0;
     const isOwner = currentUser && currentUser.id === post.user_id;
+    
+    // 检查用户是否已点赞
+    const userVote = currentUser ? LocalDB.getUserVote(post.id, currentUser.id) : null;
+    const hasLiked = userVote && userVote.vote_type === 'like';
+    const hasDisliked = userVote && userVote.vote_type === 'dislike';
     
     if (isHidden) {
         card.classList.add('post-card-hidden');
@@ -963,11 +1210,20 @@ function createPostCard(post) {
         card.classList.add('post-card-love');
     }
     
+    // 检查是否是好友（从帖子获取的用户信息）
+    const canAddFriend = !isOwner && !isLove && currentUser && post.user_id && post.username;
+    
     card.innerHTML = `
         <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                <i class="${getAvatarConfig(post.avatar).icon}"></i>
-            </div>
+            ${canAddFriend ? `
+                <div onclick="App.showFriendRequestModal('${post.user_id}', '${escapeHtml(post.anonymous_name || '匿名用户')}', '${post.avatar || 0}')" class="avatar-btn w-10 h-10 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white cursor-pointer hover:opacity-80 transition-opacity">
+                    <i class="${getAvatarConfig(post.avatar).icon}"></i>
+                </div>
+            ` : `
+                <div class="w-10 h-10 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                    <i class="${getAvatarConfig(post.avatar).icon}"></i>
+                </div>
+            `}
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1 flex-wrap">
                     <span class="category-tag tag-${category.color}">
@@ -981,12 +1237,12 @@ function createPostCard(post) {
                 <p class="text-sm leading-relaxed ${isHidden ? 'blur-sm' : ''}" style="color: var(--text-secondary); word-break: break-all;">${escapeHtml(post.content)}</p>
                 
                 <div class="flex items-center gap-4 mt-3 flex-wrap">
-                    <button onclick="App.likePost('${post.id}')" class="action-btn action-btn-like">
-                        <i class="ri-heart-line"></i>
+                    <button onclick="App.likePost('${post.id}')" class="action-btn action-btn-like ${hasLiked ? 'text-red-500' : ''}">
+                        <i class="${hasLiked ? 'ri-heart-fill' : 'ri-heart-line'}"></i>
                         <span class="like-count">${post.upvotes || 0}</span>
                     </button>
-                    <button onclick="App.dislikePost('${post.id}')" class="action-btn action-btn-dislike">
-                        <i class="ri-thumb-down-line"></i>
+                    <button onclick="App.dislikePost('${post.id}')" class="action-btn action-btn-dislike ${hasDisliked ? 'text-gray-600 dark:text-gray-400' : ''}">
+                        <i class="${hasDisliked ? 'ri-thumb-down-fill' : 'ri-thumb-down-line'}"></i>
                         <span class="dislike-count">${post.downvotes || 0}</span>
                     </button>
                     <button onclick="App.viewPostDetail('${post.id}')" class="action-btn">
@@ -1148,6 +1404,8 @@ async function likePost(postId) {
     }
     
     const card = document.querySelector(`[data-post-id="${postId}"]`);
+    const likeBtn = card.querySelector('.action-btn-like');
+    const dislikeBtn = card.querySelector('.action-btn-dislike');
     const likeCount = card.querySelector('.like-count');
     const dislikeCount = card.querySelector('.dislike-count');
     const currentLikes = parseInt(likeCount.textContent);
@@ -1159,6 +1417,8 @@ async function likePost(postId) {
         // 已经点赞过，取消点赞
         const newLikes = Math.max(0, currentLikes - 1);
         likeCount.textContent = newLikes;
+        likeBtn.classList.remove('text-red-500');
+        likeBtn.querySelector('i').className = 'ri-heart-line';
         LocalDB.removeVote(postId, currentUser.id);
         LocalDB.updatePost(postId, { upvotes: newLikes });
         showToast('已取消点赞', 'info');
@@ -1175,10 +1435,14 @@ async function likePost(postId) {
         if (userVote && userVote.vote_type === 'dislike') {
             newDislikes = Math.max(0, currentDislikes - 1);
             dislikeCount.textContent = newDislikes;
+            dislikeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+            dislikeBtn.querySelector('i').className = 'ri-thumb-down-line';
             LocalDB.updatePost(postId, { downvotes: newDislikes });
         }
         
         likeCount.textContent = newLikes;
+        likeBtn.classList.add('text-red-500');
+        likeBtn.querySelector('i').className = 'ri-heart-fill';
         LocalDB.addVote(postId, currentUser.id, 'like');
         LocalDB.updatePost(postId, { upvotes: newLikes, downvotes: newDislikes });
         showToast('点赞成功！', 'success');
@@ -1197,6 +1461,8 @@ async function dislikePost(postId) {
     }
     
     const card = document.querySelector(`[data-post-id="${postId}"]`);
+    const likeBtn = card.querySelector('.action-btn-like');
+    const dislikeBtn = card.querySelector('.action-btn-dislike');
     const likeCount = card.querySelector('.like-count');
     const dislikeCount = card.querySelector('.dislike-count');
     const currentLikes = parseInt(likeCount.textContent);
@@ -1208,6 +1474,8 @@ async function dislikePost(postId) {
         // 已经踩过，取消踩
         const newDislikes = Math.max(0, currentDislikes - 1);
         dislikeCount.textContent = newDislikes;
+        dislikeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+        dislikeBtn.querySelector('i').className = 'ri-thumb-down-line';
         LocalDB.removeVote(postId, currentUser.id);
         LocalDB.updatePost(postId, { downvotes: newDislikes });
         showToast('已取消踩', 'info');
@@ -1224,10 +1492,14 @@ async function dislikePost(postId) {
         if (userVote && userVote.vote_type === 'like') {
             newLikes = Math.max(0, currentLikes - 1);
             likeCount.textContent = newLikes;
+            likeBtn.classList.remove('text-red-500');
+            likeBtn.querySelector('i').className = 'ri-heart-line';
             LocalDB.updatePost(postId, { upvotes: newLikes });
         }
         
         dislikeCount.textContent = newDislikes;
+        dislikeBtn.classList.add('text-gray-600', 'dark:text-gray-400');
+        dislikeBtn.querySelector('i').className = 'ri-thumb-down-fill';
         LocalDB.addVote(postId, currentUser.id, 'dislike');
         LocalDB.updatePost(postId, { upvotes: newLikes, downvotes: newDislikes });
         
@@ -1315,6 +1587,12 @@ function renderPostDetail(post, comments) {
     const isLove = post.category === 'love';
     const isHidden = post.downvotes >= 10;
     const isOwner = currentUser && currentUser.id === post.user_id;
+    const canAddFriend = !isOwner && !isLove && currentUser && post.user_id && post.username;
+    
+    // 检查用户是否已点赞/踩
+    const userVote = currentUser ? LocalDB.getUserVote(post.id, currentUser.id) : null;
+    const hasLiked = userVote && userVote.vote_type === 'like';
+    const hasDisliked = userVote && userVote.vote_type === 'dislike';
     
     if (isLove) {
         container.className = 'card-love rounded-2xl p-6 mb-6';
@@ -1336,6 +1614,7 @@ function renderPostDetail(post, comments) {
                         ${isLove ? '<i class="ri-heart-fill mr-1"></i>' : ''}
                         ${category.name}
                     </span>
+                    ${canAddFriend ? '<span class="text-xs primary-text cursor-pointer hover:underline" onclick="App.showFriendRequestModal(\'' + post.user_id + '\', \'' + escapeHtml(post.anonymous_name || '匿名用户') + '\', \'' + (post.avatar || 0) + '\')">+ 添加好友</span>' : ''}
                 </div>
                 <p class="text-xs time-relative">${formatTimeAgo(post.created_at)}</p>
             </div>
@@ -1343,11 +1622,7 @@ function renderPostDetail(post, comments) {
                 <button onclick="App.confirmDeletePost('${post.id}')" class="action-btn action-btn-delete">
                     <i class="ri-delete-bin-line text-lg"></i>
                 </button>
-            ` : `
-                <button onclick="App.showReportModal('${post.id}')" class="action-btn">
-                    <i class="ri-alert-line text-lg"></i>
-                </button>
-            `}
+            ` : ''}
         </div>
         
         <h2 class="text-xl font-bold mb-3 ${isHidden ? 'blur-sm' : ''}" style="color: var(--text-primary);">${escapeHtml(post.title || '无标题')}</h2>
@@ -1358,14 +1633,20 @@ function renderPostDetail(post, comments) {
         </p>` : ''}
         
         <div class="flex items-center gap-4 mt-6 pt-4" style="border-top: 1px solid var(--border-color);">
-            <button onclick="App.likePostDetail('${post.id}')" class="action-btn action-btn-like">
-                <i class="ri-heart-line text-lg"></i>
+            <button onclick="App.likePostDetail('${post.id}')" class="action-btn action-btn-like ${hasLiked ? 'text-red-500' : ''}">
+                <i class="${hasLiked ? 'ri-heart-fill' : 'ri-heart-line'} text-lg"></i>
                 <span id="detailLikeCount">${post.upvotes || 0}</span>
             </button>
-            <button onclick="App.dislikePostDetail('${post.id}')" class="action-btn action-btn-dislike">
-                <i class="ri-thumb-down-line text-lg"></i>
+            <button onclick="App.dislikePostDetail('${post.id}')" class="action-btn action-btn-dislike ${hasDisliked ? 'text-gray-600 dark:text-gray-400' : ''}">
+                <i class="${hasDisliked ? 'ri-thumb-down-fill' : 'ri-thumb-down-line'} text-lg"></i>
                 <span id="detailDislikeCount">${post.downvotes || 0}</span>
             </button>
+            ${canAddFriend ? `
+                <button onclick="App.showFriendRequestModal('${post.user_id}', '${escapeHtml(post.anonymous_name || '匿名用户')}', '${post.avatar || 0}')" class="action-btn ml-auto">
+                    <i class="ri-user-add-line text-lg"></i>
+                    <span>加好友</span>
+                </button>
+            ` : ''}
         </div>
     `;
     
@@ -1393,32 +1674,29 @@ function renderComments(comments, postCategory = 'chat') {
         return;
     }
     
-    noComments.classList.add('hidden');
-    container.innerHTML = comments.map(comment => `
-        <div class="comment-card animate-fade-in" data-comment-id="${comment.id}">
-            <div class="flex items-start gap-3">
-                <div class="w-8 h-8 rounded-lg ${getAvatarConfig(comment.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                    <i class="${getAvatarConfig(comment.avatar).icon} text-xs"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-sm font-medium" style="color: var(--text-primary);">
-                            ${isLove ? '匿名用户' : escapeHtml(comment.anonymous_name || '匿名用户')}
-                        </span>
-                        <span class="text-xs time-relative">${formatTimeAgo(comment.created_at)}</span>
-                    </div>
-                    <p class="text-sm leading-relaxed" style="color: var(--text-secondary); word-break: break-all;">${escapeHtml(comment.content || '')}</p>
-                </div>
-                ${currentUser && currentUser.id === comment.user_id ? `
-                    <button onclick="App.deleteComment('${comment.id}')" class="action-btn action-btn-delete">
-                        <i class="ri-delete-bin-line"></i>
-                    </button>
-                ` : ''}
-            </div>
-        </div>
-    `).join('');
-    
-    // 更新评论数
+	    noComments.classList.add('hidden');
+	    container.innerHTML = comments.map(comment => {
+	        const canAdd = !isLove && currentUser && currentUser.id !== comment.user_id && comment.user_id;
+	        const onclick = canAdd ? `onclick="App.showFriendRequestModal('${comment.user_id}','${escapeHtml(comment.anonymous_name)}','${comment.avatar||0}')"` : '';
+	        return '<div class="comment-card animate-fade-in" data-comment-id="' + comment.id + '">' +
+	            '<div class="flex items-start gap-3">' +
+	                '<div class="w-8 h-8 rounded-lg ' + getAvatarConfig(comment.avatar).bg + ' flex items-center justify-center flex-shrink-0 text-white' + (canAdd ? ' cursor-pointer hover:opacity-80' : '') + '" ' + onclick + '>' +
+	                    '<i class="' + getAvatarConfig(comment.avatar).icon + ' text-xs"></i>' +
+	                '</div>' +
+	                '<div class="flex-1 min-w-0">' +
+	                    '<div class="flex items-center gap-2 mb-1">' +
+	                        '<span class="text-sm font-medium' + (canAdd ? ' cursor-pointer primary-text hover:underline' : '') + '" style="color: var(--text-primary);" ' + onclick + '>' +
+	                            (isLove ? '匿名用户' : escapeHtml(comment.anonymous_name || '匿名用户')) +
+	                        '</span>' +
+	                        (canAdd ? '<span class="text-xs primary-text">+ 加好友</span>' : '') +
+	                        '<span class="text-xs time-relative">' + formatTimeAgo(comment.created_at) + '</span>' +
+	                    '</div>' +
+	                    '<p class="text-sm leading-relaxed" style="color: var(--text-secondary); word-break: break-all;">' + escapeHtml(comment.content || '') + '</p>' +
+	                '</div>' +
+	                (currentUser && currentUser.id === comment.user_id ? '<button onclick="App.deleteComment(\'' + comment.id + '\')" class="action-btn action-btn-delete"><i class="ri-delete-bin-line"></i></button>' : '') +
+	            '</div>' +
+	        '</div>';
+	    }).join('');
     document.getElementById('commentCount').textContent = comments.length;
 }
 
@@ -2115,9 +2393,7 @@ const App = {
     
     bindGlobalEvents() {
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('#userMenuBtn') && !e.target.closest('#userDropdown')) {
-                document.getElementById('userDropdown').classList.add('hidden');
-            }
+            // 关闭主题菜单
             if (!e.target.closest('#themeDropdown') && !e.target.closest('[onclick*="toggleThemeMenu"]')) {
                 document.getElementById('themeDropdown').classList.add('hidden');
             }
@@ -2230,15 +2506,12 @@ const App = {
     },
     
     updateUIForLoggedInUser() {
-        document.getElementById('userMenuBtn').classList.remove('hidden');
-        
         if (currentUser) {
-            document.getElementById('dropdownUsername').textContent = currentUser.anonymous_name || currentUser.username;
-            
-        const statusEl = document.getElementById('dropdownUserStatus');
-        statusEl.textContent = '可正常发言';
-        statusEl.className = 'text-xs success-text';
-        statusEl.style.color = 'var(--success)';
+            // 显示导航栏功能按钮
+            const navActions = document.getElementById('navActions');
+            if (navActions) {
+                navActions.querySelectorAll('button').forEach(btn => btn.classList.remove('hidden'));
+            }
             
             const profileAvatar = document.getElementById('profileAvatar');
             if (profileAvatar) {
@@ -2252,11 +2525,20 @@ const App = {
     },
     
     updateUIForLoggedOutUser() {
-        document.getElementById('userMenuBtn').classList.add('hidden');
+        // 隐藏导航栏功能按钮
+        const navActions = document.getElementById('navActions');
+        if (navActions) {
+            navActions.querySelectorAll('button').forEach(btn => btn.classList.add('hidden'));
+        }
     },
     
     showPage(page) {
-        ['authPage', 'homePage', 'createPostPage', 'postDetailPage', 'profilePage', 'settingsPage', 'rulesPage', 'feedbackPage'].forEach(id => {
+        // 离开详情页时重置 currentPostId
+        if (currentPage === 'postDetail' && page !== 'postDetail') {
+            currentPostId = null;
+        }
+        
+        ['authPage', 'homePage', 'createPostPage', 'postDetailPage', 'profilePage', 'settingsPage', 'rulesPage', 'feedbackPage', 'friendsPage', 'chatPage'].forEach(id => {
             document.getElementById(id)?.classList.add('hidden');
         });
         
@@ -2265,7 +2547,6 @@ const App = {
                 document.getElementById('authPage').classList.remove('hidden');
                 // 重置规则同意状态
                 document.getElementById('rulesAgreed').checked = false;
-                document.getElementById('rulesAgreedModal').checked = false;
                 break;
             case 'home':
                 document.getElementById('homePage').classList.remove('hidden');
@@ -2307,6 +2588,9 @@ const App = {
                 document.getElementById('feedbackContent').value = '';
                 document.getElementById('feedbackContact').value = '';
                 document.getElementById('feedbackCount').textContent = '0';
+                break;
+            case 'friends':
+                this.showFriendsPage();
                 break;
         }
         
@@ -2476,12 +2760,332 @@ const App = {
         this.closeRulesAgreement();
     },
     
+    showFriendsPage() {
+        document.getElementById('friendsPage').classList.remove('hidden');
+        
+        const loginTip = document.getElementById('friendsLoginTip');
+        const tabs = document.getElementById('friendsTabs');
+        
+        if (!currentUser) {
+            loginTip.classList.remove('hidden');
+            tabs.classList.add('hidden');
+            document.getElementById('friendsRequestsContainer').classList.add('hidden');
+            document.getElementById('friendsListContainer').classList.add('hidden');
+            document.getElementById('friendsRequestsEmpty').classList.add('hidden');
+            document.getElementById('friendsEmpty').classList.add('hidden');
+            return;
+        }
+        
+        loginTip.classList.add('hidden');
+        tabs.classList.remove('hidden');
+        
+        // 默认显示申请列表
+        this.switchFriendsTab('requests');
+    },
+    
+    switchFriendsTab(tab) {
+        const tabRequests = document.getElementById('friendsTabRequests');
+        const tabList = document.getElementById('friendsTabList');
+        const requestsContainer = document.getElementById('friendsRequestsContainer');
+        const listContainer = document.getElementById('friendsListContainer');
+        const requestsEmpty = document.getElementById('friendsRequestsEmpty');
+        const listEmpty = document.getElementById('friendsEmpty');
+        
+        if (tab === 'requests') {
+            tabRequests.className = 'px-4 py-2 rounded-full text-sm font-medium primary-btn';
+            tabList.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap';
+            
+            requestsContainer.classList.remove('hidden');
+            listContainer.classList.add('hidden');
+            listEmpty.classList.add('hidden');
+            
+            // 加载申请列表（云端）
+            this.loadFriendRequests();
+        } else {
+            tabList.className = 'px-4 py-2 rounded-full text-sm font-medium primary-btn';
+            tabRequests.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap';
+            
+            listContainer.classList.remove('hidden');
+            requestsContainer.classList.add('hidden');
+            requestsEmpty.classList.add('hidden');
+            
+            // 加载好友列表（云端）
+            this.loadFriendsList();
+        }
+    },
+    
+    async loadFriendRequests() {
+        const requestsContainer = document.getElementById('friendsRequestsContainer');
+        const requestsEmpty = document.getElementById('friendsRequestsEmpty');
+        
+        try {
+            const requests = await LocalDB.getFriendRequests(currentUser.id);
+            if (!requests || requests.length === 0) {
+                requestsEmpty.classList.remove('hidden');
+                requestsContainer.classList.add('hidden');
+            } else {
+                requestsEmpty.classList.add('hidden');
+                requestsContainer.classList.remove('hidden');
+                this.renderFriendRequests(requests);
+            }
+        } catch (e) {
+            requestsEmpty.classList.remove('hidden');
+            requestsContainer.classList.add('hidden');
+        }
+    },
+    
+    async loadFriendsList() {
+        const listContainer = document.getElementById('friendsListContainer');
+        const listEmpty = document.getElementById('friendsEmpty');
+        
+        try {
+            const friends = await LocalDB.getFriends(currentUser.id);
+            if (!friends || friends.length === 0) {
+                listEmpty.classList.remove('hidden');
+                listContainer.classList.add('hidden');
+            } else {
+                listEmpty.classList.add('hidden');
+                listContainer.classList.remove('hidden');
+                this.renderFriendsList(friends);
+            }
+        } catch (e) {
+            listEmpty.classList.remove('hidden');
+            listContainer.classList.add('hidden');
+        }
+    },
+    
+    renderFriendRequests(requests) {
+        const container = document.getElementById('friendsRequestsContainer');
+        container.innerHTML = '';
+        
+        requests.forEach(request => {
+            const card = document.createElement('div');
+            card.className = 'card rounded-2xl p-4';
+            card.innerHTML = `
+                <div class="flex items-start gap-3 mb-3">
+                    <div class="w-12 h-12 rounded-xl ${getAvatarConfig(request.from_user_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                        <i class="${getAvatarConfig(request.from_user_avatar).icon}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-medium form-label">${escapeHtml(request.from_user_name)}</h4>
+                        <p class="text-xs form-hint">${formatTimeAgo(request.created_at)}</p>
+                        ${request.message ? `<p class="text-sm mt-1" style="color: var(--text-secondary);">${escapeHtml(request.message)}</p>` : ''}
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="App.rejectFriendRequest('${request.id}')" class="flex-1 py-2 rounded-xl border transition-all form-label">
+                        拒绝
+                    </button>
+                    <button onclick="App.acceptFriendRequest('${request.id}')" class="flex-1 py-2 primary-btn rounded-xl font-medium transition-all">
+                        接受
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    },
+    
+    renderFriendsList(friends) {
+        const container = document.getElementById('friendsListContainer');
+        container.innerHTML = '';
+        
+        friends.forEach(friend => {
+            const card = document.createElement('div');
+            card.className = 'card rounded-2xl p-4 flex items-center gap-3';
+            card.innerHTML = `
+                <div class="w-12 h-12 rounded-xl ${getAvatarConfig(friend.friend_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                    <i class="${getAvatarConfig(friend.friend_avatar).icon}"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-medium form-label truncate">${escapeHtml(friend.friend_name)}</h4>
+                    <p class="text-xs form-hint">ID: ${friend.friend_id.slice(0, 8)}...</p>
+                </div>
+                <button onclick="App.showChat('${friend.friend_id}', '${escapeHtml(friend.friend_name)}', '${friend.friend_avatar}')" class="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all" title="聊天">
+                    <i class="ri-message-3-line"></i>
+                </button>
+                <button onclick="App.removeFriend('${friend.friend_id}')" class="p-2 rounded-lg hover:bg-red-500/10 text-red-500 transition-all" title="删除好友">
+                    <i class="ri-user-unfollow-line"></i>
+                </button>
+            `;
+            container.appendChild(card);
+        });
+    },
+    
+    async removeFriend(friendId) {
+        if (confirm('确定要删除该好友吗？')) {
+            await LocalDB.removeFriend(currentUser.id, friendId);
+            showToast('已删除好友', 'success');
+            this.loadFriendsList();
+        }
+    },
+    
+    showFriendRequestModal(userId, userName, userAvatar) {
+        if (!currentUser) {
+            showToast('请先登录', 'warning');
+            return;
+        }
+        
+        if (userId === currentUser.id) {
+            showToast('不能添加自己为好友', 'warning');
+            return;
+        }
+        
+        // 保存目标用户信息
+        this._friendRequestTarget = { id: userId, name: userName, avatar: userAvatar };
+        
+        // 显示模态框
+        const modal = document.getElementById('friendRequestModal');
+        const targetDiv = document.getElementById('friendRequestTarget');
+        const messageInput = document.getElementById('friendRequestMessage');
+        const countSpan = document.getElementById('friendRequestCount');
+        
+        targetDiv.innerHTML = `
+            <div class="w-12 h-12 rounded-xl ${getAvatarConfig(userAvatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                <i class="${getAvatarConfig(userAvatar).icon}"></i>
+            </div>
+            <div>
+                <h4 class="font-medium form-label">${escapeHtml(userName)}</h4>
+                <p class="text-xs form-hint">是否添加为好友</p>
+            </div>
+        `;
+        
+        messageInput.value = '';
+        countSpan.textContent = '0';
+        
+        modal.classList.remove('hidden');
+        messageInput.focus();
+    },
+
+    closeFriendRequestModal() {
+        document.getElementById('friendRequestModal').classList.add('hidden');
+        this._friendRequestTarget = null;
+    },
+    
+    async sendFriendRequest() {
+        if (!currentUser || !this._friendRequestTarget) {
+            showToast('发送失败', 'error');
+            return;
+        }
+        
+        const message = document.getElementById('friendRequestMessage').value.trim();
+        const result = await LocalDB.sendFriendRequest(
+            currentUser,
+            this._friendRequestTarget.id,
+            this._friendRequestTarget.name,
+            this._friendRequestTarget.avatar,
+            message
+        );
+        
+        if (result.success) {
+            showToast('好友申请已发送', 'success');
+            this.closeFriendRequestModal();
+        } else {
+            showToast(result.message, 'warning');
+        }
+    },
+    
+    async acceptFriendRequest(requestId) {
+        if (!currentUser) return;
+        
+        const result = await LocalDB.acceptFriendRequest(requestId, currentUser.id, currentUser);
+        if (result.success) {
+            showToast('已添加好友，可以开始聊天了', 'success');
+            this.loadFriendRequests();
+        } else {
+            showToast(result.message || '操作失败', 'error');
+        }
+    },
+    
+    async rejectFriendRequest(requestId) {
+        if (!currentUser) return;
+        
+        await LocalDB.rejectFriendRequest(requestId, currentUser.id);
+        showToast('已拒绝申请', 'info');
+        this.loadFriendRequests();
+    },
+
+    showChat(friendId, friendName, friendAvatar) {
+        this._currentChatFriend = { id: friendId, name: friendName, avatar: friendAvatar };
+        document.getElementById('chatPage').classList.remove('hidden');
+        document.getElementById('chatFriendName').textContent = friendName;
+        document.getElementById('chatFriendAvatar').className = `w-10 h-10 rounded-xl ${getAvatarConfig(friendAvatar).bg} flex items-center justify-center flex-shrink-0 text-white`;
+        document.getElementById('chatFriendAvatar').innerHTML = `<i class="${getAvatarConfig(friendAvatar).icon}"></i>`;
+        this.loadChatMessages();
+    },
+
+    closeChat() {
+        document.getElementById('chatPage').classList.add('hidden');
+        this._currentChatFriend = null;
+    },
+
+    async loadChatMessages() {
+        if (!currentUser || !this._currentChatFriend) return;
+        
+        const messages = await LocalDB.getMessages(currentUser.id, this._currentChatFriend.id);
+        const container = document.getElementById('chatMessages');
+        container.innerHTML = '';
+        
+        if (!messages || messages.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-8 text-sm form-hint">
+                    还没有消息，快打个招呼吧~
+                </div>
+            `;
+            return;
+        }
+        
+        messages.forEach(msg => {
+            const isMe = msg.from_id === currentUser.id;
+            const div = document.createElement('div');
+            div.className = `flex ${isMe ? 'justify-end' : 'justify-start'} mb-3`;
+            div.innerHTML = `
+                ${isMe ? '' : `
+                    <div class="w-8 h-8 rounded-lg ${getAvatarConfig(msg.from_avatar || 0).bg} flex items-center justify-center flex-shrink-0 text-white mr-2">
+                        <i class="${getAvatarConfig(msg.from_avatar || 0).icon} text-sm"></i>
+                    </div>
+                `}
+                <div class="max-w-[70%] ${isMe ? 'bg-primary text-white' : ''} px-4 py-2 rounded-2xl ${isMe ? 'rounded-br-md' : 'rounded-bl-md'}" style="${isMe ? '' : 'background: var(--bg-secondary); color: var(--text-primary);'}">
+                    <p class="break-all">${escapeHtml(msg.content)}</p>
+                    <p class="text-xs ${isMe ? 'text-white/70' : 'form-hint'} mt-1">${formatTimeAgo(msg.created_at)}</p>
+                </div>
+                ${isMe ? `
+                    <div class="w-8 h-8 rounded-lg ${getAvatarConfig(currentUser.avatar).bg} flex items-center justify-center flex-shrink-0 text-white ml-2">
+                        <i class="${getAvatarConfig(currentUser.avatar).icon} text-sm"></i>
+                    </div>
+                ` : ''}
+            `;
+            container.appendChild(div);
+        });
+        
+        container.scrollTop = container.scrollHeight;
+    },
+
+    async sendChatMessage() {
+        if (!currentUser || !this._currentChatFriend) return;
+        
+        const input = document.getElementById('chatInput');
+        const content = input.value.trim();
+        if (!content) return;
+        
+        await LocalDB.sendMessage(
+            currentUser,
+            this._currentChatFriend.id,
+            this._currentChatFriend.name,
+            this._currentChatFriend.avatar,
+            content
+        );
+        input.value = '';
+        this.loadChatMessages();
+    },
+    
     async likePostDetail(postId) {
         if (!currentUser) {
             showToast('请先登录', 'warning');
             return;
         }
         
+        const likeBtn = document.querySelector('#postDetailContent .action-btn-like');
+        const dislikeBtn = document.querySelector('#postDetailContent .action-btn-dislike');
         const likeCountEl = document.getElementById('detailLikeCount');
         const dislikeCountEl = document.getElementById('detailDislikeCount');
         const currentLikes = parseInt(likeCountEl.textContent);
@@ -2493,6 +3097,8 @@ const App = {
             // 已经点赞过，取消点赞
             const newLikes = Math.max(0, currentLikes - 1);
             likeCountEl.textContent = newLikes;
+            likeBtn.classList.remove('text-red-500');
+            likeBtn.querySelector('i').className = 'ri-heart-line text-lg';
             LocalDB.removeVote(postId, currentUser.id);
             LocalDB.updatePost(postId, { upvotes: newLikes });
             showToast('已取消点赞', 'info');
@@ -2509,10 +3115,14 @@ const App = {
             if (userVote && userVote.vote_type === 'dislike') {
                 newDislikes = Math.max(0, currentDislikes - 1);
                 dislikeCountEl.textContent = newDislikes;
+                dislikeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+                dislikeBtn.querySelector('i').className = 'ri-thumb-down-line text-lg';
                 LocalDB.updatePost(postId, { downvotes: newDislikes });
             }
             
             likeCountEl.textContent = newLikes;
+            likeBtn.classList.add('text-red-500');
+            likeBtn.querySelector('i').className = 'ri-heart-fill text-lg';
             LocalDB.addVote(postId, currentUser.id, 'like');
             LocalDB.updatePost(postId, { upvotes: newLikes, downvotes: newDislikes });
             showToast('点赞成功！', 'success');
@@ -2529,6 +3139,8 @@ const App = {
             return;
         }
         
+        const likeBtn = document.querySelector('#postDetailContent .action-btn-like');
+        const dislikeBtn = document.querySelector('#postDetailContent .action-btn-dislike');
         const likeCountEl = document.getElementById('detailLikeCount');
         const dislikeCountEl = document.getElementById('detailDislikeCount');
         const currentLikes = parseInt(likeCountEl.textContent);
@@ -2540,6 +3152,8 @@ const App = {
             // 已经踩过，取消踩
             const newDislikes = Math.max(0, currentDislikes - 1);
             dislikeCountEl.textContent = newDislikes;
+            dislikeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+            dislikeBtn.querySelector('i').className = 'ri-thumb-down-line text-lg';
             LocalDB.removeVote(postId, currentUser.id);
             LocalDB.updatePost(postId, { downvotes: newDislikes });
             showToast('已取消踩', 'info');
@@ -2556,10 +3170,14 @@ const App = {
             if (userVote && userVote.vote_type === 'like') {
                 newLikes = Math.max(0, currentLikes - 1);
                 likeCountEl.textContent = newLikes;
+                likeBtn.classList.remove('text-red-500');
+                likeBtn.querySelector('i').className = 'ri-heart-line text-lg';
                 LocalDB.updatePost(postId, { upvotes: newLikes });
             }
             
             dislikeCountEl.textContent = newDislikes;
+            dislikeBtn.classList.add('text-gray-600', 'dark:text-gray-400');
+            dislikeBtn.querySelector('i').className = 'ri-thumb-down-fill text-lg';
             LocalDB.addVote(postId, currentUser.id, 'dislike');
             LocalDB.updatePost(postId, { upvotes: newLikes, downvotes: newDislikes });
             showToast('踩了一下', 'info');
