@@ -3024,11 +3024,21 @@ const App = {
         document.getElementById('chatFriendAvatar').className = `w-10 h-10 rounded-xl ${getAvatarConfig(friendAvatar).bg} flex items-center justify-center flex-shrink-0 text-white`;
         document.getElementById('chatFriendAvatar').innerHTML = `<i class="${getAvatarConfig(friendAvatar).icon}"></i>`;
         this.loadChatMessages();
+        
+        // 设置定时器，每2秒自动刷新消息
+        this._chatRefreshInterval = setInterval(() => {
+            this.loadChatMessages();
+        }, 2000);
     },
 
     closeChat() {
         document.getElementById('chatPage').classList.add('hidden');
         this._currentChatFriend = null;
+        // 清除定时器
+        if (this._chatRefreshInterval) {
+            clearInterval(this._chatRefreshInterval);
+            this._chatRefreshInterval = null;
+        }
     },
 
     async loadChatMessages() {
