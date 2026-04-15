@@ -12,6 +12,7 @@ class SupabaseClient {
     constructor(url, key) {
         this.url = url;
         this.key = key;
+        this.isConnected = true;
         this.headers = {
             'apikey': key,
             'Authorization': `Bearer ${key}`,
@@ -127,7 +128,7 @@ const LocalDB = {
                 localStorage.setItem('campus_votes', JSON.stringify(cloudVotes));
             }
         } catch (e) {
-            console.warn('同步本地数据失败:', e);
+            
         }
     },
     
@@ -528,34 +529,122 @@ const LocalDB = {
     
     // 获取未读消息数量
     async getUnreadCount(userId) {
-        if (!supabaseClient || !supabaseClient.isConnected) return 0;
+        
+        if (!supabaseClient || !supabaseClient.isConnected) {
+            
+            return 0;
+        }
         
         try {
             // 获取与我相关的消息中，对方发送的且我未读的
-            const { data: messages } = await supabaseClient
+            const { data: messages, error } = await supabaseClient
                 .from('messages')
                 .select('id, is_read, to_id')
                 .eq('to_id', userId)
                 .eq('is_read', false);
             
+            
             return messages ? messages.length : 0;
         } catch (e) {
+            
+            return 0;
+        }
+    },
+    
+    // 获取指定好友的未读消息数量
+    async getUnreadCountFromFriend(userId, friendId) {
+        if (!supabaseClient || !supabaseClient.isConnected) return 0;
+        
+        try {
+            // 先获取所有消息，再在客户端过滤
+            const { data: messages, error } = await supabaseClient
+                .from('messages')
+                .select('*')
+                .eq('to_id', userId);
+            
+            if (error) {
+                
+                return 0;
+            }
+            
+            // 在内存中过滤
+            const unread = messages ? messages.filter(m => 
+                m.from_id === friendId && m.is_read === false
+            ) : [];
+            
+            
+            return unread.length;
+        } catch (e) {
+            
             return 0;
         }
     },
     
     // 标记消息为已读
-    async markMessagesRead(userId) {
+    async markMessagesRead(userId, friendId = null) {
         if (!supabaseClient || !supabaseClient.isConnected) return;
         
         try {
-            await supabaseClient
+            // 获取所有发给该用户的消息
+            const { data: messages } = await supabaseClient
                 .from('messages')
-                .update({ is_read: true })
+                .select('id, from_id')
                 .eq('to_id', userId)
                 .eq('is_read', false);
+            
+            if (messages && messages.length > 0) {
+                // 过滤出与指定好友的消息（如果有）
+                const toMark = friendId 
+                    ? messages.filter(m => m.from_id === friendId)
+                    : messages;
+                
+                // 逐个更新
+                for (const msg of toMark) {
+                    await supabaseClient
+                        .from('messages')
+                        .update({ is_read: true })
+                        .eq('id', msg.id);
+                }
+                
+                
+            }
         } catch (e) {
-            console.error('标记消息已读失败', e);
+            
+        }
+    },
+    
+    // 获取与某好友的最后一条消息
+    async getLastMessage(userId, friendId) {
+        if (!supabaseClient || !supabaseClient.isConnected) return null;
+        
+        try {
+            const { data: messages } = await supabaseClient
+                .from('messages')
+                .select('*')
+                .or(`and(from_id.eq.${userId},to_id.eq.${friendId}),and(from_id.eq.${friendId},to_id.eq.${userId})`)
+                .order('created_at', { ascending: false })
+                .limit(1);
+            
+            return messages && messages.length > 0 ? messages[0] : null;
+        } catch (e) {
+            return null;
+        }
+    },
+    
+    // 获取所有用户
+    async getAllUsers() {
+        if (!supabaseClient || !supabaseClient.isConnected) return [];
+        
+        try {
+            const { data: users } = await supabaseClient
+                .from('user_profiles')
+                .select('id, anonymous_name, avatar, is_active')
+                .eq('is_active', true)
+                .order('anonymous_name', { ascending: true });
+            
+            return users || [];
+        } catch (e) {
+            return [];
         }
     },
     
@@ -863,22 +952,25 @@ async function initSupabase() {
         if (window.supabase) {
             const { createClient } = window.supabase;
             supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabaseClient.isConnected = true;
             
             const { error } = await supabaseClient.from('posts').select('id').limit(1);
             if (error) {
-                console.warn('Supabase REST API 警告:', error);
+                
             }
         } else {
             // 如果 SDK 未加载，使用简化的 REST API
             supabaseClient = new SupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabaseClient.isConnected = true;
         }
         
-        console.log('Supabase初始化完成');
+        
         return true;
     } catch (err) {
-        console.error('Supabase初始化失败:', err);
+        
         // 使用本地存储作为后备
         supabaseClient = new SupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        supabaseClient.isConnected = true;
         showToast('数据库连接异常，已切换到本地模式', 'warning');
         return true;
     }
@@ -915,7 +1007,7 @@ async function login() {
             profile = data;
         }
     } catch (e) {
-        console.warn('云端登录失败，检查本地存储:', e);
+        
     }
     
     // 云端失败，检查本地存储
@@ -1040,7 +1132,7 @@ async function register() {
             }
         } catch (e) {
             // 云端插入失败，使用本地存储
-            console.warn('云端注册失败，使用本地存储:', e);
+            
             newUser = LocalDB.addUser(userData);
         }
         
@@ -1051,7 +1143,7 @@ async function register() {
         
     } catch (err) {
         hideLoading();
-        console.error('注册错误:', err);
+        
         // 本地注册作为最终后备
         const localUsers = LocalDB.getUsers();
         if (localUsers.find(u => u.username === username)) {
@@ -1106,7 +1198,7 @@ async function checkAuthStatus() {
                     return true;
                 }
             } catch (e) {
-                console.warn('云端获取用户失败，使用本地缓存');
+                
             }
             
             // 云端失败，使用本地缓存的用户数据
@@ -1122,7 +1214,7 @@ async function checkAuthStatus() {
             return true;
             
         } catch (err) {
-            console.error('检查登录状态失败:', err);
+            
         }
     }
     
@@ -1218,7 +1310,7 @@ async function loadPosts(reset = true) {
         
     } catch (err) {
         document.getElementById('skeletonLoader').classList.add('hidden');
-        console.error('加载帖子失败:', err);
+        
         // 云端失败时清空本地并显示空状态
         localStorage.setItem('campus_posts', JSON.stringify([]));
         document.getElementById('emptyState').classList.remove('hidden');
@@ -1373,7 +1465,7 @@ async function createPost() {
                 newPost = data;
             }
         } catch (e) {
-            console.warn('云端存储失败，使用本地存储:', e);
+            
         }
         
         // 如果云端失败，保存到本地
@@ -1406,7 +1498,7 @@ async function createPost() {
     } catch (err) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="ri-send-plane-line mr-2"></i>发布帖子';
-        console.error('发布失败:', err);
+        
         showToast('发布失败，请重试', 'error');
     }
 }
@@ -1421,7 +1513,7 @@ async function deletePost(postId) {
                 .eq('id', postId)
                 .eq('user_id', currentUser.id);
         } catch (e) {
-            console.warn('云端删除失败，使用本地删除');
+            
         }
         
         // 始终删除本地数据
@@ -1440,7 +1532,7 @@ async function deletePost(postId) {
         }
         
     } catch (err) {
-        console.error('删除失败:', err);
+        
         showToast('删除失败，请重试', 'error');
     }
 }
@@ -1584,7 +1676,7 @@ async function viewPostDetail(postId) {
             post = data;
         }
     } catch (e) {
-        console.warn('云端获取帖子失败');
+        
     }
     
     // 如果云端帖子获取失败，使用本地帖子
@@ -1807,10 +1899,10 @@ async function submitComment() {
             .from('comments')
             .insert(commentData);
         if (error) {
-            console.warn('云端评论失败:', error);
+            
         }
     } catch (e) {
-        console.warn('云端评论失败，使用本地存储');
+        
     }
     
     // 始终保存到本地
@@ -1838,14 +1930,14 @@ async function submitComment() {
             try {
                 await supabaseClient.from('notifications').insert(notification);
             } catch (e) {
-                console.warn('云端通知保存失败');
+                
             }
             
             // 保存到本地
             LocalDB.addNotification(notification);
         }
     } catch (e) {
-        console.warn('获取帖子信息失败:', e);
+        
     }
     
     // 更新用户评论计数
@@ -1902,7 +1994,7 @@ async function deleteComment(commentId) {
                 .eq('id', commentId)
                 .eq('user_id', currentUser.id);
         } catch (e) {
-            console.warn('云端删除失败，使用本地删除');
+            
         }
         
         // 始终删除本地
@@ -1930,7 +2022,7 @@ async function deleteComment(commentId) {
         }
         
     } catch (err) {
-        console.error('删除评论失败:', err);
+        
         showToast('删除失败，请重试', 'error');
     }
 }
@@ -1975,7 +2067,7 @@ async function updateUnreadBadge() {
             }
         }
     } catch (err) {
-        console.warn('检查未读通知失败:', err);
+        
     }
 }
 
@@ -2026,7 +2118,7 @@ async function loadMyPosts() {
         }).join('');
         
     } catch (err) {
-        console.error('加载我的帖子失败:', err);
+        
     }
 }
 
@@ -2073,7 +2165,7 @@ async function loadMyComments() {
         }).join('');
         
     } catch (err) {
-        console.error('加载我的评论失败:', err);
+        
     }
 }
 
@@ -2093,7 +2185,7 @@ async function deleteMyComment(commentId) {
                 .eq('id', commentId)
                 .eq('user_id', currentUser.id);
         } catch (e) {
-            console.warn('云端删除失败');
+            
         }
         
         // 删除本地
@@ -2104,7 +2196,7 @@ async function deleteMyComment(commentId) {
         loadMyPosts(); // 刷新我的发布（评论数可能变化）
         
     } catch (err) {
-        console.error('删除评论失败:', err);
+        
         showToast('删除失败', 'error');
     }
 }
@@ -2152,7 +2244,7 @@ async function loadMyFavorites() {
         }).join('');
         
     } catch (err) {
-        console.error('加载我的收藏失败:', err);
+        
     }
 }
 
@@ -2202,7 +2294,7 @@ async function loadNotifications() {
         `).join('');
         
     } catch (err) {
-        console.error('加载通知失败:', err);
+        
     }
 }
 
@@ -2221,7 +2313,7 @@ async function markAllRead() {
         showToast('已标记全部已读', 'success');
         
     } catch (err) {
-        console.error('标记已读失败:', err);
+        
     }
 }
 
@@ -2293,7 +2385,7 @@ async function submitReport() {
         showToast('举报已提交，系统将自动处理', 'success');
         
     } catch (err) {
-        console.error('举报失败:', err);
+        
         showToast('举报失败，请重试', 'error');
     }
 }
@@ -2347,7 +2439,7 @@ async function saveNickname() {
         showToast('昵称修改成功', 'success');
         
     } catch (err) {
-        console.error('修改昵称失败:', err);
+        
         showToast('修改失败，请重试', 'error');
     }
 }
@@ -2391,7 +2483,7 @@ async function toggleFavorite(postId) {
         }
         
     } catch (err) {
-        console.error('收藏操作失败:', err);
+        
     }
 }
 
@@ -2402,7 +2494,7 @@ async function removeFavorite(favoriteId) {
         loadMyFavorites();
         
     } catch (err) {
-        console.error('取消收藏失败:', err);
+        
     }
 }
 
@@ -2510,7 +2602,7 @@ const App = {
                 user_name: feedback.user_name,
                 created_at: feedback.created_at
             }).then(({ error }) => {
-                if (error) console.warn('云端反馈保存失败:', error);
+                if (error) {};
             });
         }
         
@@ -2588,12 +2680,17 @@ const App = {
         if (!currentUser) return;
         
         const count = await LocalDB.getUnreadCount(currentUser.id);
+        
         const badge = document.getElementById('friendUnreadBadge');
+        
         if (badge) {
+            
             if (count > 0) {
                 badge.classList.remove('hidden');
+                
             } else {
                 badge.classList.add('hidden');
+                
             }
         }
     },
@@ -2911,11 +3008,10 @@ const App = {
         loginTip.classList.add('hidden');
         tabs.classList.remove('hidden');
         
-        // 标记消息为已读，隐藏红点
-        if (currentUser) {
-            LocalDB.markMessagesRead(currentUser.id);
-            document.getElementById('friendUnreadBadge').classList.add('hidden');
-        }
+        // 不要在这里标记已读，只显示当前未读状态
+        // 只有进入聊天界面时才标记与该好友的消息已读
+        // 检查未读状态
+        this.checkUnreadMessages();
         
         // 默认显示申请列表
         this.switchFriendsTab('requests');
@@ -2924,31 +3020,37 @@ const App = {
     switchFriendsTab(tab) {
         const tabRequests = document.getElementById('friendsTabRequests');
         const tabList = document.getElementById('friendsTabList');
+        const tabUsers = document.getElementById('friendsTabUsers');
         const requestsContainer = document.getElementById('friendsRequestsContainer');
         const listContainer = document.getElementById('friendsListContainer');
+        const usersContainer = document.getElementById('friendsUsersContainer');
         const requestsEmpty = document.getElementById('friendsRequestsEmpty');
         const listEmpty = document.getElementById('friendsEmpty');
         
+        // 重置所有标签样式
+        tabRequests.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap';
+        tabList.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap';
+        tabUsers.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap';
+        
+        // 隐藏所有容器
+        requestsContainer.classList.add('hidden');
+        listContainer.classList.add('hidden');
+        usersContainer.classList.add('hidden');
+        requestsEmpty.classList.add('hidden');
+        listEmpty.classList.add('hidden');
+        
         if (tab === 'requests') {
-            tabRequests.className = 'px-4 py-2 rounded-full text-sm font-medium primary-btn';
-            tabList.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap';
-            
+            tabRequests.className = 'px-4 py-2 rounded-full text-sm font-medium primary-btn whitespace-nowrap';
             requestsContainer.classList.remove('hidden');
-            listContainer.classList.add('hidden');
-            listEmpty.classList.add('hidden');
-            
-            // 加载申请列表（云端）
             this.loadFriendRequests();
-        } else {
-            tabList.className = 'px-4 py-2 rounded-full text-sm font-medium primary-btn';
-            tabRequests.className = 'px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap';
-            
+        } else if (tab === 'list') {
+            tabList.className = 'px-4 py-2 rounded-full text-sm font-medium primary-btn whitespace-nowrap';
             listContainer.classList.remove('hidden');
-            requestsContainer.classList.add('hidden');
-            requestsEmpty.classList.add('hidden');
-            
-            // 加载好友列表（云端）
             this.loadFriendsList();
+        } else if (tab === 'users') {
+            tabUsers.className = 'px-4 py-2 rounded-full text-sm font-medium primary-btn whitespace-nowrap';
+            usersContainer.classList.remove('hidden');
+            this.loadAllUsers();
         }
     },
     
@@ -2978,15 +3080,29 @@ const App = {
         
         try {
             const friends = await LocalDB.getFriends(currentUser.id);
+            
+            
             if (!friends || friends.length === 0) {
                 listEmpty.classList.remove('hidden');
                 listContainer.classList.add('hidden');
             } else {
                 listEmpty.classList.add('hidden');
                 listContainer.classList.remove('hidden');
-                this.renderFriendsList(friends);
+                
+                // 获取每个好友的未读消息数量
+                const unreadCounts = {};
+                for (const friend of friends) {
+                    const count = await LocalDB.getUnreadCountFromFriend(currentUser.id, friend.friend_id);
+                    
+                    if (count > 0) {
+                        unreadCounts[friend.friend_id] = count;
+                    }
+                }
+                
+                await this.renderFriendsList(friends, unreadCounts);
             }
         } catch (e) {
+            
             listEmpty.classList.remove('hidden');
             listContainer.classList.add('hidden');
         }
@@ -2994,7 +3110,17 @@ const App = {
     
     renderFriendRequests(requests) {
         const container = document.getElementById('friendsRequestsContainer');
+        const badge = document.getElementById('friendRequestBadge');
         container.innerHTML = '';
+        
+        // 显示/隐藏申请标签红点
+        if (badge) {
+            if (requests && requests.length > 0) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
         
         requests.forEach(request => {
             const card = document.createElement('div');
@@ -3023,26 +3149,106 @@ const App = {
         });
     },
     
-    renderFriendsList(friends) {
+    async renderFriendsList(friends, unreadCounts = {}) {
         const container = document.getElementById('friendsListContainer');
         container.innerHTML = '';
         
-        friends.forEach(friend => {
+        // 获取每个好友的最后一条消息
+        for (const friend of friends) {
+            const lastMsg = await LocalDB.getLastMessage(currentUser.id, friend.friend_id);
+            const unreadCount = unreadCounts[friend.friend_id] || 0;
+            
+            const card = document.createElement('div');
+            card.className = 'card rounded-2xl p-4 flex items-center gap-3 relative cursor-pointer';
+            card.onclick = () => App.showChat(friend.friend_id, friend.friend_name, friend.friend_avatar);
+            
+            card.innerHTML = `
+                <div class="relative">
+                    <div class="w-12 h-12 rounded-xl ${getAvatarConfig(friend.friend_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                        <i class="${getAvatarConfig(friend.friend_avatar).icon}"></i>
+                    </div>
+                    ${unreadCount > 0 ? `<span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>` : ''}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between mb-1">
+                        <h4 class="font-medium form-label truncate">${escapeHtml(friend.friend_name)}</h4>
+                        ${lastMsg ? `<span class="text-xs form-hint">${formatTimeAgo(lastMsg.created_at)}</span>` : ''}
+                    </div>
+                    <p class="text-sm form-hint truncate">
+                        ${lastMsg ? (lastMsg.from_id === currentUser.id ? '我: ' : '') + escapeHtml(lastMsg.content || '') : '暂无消息'}
+                        ${unreadCount > 0 ? `<span class="ml-1 px-1.5 py-0.5 bg-red-500 text-white text-xs rounded-full">${unreadCount}条新消息</span>` : ''}
+                    </p>
+                </div>
+                <button onclick="event.stopPropagation(); App.removeFriend('${friend.friend_id}')" class="p-2 rounded-lg hover:bg-red-500/10 text-red-500 transition-all" title="删除好友">
+                    <i class="ri-user-unfollow-line"></i>
+                </button>
+            `;
+            container.appendChild(card);
+        }
+    },
+    
+    async loadAllUsers() {
+        const container = document.getElementById('friendsUsersContainer');
+        container.innerHTML = '<div class="text-center py-4 form-hint">加载中...</div>';
+        
+        try {
+            const users = await LocalDB.getAllUsers();
+            const friends = await LocalDB.getFriends(currentUser.id);
+            const requests = await LocalDB.getFriendRequests(currentUser.id);
+            
+            // 过滤掉自己、已是好朋友的、已发送申请的
+            const friendIds = new Set(friends.map(f => f.friend_id));
+            const requestFromMe = new Set(requests.filter(r => r.from_id === currentUser.id).map(r => r.to_id));
+            
+            const availableUsers = users.filter(u => 
+                u.id !== currentUser.id && 
+                !friendIds.has(u.id) && 
+                !requestFromMe.has(u.id)
+            );
+            
+            if (availableUsers.length === 0) {
+                container.innerHTML = `
+                    <div class="card rounded-2xl p-8 text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                            <i class="ri-user-search-line text-3xl primary-text"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 form-label">暂无可添加的用户</h3>
+                        <p class="text-sm form-hint">暂时没有其他用户可以添加</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 按匿名名称排序
+            availableUsers.sort((a, b) => {
+                const nameA = (a.anonymous_name || '').toLowerCase();
+                const nameB = (b.anonymous_name || '').toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
+            
+            this.renderAllUsers(availableUsers);
+        } catch (e) {
+            container.innerHTML = '<div class="text-center py-4 form-hint">加载失败</div>';
+        }
+    },
+    
+    renderAllUsers(users) {
+        const container = document.getElementById('friendsUsersContainer');
+        container.innerHTML = '';
+        
+        users.forEach(user => {
             const card = document.createElement('div');
             card.className = 'card rounded-2xl p-4 flex items-center gap-3';
             card.innerHTML = `
-                <div class="w-12 h-12 rounded-xl ${getAvatarConfig(friend.friend_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                    <i class="${getAvatarConfig(friend.friend_avatar).icon}"></i>
+                <div class="w-12 h-12 rounded-xl ${getAvatarConfig(user.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                    <i class="${getAvatarConfig(user.avatar).icon}"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h4 class="font-medium form-label truncate">${escapeHtml(friend.friend_name)}</h4>
-                    <p class="text-xs form-hint">ID: ${friend.friend_id.slice(0, 8)}...</p>
+                    <h4 class="font-medium form-label truncate">${escapeHtml(user.anonymous_name || '匿名用户')}</h4>
+                    <p class="text-xs form-hint">ID: ${user.id.slice(0, 8)}...</p>
                 </div>
-                <button onclick="App.showChat('${friend.friend_id}', '${escapeHtml(friend.friend_name)}', '${friend.friend_avatar}')" class="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all" title="聊天">
-                    <i class="ri-message-3-line"></i>
-                </button>
-                <button onclick="App.removeFriend('${friend.friend_id}')" class="p-2 rounded-lg hover:bg-red-500/10 text-red-500 transition-all" title="删除好友">
-                    <i class="ri-user-unfollow-line"></i>
+                <button onclick="App.sendFriendRequest('${user.id}', '${escapeHtml(user.anonymous_name)}', ${user.avatar || 0})" class="py-2 px-4 primary-btn rounded-xl text-sm transition-all">
+                    加好友
                 </button>
             `;
             container.appendChild(card);
@@ -3099,7 +3305,53 @@ const App = {
         this._friendRequestTarget = null;
     },
     
-    async sendFriendRequest() {
+    async sendFriendRequest(userId, userName, userAvatar) {
+        if (!currentUser) {
+            showToast('请先登录', 'warning');
+            return;
+        }
+        
+        const result = await LocalDB.sendFriendRequest(
+            currentUser,
+            userId,
+            userName,
+            userAvatar || 0,
+            ''
+        );
+        
+        if (result.success) {
+            showToast('好友申请已发送', 'success');
+            // 重新加载用户列表
+            this.loadAllUsers();
+        } else {
+            showToast(result.message, 'warning');
+        }
+    },
+    
+    async sendFriendRequestFromModal() {
+        if (!currentUser || !this._friendRequestTarget) {
+            showToast('发送失败', 'error');
+            return;
+        }
+        
+        const message = document.getElementById('friendRequestMessage').value.trim();
+        const result = await LocalDB.sendFriendRequest(
+            currentUser,
+            this._friendRequestTarget.id,
+            this._friendRequestTarget.name,
+            this._friendRequestTarget.avatar,
+            message
+        );
+        
+        if (result.success) {
+            showToast('好友申请已发送', 'success');
+            this.closeFriendRequestModal();
+        } else {
+            showToast(result.message, 'warning');
+        }
+    },
+    
+    async sendFriendRequestWithMessage() {
         if (!currentUser || !this._friendRequestTarget) {
             showToast('发送失败', 'error');
             return;
@@ -3152,8 +3404,10 @@ const App = {
         
         // 标记与该好友的消息为已读
         if (currentUser) {
-            LocalDB.markMessagesRead(currentUser.id);
+            LocalDB.markMessagesRead(currentUser.id, friendId);
             document.getElementById('friendUnreadBadge').classList.add('hidden');
+            // 重新加载好友列表，更新头像红点
+            this.loadFriendsList();
         }
         
         // 设置定时器，每2秒自动刷新消息
