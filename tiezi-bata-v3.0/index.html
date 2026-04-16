@@ -138,7 +138,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium auth-label mb-2">设置用户名</label>
-                            <input type="text" id="registerUsername" placeholder="3-20位字母数字" 
+                            <input type="text" id="registerUsername" placeholder="2-20位中文、字母、数字、下划线" 
                                 class="auth-input w-full px-4 py-3 rounded-xl focus:outline-none transition-all">
                         </div>
                         <div>
@@ -153,7 +153,7 @@
                         </div>
                         <div class="warning-box rounded-xl p-4">
                             <p class="text-xs warning-text leading-relaxed">
-                                <i class="ri-shield-check-line mr-1"></i>请遵守社区规则，文明发言。每日发帖上限为5条，评论上限为10条。
+                                <i class="ri-shield-check-line mr-1"></i>请遵守社区规则，文明发言。每日发帖上限为10条，评论上限为15条。
                             </p>
                         </div>
                         <button onclick="App.register()" class="w-full py-3.5 love-btn rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
@@ -214,7 +214,7 @@
                     
                     <h4 class="font-semibold form-label mt-3">四、使用行为规则</h4>
                     <ul class="list-disc list-inside space-y-1">
-                        <li>每人每日发帖限 5 条、评论限 10 条，请勿恶意刷屏；</li>
+                        <li>每人每日发帖限 10 条、评论限 15 条，请勿恶意刷屏；</li>
                         <li>禁止使用外挂、脚本等工具批量操作平台；</li>
                         <li>禁止恶意踩帖、举报，干扰正常交流秩序；</li>
                         <li>未登录用户仅可浏览，登录后才可发帖、评论。</li>
@@ -684,70 +684,99 @@
         </div>
 
         <!-- ========== 设置页面 ========== -->
-        <div id="settingsPage" class="hidden min-h-screen pt-20 pb-8 px-4">
-            <div class="max-w-3xl mx-auto">
-                <!-- 顶部导航 -->
+        <div id="settingsPage" class="hidden min-h-screen pb-8 px-4" style="background: var(--bg-primary);">
+            <div class="max-w-3xl mx-auto pt-6">
+                <!-- 顶部标题 -->
                 <div class="flex items-center gap-4 mb-6">
-                    <button onclick="App.closeSettings()" class="p-2 rounded-lg nav-btn transition-all">
-                        <i class="ri-arrow-left-line text-xl"></i>
+                    <button onclick="App.goHome()" class="p-2 rounded-lg" style="background: var(--bg-secondary);">
+                        <i class="ri-arrow-left-line text-xl" style="color: var(--text-primary);"></i>
                     </button>
-                    <h2 class="text-xl font-bold page-title">设置</h2>
+                    <h2 class="text-xl font-bold" style="color: var(--text-primary);">设置</h2>
                 </div>
 
                 <!-- 设置表单 -->
                 <div class="card rounded-2xl p-6 mb-6">
-                    <h3 class="font-bold form-label mb-4 flex items-center gap-2">
-                        <i class="ri-user-settings-line text-primary"></i> 个人信息
+                    <h3 class="font-bold mb-4 flex items-center gap-2" style="color: var(--text-primary);">
+                        <i class="ri-user-settings-line" style="color: var(--primary);"></i> 个人信息
                     </h3>
                     
                     <!-- 用户名修改 -->
                     <div class="mb-4">
-                        <label class="block text-sm form-label mb-2">用户名</label>
-                        <input type="text" id="settingsUsername" class="w-full px-4 py-3 rounded-xl border transition-all form-input" placeholder="请输入新用户名" maxlength="20">
-                        <p class="text-xs form-hint mt-1">用户名长度3-20位，只能包含字母、数字、下划线</p>
+                        <label class="block text-sm mb-2" style="color: var(--text-secondary);">用户名</label>
+                        <input type="text" id="settingsUsername" class="w-full px-4 py-3 rounded-xl border transition-all" style="background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border-color);" placeholder="请输入新用户名" maxlength="20">
+                        <p class="text-xs mt-1" style="color: var(--text-hint);">用户名长度2-20位，支持中文、字母、数字、下划线</p>
                     </div>
                     
-                    <button onclick="App.saveUsername()" class="w-full py-3 primary-btn rounded-xl font-semibold transition-all flex items-center justify-center gap-2">
+                    <button onclick="App.saveUsername()" class="w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2" style="background: var(--primary); color: white;">
                         <i class="ri-save-line"></i>
                         <span>保存修改</span>
                     </button>
                 </div>
 
-                <!-- 账号信息 -->
-                <div class="card rounded-2xl p-6">
-                    <h3 class="font-bold form-label mb-4 flex items-center gap-2">
-                        <i class="ri-information-line text-secondary"></i> 账号信息
-                    </h3>
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                            <span class="form-hint">匿名昵称</span>
-                            <span id="settingsAnonymousName" class="form-label">-</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-700">
-                            <span class="form-hint">注册时间</span>
-                            <span id="settingsCreatedAt" class="form-label">-</span>
-                        </div>
-                        <div class="flex justify-between items-center py-2">
-                            <span class="form-hint">账号状态</span>
-                            <span id="settingsStatus" class="success-text">正常</span>
+                <!-- 外观设置 -->
+                <div class="card rounded-2xl overflow-hidden mb-6">
+                    <div class="px-4 py-3 border-b" style="border-color: var(--border-color);">
+                        <h3 class="font-medium flex items-center gap-2" style="color: var(--text-primary);">
+                            <i class="ri-palette-line"></i> 外观设置
+                        </h3>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-sm mb-3" style="color: var(--text-secondary);">选择主题模式</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="App.setTheme('system')" class="theme-btn p-3 rounded-xl border-2 text-center transition-all" data-theme="system" style="border-color: var(--border-color);">
+                                <i class="ri-computer-line text-xl mb-1" style="color: var(--text-primary);"></i>
+                                <p class="text-xs" style="color: var(--text-secondary);">跟随系统</p>
+                            </button>
+                            <button onclick="App.setTheme('light')" class="theme-btn p-3 rounded-xl border-2 text-center transition-all" data-theme="light" style="border-color: var(--border-color);">
+                                <i class="ri-sun-line text-xl mb-1" style="color: var(--text-primary);"></i>
+                                <p class="text-xs" style="color: var(--text-secondary);">浅色模式</p>
+                            </button>
+                            <button onclick="App.setTheme('dark')" class="theme-btn p-3 rounded-xl border-2 text-center transition-all" data-theme="dark" style="border-color: var(--border-color);">
+                                <i class="ri-moon-line text-xl mb-1" style="color: var(--text-primary);"></i>
+                                <p class="text-xs" style="color: var(--text-secondary);">深色模式</p>
+                            </button>
                         </div>
                     </div>
                 </div>
+
+                <!-- 关于 -->
+                <div class="card rounded-2xl overflow-hidden mb-6">
+                    <div class="px-4 py-3 border-b" style="border-color: var(--border-color);">
+                        <h3 class="font-medium flex items-center gap-2" style="color: var(--text-primary);">
+                            <i class="ri-information-line"></i> 关于
+                        </h3>
+                    </div>
+                    <div class="divide-y" style="border-color: var(--border-color);">
+                        <button onclick="App.showPage('rules')" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                            <span style="color: var(--text-secondary);">社区规则</span>
+                            <i class="ri-arrow-right-s-line" style="color: var(--text-hint);"></i>
+                        </button>
+                        <div class="px-4 py-3 flex items-center justify-between">
+                            <span style="color: var(--text-secondary);">版本</span>
+                            <span style="color: var(--text-hint);">v2.0.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 退出登录 -->
+                <button onclick="App.logout()" class="w-full py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2" style="background: rgba(239,68,68,0.1); color: #ef4444;">
+                    <i class="ri-logout-box-line"></i> 退出登录
+                </button>
             </div>
         </div>
 
         <!-- ========== 规则声明页 ========== -->
-        <div id="rulesPage" class="hidden min-h-screen pt-20 pb-8 px-4">
-            <div class="max-w-3xl mx-auto">
-                <!-- 顶部导航 -->
+        <div id="rulesPage" class="hidden min-h-screen pb-8 px-4" style="background: var(--bg-primary);">
+            <div class="max-w-3xl mx-auto pt-6">
+                <!-- 顶部标题 -->
                 <div class="flex items-center gap-4 mb-6">
-                    <button onclick="App.goHome()" class="p-2 rounded-lg nav-btn transition-all">
-                        <i class="ri-arrow-left-line text-xl"></i>
+                    <button onclick="App.closeSettings()" class="p-2 rounded-lg" style="background: var(--bg-secondary);">
+                        <i class="ri-arrow-left-line text-xl" style="color: var(--text-primary);"></i>
                     </button>
-                    <h2 class="text-xl font-bold page-title">社区规则</h2>
+                    <h2 class="text-xl font-bold" style="color: var(--text-primary);">社区规则</h2>
                 </div>
 
-                <div class="card rounded-2xl p-6 space-y-4 text-sm form-hint leading-relaxed">
+                <div class="card rounded-2xl p-6 space-y-4 text-sm leading-relaxed" style="color: var(--text-secondary);">
                     <h3 class="font-bold text-base text-center mb-4">校园论坛 & 表白墙 · 注意事项</h3>
                     
                     <h4 class="font-semibold form-label mt-3">一、平台说明</h4>
@@ -772,7 +801,7 @@
                     
                     <h4 class="font-semibold form-label mt-3">四、使用行为规则</h4>
                     <ul class="list-disc list-inside space-y-1">
-                        <li>每人每日发帖限 5 条、评论限 10 条，请勿恶意刷屏；</li>
+                        <li>每人每日发帖限 10 条、评论限 15 条，请勿恶意刷屏；</li>
                         <li>禁止使用外挂、脚本等工具批量操作平台；</li>
                         <li>禁止恶意踩帖、举报，干扰正常交流秩序；</li>
                         <li>未登录用户仅可浏览，登录后才可发帖、评论。</li>

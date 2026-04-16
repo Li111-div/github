@@ -697,8 +697,42 @@ const LocalDB = {
 
 // 关键词屏蔽列表
 const BLOCKED_KEYWORDS = [
-    '政治', '色情', '暴力', '赌博', '毒品', '诈骗',
-    '自杀', '杀人', '恐怖', '分裂', '反动', '习近平', '共产党'
+    // ========== 1. 辱骂、人身攻击、不文明用语 ==========
+    "傻逼", "傻屌", "沙雕", "妈卖批", "操你妈", "操你", "妈的", "尼玛", "尼妹",
+    "废物", "垃圾", "去死", "滚蛋", "脑残", "智障", "杂种", "混蛋", "贱人",
+    "人渣", "有病", "恶心", "不要脸", "滚粗", "刁毛", "叼毛", "二逼", "傻缺",
+    "憨批", "杠精", "圣母婊", "绿茶婊", "去死吧", "滚出去", "神经病", "缺德",
+    "臭狗屎", "王八蛋", "乌龟", "混蛋", "王八", "畜生", "禽兽", "龟儿子",
+    
+    // ========== 2. 低俗、不雅、色情擦边 ==========
+    "色情", "黄片", "黄色", "自慰", "做爱", "约炮", "嫖娼", "裸聊", "骚货",
+    "淫荡", "下体", "开房", "包夜", "约吗", "约一下", "私密", "露肉", "裸照",
+    "援交", "出台", "包养", "一夜情", "成人", "色情网站", "黄色网站",
+    
+    // ========== 3. 暴力、威胁、打架、霸凌 ==========
+    "杀人", "放火", "爆炸", "砍死", "打死", "弄死", "干死", "绑架", "威胁",
+    "报复", "殴打", "约架", "打架", "弄死你", "砍人", "揍你", "霸凌", "欺负人",
+    "炸死", "砍伤", "捅死", "勒死", "掐死", "剁死", "灭口", "干掉", "收拾你",
+    
+    // ========== 4. 毒品、赌博、诈骗、违规交易 ==========
+    "毒品", "海洛因", "冰毒", "大麻", "赌博", "博彩", "下注", "刷单", "贷款",
+    "套现", "传销", "诈骗", "中奖", "返利", "黑客", "破解", "外挂", "代考",
+    "替考", "作弊", "洗钱", "私彩", "赌球", "赌场", "赌资", "吸毒", "贩毒",
+    "时时彩", "双色球", "彩票", "澳门葡京", "永利",
+    
+    // ========== 5. 广告、引流、联系方式（防垃圾帖） ==========
+    "加微信", "加QQ", "私聊我", "联系方式", "电话", "微信", "QQ号", "群聊",
+    "推广", "代理", "赚钱", "兼职", "扫码", "二维码", "加我", "私信", "私信我",
+    "领福利", "免费领", "点我", "看主页", "网址", "网站", "链接", "加群",
+    "找我", "联系我", "+v", "vx", "扣我", "q我",
+    
+    // ========== 6. 校园违规、违纪行为 ==========
+    "逃课", "旷课", "代签", "翻墙", "违纪", "处分", "替课", "替跑", "抄作业",
+    "卖答案", "买答案", "作弊器", "夜不归宿", "翻墙外出", "替考作弊", "代考",
+    
+    // ========== 7. 引战、引骂、恶意言论 ==========
+    "地域黑", "歧视", "滚出", "垃圾学校", "垃圾老师", "地域歧视", "种族歧视",
+    "骂人", "互骂", "开骂", "对骂", "骂死", "骂你", "问候", "祖宗", "全家"
 ];
 
 // 板块配置
@@ -912,7 +946,8 @@ function formatTimeAgo(dateString) {
 
 function containsBlockedKeywords(content) {
     const lowerContent = content.toLowerCase();
-    return BLOCKED_KEYWORDS.some(keyword => lowerContent.includes(keyword));
+    const found = BLOCKED_KEYWORDS.find(keyword => lowerContent.includes(keyword));
+    return found || null;
 }
 
 function escapeHtml(text) {
@@ -1059,13 +1094,14 @@ async function register() {
         return;
     }
     
-    if (username.length < 3 || username.length > 20) {
-        showToast('用户名需3-20位', 'warning');
+    if (username.length < 2 || username.length > 20) {
+        showToast('用户名需2-20位', 'warning');
         return;
     }
     
-    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-        showToast('用户名只能包含字母、数字、下划线', 'warning');
+    // 允许中英文、数字、下划线
+    if (!/^[\u4e00-\u9fa5a-zA-Z0-9_]+$/.test(username)) {
+        showToast('用户名只能包含中文、字母、数字、下划线', 'warning');
         return;
     }
     
@@ -1393,8 +1429,13 @@ async function createPost() {
         return;
     }
     
-    // 测试阶段不限制发帖数量，但保留计数用于显示
     const today = getTodayDate();
+    
+    // 检查每日发帖限制
+    if (currentUser.last_post_date === today && currentUser.today_post_count >= 10) {
+        showToast('今日发帖已达上限（10条），请明天再来', 'warning');
+        return;
+    }
     
     const title = document.getElementById('postTitle').value.trim();
     const content = document.getElementById('postContent').value.trim();
@@ -1405,7 +1446,7 @@ async function createPost() {
     }
     
     if (containsBlockedKeywords(title + content)) {
-        showToast('内容包含敏感词，请修改', 'error');
+        showToast('内容包含违规词汇，请修改后重试', 'error');
         return;
     }
     
@@ -1837,8 +1878,13 @@ async function submitComment() {
         return;
     }
     
-    // 测试阶段不限制评论数量
     const today = getTodayDate();
+    
+    // 检查每日评论限制
+    if (currentUser.last_comment_date === today && currentUser.today_comment_count >= 15) {
+        showToast('今日评论已达上限（15条），请明天再来', 'warning');
+        return;
+    }
     
     const content = document.getElementById('commentContent').value.trim();
     
@@ -1848,7 +1894,7 @@ async function submitComment() {
     }
     
     if (containsBlockedKeywords(content)) {
-        showToast('评论包含敏感词，请修改', 'error');
+        showToast('评论包含违规词汇，请修改后重试', 'error');
         return;
     }
     
@@ -2490,6 +2536,111 @@ async function removeFavorite(favoriteId) {
     }
 }
 
+// ==================== 每日自动清理 ====================
+let _autoCleanupInterval = null;
+let _lastCleanupDate = localStorage.getItem('campus_last_cleanup') || '';
+
+// 检查是否需要清理
+function checkAndCleanup() {
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    
+    // 检查是否已经清理过今天
+    if (_lastCleanupDate === currentDate) {
+        return false;
+    }
+    
+    // 检查是否到达凌晨0点（0:00 - 0:05之间）
+    if (currentHour === 0 && currentMinute < 5) {
+        return true;
+    }
+    
+    // 也可以设置为每天固定时间清理（比如每天早上6点）
+    // if (currentHour === 6 && currentMinute < 5) {
+    //     return true;
+    // }
+    
+    return false;
+}
+
+// 执行清理
+async function performDailyCleanup() {
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0];
+    
+    // 避免重复清理
+    if (_lastCleanupDate === currentDate) {
+        return false;
+    }
+    
+    console.log('[清理] 开始执行每日清理...');
+    
+    try {
+        // 1. 清理云端数据
+        // 删除所有评论
+        await supabaseClient
+            .from('comments')
+            .delete()
+            .filters([]);
+        
+        // 删除所有帖子
+        await supabaseClient
+            .from('posts')
+            .delete()
+            .filters([]);
+        
+        // 2. 清理本地数据
+        localStorage.removeItem('campus_posts');
+        localStorage.removeItem('campus_comments');
+        
+        // 清理点赞记录
+        localStorage.removeItem('campus_votes');
+        
+        // 清理收藏记录
+        localStorage.removeItem('campus_favorites');
+        
+        // 记录最后清理时间
+        localStorage.setItem('campus_last_cleanup', currentDate);
+        _lastCleanupDate = currentDate;
+        
+        console.log('[清理] 每日清理完成');
+        
+        // 如果用户在首页，刷新帖子列表
+        if (currentPage === 'home') {
+            loadPosts(true);
+            showToast('每日清理完成，所有旧数据已删除', 'info');
+        }
+        
+        return true;
+    } catch (e) {
+        console.log('[清理] 清理失败:', e.message);
+        return false;
+    }
+}
+
+// 启动自动清理检查
+function startAutoCleanup() {
+    // 先检查是否需要立即清理（比如页面在0点后才打开）
+    if (checkAndCleanup()) {
+        performDailyCleanup();
+    }
+    
+    // 每分钟检查一次
+    if (_autoCleanupInterval) {
+        clearInterval(_autoCleanupInterval);
+    }
+    
+    _autoCleanupInterval = setInterval(() => {
+        if (checkAndCleanup()) {
+            performDailyCleanup();
+        }
+    }, 60000); // 每分钟检查一次
+    
+    console.log('[清理] 自动清理已启动');
+}
+
 // ==================== 应用主类 ====================
 const App = {
     async init() {
@@ -2499,6 +2650,9 @@ const App = {
         if (!connected) {
             showToast('数据库连接失败，请刷新重试', 'error');
         }
+        
+        // 启动每日自动清理
+        startAutoCleanup();
         
         // 初始化时同步本地数据与云端
         LocalDB.syncLocalData();
@@ -2565,6 +2719,11 @@ const App = {
         
         if (!content) {
             showToast('请输入问题描述', 'warning');
+            return;
+        }
+        
+        if (containsBlockedKeywords(content)) {
+            showToast('反馈内容包含违规词汇，请修改后重试', 'error');
             return;
         }
         
@@ -2718,15 +2877,27 @@ const App = {
             document.getElementById(id)?.classList.add('hidden');
         });
         
-
-        // 导航栏显示的页面（聊天和设置不显示）
+        // 顶部导航栏和底部导航栏的显示控制
         const navPages = ['home', 'friends', 'createPost', 'feedback', 'profile'];
-        const nav = document.getElementById('bottomNav');
-        if (nav) {
-            if (navPages.includes(page)) {
-                nav.classList.remove('hidden');
+        const topNav = document.getElementById('navbar');
+        const bottomNav = document.getElementById('bottomNav');
+        
+        // 设置页面、规则页面等不显示顶部导航栏
+        const noTopNavPages = ['settings', 'rules', 'feedback'];
+        
+        if (topNav) {
+            if (noTopNavPages.includes(page)) {
+                topNav.classList.add('hidden');
             } else {
-                nav.classList.add('hidden');
+                topNav.classList.remove('hidden');
+            }
+        }
+        
+        if (bottomNav) {
+            if (navPages.includes(page)) {
+                bottomNav.classList.remove('hidden');
+            } else {
+                bottomNav.classList.add('hidden');
             }
         }
 
@@ -2770,15 +2941,30 @@ const App = {
                 break;
             case 'settings':
                 document.getElementById('settingsPage').classList.remove('hidden');
+                // 隐藏顶部和底部导航栏
+                const navSettings = document.getElementById('navbar');
+                if (navSettings) navSettings.classList.add('hidden');
+                const bottomSettings = document.getElementById('bottomNav');
+                if (bottomSettings) bottomSettings.classList.add('hidden');
                 break;
             case 'rules':
                 document.getElementById('rulesPage').classList.remove('hidden');
+                // 隐藏顶部和底部导航栏
+                const navRules = document.getElementById('navbar');
+                if (navRules) navRules.classList.add('hidden');
+                const bottomRules = document.getElementById('bottomNav');
+                if (bottomRules) bottomRules.classList.add('hidden');
                 break;
             case 'feedback':
                 document.getElementById('feedbackPage').classList.remove('hidden');
                 document.getElementById('feedbackContent').value = '';
                 document.getElementById('feedbackContact').value = '';
                 document.getElementById('feedbackCount').textContent = '0';
+                // 隐藏顶部和底部导航栏
+                const topNavF = document.getElementById('navbar');
+                if (topNavF) topNavF.classList.add('hidden');
+                const bottomNavF = document.getElementById('bottomNav');
+                if (bottomNavF) bottomNavF.classList.add('hidden');
                 break;
             case 'friends':
                 this.showFriendsPage();
@@ -2853,7 +3039,14 @@ const App = {
     },
     
     checkPostLimit() {
-        // 测试阶段不限制发帖数量
+        const today = getTodayDate();
+        const postsRemaining = currentUser.last_post_date === today 
+            ? Math.max(0, 10 - currentUser.today_post_count) 
+            : 10;
+        
+        if (postsRemaining <= 3) {
+            showToast(`今日发帖剩余 ${postsRemaining} 条`, 'warning');
+        }
     },
     
     loadMorePosts() {
@@ -2960,16 +3153,29 @@ const App = {
     showSettings() {
         document.getElementById('settingsPage').classList.remove('hidden');
         
+        // 隐藏顶部导航栏
+        const topNav = document.getElementById('navbar');
+        if (topNav) topNav.classList.add('hidden');
+        
+        // 隐藏底部导航栏
+        const bottomNav = document.getElementById('bottomNav');
+        if (bottomNav) bottomNav.classList.add('hidden');
+        
         if (currentUser) {
             document.getElementById('settingsUsername').value = currentUser.username || '';
-            document.getElementById('settingsAnonymousName').textContent = currentUser.anonymous_name || '-';
-            document.getElementById('settingsCreatedAt').textContent = currentUser.created_at ? formatTimeAgo(currentUser.created_at) : '-';
-            document.getElementById('settingsStatus').textContent = '正常';
-            document.getElementById('settingsStatus').className = 'success-text';
         }
     },
     closeSettings() {
+        // 隐藏设置页面
         document.getElementById('settingsPage').classList.add('hidden');
+        // 显示顶部导航栏
+        const topNav = document.getElementById('navbar');
+        if (topNav) topNav.classList.remove('hidden');
+        // 显示底部导航栏
+        const bottomNav = document.getElementById('bottomNav');
+        if (bottomNav) bottomNav.classList.remove('hidden');
+        // 刷新UI显示
+        App.updateUIForLoggedInUser();
     },
     async saveUsername() {
         if (!currentUser) {
@@ -2984,13 +3190,14 @@ const App = {
             return;
         }
         
-        if (newUsername.length < 3 || newUsername.length > 20) {
-            showToast('用户名需3-20位', 'warning');
+        if (newUsername.length < 2 || newUsername.length > 20) {
+            showToast('用户名需2-20位', 'warning');
             return;
         }
         
-        if (!/^[a-zA-Z0-9_]+$/.test(newUsername)) {
-            showToast('用户名只能包含字母、数字、下划线', 'warning');
+        // 允许中英文、数字、下划线
+        if (!/^[\u4e00-\u9fa5a-zA-Z0-9_]+$/.test(newUsername)) {
+            showToast('用户名只能包含中文、字母、数字、下划线', 'warning');
             return;
         }
         
@@ -3381,6 +3588,12 @@ const App = {
         }
         
         const message = document.getElementById('friendRequestMessage').value.trim();
+        
+        if (message && containsBlockedKeywords(message)) {
+            showToast('申请留言包含违规词汇，请修改后重试', 'error');
+            return;
+        }
+        
         const result = await LocalDB.sendFriendRequest(
             currentUser,
             this._friendRequestTarget.id,
@@ -3404,6 +3617,12 @@ const App = {
         }
         
         const message = document.getElementById('friendRequestMessage').value.trim();
+        
+        if (message && containsBlockedKeywords(message)) {
+            showToast('申请留言包含违规词汇，请修改后重试', 'error');
+            return;
+        }
+        
         const result = await LocalDB.sendFriendRequest(
             currentUser,
             this._friendRequestTarget.id,
@@ -3529,6 +3748,11 @@ const App = {
         const input = document.getElementById('chatInput');
         const content = input.value.trim();
         if (!content) return;
+        
+        if (containsBlockedKeywords(content)) {
+            showToast('消息包含违规词汇，请修改后重试', 'error');
+            return;
+        }
         
         await LocalDB.sendMessage(
             currentUser,
