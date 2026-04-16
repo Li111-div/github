@@ -3618,13 +3618,6 @@ const App = {
             return;
         }
         
-
-            from: currentUser.id,
-            to: this._friendRequestTarget.id,
-            name: this._friendRequestTarget.name,
-            avatar: this._friendRequestTarget.avatar
-        });
-        
         const result = await LocalDB.sendFriendRequest(
             currentUser,
             this._friendRequestTarget.id,
