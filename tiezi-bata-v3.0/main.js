@@ -116,20 +116,22 @@ const LocalDB = {
                 localStorage.setItem('campus_users', JSON.stringify(cloudUsers));
             }
             
-            // 同步收藏
-            const { data: cloudFavorites } = await supabaseClient.from('favorites').select('*');
-            if (cloudFavorites) {
-                localStorage.setItem('campus_favorites', JSON.stringify(cloudFavorites));
-            }
+            // 同步收藏（云端失败不影响本地）
+            try {
+                const { data: cloudFavorites } = await supabaseClient.from('favorites').select('*');
+                if (cloudFavorites && cloudFavorites.length > 0) {
+                    localStorage.setItem('campus_favorites', JSON.stringify(cloudFavorites));
+                }
+            } catch (e) { }
             
-            // 同步投票
-            const { data: cloudVotes } = await supabaseClient.from('campus_votes').select('*');
-            if (cloudVotes) {
-                localStorage.setItem('campus_votes', JSON.stringify(cloudVotes));
-            }
-        } catch (e) {
-            
-        }
+            // 同步投票（云端失败不影响本地）
+            try {
+                const { data: cloudVotes } = await supabaseClient.from('votes').select('*');
+                if (cloudVotes && cloudVotes.length > 0) {
+                    localStorage.setItem('campus_votes', JSON.stringify(cloudVotes));
+                }
+            } catch (e) { }
+        } catch (e) { }
     },
     
     // 初始化本地数据
@@ -1232,8 +1234,10 @@ async function loadPosts(reset = true) {
     document.getElementById('emptyState').classList.add('hidden');
     document.getElementById('loadMoreIndicator')?.classList.add('hidden');
     
+    let posts = [];
+    
+    // 尝试从云端获取
     try {
-        // 尝试从云端获取
         let query = supabaseClient
             .from('posts')
             .select('*')
@@ -1246,75 +1250,41 @@ async function loadPosts(reset = true) {
         if (currentSort === 'latest') {
             query = query.order('created_at', { ascending: false });
         } else {
-            // 最热排序：按 (点赞数 + 评论数) 降序
             query = query.order('upvotes', { ascending: false });
         }
         
-        const { data: cloudPosts, error } = await query;
+        const { data, error } = await query;
         
-        // 如果云端获取成功，用云端数据完全覆盖本地
-        if (!error && cloudPosts) {
-            localStorage.setItem('campus_posts', JSON.stringify(cloudPosts));
-            posts = cloudPosts;
-        } else if (cloudPosts && cloudPosts.length > 0) {
-            posts = cloudPosts;
+        if (!error && data && data.length > 0) {
+            posts = data;
+            localStorage.setItem('campus_posts', JSON.stringify(data));
         } else {
-            // 云端无数据，清空本地
-            localStorage.setItem('campus_posts', JSON.stringify([]));
-            posts = [];
+            // 云端无数据，使用本地
+            posts = LocalDB.getPosts();
         }
-        
-        document.getElementById('skeletonLoader').classList.add('hidden');
-        
-        if (!posts || posts.length === 0) {
-            if (reset) {
-                document.getElementById('emptyState').classList.remove('hidden');
-            }
-            return;
-        }
-        
-        document.getElementById('emptyState').classList.add('hidden');
-        
-        // 为每个帖子获取评论数（从云端获取）
-        for (let post of posts) {
-            try {
-                const { data: cloudComments } = await supabaseClient
-                    .from('comments')
-                    .select('id')
-                    .eq('post_id', post.id);
-                post.commentCount = cloudComments?.length || 0;
-            } catch (e) {
-                // 云端获取失败，使用本地评论数
-                const localComments = LocalDB.getComments(post.id);
-                post.commentCount = localComments.length;
-            }
-        }
-        
-        // 最热排序：按 (点赞数 + 评论数) 降序
-        if (currentSort === 'hot') {
-            posts.sort((a, b) => {
-                const hotA = (a.upvotes || 0) + (a.commentCount || 0);
-                const hotB = (b.upvotes || 0) + (b.commentCount || 0);
-                return hotB - hotA;
-            });
-        }
-        
-        const postList = document.getElementById('postList');
-        posts.forEach((post, index) => {
-            const postCard = createPostCard(post);
-            postCard.style.animationDelay = `${index * 0.1}s`;
-            postList.appendChild(postCard);
-        });
-        
-        postsOffset += posts.length;
-        
-    } catch (err) {
-        document.getElementById('skeletonLoader').classList.add('hidden');
-        
-        // 云端失败时清空本地并显示空状态
-        localStorage.setItem('campus_posts', JSON.stringify([]));
-        document.getElementById('emptyState').classList.remove('hidden');
+    } catch (e) {
+        posts = LocalDB.getPosts();
     }
+    
+    document.getElementById('skeletonLoader').classList.add('hidden');
+    
+    if (!posts || posts.length === 0) {
+        if (reset) {
+            document.getElementById('emptyState').classList.remove('hidden');
+        }
+        return;
+    }
+    
+    document.getElementById('emptyState').classList.add('hidden');
+    
+    const postList = document.getElementById('postList');
+    posts.forEach((post, index) => {
+        const postCard = createPostCard(post);
+        postCard.style.animationDelay = `${index * 0.1}s`;
+        postList.appendChild(postCard);
+    });
+    
+    postsOffset += posts.length;
 }
 
 function createPostCard(post) {
@@ -1336,6 +1306,7 @@ function createPostCard(post) {
     const displayName = post.anonymous_name || '匿名用户';
     const commentCount = post.commentCount || 0;
     const isOwner = currentUser && currentUser.id === post.user_id;
+    const isAdminPost = post.username === 'admin';
     
     // 检查用户是否已点赞
     const userVote = currentUser ? LocalDB.getUserVote(post.id, currentUser.id) : null;
@@ -1350,22 +1321,31 @@ function createPostCard(post) {
         card.classList.add('post-card-love');
     }
     
+    if (isAdminPost) {
+        card.classList.add('post-card-admin');
+    }
+    
     // 检查是否是好友（从帖子获取的用户信息）
     const canAddFriend = !isOwner && currentUser && post.user_id && post.username;
+    
+    const avatarBg = isAdminPost ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(post.avatar).bg;
+    const avatarIcon = isAdminPost ? 'ri-shield-star-line' : getAvatarConfig(post.avatar).icon;
+    const adminTag = isAdminPost ? '<span class="text-xs px-1.5 py-0.5 bg-red-500 text-white rounded font-medium">管理员</span>' : '';
     
     card.innerHTML = `
         <div class="flex items-start gap-3">
             ${canAddFriend ? `
-                <div onclick="App.showFriendRequestModal('${post.user_id}', '${escapeHtml(post.anonymous_name || '匿名用户')}', '${post.avatar || 0}')" class="avatar-btn w-10 h-10 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white cursor-pointer hover:opacity-80 transition-opacity">
-                    <i class="${getAvatarConfig(post.avatar).icon}"></i>
+                <div onclick="App.showFriendRequestModal('${post.user_id}', '${escapeHtml(post.anonymous_name || '匿名用户')}', '${post.avatar || 0}')" class="avatar-btn w-10 h-10 rounded-xl ${avatarBg} flex items-center justify-center flex-shrink-0 text-white cursor-pointer hover:opacity-80 transition-opacity">
+                    <i class="${avatarIcon}"></i>
                 </div>
             ` : `
-                <div class="w-10 h-10 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                    <i class="${getAvatarConfig(post.avatar).icon}"></i>
+                <div class="w-10 h-10 rounded-xl ${avatarBg} flex items-center justify-center flex-shrink-0 text-white">
+                    <i class="${avatarIcon}"></i>
                 </div>
             `}
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1 flex-wrap">
+                    ${!isLove ? `<span class="text-xs font-medium flex items-center gap-1" style="color: var(--text-secondary);">${escapeHtml(post.anonymous_name || '匿名用户')}${isAdminPost ? ' <span class="text-xs px-1.5 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded font-medium">管理员</span>' : ''}</span>` : ''}
                     <span class="category-tag tag-${category.color}">
                         ${isLove ? '<i class="ri-heart-fill mr-1"></i>' : ''}
                         ${category.name}
@@ -1452,8 +1432,10 @@ async function createPost() {
             created_at: new Date().toISOString()
         };
         
-        // 尝试保存到云端
-        let newPost = null;
+        // 先保存到本地
+        const newPost = LocalDB.addPost(postData);
+        
+        // 尝试同步到云端
         try {
             const { data, error } = await supabaseClient
                 .from('posts')
@@ -1462,15 +1444,16 @@ async function createPost() {
                 .single();
             
             if (!error && data) {
-                newPost = data;
+                // 云端成功，更新本地记录
+                const localPosts = LocalDB.getPosts();
+                const index = localPosts.findIndex(p => p.id === newPost.id);
+                if (index !== -1) {
+                    localPosts[index] = data;
+                    localStorage.setItem('campus_posts', JSON.stringify(localPosts));
+                }
             }
         } catch (e) {
-            
-        }
-        
-        // 如果云端失败，保存到本地
-        if (!newPost) {
-            newPost = LocalDB.addPost(postData);
+            // 云端失败，本地已有数据，不影响
         }
         
         // 更新用户发帖计数
@@ -1489,6 +1472,7 @@ async function createPost() {
         document.getElementById('postContent').value = '';
         document.getElementById('titleCount').textContent = '0';
         document.getElementById('contentCount').textContent = '0';
+        
         selectedPostCategory = null;
         document.querySelectorAll('.post-category-btn').forEach(btn => btn.classList.remove('active'));
         
@@ -1728,6 +1712,7 @@ function renderPostDetail(post, comments) {
     const isHidden = post.downvotes >= 10;
     const isOwner = currentUser && currentUser.id === post.user_id;
     const canAddFriend = !isOwner && currentUser && post.user_id && post.username;
+    const isAdminPost = post.username === 'admin';
     
     // 检查用户是否已点赞/踩
     const userVote = currentUser ? LocalDB.getUserVote(post.id, currentUser.id) : null;
@@ -1742,13 +1727,14 @@ function renderPostDetail(post, comments) {
     
     container.innerHTML = `
         <div class="flex items-start gap-3 mb-4">
-            <div class="w-12 h-12 rounded-xl ${getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                <i class="ri-user-line text-lg"></i>
+            <div class="w-12 h-12 rounded-xl ${isAdminPost ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(post.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                <i class="${isAdminPost ? 'ri-shield-star-line' : 'ri-user-line'} text-lg"></i>
             </div>
             <div class="flex-1">
                 <div class="flex items-center gap-2 mb-1 flex-wrap">
-                    <span class="font-medium" style="color: var(--text-primary);">
+                    <span class="font-medium flex items-center gap-1" style="color: var(--text-primary);">
                         ${isLove ? '匿名用户' : escapeHtml(post.anonymous_name || '匿名用户')}
+                        ${isAdminPost ? '<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-bold shadow">管理员</span>' : ''}
                     </span>
                     <span class="category-tag tag-${category.color}">
                         ${isLove ? '<i class="ri-heart-fill mr-1"></i>' : ''}
@@ -1818,15 +1804,20 @@ function renderComments(comments, postCategory = 'chat') {
 	    container.innerHTML = comments.map(comment => {
 	        const canAdd = currentUser && currentUser.id !== comment.user_id && comment.user_id;
 	        const onclick = canAdd ? `onclick="App.showFriendRequestModal('${comment.user_id}','${escapeHtml(comment.anonymous_name)}','${comment.avatar||0}')"` : '';
-	        return '<div class="comment-card animate-fade-in" data-comment-id="' + comment.id + '">' +
+	        const isAdminComment = comment.username === 'admin';
+	        const avatarBg = isAdminComment ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(comment.avatar).bg;
+	        const avatarIcon = isAdminComment ? 'ri-shield-star-line' : getAvatarConfig(comment.avatar).icon;
+	        const adminTag = isAdminComment ? '<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-bold shadow">管理员</span>' : '';
+	        return '<div class="comment-card animate-fade-in' + (isAdminComment ? ' border-l-4 border-red-500 pl-3' : '') + '" data-comment-id="' + comment.id + '">' +
 	            '<div class="flex items-start gap-3">' +
-	                '<div class="w-8 h-8 rounded-lg ' + getAvatarConfig(comment.avatar).bg + ' flex items-center justify-center flex-shrink-0 text-white' + (canAdd ? ' cursor-pointer hover:opacity-80' : '') + '" ' + onclick + '>' +
-	                    '<i class="' + getAvatarConfig(comment.avatar).icon + ' text-xs"></i>' +
+	                '<div class="w-8 h-8 rounded-lg ' + avatarBg + ' flex items-center justify-center flex-shrink-0 text-white' + (canAdd ? ' cursor-pointer hover:opacity-80' : '') + '" ' + onclick + '>' +
+	                    '<i class="' + avatarIcon + ' text-xs"></i>' +
 	                '</div>' +
 	                '<div class="flex-1 min-w-0">' +
 	                    '<div class="flex items-center gap-2 mb-1">' +
-	                        '<span class="text-sm font-medium' + (canAdd ? ' cursor-pointer primary-text hover:underline' : '') + '" style="color: var(--text-primary);" ' + onclick + '>' +
+	                        '<span class="text-sm font-medium flex items-center gap-1' + (canAdd ? ' cursor-pointer primary-text hover:underline' : '') + '" style="color: var(--text-primary);" ' + onclick + '>' +
 	                            (isLove ? '匿名用户' : escapeHtml(comment.anonymous_name || '匿名用户')) +
+	                            adminTag +
 	                        '</span>' +
 	                        (canAdd ? '<span class="text-xs primary-text">+ 加好友</span>' : '') +
 	                        '<span class="text-xs time-relative">' + formatTimeAgo(comment.created_at) + '</span>' +
@@ -1959,16 +1950,17 @@ async function submitComment() {
     noComments.classList.add('hidden');
     
     const commentCard = document.createElement('div');
-    commentCard.className = 'comment-card animate-bounce-in';
+    commentCard.className = 'comment-card animate-bounce-in' + (currentUser.username === 'admin' ? ' border-l-4 border-red-500 pl-3' : '');
     commentCard.innerHTML = `
         <div class="flex items-start gap-3">
-            <div class="w-8 h-8 rounded-lg ${getAvatarConfig(currentUser.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                <i class="ri-user-line text-xs"></i>
+            <div class="w-8 h-8 rounded-lg ${currentUser.username === 'admin' ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(currentUser.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                <i class="${currentUser.username === 'admin' ? 'ri-shield-star-line' : 'ri-user-line'} text-xs"></i>
             </div>
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1">
-                    <span class="text-sm font-medium" style="color: var(--text-primary);">
+                    <span class="text-sm font-medium flex items-center gap-1" style="color: var(--text-primary);">
                         ${isLoveComment ? '匿名用户' : escapeHtml(currentUser.anonymous_name)}
+                        ${currentUser.username === 'admin' ? '<span class="text-xs px-1.5 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded font-medium">管理员</span>' : ''}
                     </span>
                     <span class="text-xs time-relative">刚刚</span>
                 </div>
@@ -2509,7 +2501,7 @@ const App = {
         }
         
         // 初始化时同步本地数据与云端
-        this.syncLocalData();
+        LocalDB.syncLocalData();
         
         const isLoggedIn = await checkAuthStatus();
         
@@ -2610,6 +2602,19 @@ const App = {
         document.getElementById('feedbackContent').value = '';
         document.getElementById('feedbackContact').value = '';
         document.getElementById('feedbackCount').textContent = '0';
+    },
+    
+    // 判断是否是管理员
+    isAdmin(user) {
+        return user && user.username === 'admin';
+    },
+    
+    // 获取带管理员标识的用户名
+    getDisplayName(user) {
+        if (this.isAdmin(user)) {
+            return '<span class="inline-flex items-center gap-1"><span class="text-red-500 font-bold">管理员</span></span>';
+        }
+        return escapeHtml(user.anonymous_name || user.username || '匿名用户');
     },
     
     switchAuthTab(tab) {
@@ -2713,6 +2718,21 @@ const App = {
             document.getElementById(id)?.classList.add('hidden');
         });
         
+
+        // 导航栏显示的页面（聊天和设置不显示）
+        const navPages = ['home', 'friends', 'createPost', 'feedback', 'profile'];
+        const nav = document.getElementById('bottomNav');
+        if (nav) {
+            if (navPages.includes(page)) {
+                nav.classList.remove('hidden');
+            } else {
+                nav.classList.add('hidden');
+            }
+        }
+
+        // 更新导航栏激活状态
+        this.updateNavActive(page);
+
         switch (page) {
             case 'auth':
                 document.getElementById('authPage').classList.remove('hidden');
@@ -2921,6 +2941,14 @@ const App = {
         document.getElementById('rulesAgreementModal').classList.add('hidden');
         document.body.style.overflow = '';
     },
+    updateNavActive(page) {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.page === page) {
+                item.classList.add('active');
+            }
+        });
+    },
     showNewFeaturesModal() {
         document.getElementById('newFeaturesModal').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
@@ -3123,15 +3151,21 @@ const App = {
         }
         
         requests.forEach(request => {
+            const isAdminUser = request.from_user_name === '树洞管理员';
             const card = document.createElement('div');
-            card.className = 'card rounded-2xl p-4';
+            card.className = isAdminUser 
+                ? 'card rounded-2xl p-4 border-2 border-red-500 shadow-lg shadow-red-500/20' 
+                : 'card rounded-2xl p-4';
             card.innerHTML = `
                 <div class="flex items-start gap-3 mb-3">
-                    <div class="w-12 h-12 rounded-xl ${getAvatarConfig(request.from_user_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                        <i class="${getAvatarConfig(request.from_user_avatar).icon}"></i>
+                    <div class="w-12 h-12 rounded-xl ${isAdminUser ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(request.from_user_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                        <i class="${isAdminUser ? 'ri-shield-star-line' : getAvatarConfig(request.from_user_avatar).icon}"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-medium form-label">${escapeHtml(request.from_user_name)}</h4>
+                        <h4 class="font-medium form-label flex items-center gap-2">
+                            ${escapeHtml(request.from_user_name)}
+                            ${isAdminUser ? '<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-bold shadow">管理员</span>' : ''}
+                        </h4>
                         <p class="text-xs form-hint">${formatTimeAgo(request.created_at)}</p>
                         ${request.message ? `<p class="text-sm mt-1" style="color: var(--text-secondary);">${escapeHtml(request.message)}</p>` : ''}
                     </div>
@@ -3140,7 +3174,7 @@ const App = {
                     <button onclick="App.rejectFriendRequest('${request.id}')" class="flex-1 py-2 rounded-xl border transition-all form-label">
                         拒绝
                     </button>
-                    <button onclick="App.acceptFriendRequest('${request.id}')" class="flex-1 py-2 primary-btn rounded-xl font-medium transition-all">
+                    <button onclick="App.acceptFriendRequest('${request.id}')" class="flex-1 py-2 ${isAdminUser ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'primary-btn'} rounded-xl font-medium transition-all">
                         接受
                     </button>
                 </div>
@@ -3157,21 +3191,27 @@ const App = {
         for (const friend of friends) {
             const lastMsg = await LocalDB.getLastMessage(currentUser.id, friend.friend_id);
             const unreadCount = unreadCounts[friend.friend_id] || 0;
+            const isAdminUser = friend.friend_name === '树洞管理员';
             
             const card = document.createElement('div');
-            card.className = 'card rounded-2xl p-4 flex items-center gap-3 relative cursor-pointer';
+            card.className = isAdminUser 
+                ? 'card rounded-2xl p-4 flex items-center gap-3 border-2 border-red-500 shadow-lg shadow-red-500/20 cursor-pointer' 
+                : 'card rounded-2xl p-4 flex items-center gap-3 relative cursor-pointer';
             card.onclick = () => App.showChat(friend.friend_id, friend.friend_name, friend.friend_avatar);
             
             card.innerHTML = `
                 <div class="relative">
-                    <div class="w-12 h-12 rounded-xl ${getAvatarConfig(friend.friend_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                        <i class="${getAvatarConfig(friend.friend_avatar).icon}"></i>
+                    <div class="w-12 h-12 rounded-xl ${isAdminUser ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(friend.friend_avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                        <i class="${isAdminUser ? 'ri-shield-star-line' : getAvatarConfig(friend.friend_avatar).icon}"></i>
                     </div>
                     ${unreadCount > 0 ? `<span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>` : ''}
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center justify-between mb-1">
-                        <h4 class="font-medium form-label truncate">${escapeHtml(friend.friend_name)}</h4>
+                        <h4 class="font-medium form-label truncate flex items-center gap-2">
+                            ${escapeHtml(friend.friend_name)}
+                            ${isAdminUser ? '<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-bold shadow">管理员</span>' : ''}
+                        </h4>
                         ${lastMsg ? `<span class="text-xs form-hint">${formatTimeAgo(lastMsg.created_at)}</span>` : ''}
                     </div>
                     <p class="text-sm form-hint truncate">
@@ -3237,17 +3277,23 @@ const App = {
         container.innerHTML = '';
         
         users.forEach(user => {
+            const isAdminUser = user.anonymous_name === '树洞管理员';
             const card = document.createElement('div');
-            card.className = 'card rounded-2xl p-4 flex items-center gap-3';
+            card.className = isAdminUser 
+                ? 'card rounded-2xl p-4 flex items-center gap-3 border-2 border-red-500 shadow-lg shadow-red-500/20' 
+                : 'card rounded-2xl p-4 flex items-center gap-3';
             card.innerHTML = `
-                <div class="w-12 h-12 rounded-xl ${getAvatarConfig(user.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
-                    <i class="${getAvatarConfig(user.avatar).icon}"></i>
+                <div class="w-12 h-12 rounded-xl ${isAdminUser ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(user.avatar).bg} flex items-center justify-center flex-shrink-0 text-white">
+                    <i class="${isAdminUser ? 'ri-shield-star-line' : getAvatarConfig(user.avatar).icon}"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h4 class="font-medium form-label truncate">${escapeHtml(user.anonymous_name || '匿名用户')}</h4>
+                    <h4 class="font-medium form-label truncate flex items-center gap-2">
+                        ${escapeHtml(user.anonymous_name || '匿名用户')}
+                        ${isAdminUser ? '<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-bold shadow">管理员</span>' : ''}
+                    </h4>
                     <p class="text-xs form-hint">ID: ${user.id.slice(0, 8)}...</p>
                 </div>
-                <button onclick="App.sendFriendRequest('${user.id}', '${escapeHtml(user.anonymous_name)}', ${user.avatar || 0})" class="py-2 px-4 primary-btn rounded-xl text-sm transition-all">
+                <button onclick="App.sendFriendRequest('${user.id}', '${escapeHtml(user.anonymous_name)}', ${user.avatar || 0})" class="py-2 px-4 ${isAdminUser ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white' : 'primary-btn'} rounded-xl text-sm transition-all">
                     加好友
                 </button>
             `;
@@ -3396,10 +3442,15 @@ const App = {
 
     showChat(friendId, friendName, friendAvatar) {
         this._currentChatFriend = { id: friendId, name: friendName, avatar: friendAvatar };
+        // 隐藏底部导航栏
+        document.getElementById('bottomNav')?.classList.add('hidden');
         document.getElementById('chatPage').classList.remove('hidden');
-        document.getElementById('chatFriendName').textContent = friendName;
-        document.getElementById('chatFriendAvatar').className = `w-10 h-10 rounded-xl ${getAvatarConfig(friendAvatar).bg} flex items-center justify-center flex-shrink-0 text-white`;
-        document.getElementById('chatFriendAvatar').innerHTML = `<i class="${getAvatarConfig(friendAvatar).icon}"></i>`;
+        const isAdmin = friendName === '树洞管理员';
+        document.getElementById('chatFriendName').innerHTML = isAdmin 
+            ? `<span class="flex items-center gap-2">${friendName} <span class="text-xs px-2 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-bold shadow">管理员</span></span>` 
+            : friendName;
+        document.getElementById('chatFriendAvatar').className = `w-10 h-10 rounded-xl ${isAdmin ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(friendAvatar).bg} flex items-center justify-center flex-shrink-0 text-white`;
+        document.getElementById('chatFriendAvatar').innerHTML = `<i class="${isAdmin ? 'ri-shield-star-line' : getAvatarConfig(friendAvatar).icon}"></i>`;
         this.loadChatMessages();
         
         // 标记与该好友的消息为已读
@@ -3424,6 +3475,8 @@ const App = {
             clearInterval(this._chatRefreshInterval);
             this._chatRefreshInterval = null;
         }
+        // 返回好友页面时恢复导航栏
+        document.getElementById('bottomNav')?.classList.remove('hidden');
     },
 
     async loadChatMessages() {
@@ -3444,15 +3497,17 @@ const App = {
         
         messages.forEach(msg => {
             const isMe = msg.from_id === currentUser.id;
+            const isAdminSender = msg.from_name === '树洞管理员';
             const div = document.createElement('div');
             div.className = `flex ${isMe ? 'justify-end' : 'justify-start'} mb-3`;
             div.innerHTML = `
                 ${isMe ? '' : `
-                    <div class="w-8 h-8 rounded-lg ${getAvatarConfig(msg.from_avatar || 0).bg} flex items-center justify-center flex-shrink-0 text-white mr-2">
-                        <i class="${getAvatarConfig(msg.from_avatar || 0).icon} text-sm"></i>
+                    <div class="w-8 h-8 rounded-lg ${isAdminSender ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(msg.from_avatar || 0).bg} flex items-center justify-center flex-shrink-0 text-white mr-2">
+                        <i class="${isAdminSender ? 'ri-shield-star-line' : getAvatarConfig(msg.from_avatar || 0).icon} text-sm"></i>
                     </div>
                 `}
                 <div class="max-w-[70%] px-4 py-2 rounded-2xl ${isMe ? 'rounded-br-md chat-my-msg' : 'rounded-bl-md'}" ${isMe ? '' : `style="background: var(--bg-secondary); color: var(--text-primary);"`}>
+                    ${isAdminSender ? `<span class="text-xs px-2 py-0.5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full font-bold mb-1 inline-block shadow">管理员</span>` : ''}
                     <p class="break-all" style="color: ${isMe ? 'var(--on-primary)' : 'inherit'};">${escapeHtml(msg.content)}</p>
                     <p class="text-xs ${isMe ? '' : 'form-hint'} mt-1" style="color: ${isMe ? 'var(--on-primary)' : 'inherit'}; opacity: 0.7;">${formatTimeAgo(msg.created_at)}</p>
                 </div>

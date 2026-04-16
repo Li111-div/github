@@ -782,3 +782,48 @@ body {
 .tab-content {
     animation: fadeIn 0.3s ease-out;
 }
+
+/* 底部导航栏 */
+.nav-item {
+    color: var(--text-secondary);
+    opacity: 0.7;
+    position: relative;
+}
+
+.nav-item.active {
+    color: var(--primary);
+    opacity: 1;
+    background: linear-gradient(135deg, rgba(66, 185, 131, 0.1) 0%, rgba(66, 185, 131, 0.05) 100%);
+}
+
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 0 0 4px 4px;
+}
+
+.nav-item.active i {
+    transform: scale(1.15);
+    filter: drop-shadow(0 2px 4px rgba(66, 185, 131, 0.3));
+}
+
+.nav-item:hover {
+    opacity: 1;
+    background: var(--bg-secondary);
+}
+
+.nav-item-post {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    box-shadow: 0 4px 15px rgba(66, 185, 131, 0.4);
+}
+
+/* 底部导航栏页面内边距调整 */
+body {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
