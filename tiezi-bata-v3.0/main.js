@@ -382,21 +382,25 @@ const LocalDB = {
     },
 
     async sendFriendRequest(fromUser, toUserId, toUserName, toUserAvatar, message) {
+
+        
         try {
             // 检查是否已是好友
-            const { data: existingFriends } = await supabaseClient
+            const { data: existingFriends, error: friendError } = await supabaseClient
                 .from('friends')
                 .select('id')
                 .eq('user_id', fromUser.id)
                 .eq('friend_id', toUserId)
                 .single();
             
+
+            
             if (existingFriends) {
                 return { success: false, message: '你们已经是好友了' };
             }
             
             // 检查是否已发送过申请
-            const { data: existingRequest } = await supabaseClient
+            const { data: existingRequest, error: requestError } = await supabaseClient
                 .from('friend_requests')
                 .select('id')
                 .eq('from_user_id', fromUser.id)
@@ -404,11 +408,13 @@ const LocalDB = {
                 .eq('status', 'pending')
                 .single();
             
+
+            
             if (existingRequest) {
                 return { success: false, message: '已发送过好友申请，请等待对方确认' };
             }
             
-            const { error } = await supabaseClient.from('friend_requests').insert({
+            const { error: insertError } = await supabaseClient.from('friend_requests').insert({
                 from_user_id: fromUser.id,
                 from_user_name: fromUser.anonymous_name || '匿名用户',
                 from_user_avatar: fromUser.avatar || 0,
@@ -419,9 +425,13 @@ const LocalDB = {
                 status: 'pending'
             });
             
-            if (error) throw error;
+
+            
+            if (insertError) throw insertError;
+            
             return { success: true };
         } catch (e) {
+            console.error('[LocalDB] 好友申请失败:', e);
             return { success: false, message: '发送失败，请重试' };
         }
     },
@@ -1361,17 +1371,20 @@ function createPostCard(post) {
         card.classList.add('post-card-admin');
     }
     
-    // 检查是否是好友（从帖子获取的用户信息）
-    const canAddFriend = !isOwner && currentUser && post.user_id && post.username;
+    // 检查是否可以添加好友
+    const canAddFriend = !isOwner && currentUser && post.user_id && post.user_id !== currentUser.id;
     
     const avatarBg = isAdminPost ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(post.avatar).bg;
     const avatarIcon = isAdminPost ? 'ri-shield-star-line' : getAvatarConfig(post.avatar).icon;
     const adminTag = isAdminPost ? '<span class="text-xs px-1.5 py-0.5 bg-red-500 text-white rounded font-medium">管理员</span>' : '';
+    const postUserId = post.user_id || '';
+    const postAnonName = (post.anonymous_name || '匿名用户').replace(/'/g, "\\'");
+    const postAvatar = post.avatar || 0;
     
     card.innerHTML = `
         <div class="flex items-start gap-3">
             ${canAddFriend ? `
-                <div onclick="App.showFriendRequestModal('${post.user_id}', '${escapeHtml(post.anonymous_name || '匿名用户')}', '${post.avatar || 0}')" class="avatar-btn w-10 h-10 rounded-xl ${avatarBg} flex items-center justify-center flex-shrink-0 text-white cursor-pointer hover:opacity-80 transition-opacity">
+                <div onclick="App.showFriendRequestModal('${postUserId}', '${postAnonName}', '${postAvatar}')" class="avatar-btn w-10 h-10 rounded-xl ${avatarBg} flex items-center justify-center flex-shrink-0 text-white cursor-pointer hover:opacity-80 transition-opacity">
                     <i class="${avatarIcon}"></i>
                 </div>
             ` : `
@@ -1752,7 +1765,7 @@ function renderPostDetail(post, comments) {
     const isLove = post.category === 'love';
     const isHidden = post.downvotes >= 10;
     const isOwner = currentUser && currentUser.id === post.user_id;
-    const canAddFriend = !isOwner && currentUser && post.user_id && post.username;
+    const canAddFriend = !isOwner && currentUser && post.user_id && post.user_id !== currentUser.id;
     const isAdminPost = post.username === 'admin';
     
     // 检查用户是否已点赞/踩
@@ -1781,7 +1794,7 @@ function renderPostDetail(post, comments) {
                         ${isLove ? '<i class="ri-heart-fill mr-1"></i>' : ''}
                         ${category.name}
                     </span>
-                    ${canAddFriend ? '<span class="text-xs primary-text cursor-pointer hover:underline" onclick="App.showFriendRequestModal(\'' + post.user_id + '\', \'' + escapeHtml(post.anonymous_name || '匿名用户') + '\', \'' + (post.avatar || 0) + '\')">+ 添加好友</span>' : ''}
+                    ${canAddFriend ? '<span class="text-xs primary-text cursor-pointer hover:underline" onclick="App.showFriendRequestModal(\'' + postUserId + '\', \'' + postAnonName + '\', \'' + postAvatar + '\')">+ 添加好友</span>' : ''}
                 </div>
                 <p class="text-xs time-relative">${formatTimeAgo(post.created_at)}</p>
             </div>
@@ -1809,7 +1822,7 @@ function renderPostDetail(post, comments) {
                 <span id="detailDislikeCount">${post.downvotes || 0}</span>
             </button>
             ${canAddFriend ? `
-                <button onclick="App.showFriendRequestModal('${post.user_id}', '${escapeHtml(post.anonymous_name || '匿名用户')}', '${post.avatar || 0}')" class="action-btn ml-auto">
+                <button onclick="App.showFriendRequestModal('${postUserId}', '${postAnonName}', '${postAvatar}')" class="action-btn ml-auto">
                     <i class="ri-user-add-line text-lg"></i>
                     <span>加好友</span>
                 </button>
@@ -1844,7 +1857,10 @@ function renderComments(comments, postCategory = 'chat') {
 	    noComments.classList.add('hidden');
 	    container.innerHTML = comments.map(comment => {
 	        const canAdd = currentUser && currentUser.id !== comment.user_id && comment.user_id;
-	        const onclick = canAdd ? `onclick="App.showFriendRequestModal('${comment.user_id}','${escapeHtml(comment.anonymous_name)}','${comment.avatar||0}')"` : '';
+	        const commentUserId = comment.user_id || '';
+	        const commentAnonName = (comment.anonymous_name || '匿名用户').replace(/'/g, "\\'");
+	        const commentAvatar = comment.avatar || 0;
+	        const onclick = canAdd ? `onclick="App.showFriendRequestModal('${commentUserId}', '${commentAnonName}', '${commentAvatar}')"` : '';
 	        const isAdminComment = comment.username === 'admin';
 	        const avatarBg = isAdminComment ? 'bg-gradient-to-br from-red-500 to-orange-500' : getAvatarConfig(comment.avatar).bg;
 	        const avatarIcon = isAdminComment ? 'ri-shield-star-line' : getAvatarConfig(comment.avatar).icon;
@@ -2575,7 +2591,7 @@ async function performDailyCleanup() {
         return false;
     }
     
-    console.log('[清理] 开始执行每日清理...');
+
     
     try {
         // 1. 清理云端数据
@@ -2605,7 +2621,7 @@ async function performDailyCleanup() {
         localStorage.setItem('campus_last_cleanup', currentDate);
         _lastCleanupDate = currentDate;
         
-        console.log('[清理] 每日清理完成');
+
         
         // 如果用户在首页，刷新帖子列表
         if (currentPage === 'home') {
@@ -2615,7 +2631,7 @@ async function performDailyCleanup() {
         
         return true;
     } catch (e) {
-        console.log('[清理] 清理失败:', e.message);
+
         return false;
     }
 }
@@ -2638,7 +2654,7 @@ function startAutoCleanup() {
         }
     }, 60000); // 每分钟检查一次
     
-    console.log('[清理] 自动清理已启动');
+
 }
 
 // ==================== 应用主类 ====================
@@ -2960,11 +2976,11 @@ const App = {
                 document.getElementById('feedbackContent').value = '';
                 document.getElementById('feedbackContact').value = '';
                 document.getElementById('feedbackCount').textContent = '0';
-                // 隐藏顶部和底部导航栏
+                // 显示顶部和底部导航栏
                 const topNavF = document.getElementById('navbar');
-                if (topNavF) topNavF.classList.add('hidden');
+                if (topNavF) topNavF.classList.remove('hidden');
                 const bottomNavF = document.getElementById('bottomNav');
-                if (bottomNavF) bottomNavF.classList.add('hidden');
+                if (bottomNavF) bottomNavF.classList.remove('hidden');
                 break;
             case 'friends':
                 this.showFriendsPage();
@@ -3177,6 +3193,7 @@ const App = {
         // 刷新UI显示
         App.updateUIForLoggedInUser();
     },
+    
     async saveUsername() {
         if (!currentUser) {
             showToast('请先登录', 'warning');
@@ -3517,8 +3534,15 @@ const App = {
     },
     
     showFriendRequestModal(userId, userName, userAvatar) {
+
+        
         if (!currentUser) {
             showToast('请先登录', 'warning');
+            return;
+        }
+        
+        if (!userId || userId === 'undefined' || userId === 'null') {
+            showToast('无法获取用户信息', 'error');
             return;
         }
         
@@ -3594,6 +3618,13 @@ const App = {
             return;
         }
         
+
+            from: currentUser.id,
+            to: this._friendRequestTarget.id,
+            name: this._friendRequestTarget.name,
+            avatar: this._friendRequestTarget.avatar
+        });
+        
         const result = await LocalDB.sendFriendRequest(
             currentUser,
             this._friendRequestTarget.id,
@@ -3602,11 +3633,13 @@ const App = {
             message
         );
         
+
+        
         if (result.success) {
             showToast('好友申请已发送', 'success');
             this.closeFriendRequestModal();
         } else {
-            showToast(result.message, 'warning');
+            showToast(result.message || '发送失败，请重试', 'warning');
         }
     },
     
