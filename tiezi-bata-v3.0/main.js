@@ -3199,6 +3199,13 @@ const App = {
         App.updateUIForLoggedInUser();
     },
     
+    closeRulesPage() {
+        // 隐藏规则页面
+        document.getElementById('rulesPage').classList.add('hidden');
+        // 返回首页
+        this.goHome();
+    },
+    
     async saveUsername() {
         if (!currentUser) {
             showToast('请先登录', 'warning');
