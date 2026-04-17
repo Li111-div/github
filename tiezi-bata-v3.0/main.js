@@ -705,6 +705,122 @@ const LocalDB = {
     }
 };
 
+// 图片处理相关
+const IMGBB_API_KEY = 'bc6133461b35ca1242cc60936b36aa38';
+let _selectedImage = null;
+
+// 处理图片选择
+function handleImageSelect(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    // 检查文件类型
+    if (!file.type.match(/^image\/(jpeg|png|gif|webp)$/)) {
+        showToast('仅支持 JPG/PNG/GIF/WebP 格式', 'warning');
+        input.value = '';
+        return;
+    }
+    
+    // 检查文件大小 (不超过 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('图片大小不能超过 5MB', 'warning');
+        input.value = '';
+        return;
+    }
+    
+    _selectedImage = file;
+    
+    // 显示预览
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        document.getElementById('previewImg').src = e.target.result;
+        document.getElementById('imageUploadBtn').classList.add('hidden');
+        document.getElementById('imagePreview').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
+// 移除已选择的图片
+function removePostImage() {
+    _selectedImage = null;
+    document.getElementById('imageInput').value = '';
+    document.getElementById('imagePreview').classList.add('hidden');
+    document.getElementById('imageUploadBtn').classList.remove('hidden');
+}
+
+// 压缩图片并转换为 Base64
+async function compressImage(file, maxWidth = 1920, maxHeight = 1080, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > maxWidth) {
+                    height = (height * maxWidth) / width;
+                    width = maxWidth;
+                }
+                if (height > maxHeight) {
+                    width = (width * maxHeight) / height;
+                    height = maxHeight;
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // 输出为 JPEG 格式，逐步降低质量直到小于 500KB
+                const compress = (q) => {
+                    const dataUrl = canvas.toDataURL('image/jpeg', q);
+                    const base64Length = dataUrl.split(',')[1].length;
+                    const sizeInBytes = base64Length * 0.75;
+                    
+                    if (sizeInBytes > 500 * 1024 && q > 0.1) {
+                        return compress(q - 0.1);
+                    }
+                    resolve(dataUrl);
+                };
+                
+                compress(quality);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// 上传图片到 imgBB（浏览器端）
+async function uploadImageToImgBB(dataUrl) {
+    const base64 = dataUrl.split(',')[1];
+    
+    const formData = new FormData();
+    formData.append('image', base64);
+    
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+        method: 'POST',
+        body: formData
+    });
+    
+    if (!response.ok) {
+        throw new Error('上传失败');
+    }
+    
+    const result = await response.json();
+    
+    if (result.success && result.data && result.data.url) {
+        return result.data.url;
+    } else {
+        throw new Error('上传失败');
+    }
+}
+
 // 关键词屏蔽列表
 const BLOCKED_KEYWORDS = [
     // ========== 1. 辱骂、人身攻击、不文明用语 ==========
@@ -1404,6 +1520,11 @@ function createPostCard(post) {
                 </div>
                 <h3 class="font-medium mb-1 ${isHidden ? 'blur-sm' : ''}" style="color: var(--text-primary);">${escapeHtml(post.title || '无标题')}</h3>
                 <p class="text-sm leading-relaxed ${isHidden ? 'blur-sm' : ''}" style="color: var(--text-secondary); word-break: break-all;">${escapeHtml(post.content)}</p>
+                ${post.image_url ? `
+                    <div class="mt-3 rounded-xl overflow-hidden ${isHidden ? 'blur-sm' : ''}" style="max-height: 250px; cursor: pointer;" onclick="window.open('${escapeHtml(post.image_url)}', '_blank')">
+                        <img src="${escapeHtml(post.image_url)}" alt="帖子图片" class="w-full object-cover hover:opacity-90 transition-opacity" style="max-height: 250px;">
+                    </div>
+                ` : ''}
                 
                 <div class="flex items-center gap-4 mt-3 flex-wrap">
                     <button onclick="App.likePost('${post.id}')" class="action-btn action-btn-like ${hasLiked ? 'text-red-500' : ''}">
@@ -1472,6 +1593,24 @@ async function createPost() {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="ri-loader-2-line animate-spin mr-2"></i>发布中...';
     
+    let imageUrl = null;
+    
+    // 处理图片上传到 imgBB
+    if (_selectedImage) {
+        submitBtn.innerHTML = '<i class="ri-loader-2-line animate-spin mr-2"></i>上传图片...';
+        
+        try {
+            // 压缩图片
+            const compressedDataUrl = await compressImage(_selectedImage);
+            
+            // 上传到 imgBB
+            imageUrl = await uploadImageToImgBB(compressedDataUrl);
+        } catch (e) {
+            showToast('图片上传失败，将以纯文字形式发布', 'warning');
+            imageUrl = null;
+        }
+    }
+    
     try {
         // 构建帖子数据
         const postData = {
@@ -1483,6 +1622,7 @@ async function createPost() {
             category: selectedPostCategory,
             upvotes: 0,
             downvotes: 0,
+            image_url: imageUrl,
             created_at: new Date().toISOString()
         };
         
@@ -1526,6 +1666,12 @@ async function createPost() {
         document.getElementById('postContent').value = '';
         document.getElementById('titleCount').textContent = '0';
         document.getElementById('contentCount').textContent = '0';
+        
+        // 清空图片
+        _selectedImage = null;
+        document.getElementById('imageInput').value = '';
+        document.getElementById('imagePreview').classList.add('hidden');
+        document.getElementById('imageUploadBtn').classList.remove('hidden');
         
         selectedPostCategory = null;
         document.querySelectorAll('.post-category-btn').forEach(btn => btn.classList.remove('active'));
@@ -1812,6 +1958,11 @@ function renderPostDetail(post, comments) {
         
         <h2 class="text-xl font-bold mb-3 ${isHidden ? 'blur-sm' : ''}" style="color: var(--text-primary);">${escapeHtml(post.title || '无标题')}</h2>
         <p class="leading-relaxed whitespace-pre-wrap ${isHidden ? 'blur-sm' : ''}" style="color: var(--text-secondary); word-break: break-all;">${escapeHtml(post.content)}</p>
+        ${post.image_url ? `
+            <div class="mt-4 rounded-xl overflow-hidden ${isHidden ? 'blur-sm' : ''}" style="max-height: 400px; cursor: pointer;" onclick="window.open('${escapeHtml(post.image_url)}', '_blank')">
+                <img src="${escapeHtml(post.image_url)}" alt="帖子图片" class="w-full object-contain" style="max-height: 400px;">
+            </div>
+        ` : ''}
         
         ${isHidden ? `<p class="text-center text-sm mt-4 py-2 rounded-lg" style="background: rgba(239,68,68,0.1); color: var(--warning);">
             <i class="ri-eye-off-line mr-1"></i>此帖因违规已被隐藏
@@ -4006,6 +4157,15 @@ const App = {
         };
         reader.readAsText(file);
         fileInput.value = '';
+    },
+    
+    // 图片上传相关
+    handleImageSelect(input) {
+        handleImageSelect(input);
+    },
+    
+    removePostImage() {
+        removePostImage();
     }
 };
 
