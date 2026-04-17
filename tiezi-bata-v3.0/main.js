@@ -1768,6 +1768,11 @@ function renderPostDetail(post, comments) {
     const canAddFriend = !isOwner && currentUser && post.user_id && post.user_id !== currentUser.id;
     const isAdminPost = post.username === 'admin';
     
+    // 好友相关变量
+    const postUserId = post.user_id || '';
+    const postAnonName = (post.anonymous_name || '匿名用户').replace(/'/g, "\\'");
+    const postAvatar = post.avatar || 0;
+    
     // 检查用户是否已点赞/踩
     const userVote = currentUser ? LocalDB.getUserVote(post.id, currentUser.id) : null;
     const hasLiked = userVote && userVote.vote_type === 'like';
