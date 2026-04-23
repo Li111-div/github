@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>密码加密解密工具箱</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>密码工具箱</h1>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link active">
+        <i class="fas fa-home"></i>
+        首页
+      </a>
+      <a href="/md5.html" class="nav-link">
+        <i class="fas fa-fingerprint"></i>
+        MD5加密
+      </a>
+      <a href="/sha1.html" class="nav-link">
+        <i class="fas fa-lock"></i>
+        SHA1加密
+      </a>
+      <a href="/decrypt.html" class="nav-link">
+        <i class="fas fa-key"></i>
+        解密查询
+      </a>
+      <a href="/tools.html" class="nav-link">
+        <i class="fas fa-toolbox"></i>
+        离线工具
+      </a>
+      <a href="/readme.html" class="nav-link">
+        <i class="fas fa-book"></i>
+        使用说明
+      </a>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <main class="main-container">
+    <!-- 欢迎区域 -->
+    <div class="card">
+      <div style="text-align: center; padding: 20px 0;">
+        <h2 style="font-size: 28px; margin-bottom: 12px; background: linear-gradient(135deg, #58a6ff, #39c5cf); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          密码加密解密工具箱
+        </h2>
+        <p style="color: var(--text-muted); font-size: 15px;">
+          提供 MD5、SHA1 加密与解密功能，同时集成多种编码转换工具
+        </p>
+        <div style="margin-top: 16px;">
+          <span class="status-indicator">
+            <span class="status-dot"></span>
+            数据库已连接
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 功能导航 -->
+    <div class="nav-grid">
+      <a href="/md5.html" class="nav-card">
+        <div class="nav-card-icon md5">
+          <i class="fas fa-fingerprint"></i>
+        </div>
+        <h3>MD5 加密</h3>
+        <p>将明文转换为 32 位 MD5 哈希值，支持自动存储到数据库</p>
+        <div class="nav-card-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <a href="/sha1.html" class="nav-card">
+        <div class="nav-card-icon sha1">
+          <i class="fas fa-lock"></i>
+        </div>
+        <h3>SHA1 加密</h3>
+        <p>将明文转换为 40 位 SHA1 哈希值，支持自动存储到数据库</p>
+        <div class="nav-card-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <a href="/decrypt.html" class="nav-card">
+        <div class="nav-card-icon decrypt">
+          <i class="fas fa-key"></i>
+        </div>
+        <h3>哈希解密</h3>
+        <p>通过密文查询数据库，返回对应的明文内容</p>
+        <div class="nav-card-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <a href="/tools.html" class="nav-card">
+        <div class="nav-card-icon tools">
+          <i class="fas fa-toolbox"></i>
+        </div>
+        <h3>离线工具</h3>
+        <p>Base64 编解码、URL 编解码、进制转换等，无需联网</p>
+        <div class="nav-card-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <a href="/readme.html" class="nav-card">
+        <div class="nav-card-icon readme">
+          <i class="fas fa-book"></i>
+        </div>
+        <h3>使用说明</h3>
+        <p>查看工具箱详细使用指南与注意事项</p>
+        <div class="nav-card-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+    </div>
+
+    <!-- 注意事项 -->
+    <div class="card" style="margin-top: 30px;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-exclamation-triangle"></i>
+          重要提示
+        </div>
+      </div>
+      <p style="color: var(--text-secondary); line-height: 1.8;">
+        本工具仅供个人本地自用，请勿进行公开部署或非法使用。所有加密操作会自动存储到云端数据库，解密功能需要数据库中已有对应记录方可查询成功。MD5 和 SHA1 为单向哈希算法，无法逆向破解，只能通过已存储的明文密文对照查询。
+      </p>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <p>密码加密解密工具箱 - 仅供个人学习与日常使用</p>
+  </footer>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // 初始化 Supabase 客户端
+    const supabaseUrl = 'https://vxebvrglknakopdbfyuf.supabase.co';
+    const supabaseKey = 'sb_publishable_63yeKCzGKJ4QHJl_hjLlQw_khNPspXp';
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    
+    // 挂载到全局供其他页面使用
+    window.supabase = supabase;
+  </script>
+</body>
+</html>

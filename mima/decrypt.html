@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>哈希解密 - 密码工具箱</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>密码工具箱</h1>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">
+        <i class="fas fa-home"></i>
+        首页
+      </a>
+      <a href="/md5.html" class="nav-link">
+        <i class="fas fa-fingerprint"></i>
+        MD5加密
+      </a>
+      <a href="/sha1.html" class="nav-link">
+        <i class="fas fa-lock"></i>
+        SHA1加密
+      </a>
+      <a href="/decrypt.html" class="nav-link active">
+        <i class="fas fa-key"></i>
+        解密查询
+      </a>
+      <a href="/tools.html" class="nav-link">
+        <i class="fas fa-toolbox"></i>
+        离线工具
+      </a>
+      <a href="/readme.html" class="nav-link">
+        <i class="fas fa-book"></i>
+        使用说明
+      </a>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <main class="main-container">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-key"></i>
+          哈希解密查询
+        </div>
+        <div class="card-subtitle">输入密文并选择对应的哈希算法，查询数据库返回原始明文</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">选择哈希算法</label>
+        <select id="hashType" class="form-select">
+          <option value="md5">MD5 (32位)</option>
+          <option value="sha1">SHA1 (40位)</option>
+        </select>
+        <div class="form-hint">
+          <i class="fas fa-info-circle"></i>
+          请确保选择与加密时相同的算法，否则无法匹配
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">输入密文</label>
+        <textarea 
+          id="hashText" 
+          class="form-textarea" 
+          placeholder="请输入需要查询的密文..."
+          rows="3"
+        ></textarea>
+        <div class="form-hint">
+          <i class="fas fa-lightbulb"></i>
+          提示：MD5 为 32 位十六进制字符串，SHA1 为 40 位十六进制字符串
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button id="decryptBtn" class="btn btn-primary" onclick="doDecrypt()">
+          <i class="fas fa-search"></i>
+          查询解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearAll()">
+          <i class="fas fa-trash"></i>
+          清空
+        </button>
+      </div>
+
+      <div id="resultArea" style="margin-top: 24px; display: none;">
+        <div id="successResult" style="display: none;">
+          <div class="result-box">
+            <div class="result-label">
+              <i class="fas fa-check-circle" style="color: var(--accent-success);"></i>
+              查询成功 - 明文结果
+            </div>
+            <div class="result-content" id="plainResult"></div>
+            <div class="result-actions">
+              <button class="copy-btn" onclick="copyResult()">
+                <i class="fas fa-copy"></i>
+                复制
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="errorResult" style="display: none;">
+          <div class="result-box" style="border-color: var(--accent-danger);">
+            <div class="result-label">
+              <i class="fas fa-times-circle" style="color: var(--accent-danger);"></i>
+              查询结果
+            </div>
+            <div class="result-content" style="color: var(--accent-danger);">
+              数据库中未找到匹配的记录，请确认密文和算法类型是否正确
+            </div>
+          </div>
+        </div>
+
+        <div id="loadingResult" style="display: none;">
+          <div class="result-box">
+            <div class="result-label">
+              <span class="loading">
+                <span class="loading-spinner"></span>
+                正在查询数据库...
+              </span>
+            </div>
+            <div class="result-content" style="color: var(--text-secondary);">
+              请稍候，正在检索匹配记录
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 历史记录 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-history"></i>
+          最近查询记录
+        </div>
+        <div class="card-subtitle">显示最近的解密查询结果</div>
+      </div>
+      
+      <div id="historyList" class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>暂无查询记录</p>
+      </div>
+    </div>
+
+    <!-- 说明 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-circle-info"></i>
+          解密说明
+        </div>
+      </div>
+      <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px;">
+        <strong style="color: var(--text-primary);">注意：</strong> MD5 和 SHA1 都是单向哈希算法，理论上无法逆向解密。
+        本工具的"解密"功能实际上是<strong style="color: var(--accent-primary);">通过数据库查询</strong>实现的。
+      </p>
+      <p style="color: var(--text-secondary); line-height: 1.8;">
+        只有当明文曾经通过本工具的"加密"功能处理并存储到数据库时，才能查询到对应的明文。
+        如果数据库中没有记录，则无法解密。
+      </p>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <p>密码加密解密工具箱 - 仅供个人学习与日常使用</p>
+  </footer>
+
+  <!-- Toast 容器 -->
+  <div id="toastContainer"></div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (function() {
+      // 初始化 Supabase
+      var supabaseUrl = 'https://vxebvrglknakopdbfyuf.supabase.co';
+      var supabaseKey = 'sb_publishable_63yeKCzGKJ4QHJl_hjLlQw_khNPspXp';
+      var supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      var currentPlain = '';
+      var queryHistory = [];
+
+      window.showToast = function(message, type) {
+        type = type || 'info';
+        var container = document.getElementById('toastContainer');
+        var toast = document.createElement('div');
+        toast.className = 'toast toast-' + type;
+        
+        var icons = {
+          success: 'fa-check-circle',
+          error: 'fa-times-circle',
+          info: 'fa-info-circle'
+        };
+        
+        toast.innerHTML = '<i class="fas ' + icons[type] + '"></i>' + message;
+        
+        container.appendChild(toast);
+        
+        setTimeout(function() {
+          toast.style.animation = 'slideIn 0.3s ease reverse';
+          setTimeout(function() { toast.remove(); }, 300);
+        }, 3000);
+      };
+
+      window.doDecrypt = function() {
+        var hashText = document.getElementById('hashText').value.trim();
+        var hashType = document.getElementById('hashType').value;
+        
+        if (!hashText) {
+          showToast('请输入需要查询的密文', 'error');
+          return;
+        }
+
+        // 验证格式
+        if (hashType === 'md5' && hashText.length !== 32) {
+          showToast('MD5 密文应为 32 位十六进制字符串', 'error');
+          return;
+        }
+        if (hashType === 'sha1' && hashText.length !== 40) {
+          showToast('SHA1 密文应为 40 位十六进制字符串', 'error');
+          return;
+        }
+
+        var btn = document.getElementById('decryptBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading"><span class="loading-spinner"></span>查询中...</span>';
+
+        // 显示加载状态
+        document.getElementById('resultArea').style.display = 'block';
+        document.getElementById('successResult').style.display = 'none';
+        document.getElementById('errorResult').style.display = 'none';
+        document.getElementById('loadingResult').style.display = 'block';
+
+        // 查询数据库
+        searchDatabase(hashText, hashType, btn);
+      };
+
+      function searchDatabase(hashText, hashType, btn) {
+        try {
+          supabaseClient
+            .from('hash_dict')
+            .select('plain_text, hash_text, hash_type, created_at')
+            .eq('hash_text', hashText)
+            .eq('hash_type', hashType)
+            .limit(10)
+            .then(function(response) {
+              document.getElementById('loadingResult').style.display = 'none';
+              
+              if (response.error) {
+                console.error('查询失败:', response.error);
+                document.getElementById('errorResult').style.display = 'block';
+                showToast('查询失败: ' + response.error.message, 'error');
+              } else if (response.data && response.data.length > 0) {
+                // 找到匹配
+                document.getElementById('successResult').style.display = 'block';
+                currentPlain = response.data[0].plain_text;
+                document.getElementById('plainResult').textContent = currentPlain;
+                
+                // 添加到历史记录
+                addToHistory(response.data[0]);
+                
+                showToast('查询成功，找到 ' + response.data.length + ' 条匹配记录', 'success');
+              } else {
+                // 未找到
+                document.getElementById('errorResult').style.display = 'block';
+                currentPlain = '';
+                showToast('数据库中未找到匹配的记录', 'error');
+              }
+              
+              if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-search"></i> 查询解密';
+              }
+            });
+        } catch (err) {
+          console.error('查询异常:', err);
+          document.getElementById('loadingResult').style.display = 'none';
+          document.getElementById('errorResult').style.display = 'block';
+          showToast('网络异常，请检查连接', 'error');
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-search"></i> 查询解密';
+          }
+        }
+      }
+
+      function addToHistory(record) {
+        queryHistory.unshift({
+          plain: record.plain_text,
+          hash: record.hash_text,
+          type: record.hash_type,
+          time: new Date().toLocaleString()
+        });
+        
+        if (queryHistory.length > 5) {
+          queryHistory.pop();
+        }
+        
+        renderHistory();
+      }
+
+      function renderHistory() {
+        var container = document.getElementById('historyList');
+        
+        if (queryHistory.length === 0) {
+          container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>暂无查询记录</p></div>';
+          return;
+        }
+
+        var html = '';
+        for (var i = 0; i < queryHistory.length; i++) {
+          var item = queryHistory[i];
+          var bgColor = item.type === 'md5' ? 'rgba(88, 166, 255, 0.15)' : 'rgba(163, 113, 247, 0.15)';
+          var textColor = item.type === 'md5' ? 'var(--accent-primary)' : 'var(--accent-purple)';
+          html += '<div style="padding: 12px; background: var(--bg-primary); border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color);">' +
+            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
+            '<span style="font-size: 12px; color: var(--text-muted);">' + item.time + '</span>' +
+            '<span style="font-size: 11px; padding: 2px 8px; border-radius: 4px; background: ' + bgColor + '; color: ' + textColor + '; text-transform: uppercase;">' +
+            item.type + '</span></div>' +
+            '<div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;"><strong>明文:</strong> ' + escapeHtml(item.plain) + '</div>' +
+            '<div style="font-size: 12px; color: var(--text-muted); font-family: monospace; word-break: break-all;"><strong>密文:</strong> ' + escapeHtml(item.hash) + '</div></div>';
+        }
+        
+        container.innerHTML = html;
+      }
+
+      function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      window.copyResult = function() {
+        if (!currentPlain) {
+          showToast('没有可复制的内容', 'error');
+          return;
+        }
+        
+        navigator.clipboard.writeText(currentPlain).then(function() {
+          showToast('已复制到剪贴板', 'success');
+        }).catch(function() {
+          showToast('复制失败', 'error');
+        });
+      };
+
+      window.clearAll = function() {
+        document.getElementById('hashText').value = '';
+        document.getElementById('resultArea').style.display = 'none';
+        currentPlain = '';
+      };
+    })();
+  </script>
+</body>
+</html>

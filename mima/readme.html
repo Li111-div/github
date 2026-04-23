@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使用说明 - 密码工具箱</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>密码工具箱</h1>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">
+        <i class="fas fa-home"></i>
+        首页
+      </a>
+      <a href="/md5.html" class="nav-link">
+        <i class="fas fa-fingerprint"></i>
+        MD5加密
+      </a>
+      <a href="/sha1.html" class="nav-link">
+        <i class="fas fa-lock"></i>
+        SHA1加密
+      </a>
+      <a href="/decrypt.html" class="nav-link">
+        <i class="fas fa-key"></i>
+        解密查询
+      </a>
+      <a href="/tools.html" class="nav-link">
+        <i class="fas fa-toolbox"></i>
+        离线工具
+      </a>
+      <a href="/readme.html" class="nav-link active">
+        <i class="fas fa-book"></i>
+        使用说明
+      </a>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <main class="main-container">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-book"></i>
+          使用说明
+        </div>
+        <div class="card-subtitle">密码加密解密工具箱完整使用指南</div>
+      </div>
+    </div>
+
+    <!-- 目录 -->
+    <div class="card">
+      <div class="doc-section">
+        <h2>目录</h2>
+        <ul>
+          <li><a href="#intro" style="color: var(--accent-primary); text-decoration: none;">工具简介</a></li>
+          <li><a href="#md5" style="color: var(--accent-primary); text-decoration: none;">MD5 加密功能</a></li>
+          <li><a href="#sha1" style="color: var(--accent-primary); text-decoration: none;">SHA1 加密功能</a></li>
+          <li><a href="#decrypt" style="color: var(--accent-primary); text-decoration: none;">解密查询功能</a></li>
+          <li><a href="#tools" style="color: var(--accent-primary); text-decoration: none;">离线编码工具</a></li>
+          <li><a href="#principle" style="color: var(--accent-primary); text-decoration: none;">技术原理</a></li>
+          <li><a href="#warning" style="color: var(--accent-primary); text-decoration: none;">注意事项</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 工具简介 -->
+    <div class="card">
+      <div class="doc-section" id="intro">
+        <h2><i class="fas fa-info-circle"></i> 工具简介</h2>
+        <p>
+          密码加密解密工具箱是一款提供哈希加密与解码功能的在线工具，主要包含以下核心功能：
+        </p>
+        <ul>
+          <li><strong>MD5 加密</strong>：将任意文本转换为 32 位 MD5 哈希值</li>
+          <li><strong>SHA1 加密</strong>：将任意文本转换为 40 位 SHA1 哈希值</li>
+          <li><strong>哈希解密</strong>：通过密文查询数据库，返回原始明文</li>
+          <li><strong>离线工具</strong>：Base64、URL、进制转换等多种编码工具</li>
+        </ul>
+        <p>
+          所有加密操作会自动将明文和密文存储到云端数据库，方便后续通过密文反查明文。
+          离线工具的所有操作均在浏览器本地完成，不会向服务器上传任何数据。
+        </p>
+      </div>
+    </div>
+
+    <!-- MD5 加密 -->
+    <div class="card">
+      <div class="doc-section" id="md5">
+        <h2><i class="fas fa-fingerprint"></i> MD5 加密功能</h2>
+        <h3>功能说明</h3>
+        <p>
+          MD5（Message-Digest Algorithm 5）是一种被广泛使用的密码散列函数，
+          可以将任意长度的数据转换为固定长度的 128 位哈希值（通常表示为 32 个十六进制字符）。
+        </p>
+        
+        <h3>使用方法</h3>
+        <ul>
+          <li>打开 <code>MD5加密</code> 页面</li>
+          <li>在文本框中输入需要加密的明文</li>
+          <li>点击「加密并存储」按钮</li>
+          <li>系统将自动生成 MD5 哈希值并显示</li>
+          <li>同时会将明文和密文自动存储到数据库</li>
+        </ul>
+
+        <h3>示例</h3>
+        <p>
+          输入：<code>hello world</code><br>
+          输出：<code>5eb63bbbe01eeed093cb22bb8f5acdc3</code>
+        </p>
+      </div>
+    </div>
+
+    <!-- SHA1 加密 -->
+    <div class="card">
+      <div class="doc-section" id="sha1">
+        <h2><i class="fas fa-lock"></i> SHA1 加密功能</h2>
+        <h3>功能说明</h3>
+        <p>
+          SHA1（Secure Hash Algorithm 1）是由美国国家安全局设计的安全哈希算法，
+          会产生一个 160 位的哈希值（通常表示为 40 个十六进制字符）。
+          SHA1 相比 MD5 产生更长的哈希值，理论上更安全。
+        </p>
+        
+        <h3>使用方法</h3>
+        <ul>
+          <li>打开 <code>SHA1加密</code> 页面</li>
+          <li>在文本框中输入需要加密的明文</li>
+          <li>点击「加密并存储」按钮</li>
+          <li>系统将自动生成 SHA1 哈希值并显示</li>
+          <li>同时会将明文和密文自动存储到数据库</li>
+        </ul>
+
+        <h3>示例</h3>
+        <p>
+          输入：<code>hello world</code><br>
+          输出：<code>2aae6c35c94fcfb415dbe95f408b9ce91ee846ed</code>
+        </p>
+      </div>
+    </div>
+
+    <!-- 解密查询 -->
+    <div class="card">
+      <div class="doc-section" id="decrypt">
+        <h2><i class="fas fa-key"></i> 解密查询功能</h2>
+        <h3>功能说明</h3>
+        <p>
+          由于 MD5 和 SHA1 都是单向哈希算法，理论上无法逆向解密。
+          本工具的「解密」功能实际上是<strong>通过数据库查询</strong>实现的。
+          只有当明文曾经通过本工具的加密功能处理并存储到数据库时，才能查询到对应的明文。
+        </p>
+        
+        <h3>使用方法</h3>
+        <ul>
+          <li>打开 <code>解密查询</code> 页面</li>
+          <li>选择与加密时相同的哈希算法（MD5 或 SHA1）</li>
+          <li>输入需要查询的密文</li>
+          <li>点击「查询解密」按钮</li>
+          <li>如果数据库中有匹配记录，将显示对应的明文</li>
+        </ul>
+
+        <div class="doc-warning">
+          <div class="doc-warning-title">
+            <i class="fas fa-exclamation-triangle"></i>
+            重要提示
+          </div>
+          <p>
+            解密查询需要数据库中已有对应记录才能成功。如果数据库中没有该密文的记录，
+            则无法解密。因此，请确保加密和解密使用的是同一种算法。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 离线工具 -->
+    <div class="card">
+      <div class="doc-section" id="tools">
+        <h2><i class="fas fa-toolbox"></i> 离线编码工具</h2>
+        <p>
+          离线工具提供了多种常用的编码转换功能，所有操作均在浏览器本地完成，
+          <strong style="color: var(--accent-success);">不会向服务器上传任何数据</strong>。
+        </p>
+        
+        <h3>Base64 编解码</h3>
+        <p>
+          Base64 是一种基于 64 个可打印字符来表示二进制数据的编码方式，
+          常用于在 HTTP 环境中传输二进制数据。
+        </p>
+
+        <h3>URL 编解码</h3>
+        <p>
+          URL 编码用于将特殊字符转换为 URL 安全格式，
+          例如空格转换为 <code>%20</code>。
+        </p>
+
+        <h3>进制转换</h3>
+        <p>
+          支持二进制、八进制、十进制、十六进制之间的相互转换，
+          输入时支持多种格式前缀：<code>0x</code>（十六进制）、<code>0b</code>（二进制）、<code>0o</code>（八进制）。
+        </p>
+
+        <h3>Unicode 编解码</h3>
+        <p>
+          Unicode 编码用于表示世界上的各种字符，
+          中文转换为 <code>\u4e2d\u6587</code> 格式。
+        </p>
+
+        <h3>HTML 实体编码</h3>
+        <p>
+          将 HTML 特殊字符转义为实体形式，
+          例如 <code>&lt;</code> 转换为 <code>&amp;lt;</code>。
+        </p>
+
+        <h3>大小写转换</h3>
+        <p>
+          提供大写、小写、首字母大写、句首大写、大小写反转等功能。
+        </p>
+      </div>
+    </div>
+
+    <!-- 技术原理 -->
+    <div class="card">
+      <div class="doc-section" id="principle">
+        <h2><i class="fas fa-cogs"></i> 技术原理</h2>
+        
+        <h3>哈希算法</h3>
+        <p>
+          MD5 和 SHA1 都是密码学哈希函数，具有以下特性：
+        </p>
+        <ul>
+          <li><strong>单向性</strong>：可以从明文计算密文，但无法从密文反推明文</li>
+          <li><strong>固定长度</strong>：无论输入多长，输出长度固定</li>
+          <li><strong>唯一性</strong>：不同的输入理论上会产生不同的输出</li>
+          <li><strong>雪崩效应</strong>：输入微小变化会导致输出显著变化</li>
+        </ul>
+
+        <h3>数据库存储</h3>
+        <p>
+          每次加密操作会自动将 <code>plain_text</code>（明文）、<code>hash_text</code>（密文）、
+          <code>hash_type</code>（算法类型）存储到云端数据库。
+          解密时通过密文和算法类型匹配查询数据库返回明文。
+        </p>
+
+        <h3>技术栈</h3>
+        <ul>
+          <li><strong>前端框架</strong>：原生 HTML/CSS/JavaScript</li>
+          <li><strong>样式库</strong>：Tailwind CSS</li>
+          <li><strong>加密库</strong>：CryptoJS</li>
+          <li><strong>数据库</strong>：Supabase (PostgreSQL)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 注意事项 -->
+    <div class="card">
+      <div class="doc-section" id="warning">
+        <h2><i class="fas fa-exclamation-triangle"></i> 注意事项</h2>
+        
+        <div class="doc-warning">
+          <div class="doc-warning-title">
+            <i class="fas fa-gavel"></i>
+            使用声明
+          </div>
+          <p>
+            <strong>本工具仅供个人本地自用，禁止公开部署、禁止非法使用。</strong>
+            使用本工具即表示同意以下条款：
+          </p>
+        </div>
+
+        <ul>
+          <li>本工具仅供学习、研究和个人日常使用</li>
+          <li>禁止使用本工具进行任何违法活动</li>
+          <li>禁止将本工具公开部署或提供给第三方使用</li>
+          <li>禁止使用本工具进行密码破解、撞库等行为</li>
+          <li>用户需自行承担使用本工具的风险和责任</li>
+        </ul>
+
+        <h3>安全建议</h3>
+        <ul>
+          <li>MD5 和 SHA1 由于被广泛使用，已存在大量彩虹表，不建议用于密码存储</li>
+          <li>对于需要高安全性的场景，建议使用 BCrypt、Argon2 等专业密码哈希算法</li>
+          <li>本工具的数据库连接信息已硬编码，仅供个人本地使用</li>
+        </ul>
+
+        <h3>数据说明</h3>
+        <ul>
+          <li>数据库采用 RLS（行级安全策略），仅允许查询和插入操作</li>
+          <li>加密数据存储在云端，请勿存储敏感个人信息</li>
+          <li>离线工具不会上传任何数据，所有操作在本地完成</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <p>密码加密解密工具箱 - 仅供个人学习与日常使用</p>
+  </footer>
+</body>
+</html>

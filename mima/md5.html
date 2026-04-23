@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MD5 加密 - 密码工具箱</title>
+  <link rel="stylesheet" href="/styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>密码工具箱</h1>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">
+        <i class="fas fa-home"></i>
+        首页
+      </a>
+      <a href="/md5.html" class="nav-link active">
+        <i class="fas fa-fingerprint"></i>
+        MD5加密
+      </a>
+      <a href="/sha1.html" class="nav-link">
+        <i class="fas fa-lock"></i>
+        SHA1加密
+      </a>
+      <a href="/decrypt.html" class="nav-link">
+        <i class="fas fa-key"></i>
+        解密查询
+      </a>
+      <a href="/tools.html" class="nav-link">
+        <i class="fas fa-toolbox"></i>
+        离线工具
+      </a>
+      <a href="/readme.html" class="nav-link">
+        <i class="fas fa-book"></i>
+        使用说明
+      </a>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <main class="main-container">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-fingerprint"></i>
+          MD5 加密
+        </div>
+        <div class="card-subtitle">输入明文，自动生成 32 位 MD5 哈希值并存储到数据库</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">输入明文</label>
+        <textarea 
+          id="plainText" 
+          class="form-textarea" 
+          placeholder="请输入需要加密的文本..."
+          rows="4"
+        ></textarea>
+        <div class="form-hint">
+          <i class="fas fa-info-circle"></i>
+          支持中英文、数字、特殊字符等任意文本
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button id="encryptBtn" class="btn btn-primary" onclick="doEncrypt()">
+          <i class="fas fa-key"></i>
+          加密并存储
+        </button>
+        <button class="btn btn-secondary" onclick="clearAll()">
+          <i class="fas fa-trash"></i>
+          清空
+        </button>
+      </div>
+
+      <div id="resultArea" style="margin-top: 24px; display: none;">
+        <div class="result-box">
+          <div class="result-label">
+            <i class="fas fa-check-circle" style="color: var(--accent-success);"></i>
+            加密结果
+          </div>
+          <div class="result-content" id="hashResult"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyResult()">
+              <i class="fas fa-copy"></i>
+              复制
+            </button>
+          </div>
+        </div>
+
+        <div id="statusBox" class="result-box" style="margin-top: 16px;">
+          <div class="result-label" id="statusLabel">
+            <i class="fas fa-cloud-upload" style="color: var(--accent-primary);"></i>
+            数据库状态
+          </div>
+          <div class="result-content" id="statusText" style="color: var(--text-secondary);">
+            正在上传到数据库...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 说明 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-circle-info"></i>
+          MD5 算法说明
+        </div>
+      </div>
+      <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px;">
+        <strong style="color: var(--text-primary);">MD5（Message-Digest Algorithm 5）</strong> 是被广泛使用的密码散列函数，
+        可以产生一个 128 位（16 字节）的哈希值，通常由 32 个十六进制数表示。
+      </p>
+      <p style="color: var(--text-secondary); line-height: 1.8;">
+        MD5 是单向哈希函数，不可逆向解密。本工具会将每次加密的明文和密文存储到数据库，
+        后续可通过"解密查询"功能，通过密文反查明文。
+      </p>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <p>密码加密解密工具箱 - 仅供个人学习与日常使用</p>
+  </footer>
+
+  <!-- Toast 容器 -->
+  <div id="toastContainer"></div>
+
+  <!-- 依赖脚本 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    (function() {
+      // 初始化 Supabase
+      const supabaseUrl = 'https://vxebvrglknakopdbfyuf.supabase.co';
+      const supabaseKey = 'sb_publishable_63yeKCzGKJ4QHJl_hjLlQw_khNPspXp';
+      const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      let currentHash = '';
+
+      window.showToast = function(message, type) {
+        type = type || 'info';
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast toast-' + type;
+        
+        const icons = {
+          success: 'fa-check-circle',
+          error: 'fa-times-circle',
+          info: 'fa-info-circle'
+        };
+        
+        toast.innerHTML = '<i class="fas ' + icons[type] + '"></i>' + message;
+        
+        container.appendChild(toast);
+        
+        setTimeout(function() {
+          toast.style.animation = 'slideIn 0.3s ease reverse';
+          setTimeout(function() { toast.remove(); }, 300);
+        }, 3000);
+      };
+
+      window.doEncrypt = function() {
+        var plainText = document.getElementById('plainText').value.trim();
+        
+        if (!plainText) {
+          showToast('请输入需要加密的文本', 'error');
+          return;
+        }
+
+        var btn = document.getElementById('encryptBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading"><span class="loading-spinner"></span>加密中...</span>';
+
+        // 生成 MD5 哈希
+        setTimeout(function() {
+          currentHash = CryptoJS.MD5(plainText).toString();
+          
+          // 显示结果
+          document.getElementById('resultArea').style.display = 'block';
+          document.getElementById('hashResult').textContent = currentHash;
+          document.getElementById('statusText').textContent = '正在上传到数据库...';
+          document.getElementById('statusText').style.color = 'var(--text-secondary)';
+          
+          // 存储到数据库
+          saveToDatabase(plainText, currentHash, 'md5');
+          
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-key"></i> 加密并存储';
+        }, 300);
+      };
+
+      function saveToDatabase(plainText, hashText, hashType) {
+        try {
+          supabaseClient
+            .from('hash_dict')
+            .insert([
+              {
+                plain_text: plainText,
+                hash_text: hashText,
+                hash_type: hashType
+              }
+            ])
+            .then(function(response) {
+              if (response.error) {
+                console.error('数据库存储失败:', response.error);
+                document.getElementById('statusLabel').innerHTML = '<i class="fas fa-exclamation-triangle" style="color: var(--accent-warning);"></i> 数据库状态';
+                document.getElementById('statusText').textContent = '存储失败: ' + response.error.message;
+                document.getElementById('statusText').style.color = 'var(--accent-warning)';
+                showToast('数据库存储失败', 'error');
+              } else {
+                document.getElementById('statusLabel').innerHTML = '<i class="fas fa-check-circle" style="color: var(--accent-success);"></i> 数据库状态';
+                document.getElementById('statusText').textContent = '已成功存储到数据库，可使用解密功能查询';
+                document.getElementById('statusText').style.color = 'var(--accent-success)';
+                showToast('加密并存储成功', 'success');
+              }
+            });
+        } catch (err) {
+          console.error('存储异常:', err);
+          document.getElementById('statusText').textContent = '存储异常，请检查网络连接';
+          document.getElementById('statusText').style.color = 'var(--accent-danger)';
+          showToast('网络异常', 'error');
+        }
+      }
+
+      window.copyResult = function() {
+        if (!currentHash) {
+          showToast('没有可复制的内容', 'error');
+          return;
+        }
+        
+        navigator.clipboard.writeText(currentHash).then(function() {
+          showToast('已复制到剪贴板', 'success');
+        }).catch(function() {
+          showToast('复制失败', 'error');
+        });
+      };
+
+      window.clearAll = function() {
+        document.getElementById('plainText').value = '';
+        document.getElementById('resultArea').style.display = 'none';
+        currentHash = '';
+      };
+    })();
+  </script>
+</body>
+</html>
