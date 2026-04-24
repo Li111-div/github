@@ -14,7 +14,8 @@
       <i class="fas fa-shield-halved"></i>
       <h1>密码工具箱</h1>
     </a>
-    <div class="nav-links">
+    <button class="hamburger" id="hamburgerBtn" aria-label="菜单"><span></span><span></span><span></span></button>
+    <div class="nav-links" id="navLinks">
       <a href="index.html" class="nav-link active">
         <i class="fas fa-home"></i>
         首页
@@ -149,6 +150,25 @@
     const supabaseUrl = 'https://vxebvrglknakopdbfyuf.supabase.co';
     const supabaseKey = 'sb_publishable_63yeKCzGKJ4QHJl_hjLlQw_khNPspXp';
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    
+    // 移动端汉堡菜单功能
+    const hamburger = document.getElementById('hamburgerBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        this.classList.toggle('active');
+      });
+      
+      // 点击菜单链接后关闭菜单
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('active');
+          hamburger.classList.remove('active');
+        });
+      });
+    }
     
     // 挂载到全局供其他页面使用
     window.supabase = supabase;
