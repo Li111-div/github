@@ -19,17 +19,21 @@
         <i class="fas fa-home"></i>
         首页
       </a>
-      <a href="md5.html" class="nav-link">
+      <a href="hash.html" class="nav-link">
         <i class="fas fa-fingerprint"></i>
-        MD5加密
+        哈希加密
       </a>
-      <a href="sha1.html" class="nav-link">
+      <a href="hash.html" class="nav-link">
         <i class="fas fa-lock"></i>
-        SHA1加密
+        哈希加密
       </a>
       <a href="decrypt.html" class="nav-link">
         <i class="fas fa-key"></i>
         解密查询
+      </a>
+      <a href="encrypt.html" class="nav-link">
+        <i class="fas fa-lock-open"></i>
+        可逆加密
       </a>
       <a href="tools.html" class="nav-link">
         <i class="fas fa-toolbox"></i>
@@ -58,12 +62,13 @@
     <div class="card">
       <div class="doc-section">
         <h2>目录</h2>
-        <ul>
+        <ul style="columns: 2; column-gap: 30px;">
           <li><a href="#intro" style="color: var(--accent-primary); text-decoration: none;">工具简介</a></li>
-          <li><a href="#md5" style="color: var(--accent-primary); text-decoration: none;">MD5 加密功能</a></li>
-          <li><a href="#sha1" style="color: var(--accent-primary); text-decoration: none;">SHA1 加密功能</a></li>
-          <li><a href="#decrypt" style="color: var(--accent-primary); text-decoration: none;">解密查询功能</a></li>
-          <li><a href="#tools" style="color: var(--accent-primary); text-decoration: none;">离线编码工具</a></li>
+          <li><a href="#md5" style="color: var(--accent-primary); text-decoration: none;">MD5 加密</a></li>
+          <li><a href="#sha1" style="color: var(--accent-primary); text-decoration: none;">SHA1 加密</a></li>
+          <li><a href="#decrypt" style="color: var(--accent-primary); text-decoration: none;">解密查询</a></li>
+          <li><a href="#encrypt" style="color: var(--accent-primary); text-decoration: none;">可逆加密</a></li>
+          <li><a href="#tools" style="color: var(--accent-primary); text-decoration: none;">离线工具</a></li>
           <li><a href="#principle" style="color: var(--accent-primary); text-decoration: none;">技术原理</a></li>
           <li><a href="#warning" style="color: var(--accent-primary); text-decoration: none;">注意事项</a></li>
         </ul>
@@ -75,18 +80,30 @@
       <div class="doc-section" id="intro">
         <h2><i class="fas fa-info-circle"></i> 工具简介</h2>
         <p>
-          密码加密解密工具箱是一款提供哈希加密与解码功能的在线工具，主要包含以下核心功能：
+          密码加密解密工具箱是一款功能完善的在线加密解密工具，提供多种哈希加密、可逆加密和编码转换功能。
         </p>
-        <ul>
-          <li><strong>MD5 加密</strong>：将任意文本转换为 32 位 MD5 哈希值</li>
-          <li><strong>SHA1 加密</strong>：将任意文本转换为 40 位 SHA1 哈希值</li>
-          <li><strong>哈希解密</strong>：通过密文查询数据库，返回原始明文</li>
-          <li><strong>离线工具</strong>：Base64、URL、进制转换等多种编码工具</li>
-        </ul>
-        <p>
-          所有加密操作会自动将明文和密文存储到云端数据库，方便后续通过密文反查明文。
-          离线工具的所有操作均在浏览器本地完成，不会向服务器上传任何数据。
-        </p>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <i class="fas fa-fingerprint"></i>
+            <h4>哈希加密</h4>
+            <p>MD5、SHA1 不可逆加密，输出固定长度哈希值</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-lock-open"></i>
+            <h4>可逆加密</h4>
+            <p>AES、DES、RC4 等12种对称加密算法</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-key"></i>
+            <h4>解密查询</h4>
+            <p>通过密文查询数据库返回原始明文</p>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-toolbox"></i>
+            <h4>离线工具</h4>
+            <p>Base64、URL、进制等6种编码转换</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -94,25 +111,39 @@
     <div class="card">
       <div class="doc-section" id="md5">
         <h2><i class="fas fa-fingerprint"></i> MD5 加密功能</h2>
+        
         <h3>功能说明</h3>
         <p>
-          MD5（Message-Digest Algorithm 5）是一种被广泛使用的密码散列函数，
-          可以将任意长度的数据转换为固定长度的 128 位哈希值（通常表示为 32 个十六进制字符）。
+          MD5（Message-Digest Algorithm 5）是一种广泛使用的哈希算法，可以将任意长度的数据转换为 32 位（128 位）的哈希值。
+          MD5 是不可逆算法，相同输入始终产生相同输出，但无法从输出反推输入。
         </p>
         
-        <h3>使用方法</h3>
+        <h3>算法特点</h3>
         <ul>
-          <li>打开 <code>MD5加密</code> 页面</li>
-          <li>在文本框中输入需要加密的明文</li>
-          <li>点击「加密并存储」按钮</li>
-          <li>系统将自动生成 MD5 哈希值并显示</li>
-          <li>同时会将明文和密文自动存储到数据库</li>
+          <li><strong>输出长度</strong>：32 位十六进制字符串（128 位）</li>
+          <li><strong>不可逆性</strong>：无法从密文反解明文</li>
+          <li><strong>雪崩效应</strong>：输入微小变化会导致输出完全不同</li>
+          <li><strong>碰撞抵抗</strong>：已发现可构造碰撞（不推荐用于安全场景）</li>
         </ul>
-
-        <h3>示例</h3>
+        
+        <h3>应用场景</h3>
+        <ul>
+          <li>数据完整性校验</li>
+          <li>密码存储（建议加盐）</li>
+          <li>文件校验</li>
+          <li>数字签名</li>
+        </ul>
+        
+        <h3>使用示例</h3>
+        <div class="code-block">
+<pre>输入: hello world
+输出: 5eb63bbbe01eeed093cb22bb8f5acdc3</pre>
+        </div>
+        
+        <h3>数据库存储</h3>
         <p>
-          输入：<code>hello world</code><br>
-          输出：<code>5eb63bbbe01eeed093cb22bb8f5acdc3</code>
+          每次加密会自动将（明文、密文、算法类型）存储到云端数据库。
+          如果数据库中已存在相同记录，则不会重复存储，避免数据冗余。
         </p>
       </div>
     </div>
@@ -121,27 +152,34 @@
     <div class="card">
       <div class="doc-section" id="sha1">
         <h2><i class="fas fa-lock"></i> SHA1 加密功能</h2>
+        
         <h3>功能说明</h3>
         <p>
-          SHA1（Secure Hash Algorithm 1）是由美国国家安全局设计的安全哈希算法，
-          会产生一个 160 位的哈希值（通常表示为 40 个十六进制字符）。
-          SHA1 相比 MD5 产生更长的哈希值，理论上更安全。
+          SHA1（Secure Hash Algorithm 1）是一种安全哈希算法，产生 40 位（160 位）的哈希值。
+          与 MD5 相比，SHA1 输出更长，理论上更安全，但同样不可逆。
         </p>
         
-        <h3>使用方法</h3>
+        <h3>算法特点</h3>
         <ul>
-          <li>打开 <code>SHA1加密</code> 页面</li>
-          <li>在文本框中输入需要加密的明文</li>
-          <li>点击「加密并存储」按钮</li>
-          <li>系统将自动生成 SHA1 哈希值并显示</li>
-          <li>同时会将明文和密文自动存储到数据库</li>
+          <li><strong>输出长度</strong>：40 位十六进制字符串（160 位）</li>
+          <li><strong>不可逆性</strong>：无法从密文反解明文</li>
+          <li><strong>单向函数</strong>：设计为单向计算</li>
+          <li><strong>安全强度</strong>：已被发现存在理论攻击（SHA-2/SHA-3 更好）</li>
         </ul>
-
-        <h3>示例</h3>
-        <p>
-          输入：<code>hello world</code><br>
-          输出：<code>2aae6c35c94fcfb415dbe95f408b9ce91ee846ed</code>
-        </p>
+        
+        <h3>应用场景</h3>
+        <ul>
+          <li>SSL/TLS 证书签名</li>
+          <li>Git 提交记录标识</li>
+          <li>数字签名算法（如 DSA）</li>
+          <li>数据完整性验证</li>
+        </ul>
+        
+        <h3>使用示例</h3>
+        <div class="code-block">
+<pre>输入: hello world
+输出: 2aae6c35c94fcfb415dbe95f408b9ce91ee846ed</pre>
+        </div>
       </div>
     </div>
 
@@ -149,31 +187,184 @@
     <div class="card">
       <div class="doc-section" id="decrypt">
         <h2><i class="fas fa-key"></i> 解密查询功能</h2>
+        
         <h3>功能说明</h3>
         <p>
-          由于 MD5 和 SHA1 都是单向哈希算法，理论上无法逆向解密。
-          本工具的「解密」功能实际上是<strong>通过数据库查询</strong>实现的。
-          只有当明文曾经通过本工具的加密功能处理并存储到数据库时，才能查询到对应的明文。
+          解密查询功能通过输入密文和选择算法类型，在数据库中查找匹配的记录，返回原始明文。
+          支持 MD5 和 SHA1 两种算法的查询。
         </p>
         
-        <h3>使用方法</h3>
+        <h3>使用步骤</h3>
+        <ol>
+          <li>选择算法类型（MD5 或 SHA1）</li>
+          <li>输入要查询的密文（支持大小写自动转换）</li>
+          <li>点击"查询"按钮</li>
+          <li>查看返回的明文结果</li>
+        </ol>
+        
+        <h3>注意事项</h3>
         <ul>
-          <li>打开 <code>解密查询</code> 页面</li>
-          <li>选择与加密时相同的哈希算法（MD5 或 SHA1）</li>
-          <li>输入需要查询的密文</li>
-          <li>点击「查询解密」按钮</li>
-          <li>如果数据库中有匹配记录，将显示对应的明文</li>
+          <li>必须先通过加密功能存储记录，才能查询到结果</li>
+          <li>MD5 和 SHA1 算法不互通，必须选择正确的算法</li>
+          <li>输入时会自动过滤非十六进制字符</li>
+          <li>大小写不敏感，会自动转换为小写查询</li>
         </ul>
+        
+        <h3>查询条件</h3>
+        <p>
+          数据库查询同时匹配（密文 + 算法类型），确保同一密文在不同算法下不会混淆。
+        </p>
+      </div>
+    </div>
 
-        <div class="doc-warning">
-          <div class="doc-warning-title">
-            <i class="fas fa-exclamation-triangle"></i>
-            重要提示
+    <!-- 可逆加密 -->
+    <div class="card">
+      <div class="doc-section" id="encrypt">
+        <h2><i class="fas fa-lock-open"></i> 可逆加密功能</h2>
+        
+        <p>
+          可逆加密与哈希加密不同，使用密钥可以对数据进行加密和解密操作。
+          相同的密钥既可以加密也可以解密，这是可逆加密与不可逆哈希的本质区别。
+        </p>
+        
+        <h3>支持的算法</h3>
+        
+        <div class="encrypt-section">
+          <h4><i class="fas fa-star" style="color: var(--accent-warning);"></i> 推荐算法</h4>
+          
+          <div class="encrypt-algo">
+            <h5>AES-256 (CBC 模式)</h5>
+            <p><strong>高级加密标准</strong>，目前最安全的对称加密算法之一。支持 128、192、256 位密钥。本工具使用 256 位密钥。</p>
+            <ul>
+              <li><strong>密钥长度</strong>：256 位（32 字节）</li>
+              <li><strong>分组长度</strong>：128 位（16 字节）</li>
+              <li><strong>安全性</strong>：极高，商业加密首选</li>
+              <li><strong>应用</strong>：TLS/SSL、文件加密、数据库加密</li>
+            </ul>
           </div>
-          <p>
-            解密查询需要数据库中已有对应记录才能成功。如果数据库中没有该密文的记录，
-            则无法解密。因此，请确保加密和解密使用的是同一种算法。
-          </p>
+          
+          <div class="encrypt-algo">
+            <h5>AES-ECB</h5>
+            <p>电子密码本模式，是 AES 的最简单形式。相同的明文块会产生相同的密文块。</p>
+            <ul>
+              <li><strong>特点</strong>：简单快速，但模式不安全</li>
+              <li><strong>注意</strong>：不推荐用于加密多块数据</li>
+            </ul>
+          </div>
+          
+          <div class="encrypt-algo">
+            <h5>AES-CTR</h5>
+            <p>计数器模式，通过递增计数器生成密钥流，可以并行加密。</p>
+            <ul>
+              <li><strong>特点</strong>：可并行处理，效率高</li>
+              <li><strong>应用</strong>：现代加密标准</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="encrypt-section">
+          <h4><i class="fas fa-history" style="color: var(--accent-info);"></i> 经典算法</h4>
+          
+          <div class="encrypt-algo">
+            <h5>DES</h5>
+            <p><strong>数据加密标准</strong>，1977 年发布，是历史上最著名的对称加密算法。</p>
+            <ul>
+              <li><strong>密钥长度</strong>：56 位（实际 64 位，含 8 位校验）</li>
+              <li><strong>分组长度</strong>：64 位</li>
+              <li><strong>安全性</strong>：已不安全，3DES 替代</li>
+            </ul>
+          </div>
+          
+          <div class="encrypt-algo">
+            <h5>DES-ECB</h5>
+            <p>DES 的电子密码本模式，简单但存在与 ECB 相同的安全问题。</p>
+          </div>
+          
+          <div class="encrypt-algo">
+            <h5>TripleDES</h5>
+            <p><strong>三重 DES</strong>，使用两个或三个不同的 DES 密钥对数据进行三次加密。</p>
+            <ul>
+              <li><strong>密钥长度</strong>：168 位（3×56）或 112 位（2×56）</li>
+              <li><strong>安全性</strong>：比 DES 安全，但慢</li>
+              <li><strong>应用</strong>：旧系统兼容</li>
+            </ul>
+          </div>
+          
+          <div class="encrypt-algo">
+            <h5>TripleDES-ECB</h5>
+            <p>TripleDES 的电子密码本模式。</p>
+          </div>
+        </div>
+        
+        <div class="encrypt-section">
+          <h4><i class="fas fa-water" style="color: var(--accent-cyan);"></i> 流加密算法</h4>
+          
+          <div class="encrypt-algo">
+            <h5>RC4</h5>
+            <p><strong>序列密码</strong>，流加密的经典算法，曾广泛用于 SSL/TLS 和 WEP。</p>
+            <ul>
+              <li><strong>密钥长度</strong>：可变，40-2048 位</li>
+              <li><strong>特点</strong>：简单快速</li>
+              <li><strong>注意</strong>：已发现弱点，不推荐新系统使用</li>
+            </ul>
+          </div>
+          
+          <div class="encrypt-algo">
+            <h5>RC4Drop</h5>
+            <p>RC4 的改进版本，在生成密钥流前丢弃前 N 个字节，减少弱密钥的影响。</p>
+            <ul>
+              <li><strong>丢弃字节</strong>：前 768-1536 字节</li>
+              <li><strong>安全性</strong>：比原始 RC4 更好</li>
+            </ul>
+          </div>
+          
+          <div class="encrypt-algo">
+            <h5>Rabbit</h5>
+            <p><strong>高性能流加密算法</strong>，2003 年提出，效率高，安全性好。</p>
+            <ul>
+              <li><strong>密钥长度</strong>：128 位</li>
+              <li><strong>分组长度</strong>：64 位</li>
+              <li><strong>特点</strong>：速度快，硬件实现简单</li>
+            </ul>
+          </div>
+          
+          <div class="encrypt-algo">
+            <h5>Rabbit Legacy</h5>
+            <p>Rabbit 的原始版本，保持向后兼容性。</p>
+          </div>
+        </div>
+        
+        <div class="encrypt-section">
+          <h4><i class="fas fa-fish" style="color: var(--accent-purple);"></i> 其他算法</h4>
+          
+          <div class="encrypt-algo">
+            <h5>Blowfish</h5>
+            <p><strong>河豚算法</strong>，由 Bruce Schneier 设计，以安全性高和免费使用著称。</p>
+            <ul>
+              <li><strong>密钥长度</strong>：可变，32-448 位</li>
+              <li><strong>分组长度</strong>：64 位</li>
+              <li><strong>特点</strong>：无专利，免费使用</li>
+              <li><strong>应用</strong>：加密工具、数据库</li>
+            </ul>
+          </div>
+        </div>
+        
+        <h3>使用说明</h3>
+        <ol>
+          <li><strong>输入明文</strong>：在输入框输入要加密的文本</li>
+          <li><strong>输入密钥</strong>：输入加密密钥（DES 等算法有长度要求）</li>
+          <li><strong>选择算法</strong>：从下拉菜单选择加密算法</li>
+          <li><strong>点击加密</strong>：获取密文</li>
+          <li><strong>点击解密</strong>：输入密文和相同密钥获取明文</li>
+        </ol>
+        
+        <h3>重要提示</h3>
+        <div class="warning-box">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>
+            <strong>密钥管理</strong>：加密和解密必须使用相同的密钥，丢失密钥将无法解密！<br>
+            <strong>算法选择</strong>：新项目推荐使用 AES-256，经典场景可选择 DES/TripleDES，流加密推荐 Rabbit。
+          </div>
         </div>
       </div>
     </div>
@@ -182,77 +373,127 @@
     <div class="card">
       <div class="doc-section" id="tools">
         <h2><i class="fas fa-toolbox"></i> 离线编码工具</h2>
+        
         <p>
-          离线工具提供了多种常用的编码转换功能，所有操作均在浏览器本地完成，
-          <strong style="color: var(--accent-success);">不会向服务器上传任何数据</strong>。
+          所有离线工具都在浏览器本地执行，不会向服务器发送任何数据。
+          适合处理敏感信息、开发调试等场景。
         </p>
         
-        <h3>Base64 编解码</h3>
-        <p>
-          Base64 是一种基于 64 个可打印字符来表示二进制数据的编码方式，
-          常用于在 HTTP 环境中传输二进制数据。
-        </p>
-
-        <h3>URL 编解码</h3>
-        <p>
-          URL 编码用于将特殊字符转换为 URL 安全格式，
-          例如空格转换为 <code>%20</code>。
-        </p>
-
-        <h3>进制转换</h3>
-        <p>
-          支持二进制、八进制、十进制、十六进制之间的相互转换，
-          输入时支持多种格式前缀：<code>0x</code>（十六进制）、<code>0b</code>（二进制）、<code>0o</code>（八进制）。
-        </p>
-
-        <h3>Unicode 编解码</h3>
-        <p>
-          Unicode 编码用于表示世界上的各种字符，
-          中文转换为 <code>\u4e2d\u6587</code> 格式。
-        </p>
-
-        <h3>HTML 实体编码</h3>
-        <p>
-          将 HTML 特殊字符转义为实体形式，
-          例如 <code>&lt;</code> 转换为 <code>&amp;lt;</code>。
-        </p>
-
-        <h3>大小写转换</h3>
-        <p>
-          提供大写、小写、首字母大写、句首大写、大小写反转等功能。
-        </p>
+        <div class="tool-section">
+          <h4><i class="fas fa-code"></i> Base64 编码/解码</h4>
+          <p>
+            Base64 是一种基于 64 个可打印字符的编码方式，用于将二进制数据转换为 ASCII 文本。
+          </p>
+          <ul>
+            <li><strong>字符集</strong>：A-Z, a-z, 0-9, +, /（共 64 个字符）</li>
+            <li><strong>应用</strong>：电子邮件、URL 参数、数据传输</li>
+            <li><strong>示例</strong>：<code>hello</code> → <code>aGVsbG8=</code></li>
+          </ul>
+        </div>
+        
+        <div class="tool-section">
+          <h4><i class="fas fa-link"></i> URL 编码/解码</h4>
+          <p>
+            URL 编码（百分号编码）用于将特殊字符转换为 URL 安全格式。
+          </p>
+          <ul>
+            <li><strong>空格编码</strong>：<code>%20</code> 或 <code>+</code></li>
+            <li><strong>特殊字符</strong>：<code>?</code> → <code>%3F</code>，<code>&</code> → <code>%26</code></li>
+            <li><strong>示例</strong>：<code>hello world</code> → <code>hello%20world</code></li>
+          </ul>
+        </div>
+        
+        <div class="tool-section">
+          <h4><i class="fas fa-calculator"></i> 进制转换</h4>
+          <p>
+            支持二进制、八进制、十进制、十六进制之间的相互转换。
+          </p>
+          <ul>
+            <li><strong>二进制 (BIN)</strong>：0-1，计算机底层表示</li>
+            <li><strong>八进制 (OCT)</strong>：0-7，常用于 Unix 权限</li>
+            <li><strong>十进制 (DEC)</strong>：0-9，人类日常使用</li>
+            <li><strong>十六进制 (HEX)</strong>：0-9, A-F，内存地址常用</li>
+          </ul>
+          <p>
+            <strong>支持自动识别</strong>：输入 <code>0xFF</code> 自动识别为十六进制，输入 <code>0b11111111</code> 自动识别为二进制。
+          </p>
+        </div>
+        
+        <div class="tool-section">
+          <h4><i class="fas fa-font"></i> Unicode 编码/解码</h4>
+          <p>
+            Unicode 是国际标准字符集，中文字符在 JavaScript 中以 <code>\uXXXX</code> 形式表示。
+          </p>
+          <ul>
+            <li><strong>中文字符</strong>：<code>中</code> → <code>\u4E2D</code></li>
+            <li><strong>表情符号</strong>：<code>😀</code> → <code>\u{1F600}</code></li>
+            <li><strong>应用</strong>：JSON 转义、JavaScript 字符串</li>
+          </ul>
+        </div>
+        
+        <div class="tool-section">
+          <h4><i class="fab fa-html5"></i> HTML 实体编码/解码</h4>
+          <p>
+            将 HTML 特殊字符转换为实体形式，防止 XSS 攻击和渲染错误。
+          </p>
+          <ul>
+            <li><code>&lt;</code> → <code>&amp;lt;</code></li>
+            <li><code>&gt;</code> → <code>&amp;gt;</code></li>
+            <li><code>&amp;</code> → <code>&amp;amp;</code></li>
+            <li><code>"</code> → <code>&amp;quot;</code></li>
+            <li><code>'</code> → <code>&amp;apos;</code></li>
+          </ul>
+        </div>
+        
+        <div class="tool-section">
+          <h4><i class="fas fa-text-height"></i> 大小写转换</h4>
+          <p>
+            提供 5 种大小写转换方式，适应不同的文本处理需求。
+          </p>
+          <ul>
+            <li><strong>大写</strong>：<code>hello</code> → <code>HELLO</code></li>
+            <li><strong>小写</strong>：<code>HELLO</code> → <code>hello</code></li>
+            <li><strong>首字母大写</strong>：<code>hello world</code> → <code>Hello World</code></li>
+            <li><strong>句首大写</strong>：<code>hello. world.</code> → <code>Hello. World.</code></li>
+            <li><strong>大小写反转</strong>：<code>Hello</code> → <code>hELLO</code></li>
+          </ul>
+        </div>
       </div>
     </div>
 
     <!-- 技术原理 -->
     <div class="card">
       <div class="doc-section" id="principle">
-        <h2><i class="fas fa-cogs"></i> 技术原理</h2>
+        <h2><i class="fas fa-microchip"></i> 技术原理</h2>
         
-        <h3>哈希算法</h3>
+        <h3>哈希算法原理</h3>
         <p>
-          MD5 和 SHA1 都是密码学哈希函数，具有以下特性：
+          哈希算法将任意长度的输入通过数学变换转换为固定长度的输出。
+          好的哈希算法具有以下特性：
         </p>
         <ul>
-          <li><strong>单向性</strong>：可以从明文计算密文，但无法从密文反推明文</li>
-          <li><strong>固定长度</strong>：无论输入多长，输出长度固定</li>
-          <li><strong>唯一性</strong>：不同的输入理论上会产生不同的输出</li>
-          <li><strong>雪崩效应</strong>：输入微小变化会导致输出显著变化</li>
+          <li><strong>确定性</strong>：相同输入必产生相同输出</li>
+          <li><strong>单向性</strong>：无法从输出反推输入</li>
+          <li><strong>雪崩效应</strong>：输入微小变化导致输出巨大差异</li>
+          <li><strong>抗碰撞</strong>：难以找到两个不同输入产生相同输出</li>
         </ul>
-
-        <h3>数据库存储</h3>
+        
+        <h3>对称加密原理</h3>
         <p>
-          每次加密操作会自动将 <code>plain_text</code>（明文）、<code>hash_text</code>（密文）、
-          <code>hash_type</code>（算法类型）存储到云端数据库。
-          解密时通过密文和算法类型匹配查询数据库返回明文。
+          对称加密使用相同的密钥进行加密和解密。加密过程和解密过程互为逆运算。
         </p>
-
+        <div class="code-block">
+<pre>加密: 明文 + 密钥 → 密文
+解密: 密文 + 密钥 → 明文</pre>
+        </div>
+        
         <h3>技术栈</h3>
         <ul>
-          <li><strong>前端框架</strong>：原生 HTML/CSS/JavaScript</li>
-          <li><strong>样式库</strong>：Tailwind CSS</li>
-          <li><strong>加密库</strong>：CryptoJS</li>
-          <li><strong>数据库</strong>：Supabase (PostgreSQL)</li>
+          <li><strong>前端</strong>：HTML5 + CSS3 + 原生 JavaScript</li>
+          <li><strong>样式</strong>：Tailwind CSS 暗黑风格</li>
+          <li><strong>加密库</strong>：CryptoJS（Web Crypto API 封装）</li>
+          <li><strong>数据库</strong>：Supabase（PostgreSQL 云数据库）</li>
+          <li><strong>图标</strong>：Font Awesome 6</li>
         </ul>
       </div>
     </div>
@@ -260,40 +501,29 @@
     <!-- 注意事项 -->
     <div class="card">
       <div class="doc-section" id="warning">
-        <h2><i class="fas fa-exclamation-triangle"></i> 注意事项</h2>
+        <h2><i class="fas fa-exclamation-circle"></i> 注意事项</h2>
         
-        <div class="doc-warning">
-          <div class="doc-warning-title">
-            <i class="fas fa-gavel"></i>
-            使用声明
+        <div class="warning-box">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>
+            <strong>安全警告</strong>：MD5 和 SHA1 由于存在已知安全弱点，不推荐用于高安全场景的密码存储。
+            建议使用 bcrypt、Argon2 等专门的密码哈希算法。
           </div>
-          <p>
-            <strong>本工具仅供个人本地自用，禁止公开部署、禁止非法使用。</strong>
-            使用本工具即表示同意以下条款：
-          </p>
         </div>
-
+        
+        <h3>使用规范</h3>
         <ul>
-          <li>本工具仅供学习、研究和个人日常使用</li>
-          <li>禁止使用本工具进行任何违法活动</li>
-          <li>禁止将本工具公开部署或提供给第三方使用</li>
-          <li>禁止使用本工具进行密码破解、撞库等行为</li>
-          <li>用户需自行承担使用本工具的风险和责任</li>
+          <li>本工具仅供学习和开发测试使用</li>
+          <li>不要将重要密码或敏感信息存储在数据库中</li>
+          <li>可逆加密务必妥善保管密钥，丢失将无法解密</li>
+          <li>Base64 和 Unicode 不是加密，只是编码格式</li>
         </ul>
-
-        <h3>安全建议</h3>
-        <ul>
-          <li>MD5 和 SHA1 由于被广泛使用，已存在大量彩虹表，不建议用于密码存储</li>
-          <li>对于需要高安全性的场景，建议使用 BCrypt、Argon2 等专业密码哈希算法</li>
-          <li>本工具的数据库连接信息已硬编码，仅供个人本地使用</li>
-        </ul>
-
-        <h3>数据说明</h3>
-        <ul>
-          <li>数据库采用 RLS（行级安全策略），仅允许查询和插入操作</li>
-          <li>加密数据存储在云端，请勿存储敏感个人信息</li>
-          <li>离线工具不会上传任何数据，所有操作在本地完成</li>
-        </ul>
+        
+        <h3>免责声明</h3>
+        <p>
+          本工具仅供个人本地自用，禁止公开部署或用于非法用途。
+          使用本工具产生的任何后果由用户自行承担。
+        </p>
       </div>
     </div>
   </main>

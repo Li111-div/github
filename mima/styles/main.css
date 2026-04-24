@@ -45,9 +45,16 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* 页面内容顶部留出导航栏空间 */
+body {
+  padding-top: 60px;
 }
 
 .navbar-brand {
@@ -986,5 +993,347 @@ body {
   
   .empty-state {
     padding: 20px;
+  }
+}
+
+/* ========== 分组标题 ========== */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 24px 0 16px 0;
+  padding: 8px 16px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--accent-primary);
+}
+
+.section-divider span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-divider span i {
+  color: var(--accent-primary);
+}
+
+/* ========== 徽章样式 ========== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 12px;
+  margin-left: 8px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.badge-primary {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.badge-success {
+  background: var(--accent-success);
+  color: white;
+}
+
+.badge-warning {
+  background: var(--accent-warning);
+  color: #1a1a1a;
+}
+
+.badge-danger {
+  background: var(--accent-danger);
+  color: white;
+}
+
+.badge-info {
+  background: var(--accent-info);
+  color: white;
+}
+
+.badge-purple {
+  background: var(--accent-purple);
+  color: white;
+}
+
+.badge-cyan {
+  background: var(--accent-cyan);
+  color: white;
+}
+
+/* 移动端分组标题 */
+@media (max-width: 768px) {
+  .section-divider {
+    margin: 16px 0 12px 0;
+    padding: 6px 12px;
+  }
+  
+  .section-divider span {
+    font-size: 12px;
+  }
+  
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    margin-left: 4px;
+  }
+}
+
+/* ===== 使用说明页面样式 ===== */
+
+/* 功能特性网格 */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.feature-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.feature-item i {
+  font-size: 28px;
+  margin-bottom: 12px;
+  color: var(--accent-primary);
+}
+
+.feature-item h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: var(--text-primary);
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 文档区域 */
+.doc-section {
+  padding: 0;
+}
+
+.doc-section h2 {
+  font-size: 20px;
+  margin: 0 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.doc-section h2 i {
+  color: var(--accent-primary);
+}
+
+.doc-section h3 {
+  font-size: 16px;
+  margin: 24px 0 12px 0;
+  color: var(--text-primary);
+}
+
+.doc-section h4 {
+  font-size: 14px;
+  margin: 20px 0 10px 0;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.doc-section h5 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 16px 0 8px 0;
+  color: var(--accent-primary);
+}
+
+.doc-section p {
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.doc-section ul, .doc-section ol {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.doc-section li {
+  margin: 6px 0;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.doc-section code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--accent-cyan);
+}
+
+/* 代码块 */
+.code-block {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--accent-success);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* 警告框 */
+.warning-box {
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 16px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.warning-box i {
+  color: var(--accent-warning);
+  font-size: 18px;
+  margin-top: 2px;
+}
+
+.warning-box div {
+  flex: 1;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.warning-box strong {
+  color: var(--accent-warning);
+}
+
+/* 加密算法介绍区域 */
+.encrypt-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.encrypt-section h4 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.encrypt-algo {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin: 12px 0;
+}
+
+.encrypt-algo h5 {
+  margin: 0 0 8px 0;
+  color: var(--accent-info);
+}
+
+.encrypt-algo p {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+}
+
+.encrypt-algo ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.encrypt-algo li {
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+/* 工具介绍区域 */
+.tool-section {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 16px 0;
+}
+
+.tool-section h4 {
+  margin: 0 0 10px 0;
+}
+
+.tool-section p {
+  font-size: 13px;
+}
+
+.tool-section ul {
+  margin: 10px 0;
+}
+
+/* 响应式 */
+@media (max-width: 1024px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .doc-section h2 {
+    font-size: 18px;
+  }
+  
+  .doc-section h3 {
+    font-size: 14px;
+  }
+  
+  .encrypt-section {
+    padding: 12px;
+  }
+  
+  .encrypt-algo {
+    padding: 10px 12px;
   }
 }

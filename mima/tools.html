@@ -19,17 +19,21 @@
         <i class="fas fa-home"></i>
         首页
       </a>
-      <a href="md5.html" class="nav-link">
+      <a href="hash.html" class="nav-link">
         <i class="fas fa-fingerprint"></i>
-        MD5加密
+        哈希加密
       </a>
-      <a href="sha1.html" class="nav-link">
+      <a href="hash.html" class="nav-link">
         <i class="fas fa-lock"></i>
-        SHA1加密
+        哈希加密
       </a>
       <a href="decrypt.html" class="nav-link">
         <i class="fas fa-key"></i>
         解密查询
+      </a>
+      <a href="encrypt.html" class="nav-link">
+        <i class="fas fa-lock-open"></i>
+        可逆加密
       </a>
       <a href="tools.html" class="nav-link active">
         <i class="fas fa-toolbox"></i>
@@ -51,8 +55,8 @@
           离线编码工具
         </div>
         <div class="card-subtitle">
-          <i class="fas fa-wifi-slash" style="color: var(--accent-success);"></i>
-          所有操作均在本地完成，不会上传任何数据
+          <i class="fas fa-shield-check" style="color: var(--accent-success);"></i>
+          所有操作均在本地完成，不会上传任何数据，保护您的数据隐私
         </div>
       </div>
     </div>
@@ -67,6 +71,27 @@
           <div>
             <div class="tool-title">Base64 编码/解码</div>
             <div class="tool-desc">文本与 Base64 字符串相互转换</div>
+          </div>
+        </div>
+
+        <!-- 详细介绍 -->
+        <div class="tool-info-box">
+          <div class="tool-info-title"><i class="fas fa-info-circle"></i> 什么是 Base64？</div>
+          <p>Base64 是一种基于64个可打印ASCII字符来表示二进制数据的编码方式，常用于在HTTP环境下传输较长的标识信息。</p>
+          <div class="tool-info-grid">
+            <div class="tool-info-item">
+              <span class="tool-info-label">字符集</span>
+              <span class="tool-info-value">A-Z, a-z, 0-9, +, /</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">填充字符</span>
+              <span class="tool-info-value">=</span>
+            </div>
+          </div>
+          <div class="tool-info-tags">
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> 电子邮件标准</span>
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> 数据传输</span>
+            <span class="tool-info-tag info"><i class="fas fa-code"></i> API 开发</span>
           </div>
         </div>
 
@@ -115,6 +140,27 @@
           </div>
         </div>
 
+        <!-- 详细介绍 -->
+        <div class="tool-info-box">
+          <div class="tool-info-title"><i class="fas fa-info-circle"></i> 什么是 URL 编码？</div>
+          <p>URL 编码又称为百分号编码，用于将特殊字符转换为 URL 安全格式。URL 中有些字符有特殊含义（如 ?、&、=），需要编码后才能在 URL 中传输。</p>
+          <div class="tool-info-grid">
+            <div class="tool-info-item">
+              <span class="tool-info-label">编码格式</span>
+              <span class="tool-info-value">%XX (XX为十六进制)</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">空格编码</span>
+              <span class="tool-info-value">%20 或 +</span>
+            </div>
+          </div>
+          <div class="tool-info-tags">
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> Web 标准</span>
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> URL 参数</span>
+            <span class="tool-info-tag info"><i class="fas fa-globe"></i> 浏览器兼容</span>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">输入文本</label>
           <textarea id="urlInput" class="form-textarea" rows="3" placeholder="请输入文本..."></textarea>
@@ -157,6 +203,35 @@
           <div>
             <div class="tool-title">进制转换</div>
             <div class="tool-desc">二进制、八进制、十进制、十六进制互转</div>
+          </div>
+        </div>
+
+        <!-- 详细介绍 -->
+        <div class="tool-info-box">
+          <div class="tool-info-title"><i class="fas fa-info-circle"></i> 什么是进制转换？</div>
+          <p>进制转换是将数字从一种进位计数制转换到另一种进位计数制。计算机中常用二进制、八进制、十进制和十六进制。</p>
+          <div class="tool-info-grid">
+            <div class="tool-info-item">
+              <span class="tool-info-label">二进制 (BIN)</span>
+              <span class="tool-info-value">0-1，计算机底层</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">八进制 (OCT)</span>
+              <span class="tool-info-value">0-7，Unix权限</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">十进制 (DEC)</span>
+              <span class="tool-info-value">0-9，人类习惯</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">十六进制 (HEX)</span>
+              <span class="tool-info-value">0-9,A-F，内存地址</span>
+            </div>
+          </div>
+          <div class="tool-info-tags">
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> 程序员必备</span>
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> 逆向工程</span>
+            <span class="tool-info-tag info"><i class="fas fa-microchip"></i> 底层开发</span>
           </div>
         </div>
 
@@ -218,6 +293,27 @@
           </div>
         </div>
 
+        <!-- 详细介绍 -->
+        <div class="tool-info-box">
+          <div class="tool-info-title"><i class="fas fa-info-circle"></i> 什么是 Unicode？</div>
+          <p>Unicode 是国际标准字符集，为每种语言中的每个字符设定了唯一的编码。JavaScript 内部使用 UTF-16 编码，中文字符会以 \uXXXX 形式表示。</p>
+          <div class="tool-info-grid">
+            <div class="tool-info-item">
+              <span class="tool-info-label">编码格式</span>
+              <span class="tool-info-value">\uXXXX 或 \u{XXXXX}</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">字符范围</span>
+              <span class="tool-info-value">0x0000 - 0x10FFFF</span>
+            </div>
+          </div>
+          <div class="tool-info-tags">
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> 多语言支持</span>
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> JavaScript</span>
+            <span class="tool-info-tag info"><i class="fas fa-globe"></i> 全球字符</span>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">输入文本</label>
           <textarea id="unicodeInput" class="form-textarea" rows="3" placeholder="请输入文本..."></textarea>
@@ -260,6 +356,35 @@
           <div>
             <div class="tool-title">HTML 实体编码/解码</div>
             <div class="tool-desc">HTML 特殊字符转义处理</div>
+          </div>
+        </div>
+
+        <!-- 详细介绍 -->
+        <div class="tool-info-box">
+          <div class="tool-info-title"><i class="fas fa-info-circle"></i> 什么是 HTML 实体？</div>
+          <p>HTML 实体是一段以 &amp; 开头、; 结尾的字符串，用于表示 HTML 中的保留字符或特殊符号，防止 XSS 攻击和渲染错误。</p>
+          <div class="tool-info-grid">
+            <div class="tool-info-item">
+              <span class="tool-info-label">< 标签</span>
+              <span class="tool-info-value">&amp;lt; &amp;gt;</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">&amp; 符号</span>
+              <span class="tool-info-value">&amp;amp;</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">" 双引号</span>
+              <span class="tool-info-value">&amp;quot;</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">' 单引号</span>
+              <span class="tool-info-value">&amp;apos;</span>
+            </div>
+          </div>
+          <div class="tool-info-tags">
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> XSS 防护</span>
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> Web 安全</span>
+            <span class="tool-info-tag info"><i class="fas fa-code"></i> 前端开发</span>
           </div>
         </div>
 
@@ -308,6 +433,35 @@
           </div>
         </div>
 
+        <!-- 详细介绍 -->
+        <div class="tool-info-box">
+          <div class="tool-info-title"><i class="fas fa-info-circle"></i> 大小写转换说明</div>
+          <p>大小写转换是文本处理中的基础操作，在数据规范化、用户输入处理、代码格式化等场景中广泛应用。</p>
+          <div class="tool-info-grid">
+            <div class="tool-info-item">
+              <span class="tool-info-label">大写 (UPPER)</span>
+              <span class="tool-info-value">全部转为大写字母</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">小写 (lower)</span>
+              <span class="tool-info-value">全部转为小写字母</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">首字母大写 (Title)</span>
+              <span class="tool-info-value">每个单词首字母大写</span>
+            </div>
+            <div class="tool-info-item">
+              <span class="tool-info-label">句首大写 (Sentence)</span>
+              <span class="tool-info-value">每句话首字母大写</span>
+            </div>
+          </div>
+          <div class="tool-info-tags">
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> 数据规范化</span>
+            <span class="tool-info-tag success"><i class="fas fa-check"></i> 文本处理</span>
+            <span class="tool-info-tag info"><i class="fas fa-keyboard"></i> 快捷方便</span>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">输入文本</label>
           <textarea id="caseInput" class="form-textarea" rows="3" placeholder="请输入文本..."></textarea>
@@ -345,303 +499,531 @@
     </div>
   </footer>
 
-  <!-- Toast 容器 -->
-  <div id="toastContainer"></div>
-
-  <style>
-    .btn-sm {
-      padding: 8px 14px;
-      font-size: 13px;
-    }
-    .btn-sm svg {
-      width: 14px;
-      height: 14px;
-    }
-  </style>
-
   <script>
-    function showToast(message, type = 'info') {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      
-      const icons = {
-        success: 'fa-check-circle',
-        error: 'fa-times-circle',
-        info: 'fa-info-circle'
-      };
-      
-      toast.innerHTML = `
-        <i class="fas ${icons[type]}"></i>
-        ${message}
-      `;
-      
-      container.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.style.animation = 'slideIn 0.3s ease reverse';
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
+  // ===== Base64 编码/解码 =====
+  function base64Encode() {
+    const input = document.getElementById('base64Input').value;
+    const output = document.getElementById('base64Output');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要编码的文本</span>';
+      return;
     }
-
-    function copyToClipboard(text) {
-      if (!text || text === '-') {
-        showToast('没有可复制的内容', 'error');
-        return false;
-      }
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('已复制到剪贴板', 'success');
-        return true;
-      }).catch(() => {
-        showToast('复制失败', 'error');
-        return false;
-      });
-    }
-
-    // ========== Base64 ==========
-    function base64Encode() {
-      const input = document.getElementById('base64Input').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
+    
+    try {
       const encoded = btoa(unescape(encodeURIComponent(input)));
-      document.getElementById('base64Output').textContent = encoded;
+      output.innerHTML = '<span style="color: var(--accent-success); word-break: break-all;">' + escapeHtml(encoded) + '</span>';
+      showToast('编码成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">编码失败: ' + e.message + '</span>';
     }
+  }
+  
+  function base64Decode() {
+    const input = document.getElementById('base64Input').value;
+    const output = document.getElementById('base64Output');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要解码的 Base64 字符串</span>';
+      return;
+    }
+    
+    try {
+      const decoded = decodeURIComponent(escape(atob(input)));
+      output.innerHTML = '<span style="color: var(--accent-info); word-break: break-all;">' + escapeHtml(decoded) + '</span>';
+      showToast('解码成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解码失败: 无效的 Base64 字符串</span>';
+    }
+  }
+  
+  function clearBase64() {
+    document.getElementById('base64Input').value = '';
+    document.getElementById('base64Output').innerHTML = '<span style="color: var(--text-muted);">结果将在此显示...</span>';
+    showToast('已清空', 'info');
+  }
+  
+  function copyBase64() {
+    const output = document.getElementById('base64Output');
+    const text = output.textContent;
+    if (text && !text.includes('请输入') && !text.includes('结果将在此显示')) {
+      navigator.clipboard.writeText(text);
+      showToast('已复制', 'success');
+    }
+  }
 
-    function base64Decode() {
-      const input = document.getElementById('base64Input').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
+  // ===== URL 编码/解码 =====
+  function urlEncode() {
+    const input = document.getElementById('urlInput').value;
+    const output = document.getElementById('urlOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要编码的文本</span>';
+      return;
+    }
+    
+    const encoded = encodeURIComponent(input);
+    output.innerHTML = '<span style="color: var(--accent-success); word-break: break-all;">' + escapeHtml(encoded) + '</span>';
+    showToast('编码成功', 'success');
+  }
+  
+  function urlDecode() {
+    const input = document.getElementById('urlInput').value;
+    const output = document.getElementById('urlOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要解码的 URL 编码字符串</span>';
+      return;
+    }
+    
+    try {
+      const decoded = decodeURIComponent(input);
+      output.innerHTML = '<span style="color: var(--accent-info); word-break: break-all;">' + escapeHtml(decoded) + '</span>';
+      showToast('解码成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解码失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function clearUrl() {
+    document.getElementById('urlInput').value = '';
+    document.getElementById('urlOutput').innerHTML = '<span style="color: var(--text-muted);">结果将在此显示...</span>';
+    showToast('已清空', 'info');
+  }
+  
+  function copyUrl() {
+    const output = document.getElementById('urlOutput');
+    const text = output.textContent;
+    if (text && !text.includes('请输入') && !text.includes('结果将在此显示')) {
+      navigator.clipboard.writeText(text);
+      showToast('已复制', 'success');
+    }
+  }
+
+  // ===== 进制转换 =====
+  function convertBase() {
+    const input = document.getElementById('baseInput').value.trim();
+    
+    if (!input) {
+      clearBase();
+      return;
+    }
+    
+    let decimal;
+    
+    // 自动识别进制
+    if (input.startsWith('0x') || input.startsWith('0X')) {
+      // 十六进制
+      decimal = parseInt(input, 16);
+    } else if (input.startsWith('0b') || input.startsWith('0B')) {
+      // 二进制
+      decimal = parseInt(input, 2);
+    } else if (input.startsWith('0o') || input.startsWith('0O')) {
+      // 八进制
+      decimal = parseInt(input, 8);
+    } else {
+      // 假设十进制
+      decimal = parseInt(input, 10);
+    }
+    
+    if (isNaN(decimal) || decimal < 0) {
+      document.getElementById('binOutput').textContent = '输入无效';
+      document.getElementById('octOutput').textContent = '输入无效';
+      document.getElementById('decOutput').textContent = '输入无效';
+      document.getElementById('hexOutput').textContent = '输入无效';
+      showToast('请输入有效的数字', 'warning');
+      return;
+    }
+    
+    document.getElementById('binOutput').textContent = '0b' + decimal.toString(2);
+    document.getElementById('octOutput').textContent = '0o' + decimal.toString(8);
+    document.getElementById('decOutput').textContent = decimal.toString(10);
+    document.getElementById('hexOutput').textContent = '0x' + decimal.toString(16).toUpperCase();
+    showToast('转换成功', 'success');
+  }
+  
+  function clearBase() {
+    document.getElementById('baseInput').value = '';
+    document.getElementById('binOutput').textContent = '-';
+    document.getElementById('octOutput').textContent = '-';
+    document.getElementById('decOutput').textContent = '-';
+    document.getElementById('hexOutput').textContent = '-';
+    showToast('已清空', 'info');
+  }
+  
+  function copyAllBase() {
+    const bin = document.getElementById('binOutput').textContent;
+    const oct = document.getElementById('octOutput').textContent;
+    const dec = document.getElementById('decOutput').textContent;
+    const hex = document.getElementById('hexOutput').textContent;
+    
+    if (bin === '-' || !bin) {
+      showToast('没有内容可复制', 'warning');
+      return;
+    }
+    
+    const text = `BIN: ${bin}\nOCT: ${oct}\nDEC: ${dec}\nHEX: ${hex}`;
+    navigator.clipboard.writeText(text);
+    showToast('已复制全部', 'success');
+  }
+
+  // ===== Unicode 编码/解码 =====
+  function unicodeEncode() {
+    const input = document.getElementById('unicodeInput').value;
+    const output = document.getElementById('unicodeOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要编码的文本</span>';
+      return;
+    }
+    
+    let encoded = '';
+    for (let i = 0; i < input.length; i++) {
+      const charCode = input.charCodeAt(i);
+      if (charCode > 0xFFFF) {
+        encoded += '\\u{' + charCode.toString(16).toUpperCase() + '}';
+      } else {
+        encoded += '\\u' + charCode.toString(16).toUpperCase().padStart(4, '0');
       }
-      try {
-        const decoded = decodeURIComponent(escape(atob(input)));
-        document.getElementById('base64Output').textContent = decoded;
-      } catch (e) {
-        showToast('Base64 格式不正确', 'error');
-      }
     }
-
-    function clearBase64() {
-      document.getElementById('base64Input').value = '';
-      document.getElementById('base64Output').textContent = '';
+    
+    output.innerHTML = '<span style="color: var(--accent-success); word-break: break-all;">' + escapeHtml(encoded) + '</span>';
+    showToast('编码成功', 'success');
+  }
+  
+  function unicodeDecode() {
+    const input = document.getElementById('unicodeInput').value;
+    const output = document.getElementById('unicodeOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要解码的 Unicode 字符串</span>';
+      return;
     }
-
-    function copyBase64() {
-      copyToClipboard(document.getElementById('base64Output').textContent);
+    
+    try {
+      // 处理 \uXXXX 和 \u{XXXXX} 格式
+      const decoded = input.replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) => 
+        String.fromCodePoint(parseInt(hex, 16))
+      ).replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => 
+        String.fromCharCode(parseInt(hex, 16))
+      );
+      
+      output.innerHTML = '<span style="color: var(--accent-info); word-break: break-all;">' + escapeHtml(decoded) + '</span>';
+      showToast('解码成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解码失败: 无效的 Unicode 格式</span>';
     }
-
-    // ========== URL ==========
-    function urlEncode() {
-      const input = document.getElementById('urlInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      document.getElementById('urlOutput').textContent = encodeURIComponent(input);
+  }
+  
+  function clearUnicode() {
+    document.getElementById('unicodeInput').value = '';
+    document.getElementById('unicodeOutput').innerHTML = '<span style="color: var(--text-muted);">结果将在此显示...</span>';
+    showToast('已清空', 'info');
+  }
+  
+  function copyUnicode() {
+    const output = document.getElementById('unicodeOutput');
+    const text = output.textContent;
+    if (text && !text.includes('请输入') && !text.includes('结果将在此显示')) {
+      navigator.clipboard.writeText(text);
+      showToast('已复制', 'success');
     }
+  }
 
-    function urlDecode() {
-      const input = document.getElementById('urlInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      try {
-        document.getElementById('urlOutput').textContent = decodeURIComponent(input);
-      } catch (e) {
-        showToast('URL 格式不正确', 'error');
-      }
+  // ===== HTML 实体编码/解码 =====
+  function htmlEncode() {
+    const input = document.getElementById('htmlInput').value;
+    const output = document.getElementById('htmlOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要编码的文本</span>';
+      return;
     }
-
-    function clearUrl() {
-      document.getElementById('urlInput').value = '';
-      document.getElementById('urlOutput').textContent = '';
+    
+    const encoded = input
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    
+    output.innerHTML = '<span style="color: var(--accent-success); word-break: break-all;">' + escapeHtml(encoded) + '</span>';
+    showToast('编码成功', 'success');
+  }
+  
+  function htmlDecode() {
+    const input = document.getElementById('htmlInput').value;
+    const output = document.getElementById('htmlOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要解码的 HTML 实体</span>';
+      return;
     }
-
-    function copyUrl() {
-      copyToClipboard(document.getElementById('urlOutput').textContent);
-    }
-
-    // ========== 进制转换 ==========
-    function convertBase() {
-      const input = document.getElementById('baseInput').value.trim();
-      if (!input) {
-        showToast('请输入数字', 'error');
-        return;
-      }
-
-      let decimal;
-      try {
-        // 自动检测进制
-        if (input.startsWith('0x') || input.startsWith('0X')) {
-          decimal = parseInt(input, 16);
-        } else if (input.startsWith('0b') || input.startsWith('0B')) {
-          decimal = parseInt(input, 2);
-        } else if (input.startsWith('0o') || input.startsWith('0O')) {
-          decimal = parseInt(input, 8);
-        } else if (/^[0-9]+$/.test(input)) {
-          decimal = parseInt(input, 10);
-        } else {
-          showToast('请输入有效的数字', 'error');
-          return;
-        }
-
-        if (isNaN(decimal) || decimal < 0) {
-          showToast('请输入有效的正整数', 'error');
-          return;
-        }
-
-        document.getElementById('binOutput').textContent = decimal.toString(2);
-        document.getElementById('octOutput').textContent = '0o' + decimal.toString(8);
-        document.getElementById('decOutput').textContent = decimal.toString(10);
-        document.getElementById('hexOutput').textContent = '0x' + decimal.toString(16).toUpperCase();
-      } catch (e) {
-        showToast('转换失败', 'error');
-      }
-    }
-
-    function clearBase() {
-      document.getElementById('baseInput').value = '';
-      document.getElementById('binOutput').textContent = '-';
-      document.getElementById('octOutput').textContent = '-';
-      document.getElementById('decOutput').textContent = '-';
-      document.getElementById('hexOutput').textContent = '-';
-    }
-
-    function copyAllBase() {
-      const text = `二进制: ${document.getElementById('binOutput').textContent}
-八进制: ${document.getElementById('octOutput').textContent}
-十进制: ${document.getElementById('decOutput').textContent}
-十六进制: ${document.getElementById('hexOutput').textContent}`;
-      copyToClipboard(text);
-    }
-
-    // ========== Unicode ==========
-    function unicodeEncode() {
-      const input = document.getElementById('unicodeInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      let encoded = '';
-      for (let i = 0; i < input.length; i++) {
-        encoded += '\\u' + ('0000' + input.charCodeAt(i).toString(16)).slice(-4);
-      }
-      document.getElementById('unicodeOutput').textContent = encoded;
-    }
-
-    function unicodeDecode() {
-      const input = document.getElementById('unicodeInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      try {
-        const decoded = input.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => 
-          String.fromCharCode(parseInt(hex, 16))
-        );
-        document.getElementById('unicodeOutput').textContent = decoded;
-      } catch (e) {
-        showToast('Unicode 格式不正确', 'error');
-      }
-    }
-
-    function clearUnicode() {
-      document.getElementById('unicodeInput').value = '';
-      document.getElementById('unicodeOutput').textContent = '';
-    }
-
-    function copyUnicode() {
-      copyToClipboard(document.getElementById('unicodeOutput').textContent);
-    }
-
-    // ========== HTML ==========
-    function htmlEncode() {
-      const input = document.getElementById('htmlInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      const div = document.createElement('div');
-      div.textContent = input;
-      document.getElementById('htmlOutput').textContent = div.innerHTML;
-    }
-
-    function htmlDecode() {
-      const input = document.getElementById('htmlInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
+    
+    try {
       const div = document.createElement('div');
       div.innerHTML = input;
-      document.getElementById('htmlOutput').textContent = div.textContent;
+      const decoded = div.textContent || div.innerText;
+      output.innerHTML = '<span style="color: var(--accent-info); word-break: break-all;">' + escapeHtml(decoded) + '</span>';
+      showToast('解码成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解码失败: ' + e.message + '</span>';
     }
+  }
+  
+  function clearHtml() {
+    document.getElementById('htmlInput').value = '';
+    document.getElementById('htmlOutput').innerHTML = '<span style="color: var(--text-muted);">结果将在此显示...</span>';
+    showToast('已清空', 'info');
+  }
+  
+  function copyHtml() {
+    const output = document.getElementById('htmlOutput');
+    const text = output.textContent;
+    if (text && !text.includes('请输入') && !text.includes('结果将在此显示')) {
+      navigator.clipboard.writeText(text);
+      showToast('已复制', 'success');
+    }
+  }
 
-    function clearHtml() {
-      document.getElementById('htmlInput').value = '';
-      document.getElementById('htmlOutput').textContent = '';
+  // ===== 大小写转换 =====
+  function toUpperCase() {
+    const input = document.getElementById('caseInput').value;
+    const output = document.getElementById('caseOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要转换的文本</span>';
+      return;
     }
+    
+    output.innerHTML = '<span style="color: var(--accent-success);">' + escapeHtml(input.toUpperCase()) + '</span>';
+    showToast('转换成功', 'success');
+  }
+  
+  function toLowerCase() {
+    const input = document.getElementById('caseInput').value;
+    const output = document.getElementById('caseOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要转换的文本</span>';
+      return;
+    }
+    
+    output.innerHTML = '<span style="color: var(--accent-success);">' + escapeHtml(input.toLowerCase()) + '</span>';
+    showToast('转换成功', 'success');
+  }
+  
+  function toTitleCase() {
+    const input = document.getElementById('caseInput').value;
+    const output = document.getElementById('caseOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要转换的文本</span>';
+      return;
+    }
+    
+    const titleCase = input.replace(/\w\S*/g, txt => 
+      txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    );
+    output.innerHTML = '<span style="color: var(--accent-success);">' + escapeHtml(titleCase) + '</span>';
+    showToast('转换成功', 'success');
+  }
+  
+  function toSentenceCase() {
+    const input = document.getElementById('caseInput').value;
+    const output = document.getElementById('caseOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要转换的文本</span>';
+      return;
+    }
+    
+    const sentenceCase = input.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+    output.innerHTML = '<span style="color: var(--accent-success);">' + escapeHtml(sentenceCase) + '</span>';
+    showToast('转换成功', 'success');
+  }
+  
+  function toToggleCase() {
+    const input = document.getElementById('caseInput').value;
+    const output = document.getElementById('caseOutput');
+    
+    if (!input) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">请输入要转换的文本</span>';
+      return;
+    }
+    
+    const toggleCase = input.replace(/[a-zA-Z]/g, c => 
+      c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()
+    );
+    output.innerHTML = '<span style="color: var(--accent-success);">' + escapeHtml(toggleCase) + '</span>';
+    showToast('转换成功', 'success');
+  }
+  
+  function copyCase() {
+    const output = document.getElementById('caseOutput');
+    const text = output.textContent;
+    if (text && !text.includes('请输入') && !text.includes('结果将在此显示')) {
+      navigator.clipboard.writeText(text);
+      showToast('已复制', 'success');
+    }
+  }
 
-    function copyHtml() {
-      copyToClipboard(document.getElementById('htmlOutput').textContent);
-    }
-
-    // ========== 大小写转换 ==========
-    function toUpperCase() {
-      const input = document.getElementById('caseInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      document.getElementById('caseOutput').textContent = input.toUpperCase();
-    }
-
-    function toLowerCase() {
-      const input = document.getElementById('caseInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      document.getElementById('caseOutput').textContent = input.toLowerCase();
-    }
-
-    function toTitleCase() {
-      const input = document.getElementById('caseInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      document.getElementById('caseOutput').textContent = input.replace(/\w\S*/g, txt => 
-        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-      );
-    }
-
-    function toSentenceCase() {
-      const input = document.getElementById('caseInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      document.getElementById('caseOutput').textContent = input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
-    }
-
-    function toToggleCase() {
-      const input = document.getElementById('caseInput').value;
-      if (!input) {
-        showToast('请输入文本', 'error');
-        return;
-      }
-      document.getElementById('caseOutput').textContent = input.replace(/[a-zA-Z]/g, c => 
-        c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()
-      );
-    }
-
-    function copyCase() {
-      copyToClipboard(document.getElementById('caseOutput').textContent);
-    }
+  // ===== 工具函数 =====
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    toast.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : type === 'warning' ? 'exclamation-circle' : 'info-circle') + '"></i> ' + message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => document.body.removeChild(toast), 300);
+    }, 2000);
+  }
   </script>
+
+  <style>
+  /* 工具详细介绍框样式 */
+  .tool-info-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .tool-info-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: var(--accent-primary);
+  }
+  
+  .tool-info-box p {
+    margin: 0 0 10px 0;
+    line-height: 1.5;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  
+  .tool-info-box p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .tool-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  
+  .tool-info-item {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+  }
+  
+  .tool-info-label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+  
+  .tool-info-value {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: monospace;
+  }
+  
+  .tool-info-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  
+  .tool-info-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  
+  .tool-info-tag.success {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--accent-success);
+  }
+  
+  .tool-info-tag.warning {
+    background: rgba(234, 179, 8, 0.15);
+    color: var(--accent-warning);
+  }
+  
+  .tool-info-tag.info {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-info);
+  }
+  
+  /* Toast 样式 */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10000;
+    transition: transform 0.3s ease;
+  }
+  
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .toast-success {
+    background: var(--accent-success);
+    color: white;
+  }
+  
+  .toast-error {
+    background: var(--accent-danger);
+    color: white;
+  }
+  
+  .toast-warning {
+    background: var(--accent-warning);
+    color: black;
+  }
+  
+  .toast-info {
+    background: var(--accent-info);
+    color: white;
+  }
+  
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .tool-info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  </style>
 </body>
 </html>

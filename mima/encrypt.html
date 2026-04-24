@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>可逆加密 - 密码工具箱</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>密码工具箱</h1>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link"><i class="fas fa-home"></i> 首页</a>
+      <a href="hash.html" class="nav-link"><i class="fas fa-fingerprint"></i> MD5</a>
+      <a href="hash.html" class="nav-link"><i class="fas fa-lock"></i> SHA1</a>
+      <a href="decrypt.html" class="nav-link"><i class="fas fa-key"></i> 解密</a>
+      <a href="encrypt.html" class="nav-link active"><i class="fas fa-lock-open"></i> 可逆加密</a>
+      <a href="tools.html" class="nav-link"><i class="fas fa-toolbox"></i> 工具</a>
+      <a href="readme.html" class="nav-link"><i class="fas fa-book"></i> 说明</a>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <main class="main-container">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-lock-open"></i>
+          可逆加密工具箱
+        </div>
+        <div class="card-subtitle">
+          <i class="fas fa-shield" style="color: var(--accent-warning);"></i>
+          支持12种对称加密算法，支持加密/解密双向操作，所有操作本地完成不联网
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 第一组：推荐算法 ========== -->
+    <div class="section-divider">
+      <span><i class="fas fa-star"></i> 推荐算法</span>
+      <span class="section-desc">当前最安全、应用最广泛的加密标准</span>
+    </div>
+
+    <!-- AES-256 加密 (CBC模式) -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-shield-halved" style="color: var(--accent-primary);"></i>
+          AES-256 (CBC模式)
+          <span class="badge badge-primary">推荐</span>
+        </div>
+        <div class="card-subtitle">
+          高级加密标准，当今最安全的对称加密算法，美国政府采用的标准
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p>AES (Advanced Encryption Standard) 是美国联邦政府采用的对称加密标准，取代了原有的DES。AES-256表示使用256位密钥长度，是三个版本（128/192/256）中安全性最高的。</p>
+        <p><strong>CBC模式</strong>：密码块链模式，每个明文块与前一个密文块进行XOR运算后再加密，确保相同明文产生不同密文，安全性高。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">256位 (32字节)</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-cube"></i> 分组长度</span>
+            <span class="info-value">128位 (16字节)</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-success);">极高</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-clock"></i> 运算速度</span>
+            <span class="info-value">快</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag success"><i class="fas fa-check"></i> 抗所有已知攻击</span>
+          <span class="info-tag success"><i class="fas fa-check"></i> 美国政府标准</span>
+          <span class="info-tag success"><i class="fas fa-check"></i> 适合敏感数据</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥</label>
+        <input type="text" id="aesKey" class="form-input" placeholder="输入加密密钥" value="my-secret-key-2024">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="aesInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-primary" onclick="encryptById('aes')">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptById('aes')">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('aes')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="aesOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('aes')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AES-ECB 模式 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-th" style="color: var(--accent-info);"></i>
+          AES-ECB 模式
+        </div>
+        <div class="card-subtitle">
+          电子密码本模式，相同明文产生相同密文，适合独立数据块加密
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>ECB (Electronic Codebook)</strong>：电子密码本模式，每个明文块独立加密，相同明文块产生相同密文块。</p>
+        <p><strong>优点</strong>：简单快速，支持并行加密/解密，错误传播最小（单个块损坏不影响其他块）。</p>
+        <p><strong>缺点</strong>：相同明文产生相同密文，可能泄露数据模式，不适合加密长消息或结构化数据。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">256位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-cube"></i> 分组长度</span>
+            <span class="info-value">128位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-warning);">中等</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-bolt"></i> 运算速度</span>
+            <span class="info-value">最快</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag info"><i class="fas fa-check"></i> 并行处理</span>
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 模式泄露风险</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 适合固定格式短数据</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥</label>
+        <input type="text" id="aesEcbKey" class="form-input" placeholder="输入加密密钥" value="ecb-secret-key">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="aesEcbInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-info" onclick="encryptAesEcb()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptAesEcb()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('aesEcb')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="aesEcbOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('aesEcb')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AES-CTR 模式 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-counter" style="color: var(--accent-cyan);"></i>
+          AES-CTR 模式
+        </div>
+        <div class="card-subtitle">
+          计数器模式，将块密码转换为流密码，可并行加密，适合数据流
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>CTR (Counter)</strong>：计数器模式，使用递增计数器生成密钥流，将块密码转换为流密码。</p>
+        <p><strong>优点</strong>：可并行加密/解密，无需填充，可生成任意长度密文，加密速度接近对称流密码。</p>
+        <p><strong>特性</strong>：每次加密使用不同的计数器值，相同明文产生不同密文（语义安全）。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">256位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-wave-square"></i> 类型</span>
+            <span class="info-value">流密码模式</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-success);">高</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-random"></i> 随机性</span>
+            <span class="info-value">需唯一Nonce</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag success"><i class="fas fa-check"></i> 并行处理</span>
+          <span class="info-tag success"><i class="fas fa-check"></i> 无填充</span>
+          <span class="info-tag success"><i class="fas fa-check"></i> 适合数据流</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥</label>
+        <input type="text" id="aesCtrKey" class="form-input" placeholder="输入加密密钥" value="ctr-mode-key-12345">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="aesCtrInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-cyan" onclick="encryptAesCtr()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptAesCtr()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('aesCtr')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="aesCtrOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('aesCtr')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 第二组：经典算法 ========== -->
+    <div class="section-divider">
+      <span><i class="fas fa-book"></i> 经典算法</span>
+      <span class="section-desc">历史经典加密算法，具有重要的教学和兼容性价值</span>
+    </div>
+
+    <!-- DES 加密 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-key" style="color: var(--accent-success);"></i>
+          DES 加密
+        </div>
+        <div class="card-subtitle">
+          数据加密标准，1977年发布，具有重要历史意义
+          <span class="badge badge-warning">安全强度较低</span>
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>DES (Data Encryption Standard)</strong>：1977年由IBM设计、美国国家标准局发布的对称加密算法，是世界上第一个广泛使用的商业加密标准。</p>
+        <p><strong>工作原理</strong>：使用56位密钥对64位数据块进行16轮置换和替换操作。</p>
+        <p><strong>历史地位</strong>：统治加密领域近30年，1998年被EFF的"深蓝"计算机在22小时内破解，1999年正式退役。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">56位 (8字节)</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-calendar"></i> 发布年份</span>
+            <span class="info-value">1977年</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-danger);">已淘汰</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-graduation-cap"></i> 教学价值</span>
+            <span class="info-value">极高</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 可被暴力破解</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 教学经典</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 兼容性兼容</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥 (8位)</label>
+        <input type="text" id="desKey" class="form-input" placeholder="输入8位密钥" value="des-key1" maxlength="8">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="desInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-success" onclick="encryptById('des')">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptById('des')">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('des')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="desOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('des')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DES-ECB 模式 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-th-large" style="color: var(--accent-success);"></i>
+          DES-ECB 模式
+        </div>
+        <div class="card-subtitle">
+          DES电子密码本模式，简单快速，但存在模式泄露
+          <span class="badge badge-warning">安全强度较低</span>
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>DES-ECB</strong>：DES的电子密码本模式，每个64位明文块独立加密。</p>
+        <p><strong>主要问题</strong>：相同明文块产生相同密文块，攻击者可识别重复模式。</p>
+        <p><strong>适用场景</strong>：仅建议用于加密独立随机数据，如其他算法的密钥。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">56位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-cube"></i> 分组长度</span>
+            <span class="info-value">64位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-danger);">低</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-bolt"></i> 运算速度</span>
+            <span class="info-value">快</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 模式泄露</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 简单实现</span>
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 不建议用于重要数据</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥 (8位)</label>
+        <input type="text" id="desEcbKey" class="form-input" placeholder="输入8位密钥" value="des-ecb-k" maxlength="8">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="desEcbInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-success" onclick="encryptDesEcb()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptDesEcb()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('desEcb')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="desEcbOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('desEcb')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TripleDES 加密 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-layer-group" style="color: var(--accent-primary);"></i>
+          TripleDES 加密
+        </div>
+        <div class="card-subtitle">
+          三重DES，增强安全性，向后兼容DES
+          <span class="badge badge-info">过渡算法</span>
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>TripleDES</strong>：又称3DES或TDEA，对每个数据块应用三次DES加密，使用两个或三个不同密钥。</p>
+        <p><strong>工作原理</strong>：加密-解密-加密(EDE)过程，密钥长度112位或168位。</p>
+        <p><strong>历史背景</strong>：作为DES的临时替代品开发，现已被AES取代。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">168位 (24字节)</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-layer-group"></i> 运算次数</span>
+            <span class="info-value">3次DES</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-warning);">中</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-clock"></i> 运算速度</span>
+            <span class="info-value">较慢</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag info"><i class="fas fa-check"></i> 向后兼容</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 三重安全保障</span>
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 已被AES取代</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥 (24位)</label>
+        <input type="text" id="tdesKey" class="form-input" placeholder="输入24位密钥" value="tdes-key-12345678901234" maxlength="24">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="tdesInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-primary" onclick="encryptById('tdes')">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptById('tdes')">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('tdes')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="tdesOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('tdes')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TripleDES-ECB 模式 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-th-large" style="color: var(--accent-primary);"></i>
+          TripleDES-ECB 模式
+        </div>
+        <div class="card-subtitle">
+          TripleDES电子密码本模式，简单但存在模式泄露问题
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>TripleDES-ECB</strong>：对每个数据块独立应用三次DES-ECB操作。</p>
+        <p><strong>安全性</strong>：相比DES安全性提升，但ECB模式的问题依然存在。</p>
+        <p><strong>使用建议</strong>：除非需要兼容旧系统，否则建议使用AES。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">168位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-warning);">中</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-bolt"></i> 运算速度</span>
+            <span class="info-value">慢</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-exchange-alt"></i> 兼容性</span>
+            <span class="info-value">旧系统</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag info"><i class="fas fa-check"></i> 兼容性</span>
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> ECB模式缺陷</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 教学参考</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥 (24位)</label>
+        <input type="text" id="tdesEcbKey" class="form-input" placeholder="输入24位密钥" value="tdes-ecb-123456789012" maxlength="24">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="tdesEcbInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-primary" onclick="encryptTdesEcb()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptTdesEcb()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('tdesEcb')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="tdesEcbOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('tdesEcb')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 第三组：流加密算法 ========== -->
+    <div class="section-divider">
+      <span><i class="fas fa-wave-square"></i> 流加密算法</span>
+      <span class="section-desc">逐位或逐字节加密，适合实时数据流和大规模数据</span>
+    </div>
+
+    <!-- RC4 加密 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-random" style="color: var(--accent-warning);"></i>
+          RC4 加密
+        </div>
+        <div class="card-subtitle">
+          序列密码，曾经应用最广泛的流密码之一
+          <span class="badge badge-warning">存在安全漏洞</span>
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>RC4</strong>：Ron Rivest于1987年设计的流密码，以字节为单位生成伪随机密钥流，与明文进行XOR运算。</p>
+        <p><strong>历史应用</strong>：曾广泛用于WEP无线加密、TLS/SSL协议、WiFi安全等。</p>
+        <p><strong>已知问题</strong>：密钥流存在统计偏差，2002003年发现攻击方法，2015年被正式禁用。TLS已禁止RC4，WEP已被废弃。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">40-2048位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-tint"></i> 类型</span>
+            <span class="info-value">同步流密码</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-danger);">有漏洞</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-bolt"></i> 速度</span>
+            <span class="info-value">非常快</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 已发现攻击</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 历史地位重要</span>
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 不建议新应用</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥</label>
+        <input type="text" id="rc4Key" class="form-input" placeholder="输入加密密钥" value="rc4-secret-key">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="rc4Input" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-warning" onclick="encryptById('rc4')">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptById('rc4')">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('rc4')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="rc4Output" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('rc4')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RC4Drop 加密 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-filter" style="color: var(--accent-warning);"></i>
+          RC4Drop 加密
+        </div>
+        <div class="card-subtitle">
+          RC4改进版，丢弃初始密钥流，提高安全性
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>RC4Drop</strong>：RC4的改进版本，在生成密钥流前丢弃初始若干字节。</p>
+        <p><strong>改进原因</strong>：研究发现RC4初始密钥流存在偏差，攻击者可利用。丢弃前N个字节可减少偏差。</p>
+        <p><strong>安全性</strong>：比标准RC4更安全，但仍是过渡方案。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">40-2048位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-trash-alt"></i> 丢弃字节</span>
+            <span class="info-value">768或3072字节</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-warning);">中等</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-bolt"></i> 速度</span>
+            <span class="info-value">快</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag success"><i class="fas fa-check"></i> 比RC4更安全</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 保留RC4优点</span>
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 仍非最佳选择</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥</label>
+        <input type="text" id="rc4DropKey" class="form-input" placeholder="输入加密密钥" value="rc4drop-secret">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="rc4DropInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-warning" onclick="encryptRc4Drop()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptRc4Drop()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('rc4Drop')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="rc4DropOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('rc4Drop')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rabbit 加密 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa hare" style="color: var(--accent-cyan);"></i>
+          Rabbit 加密
+        </div>
+        <div class="card-subtitle">
+          高性能流密码，为高速应用设计
+          <span class="badge badge-success">高性能</span>
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>Rabbit</strong>：2003年由Cryptico公司设计的高速流密码，使用128位密钥和64位初始向量。</p>
+        <p><strong>设计目标</strong>：在软件中实现高性能，特别优化了32位处理器上的执行效率。</p>
+        <p><strong>安全性</strong>：通过eSTREAM项目评选，被认为是安全可靠的流密码之一。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">128位 (16字节)</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-vector-square"></i> IV长度</span>
+            <span class="info-value">64位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-success);">高</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-tachometer-alt"></i> 性能</span>
+            <span class="info-value">极高</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag success"><i class="fas fa-check"></i> eSTREAM认证</span>
+          <span class="info-tag success"><i class="fas fa-check"></i> 高速性能</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 现代设计</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥</label>
+        <input type="text" id="rabbitKey" class="form-input" placeholder="输入加密密钥" value="rabbit-secret-key-123">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="rabbitInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-cyan" onclick="encryptRabbit()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptRabbit()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('rabbit')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="rabbitOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('rabbit')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rabbit Legacy 加密 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-pastafarianism" style="color: var(--accent-cyan);"></i>
+          Rabbit Legacy 加密
+        </div>
+        <div class="card-subtitle">
+          Rabbit算法的原始版本，保留向后兼容性
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>Rabbit Legacy</strong>：Rabbit算法的早期版本，与标准Rabbit略有不同。</p>
+        <p><strong>兼容性</strong>：保留用于解密旧系统数据，新项目建议使用标准Rabbit。</p>
+        <p><strong>差异</strong>：密钥流生成算法略有不同，但安全性相近。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">128位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-history"></i> 版本</span>
+            <span class="info-value">原始版本</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-success);">高</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-exchange-alt"></i> 用途</span>
+            <span class="info-value">兼容旧数据</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag info"><i class="fas fa-check"></i> 旧系统兼容</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 高安全性</span>
+          <span class="info-tag warning"><i class="fas fa-exclamation"></i> 新项目用Rabbit</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥</label>
+        <input type="text" id="rabbitLegacyKey" class="form-input" placeholder="输入加密密钥" value="rabbit-legacy-key-2024">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="rabbitLegacyInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-cyan" onclick="encryptRabbitLegacy()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptRabbitLegacy()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('rabbitLegacy')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="rabbitLegacyOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('rabbitLegacy')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 第四组：其他算法 ========== -->
+    <div class="section-divider">
+      <span><i class="fas fa-ellipsis-h"></i> 其他算法</span>
+      <span class="section-desc">特色加密算法，各有独特设计</span>
+    </div>
+
+    <!-- Blowfish 加密 -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-fish" style="color: var(--accent-info);"></i>
+          Blowfish 加密
+        </div>
+        <div class="card-subtitle">
+          河豚算法，密钥长度可变，安全免费
+          <span class="badge badge-info">特色设计</span>
+        </div>
+      </div>
+      
+      <!-- 算法详细介绍 -->
+      <div class="info-box">
+        <div class="info-title"><i class="fas fa-info-circle"></i> 算法原理</div>
+        <p><strong>Blowfish</strong>：1993年由Bruce Schneier设计的对称加密算法，以"河豚"命名，寓意其强大的保护能力。</p>
+        <p><strong>独特设计</strong>：密钥长度可变(32-448位)，使用Feistel网络结构，共16轮加密。</p>
+        <p><strong>优点</strong>：完全免费公开，无专利保护，至今未被破解，适合需要灵活密钥长度的场景。</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-key"></i> 密钥长度</span>
+            <span class="info-value">32-448位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-cube"></i> 分组长度</span>
+            <span class="info-value">64位</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-shield-alt"></i> 安全等级</span>
+            <span class="info-value" style="color: var(--accent-success);">高</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label"><i class="fas fa-dollar-sign"></i> 费用</span>
+            <span class="info-value">免费</span>
+          </div>
+        </div>
+        <div class="info-tags">
+          <span class="info-tag success"><i class="fas fa-check"></i> 至今无破解</span>
+          <span class="info-tag success"><i class="fas fa-check"></i> 专利免费</span>
+          <span class="info-tag info"><i class="fas fa-check"></i> 灵活密钥</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">密钥 (可变长度)</label>
+        <input type="text" id="blowfishKey" class="form-input" placeholder="输入加密密钥(4-56字符)" value="blowfish-secret-key-2024">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">输入文本</label>
+        <textarea id="blowfishInput" class="form-textarea" rows="3" placeholder="请输入要加密/解密的文本..."></textarea>
+      </div>
+
+      <div class="btn-group" style="margin-bottom: 16px;">
+        <button class="btn btn-info" onclick="encryptBlowfish()">
+          <i class="fas fa-lock"></i> 加密
+        </button>
+        <button class="btn btn-secondary" onclick="decryptBlowfish()">
+          <i class="fas fa-lock-open"></i> 解密
+        </button>
+        <button class="btn btn-secondary" onclick="clearById('blowfish')">
+          <i class="fas fa-trash"></i> 清空
+        </button>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label class="form-label">输出结果</label>
+        <div class="result-box">
+          <div class="result-content" id="blowfishOutput" style="word-break: break-all;"></div>
+          <div class="result-actions">
+            <button class="copy-btn" onclick="copyById('blowfish')">
+              <i class="fas fa-copy"></i> 复制
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>阜阳职业技术学校 移动应用与开发赛项实训作品</p>
+      <p class="footer-tech">HTML + TailwindCSS + 原生JS | Supabase PostgreSQL | GitHub Pages静态托管</p>
+    </div>
+  </footer>
+
+  <script>
+  // ===== AES-256 CBC 模式 =====
+  function encryptById(type) {
+    const keys = {
+      aes: { key: 'aesKey', input: 'aesInput', output: 'aesOutput' },
+      des: { key: 'desKey', input: 'desInput', output: 'desOutput' },
+      tdes: { key: 'tdesKey', input: 'tdesInput', output: 'tdesOutput' },
+      rc4: { key: 'rc4Key', input: 'rc4Input', output: 'rc4Output' }
+    };
+    
+    const config = keys[type];
+    const key = document.getElementById(config.key).value;
+    const input = document.getElementById(config.input).value;
+    const output = document.getElementById(config.output);
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    try {
+      let encrypted;
+      if (type === 'aes') {
+        encrypted = CryptoJS.AES.encrypt(input, key).toString();
+      } else if (type === 'des') {
+        if (key.length < 8) {
+          output.innerHTML = '<span style="color: var(--accent-warning);">DES密钥需要至少8位</span>';
+          return;
+        }
+        encrypted = CryptoJS.DES.encrypt(input, key).toString();
+      } else if (type === 'tdes') {
+        if (key.length < 24) {
+          output.innerHTML = '<span style="color: var(--accent-warning);">TripleDES密钥需要至少24位</span>';
+          return;
+        }
+        encrypted = CryptoJS.TripleDES.encrypt(input, key).toString();
+      } else if (type === 'rc4') {
+        encrypted = CryptoJS.RC4.encrypt(input, key).toString();
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptById(type) {
+    const keys = {
+      aes: { key: 'aesKey', input: 'aesInput', output: 'aesOutput' },
+      des: { key: 'desKey', input: 'desInput', output: 'desOutput' },
+      tdes: { key: 'tdesKey', input: 'tdesInput', output: 'tdesOutput' },
+      rc4: { key: 'rc4Key', input: 'rc4Input', output: 'rc4Output' }
+    };
+    
+    const config = keys[type];
+    const key = document.getElementById(config.key).value;
+    const input = document.getElementById(config.input).value;
+    const output = document.getElementById(config.output);
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      let decrypted;
+      if (type === 'aes') {
+        const bytes = CryptoJS.AES.decrypt(input, key);
+        decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      } else if (type === 'des') {
+        const bytes = CryptoJS.DES.decrypt(input, key);
+        decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      } else if (type === 'tdes') {
+        const bytes = CryptoJS.TripleDES.decrypt(input, key);
+        decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      } else if (type === 'rc4') {
+        const bytes = CryptoJS.RC4.decrypt(input, key);
+        decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      }
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== AES-ECB 模式 =====
+  function encryptAesEcb() {
+    const key = document.getElementById('aesEcbKey').value;
+    const input = document.getElementById('aesEcbInput').value;
+    const output = document.getElementById('aesEcbOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.AES.encrypt(input, key, { mode: CryptoJS.mode.ECB }).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptAesEcb() {
+    const key = document.getElementById('aesEcbKey').value;
+    const input = document.getElementById('aesEcbInput').value;
+    const output = document.getElementById('aesEcbOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.AES.decrypt(input, key, { mode: CryptoJS.mode.ECB });
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== AES-CTR 模式 =====
+  function encryptAesCtr() {
+    const key = document.getElementById('aesCtrKey').value;
+    const input = document.getElementById('aesCtrInput').value;
+    const output = document.getElementById('aesCtrOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.AES.encrypt(input, key, { mode: CryptoJS.mode.CTR, padding: CryptoJS.pad.NoPadding }).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptAesCtr() {
+    const key = document.getElementById('aesCtrKey').value;
+    const input = document.getElementById('aesCtrInput').value;
+    const output = document.getElementById('aesCtrOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.AES.decrypt(input, key, { mode: CryptoJS.mode.CTR, padding: CryptoJS.pad.NoPadding });
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== DES-ECB 模式 =====
+  function encryptDesEcb() {
+    const key = document.getElementById('desEcbKey').value;
+    const input = document.getElementById('desEcbInput').value;
+    const output = document.getElementById('desEcbOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    if (key.length < 8) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">DES密钥需要至少8位</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.DES.encrypt(input, key, { mode: CryptoJS.mode.ECB }).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptDesEcb() {
+    const key = document.getElementById('desEcbKey').value;
+    const input = document.getElementById('desEcbInput').value;
+    const output = document.getElementById('desEcbOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.DES.decrypt(input, key, { mode: CryptoJS.mode.ECB });
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== TripleDES-ECB 模式 =====
+  function encryptTdesEcb() {
+    const key = document.getElementById('tdesEcbKey').value;
+    const input = document.getElementById('tdesEcbInput').value;
+    const output = document.getElementById('tdesEcbOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    if (key.length < 24) {
+      output.innerHTML = '<span style="color: var(--accent-warning);">TripleDES密钥需要至少24位</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.TripleDES.encrypt(input, key, { mode: CryptoJS.mode.ECB }).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptTdesEcb() {
+    const key = document.getElementById('tdesEcbKey').value;
+    const input = document.getElementById('tdesEcbInput').value;
+    const output = document.getElementById('tdesEcbOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.TripleDES.decrypt(input, key, { mode: CryptoJS.mode.ECB });
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== RC4Drop 模式 =====
+  function encryptRc4Drop() {
+    const key = document.getElementById('rc4DropKey').value;
+    const input = document.getElementById('rc4DropInput').value;
+    const output = document.getElementById('rc4DropOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.RC4Drop.encrypt(input, key).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptRc4Drop() {
+    const key = document.getElementById('rc4DropKey').value;
+    const input = document.getElementById('rc4DropInput').value;
+    const output = document.getElementById('rc4DropOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.RC4Drop.decrypt(input, key);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== Rabbit 模式 =====
+  function encryptRabbit() {
+    const key = document.getElementById('rabbitKey').value;
+    const input = document.getElementById('rabbitInput').value;
+    const output = document.getElementById('rabbitOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.Rabbit.encrypt(input, key).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptRabbit() {
+    const key = document.getElementById('rabbitKey').value;
+    const input = document.getElementById('rabbitInput').value;
+    const output = document.getElementById('rabbitOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.Rabbit.decrypt(input, key);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== Rabbit Legacy 模式 =====
+  function encryptRabbitLegacy() {
+    const key = document.getElementById('rabbitLegacyKey').value;
+    const input = document.getElementById('rabbitLegacyInput').value;
+    const output = document.getElementById('rabbitLegacyOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.RabbitLegacy.encrypt(input, key).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptRabbitLegacy() {
+    const key = document.getElementById('rabbitLegacyKey').value;
+    const input = document.getElementById('rabbitLegacyInput').value;
+    const output = document.getElementById('rabbitLegacyOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.RabbitLegacy.decrypt(input, key);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== Blowfish 模式 =====
+  function encryptBlowfish() {
+    const key = document.getElementById('blowfishKey').value;
+    const input = document.getElementById('blowfishInput').value;
+    const output = document.getElementById('blowfishOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和明文</span>';
+      return;
+    }
+    
+    try {
+      const encrypted = CryptoJS.Blowfish.encrypt(input, key).toString();
+      output.innerHTML = '<span style="color: var(--accent-success);">' + encrypted + '</span>';
+      showToast('加密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">加密失败: ' + e.message + '</span>';
+    }
+  }
+  
+  function decryptBlowfish() {
+    const key = document.getElementById('blowfishKey').value;
+    const input = document.getElementById('blowfishInput').value;
+    const output = document.getElementById('blowfishOutput');
+    
+    if (!key || !input) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">请输入密钥和密文</span>';
+      return;
+    }
+    
+    try {
+      const bytes = CryptoJS.Blowfish.decrypt(input, key);
+      const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      
+      if (!decrypted) {
+        output.innerHTML = '<span style="color: var(--accent-warning);">密钥错误或密文格式不正确</span>';
+        return;
+      }
+      
+      output.innerHTML = '<span style="color: var(--accent-info);">' + decrypted + '</span>';
+      showToast('解密成功', 'success');
+    } catch (e) {
+      output.innerHTML = '<span style="color: var(--accent-danger);">解密失败: ' + e.message + '</span>';
+    }
+  }
+
+  // ===== 通用函数 =====
+  function clearById(prefix) {
+    document.getElementById(prefix + 'Input').value = '';
+    document.getElementById(prefix + 'Output').innerHTML = '<span style="color: var(--text-muted);">结果将在此显示...</span>';
+    showToast('已清空', 'info');
+  }
+  
+  function copyById(prefix) {
+    const output = document.getElementById(prefix + 'Output');
+    const text = output.textContent || output.innerText;
+    
+    if (text && !text.includes('请输入') && !text.includes('结果将在此显示')) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('已复制到剪贴板', 'success');
+      }).catch(() => {
+        showToast('复制失败', 'error');
+      });
+    } else {
+      showToast('没有内容可复制', 'warning');
+    }
+  }
+  
+  // 修复：定义 escapeHtml 函数
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  function showToast(message, type) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    
+    const icons = {
+      success: 'fa-check-circle',
+      error: 'fa-times-circle',
+      warning: 'fa-exclamation-circle',
+      info: 'fa-info-circle'
+    };
+    
+    toast.innerHTML = '<i class="fas ' + icons[type] + '"></i>' + message;
+    container.appendChild(toast);
+    
+    setTimeout(function() {
+      toast.classList.add('show');
+    }, 10);
+    
+    setTimeout(function() {
+      toast.classList.remove('show');
+      setTimeout(function() {
+        container.removeChild(toast);
+      }, 300);
+    }, 3000);
+  }
+  </script>
+
+  <style>
+  /* 算法介绍框样式 */
+  .info-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .info-title {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--accent-primary);
+  }
+  
+  .info-box p {
+    margin: 0 0 10px 0;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+  
+  .info-box p:last-child {
+    margin-bottom: 0;
+  }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  
+  .info-item {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+  }
+  
+  .info-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  
+  .info-value {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .info-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .info-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .info-tag.success {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--accent-success);
+  }
+  
+  .info-tag.warning {
+    background: rgba(234, 179, 8, 0.15);
+    color: var(--accent-warning);
+  }
+  
+  .info-tag.info {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-info);
+  }
+  
+  /* Toast 样式 */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10000;
+    transition: transform 0.3s ease;
+  }
+  
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+  
+  .toast-success {
+    background: var(--accent-success);
+    color: white;
+  }
+  
+  .toast-error {
+    background: var(--accent-danger);
+    color: white;
+  }
+  
+  .toast-warning {
+    background: var(--accent-warning);
+    color: black;
+  }
+  
+  .toast-info {
+    background: var(--accent-info);
+    color: white;
+  }
+  
+  /* 响应式 */
+  @media (max-width: 768px) {
+    .info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .info-tags {
+      flex-direction: column;
+    }
+  }
+  </style>
+  <!-- Toast容器 -->
+  <div id="toastContainer"></div>
+</body>

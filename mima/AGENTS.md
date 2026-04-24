@@ -10,13 +10,13 @@
 ```
 /workspace/projects/
 ├── index.html          # 首页 - 功能导航
-├── md5.html            # MD5 加密页面
-├── sha1.html           # SHA1 加密页面
+├── hash.html           # 哈希加密页面 (MD5/SHA1 标签页合并)
 ├── decrypt.html        # 解密查询页面
+├── encrypt.html        # 可逆加密页面 (12种算法)
 ├── tools.html          # 离线工具页面
 ├── readme.html         # 使用说明页面
 ├── styles/
-│   └── main.css        # 共享暗黑风格样式
+│   └── main.css        # 共享暗黑风格样式（含响应式）
 └── .coze               # 项目配置
 ```
 
@@ -27,24 +27,48 @@
 - 数据库连接状态指示
 - 重要提示说明
 
-### 2. md5.html (MD5 加密)
-- 输入明文生成 32 位 MD5 哈希
+### 2. hash.html (哈希加密 - MD5/SHA1合并)
+- 标签页切换 MD5 / SHA1
+- 输入明文生成哈希值
 - 自动存储到 Supabase 数据库
 - 复制结果功能
 - Toast 提示反馈
+- MD5: 32位十六进制
+- SHA1: 40位十六进制
 
-### 3. sha1.html (SHA1 加密)
-- 输入明文生成 40 位 SHA1 哈希
-- 自动存储到 Supabase 数据库
-- 复制结果功能
-
-### 4. decrypt.html (解密查询)
+### 3. decrypt.html (解密查询)
 - 选择算法类型 (MD5/SHA1)
 - 输入密文查询数据库
 - 显示查询结果和历史记录
 - 格式验证 (MD5 32位, SHA1 40位)
+- 密文自动转小写兼容
 
-### 5. tools.html (离线工具)
+### 5. encrypt.html (可逆加密)
+支持12种对称加密算法，均支持加密/解密双向操作，分为4个分组：
+
+**推荐算法**：
+- **AES-256 (CBC模式)**: 高级加密标准，最安全的对称加密算法
+- **AES-ECB**: 电子密码本模式，简单快速
+- **AES-CTR**: 计数器模式，可并行加密
+
+**经典算法**：
+- **DES**: 数据加密标准（密钥8位）
+- **DES-ECB**: DES电子密码本模式
+- **TripleDES**: 三重DES（密钥24位）
+- **TripleDES-ECB**: TripleDES电子密码本模式
+
+**流加密算法**：
+- **RC4**: 序列密码，广泛应用于SSL/TLS
+- **RC4Drop**: RC4改进版，丢弃初始密钥流
+- **Rabbit**: 高性能流加密算法
+- **Rabbit Legacy**: Rabbit原始版本
+
+**其他算法**：
+- **Blowfish**: 河豚算法，密钥长度可变(32-448位)
+
+所有操作本地完成，使用CryptoJS实现
+
+### 6. tools.html (离线工具)
 所有工具均为本地计算，不上传数据：
 - Base64 编码/解码
 - URL 编码/解码
@@ -53,7 +77,7 @@
 - HTML 实体编码/解码
 - 大小写转换
 
-### 6. readme.html (使用说明)
+### 7. readme.html (使用说明)
 - 完整使用文档
 - 技术原理说明
 - 注意事项声明

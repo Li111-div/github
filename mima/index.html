@@ -19,17 +19,17 @@
         <i class="fas fa-home"></i>
         首页
       </a>
-      <a href="md5.html" class="nav-link">
+      <a href="hash.html" class="nav-link">
         <i class="fas fa-fingerprint"></i>
-        MD5加密
-      </a>
-      <a href="sha1.html" class="nav-link">
-        <i class="fas fa-lock"></i>
-        SHA1加密
+        哈希加密
       </a>
       <a href="decrypt.html" class="nav-link">
         <i class="fas fa-key"></i>
         解密查询
+      </a>
+      <a href="encrypt.html" class="nav-link">
+        <i class="fas fa-lock-open"></i>
+        可逆加密
       </a>
       <a href="tools.html" class="nav-link">
         <i class="fas fa-toolbox"></i>
@@ -64,23 +64,12 @@
 
     <!-- 功能导航 -->
     <div class="nav-grid">
-      <a href="md5.html" class="nav-card">
+      <a href="hash.html" class="nav-card">
         <div class="nav-card-icon md5">
           <i class="fas fa-fingerprint"></i>
         </div>
-        <h3>MD5 加密</h3>
-        <p>将明文转换为 32 位 MD5 哈希值，支持自动存储到数据库</p>
-        <div class="nav-card-arrow">
-          <i class="fas fa-arrow-right"></i>
-        </div>
-      </a>
-
-      <a href="sha1.html" class="nav-card">
-        <div class="nav-card-icon sha1">
-          <i class="fas fa-lock"></i>
-        </div>
-        <h3>SHA1 加密</h3>
-        <p>将明文转换为 40 位 SHA1 哈希值，支持自动存储到数据库</p>
+        <h3>哈希加密</h3>
+        <p>MD5/SHA1 单向哈希加密，明文转密文自动存储到数据库</p>
         <div class="nav-card-arrow">
           <i class="fas fa-arrow-right"></i>
         </div>
@@ -92,6 +81,17 @@
         </div>
         <h3>哈希解密</h3>
         <p>通过密文查询数据库，返回对应的明文内容</p>
+        <div class="nav-card-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </a>
+
+      <a href="encrypt.html" class="nav-card">
+        <div class="nav-card-icon" style="background: rgba(248, 113, 113, 0.15); color: var(--accent-danger);">
+          <i class="fas fa-lock-open"></i>
+        </div>
+        <h3>可逆加密</h3>
+        <p>AES、DES、TripleDES、Rabbit、RC4 对称加密，支持加密解密双向转换</p>
         <div class="nav-card-arrow">
           <i class="fas fa-arrow-right"></i>
         </div>
