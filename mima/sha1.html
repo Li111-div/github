@@ -197,6 +197,33 @@
       };
 
       function saveToDatabase(plainText, hashText, hashType) {
+        // 先检查是否已存在相同明文和哈希类型的记录
+        supabaseClient
+          .from('hash_dict')
+          .select('id')
+          .eq('plain_text', plainText)
+          .eq('hash_type', hashType)
+          .limit(1)
+          .then(function(checkRes) {
+            if (checkRes.error) {
+              console.error('检查重复失败:', checkRes.error);
+            }
+            
+            // 如果已存在，跳过插入
+            if (checkRes.data && checkRes.data.length > 0) {
+              document.getElementById('statusLabel').innerHTML = '<i class="fas fa-info-circle" style="color: var(--accent-info);"></i> 数据库状态';
+              document.getElementById('statusText').textContent = '该记录已存在，无需重复存储';
+              document.getElementById('statusText').style.color = 'var(--accent-info)';
+              showToast('记录已存在，跳过重复存储', 'info');
+              return;
+            }
+            
+            // 不存在则插入新记录
+            insertNewRecord(plainText, hashText, hashType);
+          });
+      }
+
+      function insertNewRecord(plainText, hashText, hashType) {
         try {
           supabaseClient
             .from('hash_dict')
