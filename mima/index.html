@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>密码加密解密工具箱</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <link rel="stylesheet" href="styles/main.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -183,6 +184,41 @@
     
     // 挂载到全局供其他页面使用
     window.supabase = supabase;
+
+    // 滚动导航按钮
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' });
+    }
+    window.scrollToTop = scrollToTop;
+    window.scrollToBottom = scrollToBottom;
+    
+    // 滚动导航按钮显示/隐藏
+    const scrollNav = document.querySelector('.scroll-nav');
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+      
+      if (scrollTop > 100 || scrollTop < scrollHeight - clientHeight - 100) {
+        scrollNav.classList.add('visible');
+      } else {
+        scrollNav.classList.remove('visible');
+      }
+      lastScrollTop = scrollTop;
+    });
   </script>
+  <!-- 滚动导航按钮 -->
+  <div class="scroll-nav">
+    <button class="scroll-btn scroll-top" onclick="scrollToTop()" title="回到顶部">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <button class="scroll-btn scroll-bottom" onclick="scrollToBottom()" title="前往底部">
+      <i class="fas fa-arrow-down"></i>
+    </button>
+  </div>
 </body>
 </html>

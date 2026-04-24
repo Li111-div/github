@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>离线工具 - 密码工具箱</title>
   <link rel="stylesheet" href="styles/main.css">
@@ -890,6 +891,28 @@
       setTimeout(() => document.body.removeChild(toast), 300);
     }, 2000);
   }
+
+  // 滚动导航函数
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+  function scrollToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' });
+  }
+
+  // 滚动导航按钮显示/隐藏
+  const scrollNav = document.querySelector('.scroll-nav');
+  window.addEventListener('scroll', function() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+    
+    if (scrollTop > 100 || scrollTop < scrollHeight - clientHeight - 100) {
+      scrollNav.classList.add('visible');
+    } else {
+      scrollNav.classList.remove('visible');
+    }
+  });
   </script>
 
   <style>
@@ -1028,5 +1051,14 @@
     }
   }
   </style>
+  <!-- 滚动导航按钮 -->
+  <div class="scroll-nav">
+    <button class="scroll-btn scroll-top" onclick="scrollToTop()" title="回到顶部">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <button class="scroll-btn scroll-bottom" onclick="scrollToBottom()" title="前往底部">
+      <i class="fas fa-arrow-down"></i>
+    </button>
+  </div>
 </body>
 </html>

@@ -24,6 +24,11 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 70px;
+}
+
 html, body {
   height: 100%;
 }
@@ -92,7 +97,6 @@ body {
   color: var(--text-secondary);
   font-size: 14px;
   font-weight: 500;
-  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -179,7 +183,7 @@ body {
   color: var(--text-primary);
   font-size: 14px;
   font-family: 'SF Mono', 'Consolas', monospace;
-  transition: all 0.2s ease;
+  transition: color 0.1s, background 0.1s, border-color 0.1s;
 }
 
 .form-input:focus, .form-textarea:focus, .form-select:focus {
@@ -220,7 +224,7 @@ body {
   font-weight: 500;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.1s, background 0.1s, border-color 0.1s;
   text-decoration: none;
 }
 
@@ -320,7 +324,7 @@ body {
   color: var(--text-secondary);
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.1s, background 0.1s, border-color 0.1s;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -421,7 +425,7 @@ body {
   border-radius: 12px;
   padding: 24px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
   position: relative;
   overflow: hidden;
 }
@@ -435,7 +439,6 @@ body {
   height: 3px;
   background: linear-gradient(90deg, var(--accent-primary), var(--accent-cyan));
   opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .nav-card:active {
@@ -506,7 +509,7 @@ body {
   top: 24px;
   right: 24px;
   color: var(--text-muted);
-  transition: all 0.3s ease;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 
 .nav-card-arrow svg {
@@ -797,7 +800,7 @@ body {
     height: 2px;
     background: var(--text-primary);
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
   }
   
   .hamburger.active span:nth-child(1) {
@@ -1143,7 +1146,7 @@ body {
   border-radius: var(--radius);
   padding: 20px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 
 .feature-item:active {
@@ -1429,7 +1432,7 @@ body {
   border-radius: 20px;
   color: var(--text-muted);
   font-size: 0.9rem;
-  transition: all 0.3s;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
   border: 1px solid var(--border);
 }
 
@@ -1559,7 +1562,7 @@ body {
   border-radius: var(--radius);
   padding: 25px;
   text-align: center;
-  transition: all 0.3s;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
   border: 1px solid var(--border);
 }
 
@@ -1793,4 +1796,99 @@ body {
 .guide-footer .btn {
   padding: 14px 30px;
   font-size: 1rem;
+}
+
+/* ========== 滚动导航按钮 ========== */
+.scroll-nav {
+  position: fixed;
+  right: 20px;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 999;
+}
+
+.scroll-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-btn:active {
+  background: var(--accent-primary);
+  color: white;
+  transform: scale(0.95);
+  border-color: var(--accent-primary);
+}
+
+.scroll-btn:hover {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.scroll-top {
+  opacity: 0;
+  transform: translateX(20px);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.scroll-bottom {
+  opacity: 0;
+  transform: translateX(20px);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.scroll-nav.visible .scroll-top,
+.scroll-nav.visible .scroll-bottom {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .scroll-nav {
+    right: 15px;
+    bottom: 70px;
+  }
+  
+  .scroll-btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ========== 丝滑滚动效果 ========== */
+/* 已禁用平滑滚动，改用即时滚动 */
+
+/* 自定义滚动条丝滑效果 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--accent-primary);
 }
