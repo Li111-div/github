@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>安卓APP下载 - 密码加密解密工具箱</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>密码工具箱</h1>
+    </a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="菜单">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">
+        <i class="fas fa-home"></i>
+        首页
+      </a>
+      <a href="hash.html" class="nav-link">
+        <i class="fas fa-fingerprint"></i>
+        哈希加密
+      </a>
+      <a href="decrypt.html" class="nav-link">
+        <i class="fas fa-key"></i>
+        解密查询
+      </a>
+      <a href="encrypt.html" class="nav-link">
+        <i class="fas fa-lock-open"></i>
+        可逆加密
+      </a>
+      <a href="tools.html" class="nav-link">
+        <i class="fas fa-toolbox"></i>
+        离线工具
+      </a>
+      <a href="readme.html" class="nav-link">
+        <i class="fas fa-book"></i>
+        使用说明
+      </a>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <main class="main-container">
+    <div class="card">
+      <div style="text-align: center; padding: 30px 20px;">
+        <!-- APP图标 -->
+        <div style="width: 120px; height: 120px; margin: 0 auto 24px; background: linear-gradient(135deg, #3dd158, #00a854); border-radius: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 32px rgba(61, 209, 88, 0.3);">
+          <i class="fas fa-shield-halved" style="font-size: 60px; color: white;"></i>
+        </div>
+        
+        <h2 style="font-size: 28px; margin-bottom: 12px;">密码加密解密工具箱</h2>
+        <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 20px;">
+          <i class="fab fa-android" style="color: #3dd158;"></i> Android 版本
+        </p>
+        
+        <!-- 系统要求警告 -->
+        <div style="background: rgba(248, 81, 73, 0.1); border: 1px solid rgba(248, 81, 73, 0.3); border-radius: 12px; padding: 16px 20px; margin: 20px auto; max-width: 500px; text-align: left;">
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <i class="fas fa-exclamation-circle" style="color: var(--accent-danger); font-size: 24px; margin-top: 2px;"></i>
+            <div>
+              <h4 style="color: var(--accent-danger); margin: 0 0 8px 0; font-size: 16px;">注意：本应用仅支持 Android 系统</h4>
+              <p style="color: var(--text-secondary); font-size: 14px; margin: 0; line-height: 1.6;">
+                本安装包为 <strong style="color: #3dd158;">Android APK</strong> 格式，<strong style="color: var(--accent-danger);">不支持 iOS（苹果手机）/ 鸿蒙 / Windows / Mac 系统</strong>。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 如何查看系统 -->
+        <div style="background: rgba(88, 166, 255, 0.05); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px 20px; margin: 0 auto 20px; max-width: 500px; text-align: left;">
+          <h4 style="color: var(--accent-primary); margin: 0 0 10px 0; font-size: 15px;">
+            <i class="fas fa-question-circle"></i> 如何查看自己的手机系统？
+          </h4>
+          <ul style="color: var(--text-secondary); font-size: 13px; margin: 0; padding-left: 18px; line-height: 1.8;">
+            <li><strong>华为/荣耀：</strong>设置 → 关于手机 → Android版本</li>
+            <li><strong>小米/红米：</strong>设置 → 我的设备 → 全部参数 → Android版本</li>
+            <li><strong>OPPO/Realme：</strong>设置 → 关于手机 → 版本信息 → Android版本</li>
+            <li><strong>VIVO：</strong>设置 → 系统升级 → 右上角设置 → 关于手机</li>
+            <li><strong>三星：</strong>设置 → 关于手机 → 软件信息 → Android版本</li>
+            <li><strong>其他品牌：</strong>设置 → 系统/我的设备 → 关于手机 → Android版本</li>
+          </ul>
+          <p style="color: var(--accent-success); font-size: 13px; margin: 10px 0 0 0;">
+            <i class="fas fa-check-circle"></i> 如果能看到 Android 版本号，说明是安卓系统，可以下载安装
+          </p>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 30px;">
+          <div class="badge" style="background: rgba(88, 166, 255, 0.15); color: var(--accent-primary);">
+            <i class="fas fa-mobile-alt"></i>
+            Android 5.0+
+          </div>
+          <div class="badge" style="background: rgba(61, 209, 88, 0.15); color: #3dd158;">
+            <i class="fas fa-check-circle"></i>
+            免费使用
+          </div>
+          <div class="badge" style="background: rgba(163, 113, 247, 0.15); color: var(--accent-purple);">
+            <i class="fas fa-database"></i>
+            云端同步
+          </div>
+        </div>
+
+        <!-- 下载按钮 -->
+        <div style="margin: 30px 0;">
+          <a href="https://code.coze.cn/api/sandbox/coze_coding/file/proxy?expire_time=-1&file_path=assets%2FH51F18AF3_0424171111.apk&nonce=e7e45ef2-0035-437f-b354-ab20e4925316&project_id=7631917966572994569&sign=86101e7d499e36e431fbb48af932310a892d768b327af3316235b140883070dd" 
+             class="btn btn-primary" 
+             style="padding: 16px 48px; font-size: 18px; display: inline-flex; align-items: center; gap: 12px;">
+            <i class="fas fa-download"></i>
+            立即下载 APK
+          </a>
+        </div>
+
+        <p style="color: var(--text-muted); font-size: 13px;">
+          <i class="fas fa-info-circle"></i>
+          本应用仅适用于 Android 手机，请在设置中允许"安装未知来源应用"
+        </p>
+      </div>
+    </div>
+
+    <!-- 功能介绍 -->
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-star" style="color: var(--accent-warning);"></i>
+          APP 功能特点
+        </div>
+      </div>
+      <div class="feature-grid" style="margin-top: 16px;">
+        <div class="feature-item">
+          <i class="fas fa-fingerprint"></i>
+          <div>
+            <strong>哈希加密</strong>
+            <p>支持 MD5、SHA1 在线加密</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-key"></i>
+          <div>
+            <strong>哈希解密</strong>
+            <p>云端数据库快速查询</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-lock-open"></i>
+          <div>
+            <strong>可逆加密</strong>
+            <p>AES、DES 等多种算法</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <i class="fas fa-toolbox"></i>
+          <div>
+            <strong>离线工具</strong>
+            <p>Base64、URL、进制转换</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 安装说明 -->
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-question-circle" style="color: var(--accent-cyan);"></i>
+          安装说明
+        </div>
+      </div>
+      <ol style="color: var(--text-secondary); line-height: 2; padding-left: 20px; margin-top: 12px;">
+        <li>点击上方"立即下载 APK"按钮下载安装包</li>
+        <li>打开手机<span style="color: var(--accent-primary);">设置</span> → <span style="color: var(--accent-primary);">应用设置</span> → <span style="color: var(--accent-primary);">应用管理</span></li>
+        <li>找到对应的浏览器或文件管理器</li>
+        <li>开启<span style="color: var(--accent-success);">"允许安装未知来源应用"</span>权限</li>
+        <li>返回下载目录，点击 APK 文件开始安装</li>
+      </ol>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>阜阳职业技术学校 移动应用与开发赛项实训作品</p>
+      <p class="footer-tech">HTML + TailwindCSS + 原生JS | Supabase PostgreSQL | GitHub Pages静态托管</p>
+    </div>
+  </footer>
+
+  <script>
+    // 移动端汉堡菜单功能
+    document.addEventListener('DOMContentLoaded', function() {
+      const hamburger = document.getElementById('hamburgerBtn');
+      const navLinks = document.getElementById('navLinks');
+      
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function() {
+          navLinks.classList.toggle('active');
+          this.classList.toggle('active');
+        });
+        
+        navLinks.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            hamburger.classList.remove('active');
+          });
+        });
+      }
+
+      // 滚动导航按钮
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+      function scrollToBottom() {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' });
+      }
+      window.scrollToTop = scrollToTop;
+      window.scrollToBottom = scrollToBottom;
+
+      const scrollNav = document.querySelector('.scroll-nav');
+      window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        
+        if (scrollTop > 100 || scrollTop < scrollHeight - clientHeight - 100) {
+          scrollNav.classList.add('visible');
+        } else {
+          scrollNav.classList.remove('visible');
+        }
+      });
+    });
+  </script>
+
+  <!-- 滚动导航按钮 -->
+  <div class="scroll-nav">
+    <button class="scroll-btn scroll-top" onclick="scrollToTop()" title="回到顶部">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <button class="scroll-btn scroll-bottom" onclick="scrollToBottom()" title="前往底部">
+      <i class="fas fa-arrow-down"></i>
+    </button>
+  </div>
+</body>
+</html>
