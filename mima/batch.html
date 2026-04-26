@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>批量文件处理 - 密码加密解密工具箱</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <a href="index.html" class="navbar-brand">
+      <i class="fas fa-shield-halved"></i>
+      <h1>密码工具箱</h1>
+    </a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="菜单">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">
+        <i class="fas fa-home"></i>
+        首页
+      </a>
+      <a href="hash.html" class="nav-link">
+        <i class="fas fa-fingerprint"></i>
+        哈希加密
+      </a>
+      <a href="decrypt.html" class="nav-link">
+        <i class="fas fa-key"></i>
+        解密查询
+      </a>
+      <a href="encrypt.html" class="nav-link">
+        <i class="fas fa-lock-open"></i>
+        可逆加密
+      </a>
+      <a href="tools.html" class="nav-link">
+        <i class="fas fa-toolbox"></i>
+        离线工具
+      </a>
+      <a href="readme.html" class="nav-link">
+        <i class="fas fa-book"></i>
+        使用说明
+      </a>
+    </div>
+  </nav>
+
+  <!-- 主内容 -->
+  <main class="main-container">
+    <!-- 警告提示 -->
+    <div class="card" style="margin-bottom: 24px; border-left: 4px solid var(--accent-warning);">
+      <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0;">
+        <i class="fas fa-desktop" style="font-size: 24px; color: var(--accent-warning);"></i>
+        <div>
+          <h4 style="margin: 0 0 4px 0; color: var(--accent-warning);">仅支持电脑端使用</h4>
+          <p style="margin: 0; color: var(--text-muted); font-size: 14px;">本功能需要使用电脑浏览器（Chrome、Firefox、Edge 等），不支持手机端操作</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 文件上传区 -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-file-upload"></i>
+          文件上传
+        </div>
+      </div>
+      
+      <div id="dropZone" class="drop-zone" style="margin-top: 16px;">
+        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--text-muted); margin-bottom: 16px;"></i>
+        <p style="color: var(--text-primary); font-size: 16px; margin-bottom: 8px;">
+          拖拽文件到此处 或 点击选择文件
+        </p>
+        <p style="color: var(--text-muted); font-size: 13px;">
+          支持 .txt 纯文本文件，单个文件最大 10MB
+        </p>
+        <input type="file" id="fileInput" accept=".txt" style="display: none;">
+        <button class="btn btn-secondary" style="margin-top: 16px;" onclick="document.getElementById('fileInput').click()">
+          <i class="fas fa-folder-open"></i>
+          选择文件
+        </button>
+      </div>
+
+      <!-- 已选择文件信息 -->
+      <div id="fileInfo" class="file-info" style="display: none; margin-top: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <i class="fas fa-file-alt" style="font-size: 32px; color: var(--accent-primary);"></i>
+          <div style="flex: 1;">
+            <div id="fileName" style="font-weight: 600; color: var(--text-primary);"></div>
+            <div style="font-size: 13px; color: var(--text-muted);">
+              文件大小: <span id="fileSize">-</span> | 总行数: <span id="totalLines">-</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="clearFile()" style="padding: 8px 16px;">
+            <i class="fas fa-times"></i>
+            移除
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 功能选择区 -->
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-cogs"></i>
+          功能选择
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <!-- 加密/解密切换 -->
+        <div class="form-group">
+          <label class="form-label">选择操作类型</label>
+          <div style="display: flex; gap: 16px; margin-top: 8px;">
+            <label class="radio-card" style="flex: 1;">
+              <input type="radio" name="operation" value="encrypt" checked onchange="toggleMode()">
+              <div class="radio-content">
+                <i class="fas fa-lock"></i>
+                <span>批量加密</span>
+              </div>
+            </label>
+            <label class="radio-card" style="flex: 1;">
+              <input type="radio" name="operation" value="decrypt" onchange="toggleMode()">
+              <div class="radio-content">
+                <i class="fas fa-unlock"></i>
+                <span>批量解密</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 加密算法选择 -->
+        <div class="form-group" id="encryptOptions" style="margin-top: 20px;">
+          <label class="form-label">选择加密算法</label>
+          <div style="display: flex; gap: 16px; margin-top: 8px;">
+            <label class="radio-card" style="flex: 1;">
+              <input type="radio" name="encryptAlgo" value="md5" checked>
+              <div class="radio-content">
+                <div>
+                  <strong>MD5</strong>
+                  <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">32位哈希值</p>
+                </div>
+              </div>
+            </label>
+            <label class="radio-card" style="flex: 1;">
+              <input type="radio" name="encryptAlgo" value="sha1">
+              <div class="radio-content">
+                <div>
+                  <strong>SHA1</strong>
+                  <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0 0;">40位哈希值</p>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 解密自动识别提示 -->
+        <div class="form-group" id="decryptOptions" style="margin-top: 20px; display: none;">
+          <label class="form-label">
+            <i class="fas fa-magic" style="color: var(--accent-purple);"></i>
+            解密模式说明
+          </label>
+          <div style="background: rgba(163, 113, 247, 0.1); border: 1px solid rgba(163, 113, 247, 0.3); border-radius: 8px; padding: 16px; margin-top: 8px;">
+            <p style="color: var(--text-secondary); margin: 0; line-height: 1.8;">
+              系统将自动识别每行密文的格式：<br>
+              <span style="color: var(--accent-primary);">• 32位十六进制</span> → 自动识别为 MD5<br>
+              <span style="color: var(--accent-cyan);">• 40位十六进制</span> → 自动识别为 SHA1<br>
+              <span style="color: var(--accent-warning);">• 无法识别的格式</span> → 标记为失败
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 操作按钮 -->
+      <div style="display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap;">
+        <button class="btn btn-primary" id="startBtn" onclick="startProcess()" disabled style="flex: 1; min-width: 150px;">
+          <i class="fas fa-play"></i>
+          开始处理
+        </button>
+        <button class="btn btn-secondary" onclick="clearAll()" style="flex: 0 0 auto;">
+          <i class="fas fa-trash-alt"></i>
+          清空
+        </button>
+        <button class="btn btn-secondary" id="downloadBtn" onclick="downloadResult()" disabled style="flex: 0 0 auto;">
+          <i class="fas fa-download"></i>
+          下载结果
+        </button>
+      </div>
+    </div>
+
+    <!-- 处理结果区 -->
+    <div class="card" id="resultCard" style="margin-bottom: 24px; display: none;">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-list"></i>
+          处理结果
+        </div>
+        <div id="resultStats" class="result-stats"></div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <!-- 结果统计 -->
+        <div id="statsBar" class="stats-bar" style="display: none;">
+          <div class="stat-item stat-success">
+            <i class="fas fa-check-circle"></i>
+            <span>成功: <strong id="successCount">0</strong></span>
+          </div>
+          <div class="stat-item stat-error">
+            <i class="fas fa-times-circle"></i>
+            <span>失败: <strong id="failCount">0</strong></span>
+          </div>
+          <div class="stat-item stat-info">
+            <i class="fas fa-info-circle"></i>
+            <span>总计: <strong id="totalCount">0</strong></span>
+          </div>
+        </div>
+
+        <!-- 结果表格 -->
+        <div class="table-container" style="margin-top: 16px;">
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">序号</th>
+                <th>原内容</th>
+                <th style="width: 100px;">类型</th>
+                <th style="width: 100px;">状态</th>
+                <th style="width: 120px;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="resultBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 使用教程区 -->
+    <div class="card" id="guideCard">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fas fa-book-open"></i>
+          使用教程
+        </div>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <!-- 教程章节 -->
+        <div class="guide-section">
+          <div class="guide-header" onclick="toggleGuide(this)">
+            <div class="guide-title">
+              <i class="fas fa-file-alt"></i>
+              <span>什么是批量文件处理？</span>
+            </div>
+            <i class="fas fa-chevron-down guide-arrow"></i>
+          </div>
+          <div class="guide-content">
+            <p>批量文件处理是一种高效处理大量数据的方式。当你有大量的明文需要加密，或者有大量的密文需要查询解密时，逐个手动操作会非常繁琐。</p>
+            <p>通过上传一个 <strong>.txt 纯文本文件</strong>，系统可以自动：</p>
+            <ul>
+              <li><strong>批量加密</strong>：将文件中的每一行明文转换为对应的 MD5 或 SHA1 哈希值，并存入数据库</li>
+              <li><strong>批量解密</strong>：自动识别每一行密文的格式（MD5/SHA1），查询数据库获取对应的明文</li>
+            </ul>
+            <p>本功能特别适合：</p>
+            <ul>
+              <li>一次性处理大量用户密码的哈希存储</li>
+              <li>批量验证已有的密文记录</li>
+              <li>数据库迁移时的哈希数据整理</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <div class="guide-header" onclick="toggleGuide(this)">
+            <div class="guide-title">
+              <i class="fas fa-lock"></i>
+              <span>批量加密使用教程</span>
+            </div>
+            <i class="fas fa-chevron-down guide-arrow"></i>
+          </div>
+          <div class="guide-content">
+            <h4>第一步：准备文件</h4>
+            <p>新建一个 <strong>.txt</strong> 纯文本文件，每行输入一条需要加密的明文。例如：</p>
+            <div class="code-block">
+              我的密码123<br>
+              hello world<br>
+              admin@2024<br>
+              密码加密测试
+            </div>
+            <p><strong>注意：</strong></p>
+            <ul>
+              <li>文件编码必须是 <strong>UTF-8</strong></li>
+              <li>每行只能有一条明文</li>
+              <li>不建议使用过长的内容（建议不超过 100 字符）</li>
+              <li>不要有空行</li>
+            </ul>
+
+            <h4>第二步：上传文件</h4>
+            <p>点击"选择文件"按钮，或直接拖拽文件到上传区域。系统会显示文件名、大小和总行数。</p>
+
+            <h4>第三步：选择加密算法</h4>
+            <p>根据需求选择：</p>
+            <ul>
+              <li><strong>MD5</strong>：生成 32 位哈希值，速度快，兼容性广</li>
+              <li><strong>SHA1</strong>：生成 40 位哈希值，安全性略高</li>
+            </ul>
+
+            <h4>第四步：开始处理</h4>
+            <p>点击"开始处理"按钮，系统会逐行处理并实时显示进度。处理完成后会显示统计结果。</p>
+
+            <h4>第五步：查看和下载结果</h4>
+            <p>处理结果会显示在表格中，每条记录都可以单独复制。点击"下载结果"可以导出为文本文件。</p>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <div class="guide-header" onclick="toggleGuide(this)">
+            <div class="guide-title">
+              <i class="fas fa-unlock"></i>
+              <span>批量解密使用教程</span>
+            </div>
+            <i class="fas fa-chevron-down guide-arrow"></i>
+          </div>
+          <div class="guide-content">
+            <h4>第一步：准备文件</h4>
+            <p>将需要查询解密的密文放入 <strong>.txt</strong> 文件中，每行一条密文。例如：</p>
+            <div class="code-block">
+              e10adc3949ba59abbe56e057f20f883e<br>
+              5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8<br>
+              da39a3ee5e6b4b0d3255bfef95601890afd80709
+            </div>
+            <p><strong>注意：</strong></p>
+            <ul>
+              <li>每行必须是一个有效的 MD5（32位）或 SHA1（40位）哈希值</li>
+              <li>密文可以是大小写混合，系统会自动处理</li>
+              <li>格式错误的行会被标记为"无法识别"</li>
+            </ul>
+
+            <h4>第二步：上传文件</h4>
+            <p>点击"选择文件"按钮上传密文文件。</p>
+
+            <h4>第三步：选择解密模式</h4>
+            <p>选择"批量解密"选项卡。系统会显示自动识别的说明文字。</p>
+
+            <h4>第四步：开始处理</h4>
+            <p>点击"开始处理"，系统会：</p>
+            <ol>
+              <li>读取每一行密文</li>
+              <li>自动判断是 MD5（32位）还是 SHA1（40位）</li>
+              <li>查询数据库获取对应的明文</li>
+              <li>显示查询结果</li>
+            </ol>
+
+            <h4>结果说明</h4>
+            <ul>
+              <li><span style="color: var(--accent-success);">解密成功</span>：数据库中有该密文的记录，显示对应的明文</li>
+              <li><span style="color: var(--accent-danger);">解密失败</span>：数据库中没有该密文的记录（从未加密存储过）</li>
+              <li><span style="color: var(--accent-warning);">格式错误</span>：该行不是有效的 MD5 或 SHA1 格式</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <div class="guide-header" onclick="toggleGuide(this)">
+            <div class="guide-title">
+              <i class="fas fa-file-code"></i>
+              <span>文件格式要求</span>
+            </div>
+            <i class="fas fa-chevron-down guide-arrow"></i>
+          </div>
+          <div class="guide-content">
+            <h4>支持的格式</h4>
+            <table class="info-table">
+              <tr>
+                <td><strong>文件类型</strong></td>
+                <td>.txt（纯文本文件）</td>
+              </tr>
+              <tr>
+                <td><strong>文件编码</strong></td>
+                <td>UTF-8（推荐）、GBK、GB2312</td>
+              </tr>
+              <tr>
+                <td><strong>文件大小</strong></td>
+                <td>最大 10MB</td>
+              </tr>
+              <tr>
+                <td><strong>每行内容</strong></td>
+                <td>一条明文或一条密文</td>
+              </tr>
+              <tr>
+                <td><strong>空行处理</strong></td>
+                <td>会自动跳过空行</td>
+              </tr>
+            </table>
+
+            <h4>不支持的格式</h4>
+            <ul style="color: var(--accent-danger);">
+              <li>Word 文档（.doc/.docx）</li>
+              <li>Excel 表格（.xls/.xlsx）</li>
+              <li>PDF 文件</li>
+              <li>图片文件</li>
+              <li>其他非文本格式</li>
+            </ul>
+
+            <h4>如何创建正确的 TXT 文件</h4>
+            <p><strong>方法一：使用记事本</strong></p>
+            <ol>
+              <li>打开 Windows 记事本</li>
+              <li>输入内容，每行一条</li>
+              <li>点击"文件" → "另存为"</li>
+              <li>编码选择"UTF-8"，保存为 .txt 文件</li>
+            </ol>
+            <p><strong>方法二：使用 VS Code</strong></p>
+            <ol>
+              <li>新建文件</li>
+              <li>输入内容</li>
+              <li>点击右下角编码，选择"通过编码保存"</li>
+              <li>选择 UTF-8，保存为 .txt 文件</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <div class="guide-header" onclick="toggleGuide(this)">
+            <div class="guide-title">
+              <i class="fas fa-code"></i>
+              <span>加密/解密原理详解</span>
+            </div>
+            <i class="fas fa-chevron-down guide-arrow"></i>
+          </div>
+          <div class="guide-content">
+            <h4>哈希算法简介</h4>
+            <p>哈希算法（Hash Function）是一种将任意长度的输入转换为固定长度输出的算法。它的特点包括：</p>
+            <ul>
+              <li><strong>单向性</strong>：可以从明文计算出密文，但无法从密文反推明文</li>
+              <li><strong>固定输出</strong>：相同输入永远产生相同输出</li>
+              <li><strong>雪崩效应</strong>：输入微小变化会导致输出巨大变化</li>
+            </ul>
+
+            <h4>MD5 算法原理</h4>
+            <p>MD5（Message-Digest Algorithm 5）是广泛使用的哈希算法：</p>
+            <ul>
+              <li>输出长度：<strong>128 位（32 个十六进制字符）</strong></li>
+              <li>设计者：RSA Data Security（1991 年）</li>
+              <li>特点：计算速度快，兼容性好</li>
+              <li>安全性：已被发现存在碰撞漏洞，不建议用于高安全场景</li>
+            </ul>
+            <div class="code-block">
+明文: "admin"
+MD5: "f0e4c2f76c58916ec258f246851bea0d"  (32字符)
+            </div>
+
+            <h4>SHA1 算法原理</h4>
+            <p>SHA1（Secure Hash Algorithm 1）是由 NSA 设计的安全哈希算法：</p>
+            <ul>
+              <li>输出长度：<strong>160 位（40 个十六进制字符）</strong></li>
+              <li>设计者：美国国家安全局（NSA）</li>
+              <li>特点：比 MD5 更长，理论强度更高</li>
+              <li>安全性：已被发现存在理论碰撞，同样不推荐高安全场景</li>
+            </ul>
+            <div class="code-block">
+明文: "admin"
+SHA1: "d033e22ae348aeb5660fc2140aec35850c4da997"  (40字符)
+            </div>
+
+            <h4>自动识别原理</h4>
+            <p>系统如何判断一串字符是 MD5 还是 SHA1？</p>
+            <div class="code-block">
+判断逻辑:
+1. 去除首尾空白
+2. 转为小写
+3. 判断长度:
+   - 长度为 32 且为十六进制 → MD5
+   - 长度为 40 且为十六进制 → SHA1
+   - 其他 → 无法识别
+            </div>
+
+            <h4>数据库存储机制</h4>
+            <p>当你在网页端进行加密时，系统会：</p>
+            <ol>
+              <li>计算明文的哈希值</li>
+              <li>检查数据库是否已有该记录</li>
+              <li>如不存在，插入新记录（明文、密文、算法类型、时间戳）</li>
+            </ol>
+            <p>批量处理时，系统会逐条处理，每条都会检查并存储到数据库。</p>
+
+            <h4>为什么解密需要数据库？</h4>
+            <p>由于哈希算法的单向性，<strong>无法从密文直接计算出明文</strong>。解密功能实际上是：</p>
+            <div class="code-block">
+用户输入密文 → 数据库查询 → 返回对应的明文
+
+例如：
+数据库记录: { 明文: "admin", 密文: "f0e4c2f7...", 类型: "md5" }
+用户查询: "f0e4c2f7..."
+系统回答: "admin"
+            </div>
+            <p><strong>重要提醒：</strong>只有在数据库中已有记录的密文才能被"解密"，新建的密文需要先通过加密功能存储到数据库。</p>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <div class="guide-header" onclick="toggleGuide(this)">
+            <div class="guide-title">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>常见问题与注意事项</span>
+            </div>
+            <i class="fas fa-chevron-down guide-arrow"></i>
+          </div>
+          <div class="guide-content">
+            <h4>解密失败的原因</h4>
+            <ul>
+              <li><strong>数据库中没有该记录</strong>：密文从未通过加密功能存储到数据库</li>
+              <li><strong>算法类型不匹配</strong>：同一个明文用 MD5 和 SHA1 加密结果不同</li>
+              <li><strong>格式错误</strong>：输入的不是有效的 MD5（32位）或 SHA1（40位）格式</li>
+            </ul>
+
+            <h4>加密后如何解密？</h4>
+            <p>加密完成后，系统会自动将每条记录存入数据库。此时你可以：</p>
+            <ol>
+              <li>在结果表格中查看加密结果</li>
+              <li>点击"下载结果"保存到本地</li>
+              <li>复制单条结果进行分享</li>
+            </ol>
+
+            <h4>批量处理的限制</h4>
+            <ul>
+              <li><strong>单次处理最大 10MB</strong>：文件过大会导致浏览器卡顿</li>
+              <li><strong>仅支持 .txt 文件</strong>：其他格式需要先转换为纯文本</li>
+              <li><strong>仅支持电脑端</strong>：手机浏览器无法使用文件上传功能</li>
+            </ul>
+
+            <h4>数据安全说明</h4>
+            <ul>
+              <li>所有数据存储在云端数据库中</li>
+              <li>数据库仅允许插入和查询，不允许删除和修改</li>
+              <li>请勿上传包含敏感信息的文件</li>
+              <li>建议定期导出重要数据</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>阜阳职业技术学校 移动应用与开发赛项实训作品</p>
+      <p class="footer-tech">HTML + TailwindCSS + 原生JS | Supabase PostgreSQL | GitHub Pages静态托管</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <script>
+    // ============ 全局变量 ============
+    let currentFile = null;
+    let fileLines = [];
+    let results = [];
+    let operationMode = 'encrypt'; // encrypt 或 decrypt
+    let encryptAlgo = 'md5';
+
+    // Supabase 配置
+    const SUPABASE_URL = 'https://vxebvrglknakopdbfyuf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_63yeKCzGKJ4QHJl_hjLlQw_khNPspXp';
+    let supabase = null;
+
+    // ============ 初始化 ============
+    document.addEventListener('DOMContentLoaded', async function() {
+      // 初始化 Supabase
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      window.supabase = supabase;
+
+      // 汉堡菜单
+      const hamburger = document.getElementById('hamburgerBtn');
+      const navLinks = document.getElementById('navLinks');
+      if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function() {
+          navLinks.classList.toggle('active');
+          this.classList.toggle('active');
+        });
+      }
+
+      // 拖拽上传
+      setupDropZone();
+      
+      // 文件选择
+      document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+      // 滚动导航
+      setupScrollNav();
+    });
+
+    // ============ 拖拽上传 ============
+    function setupDropZone() {
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('fileInput');
+
+      dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('drag-over');
+      });
+
+      dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+      });
+
+      dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+
+      dropZone.addEventListener('click', function() {
+        fileInput.click();
+      });
+    }
+
+    // ============ 文件处理 ============
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) {
+        handleFile(file);
+      }
+    }
+
+    function handleFile(file) {
+      // 检查文件类型
+      if (!file.name.endsWith('.txt')) {
+        showToast('只支持 .txt 格式的文件', 'error');
+        return;
+      }
+
+      // 检查文件大小（10MB）
+      if (file.size > 10 * 1024 * 1024) {
+        showToast('文件大小不能超过 10MB', 'error');
+        return;
+      }
+
+      currentFile = file;
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const content = e.target.result;
+        // 按行分割
+        fileLines = content.split(/\r?\n/).filter(line => line.trim() !== '');
+        
+        // 显示文件信息
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        document.getElementById('totalLines').textContent = fileLines.length;
+        document.getElementById('fileInfo').style.display = 'block';
+        document.getElementById('dropZone').style.display = 'none';
+        document.getElementById('startBtn').disabled = false;
+        
+        showToast(`已加载 ${fileLines.length} 行数据`, 'success');
+      };
+
+      reader.onerror = function() {
+        showToast('文件读取失败', 'error');
+      };
+
+      reader.readAsText(file);
+    }
+
+    function clearFile() {
+      currentFile = null;
+      fileLines = [];
+      results = [];
+      document.getElementById('fileInput').value = '';
+      document.getElementById('fileInfo').style.display = 'none';
+      document.getElementById('dropZone').style.display = 'block';
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('downloadBtn').disabled = true;
+      document.getElementById('resultCard').style.display = 'none';
+    }
+
+    function clearAll() {
+      clearFile();
+      clearResults();
+    }
+
+    function clearResults() {
+      results = [];
+      document.getElementById('resultBody').innerHTML = '';
+      document.getElementById('resultCard').style.display = 'none';
+      document.getElementById('downloadBtn').disabled = true;
+    }
+
+    // ============ 模式切换 ============
+    function toggleMode() {
+      operationMode = document.querySelector('input[name="operation"]:checked').value;
+      encryptAlgo = document.querySelector('input[name="encryptAlgo"]:checked')?.value || 'md5';
+      
+      if (operationMode === 'encrypt') {
+        document.getElementById('encryptOptions').style.display = 'block';
+        document.getElementById('decryptOptions').style.display = 'none';
+      } else {
+        document.getElementById('encryptOptions').style.display = 'none';
+        document.getElementById('decryptOptions').style.display = 'block';
+      }
+    }
+
+    // ============ 教程折叠 ============
+    function toggleGuide(header) {
+      const content = header.nextElementSibling;
+      const arrow = header.querySelector('.guide-arrow');
+      
+      if (content.style.display === 'none') {
+        content.style.display = 'block';
+        arrow.classList.add('rotated');
+      } else {
+        content.style.display = 'none';
+        arrow.classList.remove('rotated');
+      }
+    }
+
+    // ============ 滚动导航 ============
+    function setupScrollNav() {
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+      function scrollToBottom() {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'auto' });
+      }
+      window.scrollToTop = scrollToTop;
+      window.scrollToBottom = scrollToBottom;
+
+      const scrollNav = document.querySelector('.scroll-nav');
+      if (scrollNav) {
+        window.addEventListener('scroll', function() {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollHeight = document.documentElement.scrollHeight;
+          const clientHeight = document.documentElement.clientHeight;
+          
+          if (scrollTop > 100 || scrollTop < scrollHeight - clientHeight - 100) {
+            scrollNav.classList.add('visible');
+          } else {
+            scrollNav.classList.remove('visible');
+          }
+        });
+      }
+    }
+
+    // ============ 开始处理 ============
+    async function startProcess() {
+      if (fileLines.length === 0) {
+        showToast('请先上传文件', 'warning');
+        return;
+      }
+
+      const startBtn = document.getElementById('startBtn');
+      startBtn.disabled = true;
+      startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 处理中...';
+
+      results = [];
+      let successCount = 0;
+      let failCount = 0;
+
+      // 清空结果表格
+      document.getElementById('resultBody').innerHTML = '';
+
+      try {
+        if (operationMode === 'encrypt') {
+          // 批量加密
+          encryptAlgo = document.querySelector('input[name="encryptAlgo"]:checked').value;
+          
+          for (let i = 0; i < fileLines.length; i++) {
+            const plainText = fileLines[i].trim();
+            if (!plainText) continue;
+
+            let hashText = '';
+            let hashType = encryptAlgo;
+
+            if (encryptAlgo === 'md5') {
+              hashText = CryptoJS.MD5(plainText).toString();
+            } else {
+              hashText = CryptoJS.SHA1(plainText).toString();
+            }
+
+            // 存入数据库
+            const success = await saveToDatabase(plainText, hashText, hashType);
+            
+            results.push({
+              index: i + 1,
+              input: plainText,
+              output: hashText,
+              type: encryptAlgo.toUpperCase(),
+              status: 'success'
+            });
+            successCount++;
+
+            // 实时更新表格
+            addResultRow(results[results.length - 1]);
+            updateStats(successCount, failCount, results.length);
+          }
+        } else {
+          // 批量解密
+          for (let i = 0; i < fileLines.length; i++) {
+            const hashText = fileLines[i].trim();
+            if (!hashText) continue;
+
+            const detectedType = detectHashType(hashText);
+            
+            if (!detectedType) {
+              results.push({
+                index: i + 1,
+                input: hashText,
+                output: '-',
+                type: '格式错误',
+                status: 'error'
+              });
+              failCount++;
+            } else {
+              // 查询数据库
+              const plainText = await queryDatabase(hashText, detectedType);
+              
+              if (plainText) {
+                results.push({
+                  index: i + 1,
+                  input: hashText,
+                  output: plainText,
+                  type: detectedType.toUpperCase(),
+                  status: 'success'
+                });
+                successCount++;
+              } else {
+                results.push({
+                  index: i + 1,
+                  input: hashText,
+                  output: '-',
+                  type: detectedType.toUpperCase(),
+                  status: 'notfound'
+                });
+                failCount++;
+              }
+            }
+
+            // 实时更新表格
+            addResultRow(results[results.length - 1]);
+            updateStats(successCount, failCount, results.length);
+          }
+        }
+
+        // 显示结果卡片
+        document.getElementById('resultCard').style.display = 'block';
+        document.getElementById('downloadBtn').disabled = false;
+        
+        showToast(`处理完成！成功 ${successCount} 条，失败 ${failCount} 条`, successCount > 0 ? 'success' : 'warning');
+
+      } catch (error) {
+        console.error('处理错误:', error);
+        showToast('处理过程中发生错误', 'error');
+      } finally {
+        startBtn.disabled = false;
+        startBtn.innerHTML = '<i class="fas fa-play"></i> 开始处理';
+      }
+    }
+
+    // ============ 数据库操作 ============
+    async function saveToDatabase(plainText, hashText, hashType) {
+      try {
+        // 检查是否已存在
+        const { data: existing } = await supabase
+          .from('hash_dict')
+          .select('id')
+          .eq('plain_text', plainText)
+          .eq('hash_text', hashText)
+          .eq('hash_type', hashType)
+          .limit(1);
+
+        if (existing && existing.length > 0) {
+          return true; // 已存在
+        }
+
+        // 插入新记录
+        const { error } = await supabase
+          .from('hash_dict')
+          .insert([{
+            plain_text: plainText,
+            hash_text: hashText,
+            hash_type: hashType
+          }]);
+
+        return !error;
+      } catch (e) {
+        console.error('数据库存储错误:', e);
+        return false;
+      }
+    }
+
+    async function queryDatabase(hashText, hashType) {
+      try {
+        const { data, error } = await supabase
+          .from('hash_dict')
+          .select('plain_text')
+          .eq('hash_text', hashText.toLowerCase())
+          .eq('hash_type', hashType)
+          .limit(1);
+
+        if (error || !data || data.length === 0) {
+          return null;
+        }
+
+        return data[0].plain_text;
+      } catch (e) {
+        console.error('数据库查询错误:', e);
+        return null;
+      }
+    }
+
+    // ============ 工具函数 ============
+    function detectHashType(str) {
+      const clean = str.trim().toLowerCase();
+      if (/^[a-f0-9]{32}$/.test(clean)) return 'md5';
+      if (/^[a-f0-9]{40}$/.test(clean)) return 'sha1';
+      return null;
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    // ============ 结果展示 ============
+    function updateStats(success, fail, total) {
+      document.getElementById('successCount').textContent = success;
+      document.getElementById('failCount').textContent = fail;
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('statsBar').style.display = 'flex';
+    }
+
+    function addResultRow(result) {
+      const tbody = document.getElementById('resultBody');
+      const tr = document.createElement('tr');
+      
+      const statusIcon = result.status === 'success' 
+        ? '<i class="fas fa-check-circle" style="color: var(--accent-success);"></i>'
+        : result.status === 'notfound'
+        ? '<i class="fas fa-question-circle" style="color: var(--accent-warning);"></i>'
+        : '<i class="fas fa-times-circle" style="color: var(--accent-danger);"></i>';
+      
+      const statusText = result.status === 'success' 
+        ? '成功'
+        : result.status === 'notfound'
+        ? '未找到'
+        : '失败';
+
+      tr.innerHTML = `
+        <td>${result.index}</td>
+        <td class="cell-content" title="${escapeHtml(result.input)}">${escapeHtml(result.input.length > 30 ? result.input.substring(0, 30) + '...' : result.input)}</td>
+        <td>${result.type}</td>
+        <td>${statusIcon} ${statusText}</td>
+        <td>
+          <button class="btn-icon" onclick="copyCell('${escapeHtml(result.output)}')" title="复制">
+            <i class="fas fa-copy"></i>
+          </button>
+        </td>
+      `;
+      
+      tbody.appendChild(tr);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function copyCell(text) {
+      if (text === '-') {
+        showToast('无内容可复制', 'warning');
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('已复制到剪贴板', 'success');
+      }).catch(() => {
+        showToast('复制失败', 'error');
+      });
+    }
+
+    // ============ 下载结果 ============
+    function downloadResult() {
+      if (results.length === 0) {
+        showToast('没有可下载的结果', 'warning');
+        return;
+      }
+
+      let content = operationMode === 'encrypt' 
+        ? '# 批量加密结果\n# 算法: ' + encryptAlgo.toUpperCase() + '\n# 时间: ' + new Date().toLocaleString() + '\n\n'
+        : '# 批量解密结果\n# 时间: ' + new Date().toLocaleString() + '\n\n';
+
+      content += '# 格式: 序号 | 类型 | 原内容 | 结果\n';
+      content += '----------------------------------------\n';
+
+      results.forEach(r => {
+        content += `${r.index} | ${r.type} | ${r.input} | ${r.output}\n`;
+      });
+
+      content += '----------------------------------------\n';
+      content += `# 统计: 总计 ${results.length} 条\n`;
+
+      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `batch_${operationMode}_${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast('结果文件已下载', 'success');
+    }
+
+    // ============ Toast 提示 ============
+    function showToast(message, type) {
+      const container = document.getElementById('toastContainer') || createToastContainer();
+      const toast = document.createElement('div');
+      toast.className = 'toast toast-' + type;
+      
+      const icons = {
+        success: 'check-circle',
+        error: 'times-circle',
+        warning: 'exclamation-circle',
+        info: 'info-circle'
+      };
+      
+      toast.innerHTML = '<i class="fas fa-' + icons[type] + '"></i> ' + message;
+      container.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('show'), 10);
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => container.removeChild(toast), 300);
+      }, 3000);
+    }
+
+    function createToastContainer() {
+      const container = document.createElement('div');
+      container.id = 'toastContainer';
+      container.style.cssText = 'position: fixed; top: 80px; right: 24px; z-index: 10000;';
+      document.body.appendChild(container);
+      return container;
+    }
+  </script>
+
+  <style>
+    /* 拖拽区域 */
+    .drop-zone {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .drop-zone:hover,
+    .drop-zone.drag-over {
+      border-color: var(--accent-primary);
+      background: rgba(88, 166, 255, 0.05);
+    }
+
+    .drop-zone.drag-over {
+      transform: scale(1.01);
+    }
+
+    /* 文件信息 */
+    .file-info {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    /* 单选卡片 */
+    .radio-card {
+      cursor: pointer;
+    }
+
+    .radio-card input {
+      display: none;
+    }
+
+    .radio-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-card);
+      transition: all 0.15s ease;
+    }
+
+    .radio-card input:checked + .radio-content {
+      border-color: var(--accent-primary);
+      background: rgba(88, 166, 255, 0.1);
+      color: var(--accent-primary);
+    }
+
+    .radio-content i {
+      font-size: 20px;
+    }
+
+    /* 结果统计 */
+    .stats-bar {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .stat-success {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--accent-success);
+    }
+
+    .stat-error {
+      background: rgba(248, 81, 73, 0.15);
+      color: var(--accent-danger);
+    }
+
+    .stat-info {
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent-primary);
+    }
+
+    /* 结果表格 */
+    .table-container {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .result-table th,
+    .result-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .result-table th {
+      background: var(--bg-secondary);
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .result-table tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .cell-content {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    /* 按钮图标 */
+    .btn-icon {
+      padding: 6px 10px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+    }
+
+    /* 教程样式 */
+    .guide-section {
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .guide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: var(--bg-card);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .guide-header:hover {
+      background: var(--bg-secondary);
+    }
+
+    .guide-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .guide-arrow {
+      transition: transform 0.2s ease;
+    }
+
+    .guide-arrow.rotated {
+      transform: rotate(180deg);
+    }
+
+    .guide-content {
+      display: none;
+      padding: 16px;
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .guide-content h4 {
+      color: var(--accent-primary);
+      margin: 16px 0 8px 0;
+    }
+
+    .guide-content h4:first-child {
+      margin-top: 0;
+    }
+
+    .guide-content p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+      margin: 8px 0;
+    }
+
+    .guide-content ul,
+    .guide-content ol {
+      color: var(--text-secondary);
+      line-height: 2;
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+
+    .guide-content li {
+      margin: 4px 0;
+    }
+
+    /* 代码块 */
+    .code-block {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 12px 0;
+    }
+
+    /* 信息表格 */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+    }
+
+    .info-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .info-table td:first-child {
+      width: 140px;
+      background: var(--bg-card);
+    }
+
+    /* Toast 样式 */
+    .toast {
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 10000;
+      animation: toastSlideIn 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    @keyframes toastSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .toast-success {
+      background: rgba(63, 185, 80, 0.95);
+      color: white;
+    }
+
+    .toast-error {
+      background: rgba(248, 81, 73, 0.95);
+      color: white;
+    }
+
+    .toast-warning {
+      background: rgba(210, 153, 34, 0.95);
+      color: white;
+    }
+
+    .toast-info {
+      background: rgba(88, 166, 255, 0.95);
+      color: white;
+    }
+
+    /* 滚动导航按钮 */
+    .scroll-nav {
+      position: fixed;
+      right: 20px;
+      bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
+    }
+
+    .scroll-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .scroll-btn:active {
+      background: var(--accent-primary);
+      color: white;
+      transform: scale(0.95);
+      border-color: var(--accent-primary);
+    }
+
+    .scroll-top,
+    .scroll-bottom {
+      opacity: 0;
+      transform: translateX(20px);
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .scroll-nav.visible .scroll-top,
+    .scroll-nav.visible .scroll-bottom {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .drop-zone {
+        padding: 30px 16px;
+      }
+
+      .stats-bar {
+        flex-wrap: wrap;
+      }
+
+      .table-container {
+        max-height: 300px;
+      }
+
+      .result-table {
+        font-size: 12px;
+      }
+
+      .result-table th,
+      .result-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+
+  <!-- 滚动导航按钮 -->
+  <div class="scroll-nav">
+    <button class="scroll-btn scroll-top" onclick="scrollToTop()" title="回到顶部">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+    <button class="scroll-btn scroll-bottom" onclick="scrollToBottom()" title="前往底部">
+      <i class="fas fa-arrow-down"></i>
+    </button>
+  </div>
+</body>
+</html>
