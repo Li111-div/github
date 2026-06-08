@@ -218,210 +218,259 @@
     <script>
         // 显卡详细数据
         const gpuData = {
-            // RTX 50系列桌面端
-            "RTX 5090 D": {
+                        // RTX 50系列桌面端
+                        "RTX 5090": {
                 type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
-                cuda: 21760, memory: "32GB GDDR7", bus: "512-bit", bandwidth: "1344 GB/s",
+                cuda: 21760, memory: "32GB GDDR7", bus: "512-bit", bandwidth: "1792 GB/s",
                 tdp: "575W", boostClock: "2.41 GHz", baseClock: "2.01 GHz",
                 tensorCores: "5th Gen (3352 AI TOPS)", rtCores: "4th Gen (318 TFLOPS)",
-                score: 48732, price: "$1,999", position: "旗舰"
+                score: 48732, price: "$1,999（国内无售）", position: "旗舰",
+                note: "海外版，国内无官方销售",
+                memoryOptions: ["32GB GDDR7"]
             },
-            "RTX 5080": {
+                                                "RTX 5090 D v2": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 21760, memory: "24GB GDDR7", bus: "384-bit", bandwidth: "1344 GB/s",
+                tdp: "575W", boostClock: "2.41 GHz", baseClock: "2.01 GHz",
+                tensorCores: "5th Gen (2375 AI TOPS)", rtCores: "4th Gen (318 TFLOPS)",
+                score: 41500, price: "¥16,499起", position: "旗舰",
+                note: "中国特供版（显存缩减版），性能比RTX 5090低约15%",
+                memoryOptions: ["24GB GDDR7"]
+            },
+                                    "RTX 5080": {
                 type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 10752, memory: "16GB GDDR7", bus: "256-bit", bandwidth: "960 GB/s",
                 tdp: "360W", boostClock: "2.62 GHz", baseClock: "2.30 GHz",
                 tensorCores: "5th Gen (1801 AI TOPS)", rtCores: "4th Gen (171 TFLOPS)",
-                score: 32700, price: "$999", position: "高端"
+                score: 32700, price: "¥8,299起", position: "高端",
+                memoryOptions: ["16GB GDDR7"]
             },
             "RTX 5070 Ti": {
                 type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 8960, memory: "16GB GDDR7", bus: "256-bit", bandwidth: "896 GB/s",
                 tdp: "300W", boostClock: "2.45 GHz", baseClock: "2.30 GHz",
                 tensorCores: "5th Gen (1406 AI TOPS)", rtCores: "4th Gen (133 TFLOPS)",
-                score: 27727, price: "$749", position: "次旗舰"
+                score: 27727, price: "¥6,124起", position: "次旗舰",
+                memoryOptions: ["16GB GDDR7"]
             },
-            "RTX 4090": {
+                        "RTX 4090": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 16384, memory: "24GB GDDR6X", bus: "384-bit", bandwidth: "1008 GB/s",
                 tdp: "450W", boostClock: "2.52 GHz", baseClock: "2.23 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (71 TFLOPS)",
-                score: 36676, price: "$1,599", position: "旗舰"
+                score: 36676, price: "已停产", position: "旗舰",
+                note: "已停产，市场库存枯竭"
             },
-            "RTX 4080 Super": {
+            "RTX 4090 D": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 14592, memory: "24GB GDDR6X", bus: "384-bit", bandwidth: "1008 GB/s",
+                tdp: "425W", boostClock: "2.52 GHz", baseClock: "2.28 GHz",
+                tensorCores: "4th Gen (296 AI TOPS)", rtCores: "3rd Gen (64 TFLOPS)",
+                score: 33000, price: "¥12,999起", position: "旗舰",
+                note: "中国特供版（出口管制合规版）",
+                memoryOptions: ["24GB GDDR6X"]
+            },
+                        "RTX 4080 Super": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 10240, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "736 GB/s",
                 tdp: "320W", boostClock: "2.55 GHz", baseClock: "2.29 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (51 TFLOPS)",
-                score: 27920, price: "$999", position: "高端"
+                score: 27920, price: "¥7,499起", position: "高端",
+                memoryOptions: ["16GB GDDR6X"]
             },
             "RTX 4080": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 9728, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "717 GB/s",
                 tdp: "320W", boostClock: "2.51 GHz", baseClock: "2.21 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (48 TFLOPS)",
-                score: 27724, price: "$1,199", position: "高端"
+                score: 27724, price: "已停产", position: "高端",
+                note: "已停产，被RTX 4080 Super取代"
             },
-            "RTX 5070": {
+                                                                        "RTX 5070": {
                 type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 6144, memory: "12GB GDDR7", bus: "192-bit", bandwidth: "672 GB/s",
                 tdp: "250W", boostClock: "2.51 GHz", baseClock: "2.33 GHz",
                 tensorCores: "5th Gen (988 AI TOPS)", rtCores: "4th Gen (94 TFLOPS)",
-                score: 24500, price: "$549", position: "高端主流"
+                score: 25000, price: "¥4,300起", position: "高端主流",
+                memoryOptions: ["12GB GDDR7"]
             },
-            "RTX 4070 Ti Super": {
+                        "RTX 4070 Ti Super": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 8448, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "672 GB/s",
                 tdp: "285W", boostClock: "2.61 GHz", baseClock: "2.31 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (51 TFLOPS)",
-                score: 24404, price: "$799", position: "次旗舰"
+                score: 24404, price: "¥5,999起", position: "次旗舰",
+                memoryOptions: ["16GB GDDR6X"]
             },
             "RTX 4070 Ti": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 7680, memory: "12GB GDDR6X", bus: "192-bit", bandwidth: "504 GB/s",
                 tdp: "285W", boostClock: "2.61 GHz", baseClock: "2.31 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (46 TFLOPS)",
-                score: 22608, price: "$799", position: "次旗舰"
+                score: 22608, price: "已停产", position: "次旗舰",
+                note: "已停产，被RTX 4070 Ti Super取代"
             },
             "RTX 4070 Super": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 7168, memory: "12GB GDDR6X", bus: "192-bit", bandwidth: "504 GB/s",
                 tdp: "220W", boostClock: "2.48 GHz", baseClock: "1.92 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (46 TFLOPS)",
-                score: 21302, price: "$599", position: "高端主流"
+                score: 21302, price: "¥4,599起", position: "高端主流",
+                memoryOptions: ["12GB GDDR6X"]
             },
             "RTX 4070": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 5888, memory: "12GB GDDR6X", bus: "192-bit", bandwidth: "504 GB/s",
                 tdp: "200W", boostClock: "2.48 GHz", baseClock: "1.92 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (40 TFLOPS)",
-                score: 19200, price: "$599", position: "主流"
+                score: 19200, price: "¥3,999起", position: "主流",
+                memoryOptions: ["12GB GDDR6X"]
             },
-            "RTX 5060 Ti": {
+                        "RTX 5060 Ti 16GB": {
                 type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
-                cuda: 4608, memory: "16GB/8GB GDDR7", bus: "128-bit", bandwidth: "448 GB/s",
+                cuda: 4608, memory: "16GB GDDR7", bus: "128-bit", bandwidth: "448 GB/s",
                 tdp: "180W", boostClock: "2.57 GHz", baseClock: "2.41 GHz",
                 tensorCores: "5th Gen (759 AI TOPS)", rtCores: "4th Gen (72 TFLOPS)",
-                score: 19500, price: "$449", position: "中端"
+                score: 19500, price: "¥3,599起", position: "中端",
+                memoryOptions: ["16GB GDDR7"]
             },
-            "RTX 4060 Ti 16GB": {
+                        "RTX 5060 Ti 8GB": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 4608, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "448 GB/s",
+                tdp: "180W", boostClock: "2.57 GHz", baseClock: "2.41 GHz",
+                tensorCores: "5th Gen (759 AI TOPS)", rtCores: "4th Gen (72 TFLOPS)",
+                score: 18500, price: "¥3,199起", position: "中端",
+                note: "8GB版本在高分辨率下可能有显存瓶颈",
+                memoryOptions: ["8GB GDDR7"]
+            },
+                        "RTX 4060 Ti 16GB": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 4352, memory: "16GB GDDR6", bus: "128-bit", bandwidth: "288 GB/s",
                 tdp: "165W", boostClock: "2.54 GHz", baseClock: "2.31 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (34 TFLOPS)",
-                score: 16800, price: "$499", position: "中端"
+                score: 16800, price: "¥2,800起", position: "中端",
+                memoryOptions: ["16GB GDDR6"]
             },
             "RTX 4060 Ti": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 4352, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "288 GB/s",
                 tdp: "160W", boostClock: "2.54 GHz", baseClock: "2.31 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (34 TFLOPS)",
-                score: 16500, price: "$399", position: "中端"
+                score: 16500, price: "¥2,400起", position: "中端",
+                memoryOptions: ["8GB GDDR6"]
             },
-            "RTX 5060": {
+                        "RTX 5060": {
                 type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 3840, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "448 GB/s",
                 tdp: "150W", boostClock: "2.50 GHz", baseClock: "2.28 GHz",
                 tensorCores: "5th Gen (614 AI TOPS)", rtCores: "4th Gen (58 TFLOPS)",
-                score: 16500, price: "$299", position: "入门"
+                score: 16500, price: "¥1,958起", position: "入门",
+                memoryOptions: ["8GB GDDR7"]
             },
-            "RTX 4060": {
+                        "RTX 4060": {
                 type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 3072, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "272 GB/s",
                 tdp: "115W", boostClock: "2.46 GHz", baseClock: "1.83 GHz",
                 tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (24 TFLOPS)",
-                score: 13200, price: "$299", position: "入门"
+                score: 13200, price: "¥2,000起", position: "入门",
+                memoryOptions: ["8GB GDDR6"]
             },
-            "RTX 5050": {
+                        "RTX 5050": {
                 type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 2560, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "320 GB/s",
                 tdp: "130W", boostClock: "2.57 GHz", baseClock: "2.31 GHz",
                 tensorCores: "5th Gen (421 AI TOPS)", rtCores: "4th Gen (40 TFLOPS)",
-                score: 12000, price: "$199", position: "入门"
+                score: 12000, price: "¥1,660起", position: "入门",
+                                memoryOptions: ["8GB GDDR6"]
             },
-            "RTX 4050": {
-                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
-                cuda: 2560, memory: "6GB GDDR6", bus: "96-bit", bandwidth: "192 GB/s",
-                tdp: "115W", boostClock: "2.46 GHz", baseClock: "1.60 GHz",
-                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (24 TFLOPS)",
-                score: 10500, price: "$229", position: "入门"
-            },
-            // RTX 50系列移动端
+                        // RTX 50系列移动端
             "RTX 5090 移动端": {
                 type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 10496, memory: "24GB GDDR7", bus: "256-bit", bandwidth: "896 GB/s",
                 tgp: "95-150W", boostClock: "1597-2160 MHz", baseClock: "990 MHz",
                 tensorCores: "5th Gen (1824 AI TOPS)", rtCores: "4th Gen",
-                score: 25129, price: "$2,899起", position: "旗舰"
+                score: 25129, price: "约¥20,000起", position: "旗舰",
+                memoryOptions: ["24GB GDDR7"]
             },
             "RTX 5080 移动端": {
                 type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 7680, memory: "16GB GDDR7", bus: "256-bit", bandwidth: "896 GB/s",
                 tgp: "80-150W", boostClock: "1500-2287 MHz", baseClock: "980 MHz",
                 tensorCores: "5th Gen (1334 AI TOPS)", rtCores: "4th Gen",
-                score: 21948, price: "$2,199起", position: "高端"
+                score: 21948, price: "约¥15,000起", position: "高端",
+                memoryOptions: ["16GB GDDR7"]
             },
-            "RTX 4090 移动端": {
+                        "RTX 4090 移动端": {
                 type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 9728, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "512 GB/s",
                 tgp: "80-150W", boostClock: "2040 MHz", baseClock: "1455 MHz",
                 tensorCores: "4th Gen", rtCores: "3rd Gen",
-                score: 22254, price: "$3,499起", position: "旗舰"
+                score: 22254, price: "约¥25,000起", position: "旗舰",
+                memoryOptions: ["16GB GDDR6X"]
             },
-            "RTX 5070 Ti 移动端": {
+                        "RTX 5070 Ti 移动端": {
                 type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 5888, memory: "12GB GDDR7", bus: "192-bit", bandwidth: "672 GB/s",
                 tgp: "60-115W", boostClock: "1447-2220 MHz", baseClock: "850 MHz",
                 tensorCores: "5th Gen (992 AI TOPS)", rtCores: "4th Gen",
-                score: 18500, price: "$1,599起", position: "次旗舰"
+                score: 18500, price: "约¥12,000起", position: "次旗舰",
+                memoryOptions: ["12GB GDDR7"]
             },
-            "RTX 4080 移动端": {
+                        "RTX 4080 移动端": {
                 type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 7424, memory: "12GB GDDR6", bus: "192-bit", bandwidth: "432 GB/s",
                 tgp: "60-150W", boostClock: "2280 MHz", baseClock: "1290 MHz",
                 tensorCores: "4th Gen", rtCores: "3rd Gen",
-                score: 21222, price: "$2,499起", position: "高端"
+                score: 21222, price: "约¥18,000起", position: "高端",
+                memoryOptions: ["12GB GDDR6"]
             },
-            "RTX 5070 移动端": {
+                                                "RTX 5070 移动端": {
                 type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 4608, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "320 GB/s",
                 tgp: "50-100W", boostClock: "1425-2347 MHz", baseClock: "910 MHz",
                 tensorCores: "5th Gen (798 AI TOPS)", rtCores: "4th Gen",
-                score: 14072, price: "$1,299起", position: "主流"
+                score: 16000, price: "约¥9,000起", position: "主流",
+                memoryOptions: ["8GB GDDR7"]
             },
-            "RTX 4070 移动端": {
+                        "RTX 4070 移动端": {
                 type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 4608, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "288 GB/s",
                 tgp: "35-115W", boostClock: "2175 MHz", baseClock: "1230 MHz",
                 tensorCores: "4th Gen", rtCores: "3rd Gen",
-                score: 14800, price: "$1,599起", position: "主流"
+                score: 14800, price: "约¥12,000起", position: "主流",
+                memoryOptions: ["8GB GDDR6"]
             },
-            "RTX 5060 移动端": {
+                        "RTX 5060 移动端": {
                 type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 3328, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "320 GB/s",
                 tgp: "45-100W", boostClock: "1455-2497 MHz", baseClock: "950 MHz",
                 tensorCores: "5th Gen (572 AI TOPS)", rtCores: "4th Gen",
-                score: 13821, price: "$1,099起", position: "主流"
+                score: 13821, price: "约¥7,000起", position: "主流",
+                memoryOptions: ["8GB GDDR7"]
             },
-            "RTX 4060 移动端": {
+                        "RTX 4060 移动端": {
                 type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 3072, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "192 GB/s",
                 tgp: "35-115W", boostClock: "2370 MHz", baseClock: "1470 MHz",
                 tensorCores: "4th Gen", rtCores: "3rd Gen",
-                score: 10200, price: "$1,099起", position: "入门"
+                score: 10200, price: "约¥8,000起", position: "入门",
+                memoryOptions: ["8GB GDDR6"]
             },
-            "RTX 5050 移动端": {
+                        "RTX 5050 移动端": {
                 type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
                 cuda: 2560, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "320 GB/s",
                 tgp: "35-100W", boostClock: "1500-2662 MHz", baseClock: "1020 MHz",
                 tensorCores: "5th Gen (440 AI TOPS)", rtCores: "4th Gen",
-                score: 10000, price: "$899起", position: "入门"
+                score: 10000, price: "约¥5,500起", position: "入门",
+                memoryOptions: ["8GB GDDR7"]
             },
-            "RTX 4050 移动端": {
+                        "RTX 4050 移动端": {
                 type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
                 cuda: 2560, memory: "6GB GDDR6", bus: "96-bit", bandwidth: "192 GB/s",
                 tgp: "35-115W", boostClock: "2370 MHz", baseClock: "1605 MHz",
                 tensorCores: "4th Gen", rtCores: "3rd Gen",
-                score: 8500, price: "$799起", position: "入门"
+                score: 8500, price: "约¥6,000起", position: "入门",
+                memoryOptions: ["6GB GDDR6"]
             }
         };
 
@@ -429,9 +478,14 @@
         const sortedGPUs = Object.entries(gpuData)
             .sort((a, b) => b[1].score - a[1].score);
 
-        const labels = sortedGPUs.map(([name, data]) => {
+                        const labels = sortedGPUs.map(([name, data]) => {
             const badge = data.type === 'desktop' ? '🖥️' : '💻';
-            return `${badge} ${name}`;
+            // 从显存信息中提取容量（如 "16GB GDDR7" → "16GB"）
+            const memMatch = data.memory.match(/^(\d+GB)/);
+            const memLabel = memMatch ? memMatch[1] : '';
+            // 如果名字里已经包含显存容量（如 RTX 5060 Ti 16GB），就不再重复添加
+            const displayName = (memLabel && name.includes(memLabel)) ? name : `${name} ${memLabel}`;
+            return `${badge} ${displayName}`;
         });
         const scores = sortedGPUs.map(([, data]) => data.score);
         const colors = sortedGPUs.map(([, data]) => 
