@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英伟达桌面端与移动端显卡性能对比</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 50%, #0f0f23 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(118, 185, 0, 0.1) 0%, rgba(0, 200, 83, 0.05) 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(118, 185, 0, 0.3);
+        }
+        h1 {
+            font-size: 2.8em;
+            background: linear-gradient(90deg, #76b900, #00c853);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(118, 185, 0, 0.3);
+        }
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .update-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+        }
+        .legend-color {
+            width: 30px;
+            height: 16px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .desktop-color { background: linear-gradient(90deg, #76b900, #00c853); }
+        .mobile-color { background: linear-gradient(90deg, #ff6b6b, #ee5a5a); }
+        .chart-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .chart-title {
+            font-size: 1.5em;
+            color: #76b900;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+                .chart-container {
+            position: relative;
+            height: 1200px;
+            overflow: visible;
+        }
+                .tooltip-custom {
+            position: fixed;
+            display: none;
+            background: rgba(20, 20, 40, 0.98);
+            border: 2px solid #76b900;
+            border-radius: 12px;
+            padding: 20px;
+            z-index: 10000;
+            min-width: 350px;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(118, 185, 0, 0.2);
+            pointer-events: none;
+        }
+        .tooltip-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #76b900;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(118, 185, 0, 0.3);
+        }
+        .tooltip-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 20px;
+        }
+        .tooltip-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        .tooltip-label {
+            color: #888;
+            font-size: 0.9em;
+        }
+        .tooltip-value {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        .tooltip-highlight {
+            color: #76b900;
+        }
+        .note-box {
+            background: linear-gradient(135deg, rgba(118, 185, 0, 0.08) 0%, rgba(0, 200, 83, 0.04) 100%);
+            border-left: 4px solid #76b900;
+            padding: 20px 25px;
+            margin: 30px 0;
+            border-radius: 0 12px 12px 0;
+        }
+        .note-title {
+            color: #76b900;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .note-content {
+            color: #a0a0a0;
+            line-height: 1.8;
+        }
+        .data-source {
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .performance-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .badge-flagship { background: linear-gradient(90deg, #ffd700, #ffb300); color: #000; }
+        .badge-high { background: linear-gradient(90deg, #76b900, #00c853); color: #000; }
+        .badge-mid { background: linear-gradient(90deg, #2196f3, #1976d2); color: #fff; }
+        .badge-entry { background: linear-gradient(90deg, #9e9e9e, #757575); color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 英伟达显卡性能对比</h1>
+            <p class="subtitle">桌面端 vs 移动端 · RTX 50系列 & RTX 40系列全型号对比</p>
+            <p class="update-time">数据更新时间：2026年6月 | 数据来源：NVIDIA官方规格、3DMark、Notebookcheck</p>
+        </header>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color desktop-color"></div>
+                <span>桌面端显卡 (Desktop)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color mobile-color"></div>
+                                <span>移动端显卡</span>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2 class="chart-title">📊 综合性能排名（基于3DMark Time Spy图形分）</h2>
+            <div class="chart-container">
+                <canvas id="performanceChart"></canvas>
+            </div>
+            <div id="customTooltip" class="tooltip-custom"></div>
+        </div>
+
+        <div class="note-box">
+            <div class="note-title">📋 数据说明</div>
+            <div class="note-content">
+                <p>• 所有数据均来自NVIDIA官方规格表、3DMark Time Spy基准测试数据库、Notebookcheck权威评测</p>
+                <p>• 桌面端显卡性能为公版参考值，AIB厂商版本可能略有差异</p>
+                <p>• 移动端显卡性能受功耗墙（TGP）影响，不同笔记本机型可能有±15%差异</p>
+                <p>• 3DMark Time Spy分数为GPU图形分，反映显卡纯图形处理能力</p>
+                <p>• 移动端显卡命名与桌面端相同，但实际规格和性能存在显著差异</p>
+            </div>
+        </div>
+
+        <div class="data-source">
+            <p>数据来源：NVIDIA官方规格表 | 3DMark UL Solutions | Notebookcheck | TechSpot | Tom's Hardware</p>
+            <p>© 2026 GPU性能对比工具 | 仅供参考，实际性能以官方发布为准</p>
+        </div>
+    </div>
+
+    <script>
+        // 显卡详细数据
+        const gpuData = {
+            // RTX 50系列桌面端
+            "RTX 5090 D": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 21760, memory: "32GB GDDR7", bus: "512-bit", bandwidth: "1344 GB/s",
+                tdp: "575W", boostClock: "2.41 GHz", baseClock: "2.01 GHz",
+                tensorCores: "5th Gen (3352 AI TOPS)", rtCores: "4th Gen (318 TFLOPS)",
+                score: 48732, price: "$1,999", position: "旗舰"
+            },
+            "RTX 5080": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 10752, memory: "16GB GDDR7", bus: "256-bit", bandwidth: "960 GB/s",
+                tdp: "360W", boostClock: "2.62 GHz", baseClock: "2.30 GHz",
+                tensorCores: "5th Gen (1801 AI TOPS)", rtCores: "4th Gen (171 TFLOPS)",
+                score: 32700, price: "$999", position: "高端"
+            },
+            "RTX 5070 Ti": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 8960, memory: "16GB GDDR7", bus: "256-bit", bandwidth: "896 GB/s",
+                tdp: "300W", boostClock: "2.45 GHz", baseClock: "2.30 GHz",
+                tensorCores: "5th Gen (1406 AI TOPS)", rtCores: "4th Gen (133 TFLOPS)",
+                score: 27727, price: "$749", position: "次旗舰"
+            },
+            "RTX 4090": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 16384, memory: "24GB GDDR6X", bus: "384-bit", bandwidth: "1008 GB/s",
+                tdp: "450W", boostClock: "2.52 GHz", baseClock: "2.23 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (71 TFLOPS)",
+                score: 36676, price: "$1,599", position: "旗舰"
+            },
+            "RTX 4080 Super": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 10240, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "736 GB/s",
+                tdp: "320W", boostClock: "2.55 GHz", baseClock: "2.29 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (51 TFLOPS)",
+                score: 27920, price: "$999", position: "高端"
+            },
+            "RTX 4080": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 9728, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "717 GB/s",
+                tdp: "320W", boostClock: "2.51 GHz", baseClock: "2.21 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (48 TFLOPS)",
+                score: 27724, price: "$1,199", position: "高端"
+            },
+            "RTX 5070": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 6144, memory: "12GB GDDR7", bus: "192-bit", bandwidth: "672 GB/s",
+                tdp: "250W", boostClock: "2.51 GHz", baseClock: "2.33 GHz",
+                tensorCores: "5th Gen (988 AI TOPS)", rtCores: "4th Gen (94 TFLOPS)",
+                score: 24500, price: "$549", position: "高端主流"
+            },
+            "RTX 4070 Ti Super": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 8448, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "672 GB/s",
+                tdp: "285W", boostClock: "2.61 GHz", baseClock: "2.31 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (51 TFLOPS)",
+                score: 24404, price: "$799", position: "次旗舰"
+            },
+            "RTX 4070 Ti": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 7680, memory: "12GB GDDR6X", bus: "192-bit", bandwidth: "504 GB/s",
+                tdp: "285W", boostClock: "2.61 GHz", baseClock: "2.31 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (46 TFLOPS)",
+                score: 22608, price: "$799", position: "次旗舰"
+            },
+            "RTX 4070 Super": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 7168, memory: "12GB GDDR6X", bus: "192-bit", bandwidth: "504 GB/s",
+                tdp: "220W", boostClock: "2.48 GHz", baseClock: "1.92 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (46 TFLOPS)",
+                score: 21302, price: "$599", position: "高端主流"
+            },
+            "RTX 4070": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 5888, memory: "12GB GDDR6X", bus: "192-bit", bandwidth: "504 GB/s",
+                tdp: "200W", boostClock: "2.48 GHz", baseClock: "1.92 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (40 TFLOPS)",
+                score: 19200, price: "$599", position: "主流"
+            },
+            "RTX 5060 Ti": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 4608, memory: "16GB/8GB GDDR7", bus: "128-bit", bandwidth: "448 GB/s",
+                tdp: "180W", boostClock: "2.57 GHz", baseClock: "2.41 GHz",
+                tensorCores: "5th Gen (759 AI TOPS)", rtCores: "4th Gen (72 TFLOPS)",
+                score: 19500, price: "$449", position: "中端"
+            },
+            "RTX 4060 Ti 16GB": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 4352, memory: "16GB GDDR6", bus: "128-bit", bandwidth: "288 GB/s",
+                tdp: "165W", boostClock: "2.54 GHz", baseClock: "2.31 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (34 TFLOPS)",
+                score: 16800, price: "$499", position: "中端"
+            },
+            "RTX 4060 Ti": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 4352, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "288 GB/s",
+                tdp: "160W", boostClock: "2.54 GHz", baseClock: "2.31 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (34 TFLOPS)",
+                score: 16500, price: "$399", position: "中端"
+            },
+            "RTX 5060": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 3840, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "448 GB/s",
+                tdp: "150W", boostClock: "2.50 GHz", baseClock: "2.28 GHz",
+                tensorCores: "5th Gen (614 AI TOPS)", rtCores: "4th Gen (58 TFLOPS)",
+                score: 16500, price: "$299", position: "入门"
+            },
+            "RTX 4060": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 3072, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "272 GB/s",
+                tdp: "115W", boostClock: "2.46 GHz", baseClock: "1.83 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (24 TFLOPS)",
+                score: 13200, price: "$299", position: "入门"
+            },
+            "RTX 5050": {
+                type: "desktop", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 2560, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "320 GB/s",
+                tdp: "130W", boostClock: "2.57 GHz", baseClock: "2.31 GHz",
+                tensorCores: "5th Gen (421 AI TOPS)", rtCores: "4th Gen (40 TFLOPS)",
+                score: 12000, price: "$199", position: "入门"
+            },
+            "RTX 4050": {
+                type: "desktop", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 2560, memory: "6GB GDDR6", bus: "96-bit", bandwidth: "192 GB/s",
+                tdp: "115W", boostClock: "2.46 GHz", baseClock: "1.60 GHz",
+                tensorCores: "4th Gen (330 AI TOPS)", rtCores: "3rd Gen (24 TFLOPS)",
+                score: 10500, price: "$229", position: "入门"
+            },
+            // RTX 50系列移动端
+            "RTX 5090 移动端": {
+                type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 10496, memory: "24GB GDDR7", bus: "256-bit", bandwidth: "896 GB/s",
+                tgp: "95-150W", boostClock: "1597-2160 MHz", baseClock: "990 MHz",
+                tensorCores: "5th Gen (1824 AI TOPS)", rtCores: "4th Gen",
+                score: 25129, price: "$2,899起", position: "旗舰"
+            },
+            "RTX 5080 移动端": {
+                type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 7680, memory: "16GB GDDR7", bus: "256-bit", bandwidth: "896 GB/s",
+                tgp: "80-150W", boostClock: "1500-2287 MHz", baseClock: "980 MHz",
+                tensorCores: "5th Gen (1334 AI TOPS)", rtCores: "4th Gen",
+                score: 21948, price: "$2,199起", position: "高端"
+            },
+            "RTX 4090 移动端": {
+                type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 9728, memory: "16GB GDDR6X", bus: "256-bit", bandwidth: "512 GB/s",
+                tgp: "80-150W", boostClock: "2040 MHz", baseClock: "1455 MHz",
+                tensorCores: "4th Gen", rtCores: "3rd Gen",
+                score: 22254, price: "$3,499起", position: "旗舰"
+            },
+            "RTX 5070 Ti 移动端": {
+                type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 5888, memory: "12GB GDDR7", bus: "192-bit", bandwidth: "672 GB/s",
+                tgp: "60-115W", boostClock: "1447-2220 MHz", baseClock: "850 MHz",
+                tensorCores: "5th Gen (992 AI TOPS)", rtCores: "4th Gen",
+                score: 18500, price: "$1,599起", position: "次旗舰"
+            },
+            "RTX 4080 移动端": {
+                type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 7424, memory: "12GB GDDR6", bus: "192-bit", bandwidth: "432 GB/s",
+                tgp: "60-150W", boostClock: "2280 MHz", baseClock: "1290 MHz",
+                tensorCores: "4th Gen", rtCores: "3rd Gen",
+                score: 21222, price: "$2,499起", position: "高端"
+            },
+            "RTX 5070 移动端": {
+                type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 4608, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "320 GB/s",
+                tgp: "50-100W", boostClock: "1425-2347 MHz", baseClock: "910 MHz",
+                tensorCores: "5th Gen (798 AI TOPS)", rtCores: "4th Gen",
+                score: 14072, price: "$1,299起", position: "主流"
+            },
+            "RTX 4070 移动端": {
+                type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 4608, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "288 GB/s",
+                tgp: "35-115W", boostClock: "2175 MHz", baseClock: "1230 MHz",
+                tensorCores: "4th Gen", rtCores: "3rd Gen",
+                score: 14800, price: "$1,599起", position: "主流"
+            },
+            "RTX 5060 移动端": {
+                type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 3328, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "320 GB/s",
+                tgp: "45-100W", boostClock: "1455-2497 MHz", baseClock: "950 MHz",
+                tensorCores: "5th Gen (572 AI TOPS)", rtCores: "4th Gen",
+                score: 13821, price: "$1,099起", position: "主流"
+            },
+            "RTX 4060 移动端": {
+                type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 3072, memory: "8GB GDDR6", bus: "128-bit", bandwidth: "192 GB/s",
+                tgp: "35-115W", boostClock: "2370 MHz", baseClock: "1470 MHz",
+                tensorCores: "4th Gen", rtCores: "3rd Gen",
+                score: 10200, price: "$1,099起", position: "入门"
+            },
+            "RTX 5050 移动端": {
+                type: "mobile", series: "RTX 50系列", architecture: "Blackwell",
+                cuda: 2560, memory: "8GB GDDR7", bus: "128-bit", bandwidth: "320 GB/s",
+                tgp: "35-100W", boostClock: "1500-2662 MHz", baseClock: "1020 MHz",
+                tensorCores: "5th Gen (440 AI TOPS)", rtCores: "4th Gen",
+                score: 10000, price: "$899起", position: "入门"
+            },
+            "RTX 4050 移动端": {
+                type: "mobile", series: "RTX 40系列", architecture: "Ada Lovelace",
+                cuda: 2560, memory: "6GB GDDR6", bus: "96-bit", bandwidth: "192 GB/s",
+                tgp: "35-115W", boostClock: "2370 MHz", baseClock: "1605 MHz",
+                tensorCores: "4th Gen", rtCores: "3rd Gen",
+                score: 8500, price: "$799起", position: "入门"
+            }
+        };
+
+        // 按分数排序
+        const sortedGPUs = Object.entries(gpuData)
+            .sort((a, b) => b[1].score - a[1].score);
+
+        const labels = sortedGPUs.map(([name, data]) => {
+            const badge = data.type === 'desktop' ? '🖥️' : '💻';
+            return `${badge} ${name}`;
+        });
+        const scores = sortedGPUs.map(([, data]) => data.score);
+        const colors = sortedGPUs.map(([, data]) => 
+            data.type === 'desktop' 
+                ? 'rgba(118, 185, 0, 0.85)' 
+                : 'rgba(255, 107, 107, 0.85)'
+        );
+        const borderColors = sortedGPUs.map(([, data]) => 
+            data.type === 'desktop' 
+                ? 'rgba(118, 185, 0, 1)' 
+                : 'rgba(255, 107, 107, 1)'
+        );
+
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '3DMark Time Spy 图形分',
+                    data: scores,
+                    backgroundColor: colors,
+                    borderColor: borderColors,
+                    borderWidth: 2,
+                    borderRadius: 6,
+                    barThickness: 28
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 55000,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#888',
+                            font: { size: 12 },
+                            callback: value => value.toLocaleString()
+                        },
+                        title: {
+                            display: true,
+                            text: '3DMark Time Spy 图形分',
+                            color: '#888',
+                            font: { size: 13 }
+                        }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            color: '#e0e0e0',
+                            font: { size: 12, weight: '500' },
+                            padding: 8
+                        }
+                    }
+                },
+                onHover: (event, elements) => {
+                    if (elements.length > 0) {
+                        const index = elements[0].index;
+                        const [name, data] = sortedGPUs[index];
+                        showTooltip(event, name, data);
+                    } else {
+                        hideTooltip();
+                    }
+                }
+            }
+        });
+
+                function showTooltip(event, name, data) {
+            const tooltip = document.getElementById('customTooltip');
+            const powerLabel = data.type === 'desktop' ? 'TDP' : 'TGP';
+            const powerValue = data.tdp || data.tgp;
+            
+            tooltip.innerHTML = `
+                <div class="tooltip-title">${name}</div>
+                <div class="tooltip-grid">
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">系列</span>
+                        <span class="tooltip-value">${data.series}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">架构</span>
+                        <span class="tooltip-value">${data.architecture}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">CUDA核心</span>
+                        <span class="tooltip-value tooltip-highlight">${data.cuda.toLocaleString()}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">显存</span>
+                        <span class="tooltip-value">${data.memory}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">显存位宽</span>
+                        <span class="tooltip-value">${data.bus}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">显存带宽</span>
+                        <span class="tooltip-value">${data.bandwidth}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">${powerLabel}</span>
+                        <span class="tooltip-value tooltip-highlight">${powerValue}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">加速频率</span>
+                        <span class="tooltip-value">${data.boostClock}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">Tensor核心</span>
+                        <span class="tooltip-value">${data.tensorCores}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">RT核心</span>
+                        <span class="tooltip-value">${data.rtCores}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">Time Spy分</span>
+                        <span class="tooltip-value tooltip-highlight">${data.score.toLocaleString()}</span>
+                    </div>
+                    <div class="tooltip-item">
+                        <span class="tooltip-label">参考价格</span>
+                        <span class="tooltip-value">${data.price}</span>
+                    </div>
+                </div>
+            `;
+            
+                        // 先显示tooltip以获取实际尺寸
+            tooltip.style.display = 'block';
+            tooltip.style.left = '-9999px';
+            tooltip.style.top = '-9999px';
+            
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const tooltipWidth = tooltipRect.width;
+            const tooltipHeight = tooltipRect.height;
+            
+            const mouseX = event.native.clientX;
+            const mouseY = event.native.clientY;
+            
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // 默认显示在鼠标右侧
+            let left = mouseX + 20;
+            let top = mouseY - tooltipHeight / 2;
+            
+            // 右边界检测：如果右侧空间不足，显示在左侧
+            if (left + tooltipWidth > viewportWidth - 20) {
+                left = mouseX - tooltipWidth - 20;
+            }
+            
+            // 左边界检测
+            if (left < 20) {
+                left = 20;
+            }
+            
+            // 下边界检测：如果下方空间不足，向上偏移
+            if (top + tooltipHeight > viewportHeight - 20) {
+                top = viewportHeight - tooltipHeight - 20;
+            }
+            
+            // 上边界检测
+            if (top < 20) {
+                top = 20;
+            }
+            
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+        }
+
+        function hideTooltip() {
+            document.getElementById('customTooltip').style.display = 'none';
+        }
+
+        document.getElementById('performanceChart').addEventListener('mouseleave', hideTooltip);
+    </script>
+</body>
+</html>
