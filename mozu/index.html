@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的世界整合包下载</title>
+  <style>
+    /* ====== 基础 ====== */
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #1a0a00 url('https://assets.mojang.com/skins/minecraft/textures/blocks/dirt.png') repeat;
+      background-size: 64px 64px;
+      font-family: 'Press Start 2P', monospace;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ====== 顶部标题栏 ====== */
+    .header {
+      width: 100%;
+      background: linear-gradient(180deg, #2d1a0a 0%, #1a0a00 100%);
+      border-bottom: 4px solid #4a2a0a;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      color: #55ff55;
+      text-shadow: 3px 3px 0 #003300, 5px 5px 0 rgba(0,0,0,0.3);
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 10px;
+      color: #aaaa55;
+      letter-spacing: 2px;
+    }
+
+    /* ====== 像素分割线 ====== */
+    .divider {
+      width: 100%;
+      height: 8px;
+      background: repeating-linear-gradient(
+        90deg,
+        #5c3317 0px, #5c3317 8px,
+        #7a4a2a 8px, #7a4a2a 16px
+      );
+    }
+
+    /* ====== 主内容区 ====== */
+    .main {
+      max-width: 800px;
+      width: 100%;
+      padding: 40px 20px;
+    }
+
+    /* ====== 整合包卡片 ====== */
+    .modpack-card {
+      background: #3c2415;
+      border: 4px solid #5c3317;
+      border-image: repeating-linear-gradient(
+        45deg,
+        #5c3317, #5c3317 4px,
+        #7a4a2a 4px, #7a4a2a 8px
+      ) 8;
+      padding: 0;
+      margin-bottom: 30px;
+      image-rendering: pixelated;
+    }
+
+    .modpack-banner {
+      width: 100%;
+      height: 260px;
+      background: linear-gradient(135deg, #1a3300 0%, #2d5500 30%, #0a1a00 70%, #1a3300 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 4px solid #5c3317;
+    }
+
+    .modpack-banner::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(85,255,85,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(255,255,85,0.08) 0%, transparent 50%);
+    }
+
+    .modpack-banner .title-area {
+      text-align: center;
+      z-index: 1;
+    }
+
+    .modpack-banner .title-area h2 {
+      font-size: 32px;
+      color: #ffffff;
+      text-shadow:
+        3px 3px 0 #2d5500,
+        0 0 20px rgba(85,255,85,0.5);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .modpack-banner .title-area .subtitle {
+      font-size: 9px;
+      color: #aaffaa;
+      letter-spacing: 3px;
+    }
+
+    /* 像素装饰 - 苦力怕 */
+    .creeper-icon {
+      position: absolute;
+      right: 30px;
+      bottom: 20px;
+      opacity: 0.15;
+    }
+
+    .creeper-icon svg {
+      width: 80px;
+      height: 80px;
+    }
+
+    .modpack-info {
+      padding: 30px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .info-item {
+      background: #2a1508;
+      border: 2px solid #4a2a0a;
+      padding: 14px 16px;
+    }
+
+    .info-item .label {
+      font-size: 7px;
+      color: #8a6a3a;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    .info-item .value {
+      font-size: 11px;
+      color: #ffaa00;
+    }
+
+    .modpack-desc {
+      background: #2a1508;
+      border: 2px solid #4a2a0a;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .modpack-desc .desc-title {
+      font-size: 9px;
+      color: #55ff55;
+      margin-bottom: 14px;
+      letter-spacing: 2px;
+    }
+
+    .modpack-desc .desc-text {
+      font-size: 9px;
+      color: #ccbb99;
+      line-height: 2;
+    }
+
+    .mod-features {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .mod-tag {
+      background: #1a3300;
+      border: 2px solid #336600;
+      color: #88ff88;
+      font-size: 7px;
+      padding: 6px 12px;
+      letter-spacing: 1px;
+    }
+
+    /* ====== 下载按钮 ====== */
+    .download-section {
+      text-align: center;
+      padding: 30px;
+      background: #2a1508;
+      border-top: 2px solid #4a2a0a;
+    }
+
+    .download-btn {
+      display: inline-block;
+      background: #55aa00;
+      border: 3px solid #336600;
+      padding: 16px 48px;
+      color: #ffffff;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      text-shadow: 2px 2px 0 #003300;
+      box-shadow:
+        inset -4px -4px 0 #336600,
+        inset 4px 4px 0 #77cc00,
+        6px 6px 0 rgba(0,0,0,0.4);
+      transition: all 0.1s;
+      letter-spacing: 2px;
+    }
+
+    .download-btn:hover {
+      background: #66bb11;
+      transform: translate(2px, 2px);
+      box-shadow:
+        inset -4px -4px 0 #336600,
+        inset 4px 4px 0 #77cc00,
+        3px 3px 0 rgba(0,0,0,0.4);
+    }
+
+    .download-btn:active {
+      transform: translate(4px, 4px);
+      box-shadow:
+        inset -4px -4px 0 #336600,
+        inset 4px 4px 0 #77cc00,
+        1px 1px 0 rgba(0,0,0,0.4);
+    }
+
+    .download-note {
+      font-size: 7px;
+      color: #666644;
+      margin-top: 16px;
+      letter-spacing: 1px;
+    }
+
+    /* ====== 底部 ====== */
+    .footer {
+      width: 100%;
+      background: #0d0500;
+      border-top: 4px solid #2a1508;
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 7px;
+      color: #554433;
+      letter-spacing: 1px;
+      line-height: 2.2;
+    }
+
+    .footer .hearts {
+      color: #ff5555;
+      font-size: 10px;
+    }
+
+    /* ====== 像素粒子背景 ====== */
+    .particles {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #55ff5544;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-10px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+
+    .main, .header, .footer { position: relative; z-index: 1; }
+
+    /* ====== 响应式 ====== */
+    @media (max-width: 600px) {
+      .header h1 { font-size: 18px; }
+      .modpack-banner { height: 180px; }
+      .modpack-banner .title-area h2 { font-size: 20px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .download-btn { font-size: 11px; padding: 14px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 像素粒子 -->
+  <div class="particles" id="particles"></div>
+
+  <!-- 顶部 -->
+  <div class="header">
+    <h1>⛏ MINECRAFT 整合包</h1>
+    <p>M O D P A C K &nbsp; D O W N L O A D</p>
+  </div>
+  <div class="divider"></div>
+
+  <!-- 主内容 -->
+  <div class="main">
+    <div class="modpack-card">
+      <!-- 横幅 -->
+      <div class="modpack-banner">
+        <div class="title-area">
+          <h2>你好，新蒸程</h2>
+          <div class="subtitle">HELLO &nbsp; NEW &nbsp; STEAM &nbsp; ERA</div>
+        </div>
+        <!-- 苦力怕装饰 -->
+        <div class="creeper-icon">
+          <svg viewBox="0 0 16 16" fill="#55ff55">
+            <rect x="3" y="0" width="4" height="3"/>
+            <rect x="9" y="0" width="4" height="3"/>
+            <rect x="0" y="3" width="16" height="4"/>
+            <rect x="0" y="7" width="16" height="9"/>
+            <rect x="4" y="4" width="2" height="3" fill="#000"/>
+            <rect x="10" y="4" width="2" height="3" fill="#000"/>
+            <rect x="6" y="8" width="1" height="3" fill="#000"/>
+            <rect x="9" y="8" width="1" height="3" fill="#000"/>
+            <rect x="7" y="8" width="2" height="2" fill="#000"/>
+            <rect x="7" y="10" width="2" height="3" fill="#000"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 信息 -->
+      <div class="modpack-info">
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="label">▸ 整合包名称</div>
+            <div class="value">你好，新蒸程</div>
+          </div>
+          <div class="info-item">
+            <div class="label">▸ Minecraft 版本</div>
+            <div class="value">1.20.1</div>
+          </div>
+          <div class="info-item">
+            <div class="label">▸ 加载器</div>
+            <div class="value">Forge</div>
+          </div>
+          <div class="info-item">
+            <div class="label">▸ 文件大小</div>
+            <div class="value">约 500MB</div>
+          </div>
+        </div>
+
+        <div class="modpack-desc">
+          <div class="desc-title">◆ 整合包简介</div>
+          <div class="desc-text">
+            「你好，新蒸程」是一套精心配置的 Minecraft 整合包，<br>
+            融合了科技、冒险与建造的多重玩法。<br>
+            从零开始，搭建你的自动化流水线，<br>
+            探索未知的维度，创造属于你的新世界。<br>
+            适合喜欢折腾、热爱创造的你！
+          </div>
+        </div>
+
+        <div class="mod-features">
+          <span class="mod-tag">⚙ 科技模组</span>
+          <span class="mod-tag">⚔ 冒险探索</span>
+          <span class="mod-tag">🏗 建造增强</span>
+          <span class="mod-tag">🌾 农业扩展</span>
+          <span class="mod-tag">🔮 魔法附魔</span>
+          <span class="mod-tag">🎨 画质光影</span>
+        </div>
+      </div>
+
+      <!-- 下载 -->
+      <div class="download-section">
+        <!--
+          ============================================================
+          🔧 下载链接配置区
+          ============================================================
+          请将下方 href 替换为你的实际文件路径或下载链接：
+            本地路径示例: href="./modpack/你好新蒸程-v1.0.zip"
+            网络链接示例: href="https://your-server.com/downloads/modpack.zip"
+          ============================================================
+        -->
+        <a href="你好，新蒸程！V1.7 正式版.zip" class="download-btn" id="downloadBtn">
+          ⬇ 立即下载
+        </a>
+        <p class="download-note">
+          当前版本 v1.0 &nbsp;|&nbsp; 适用于 Minecraft 1.20.1 Forge
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="divider"></div>
+  <div class="footer">
+    <p>
+      Made with <span class="hearts">♥♥♥</span> for Minecraft<br>
+      MINECRAFT 整合包下载站
+    </p>
+  </div>
+
+  <!-- 粒子脚本 -->
+  <script>
+    const container = document.getElementById('particles');
+    const colors = ['#55ff5566', '#ffff5544', '#ff555533', '#55aaff33'];
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (3 + Math.random() * 5) + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
+      container.appendChild(p);
+    }
+
+    // 下载按钮点击反馈
+    document.getElementById('downloadBtn').addEventListener('click', function(e) {
+      if (this.getAttribute('href') === '#') {
+        e.preventDefault();
+        alert('下载链接尚未配置，请将整合包文件放入指定目录后修改 href 属性。');
+      }
+    });
+  </script>
+</body>
+</html>
