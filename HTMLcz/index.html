@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML 标签大全 · 前端标签速查手册</title>
+<style>
+  :root{
+    --bg:#f5f6fa;
+    --card:#ffffff;
+    --text:#222838;
+    --muted:#6b7280;
+    --accent:#4f46e5;
+    --accent-dark:#4338ca;
+    --accent-soft:#eef0ff;
+    --border:#e6e8f0;
+    --code-bg:#1f2530;
+    --code-text:#dfe4ee;
+    --badge:#16a34a;
+    --badge-bg:#e9f9ef;
+    --warn-bg:#fff7ed;
+    --warn-border:#fed7aa;
+    --warn-text:#c2410c;
+    --sidebar-w:248px;
+    --header-h:64px;
+    --radius:12px;
+    --shadow:0 1px 3px rgba(30,40,60,.06),0 4px 14px rgba(30,40,60,.06);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  code,pre,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace}
+
+  /* ========== 顶部栏 ========== */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;height:var(--header-h);z-index:60;
+    background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:14px;padding:0 20px;
+  }
+  .menu-btn{
+    display:none;width:40px;height:40px;border:1px solid var(--border);background:#fff;border-radius:10px;
+    cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .menu-btn svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:2}
+  .brand{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;color:var(--text)}
+  .brand-logo{
+    width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#4338ca);
+    color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px;
+  }
+  .brand-title{font-size:17px;font-weight:700;white-space:nowrap}
+  .brand-title small{display:block;font-size:11px;font-weight:400;color:var(--muted);letter-spacing:.5px}
+  .search-wrap{flex:1;display:flex;justify-content:center;min-width:0}
+  .search-box{
+    position:relative;width:100%;max-width:460px;
+  }
+  .search-box svg{
+    position:absolute;left:13px;top:50%;transform:translateY(-50%);
+    width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:2;pointer-events:none;
+  }
+  #searchInput{
+    width:100%;height:40px;border:1px solid var(--border);border-radius:10px;
+    padding:0 14px 0 40px;font-size:14.5px;background:#f8f9fc;color:var(--text);outline:none;
+    transition:border-color .2s,box-shadow .2s,background .2s;
+  }
+  #searchInput:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+  .search-clear{
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    width:26px;height:26px;border:none;background:#e5e7f0;border-radius:50%;cursor:pointer;
+    color:#555;font-size:13px;line-height:1;display:none;align-items:center;justify-content:center;
+  }
+  .search-clear.show{display:flex}
+
+  /* ========== 布局 ========== */
+  .sidebar{
+    position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);z-index:50;
+    background:#fff;border-right:1px solid var(--border);
+    overflow-y:auto;padding:18px 12px 30px;
+  }
+  .sidebar h3{
+    font-size:12px;color:var(--muted);letter-spacing:1.5px;padding:0 12px 10px;font-weight:600;
+  }
+  .nav-list{list-style:none}
+  .nav-list a{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;margin:2px 0;
+    border-radius:9px;text-decoration:none;color:#3d4357;font-size:14px;
+    transition:background .15s,color .15s;cursor:pointer;
+  }
+  .nav-list a:hover{background:var(--accent-soft);color:var(--accent-dark)}
+  .nav-list a.active{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 3px 10px rgba(79,70,229,.28)}
+  .nav-dot{width:8px;height:8px;border-radius:50%;background:#c7cbe0;flex-shrink:0}
+  .nav-list a.active .nav-dot{background:#fff}
+  .nav-count{margin-left:auto;font-size:11px;color:#9aa0b5;background:#f0f1f7;border-radius:20px;padding:1px 8px}
+  .nav-list a.active .nav-count{background:rgba(255,255,255,.25);color:#fff}
+  .nav-top{margin-top:14px;border-top:1px dashed var(--border);padding-top:12px}
+
+  .main{
+    margin-left:var(--sidebar-w);
+    padding:calc(var(--header-h) + 24px) 28px 60px;
+    max-width:1180px;
+  }
+  .page-head{margin-bottom:26px}
+  .page-head h1{font-size:26px;font-weight:800;letter-spacing:.5px}
+  .page-head p{color:var(--muted);margin-top:8px;font-size:14.5px}
+  .stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .stat-chip{
+    background:#fff;border:1px solid var(--border);border-radius:20px;padding:5px 14px;
+    font-size:13px;color:#444;box-shadow:var(--shadow);
+  }
+  .stat-chip b{color:var(--accent)}
+  .search-tip{
+    display:none;margin-bottom:18px;background:var(--accent-soft);color:var(--accent-dark);
+    border:1px solid #d6dbff;border-radius:10px;padding:10px 16px;font-size:14px;
+  }
+  .search-tip.empty{background:var(--warn-bg);border-color:var(--warn-border);color:var(--warn-text)}
+
+  /* ========== 分类区块 ========== */
+  .category{margin-bottom:40px;scroll-margin-top:calc(var(--header-h) + 16px)}
+  .cat-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .cat-bar{width:5px;height:26px;border-radius:3px;background:linear-gradient(180deg,#6366f1,#4338ca)}
+  .cat-head h2{font-size:20px;font-weight:700}
+  .cat-head .cat-en{font-size:12.5px;color:var(--muted);font-weight:400;letter-spacing:.5px}
+  .cat-head .cat-num{
+    margin-left:auto;font-size:12.5px;color:var(--muted);background:#fff;border:1px solid var(--border);
+    border-radius:20px;padding:3px 12px;
+  }
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+
+  /* ========== 标签卡片 ========== */
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px 18px 14px;box-shadow:var(--shadow);
+    transition:transform .18s,box-shadow .18s;
+    display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:0 6px 22px rgba(30,40,80,.12)}
+  .card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .tag-chip{
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;font-weight:700;
+    color:var(--accent-dark);background:var(--accent-soft);
+    border:1px solid #dfe3ff;border-radius:7px;padding:2px 9px;
+  }
+  .badge{
+    font-size:11px;font-weight:600;border-radius:20px;padding:2px 9px;letter-spacing:.5px;
+  }
+  .badge.hot{color:var(--badge);background:var(--badge-bg)}
+  .badge.dep{color:var(--warn-text);background:var(--warn-bg);border:1px solid var(--warn-border)}
+  .card .desc{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+  .card .detail{font-size:13.5px;color:#4b5263;margin-bottom:10px}
+  .attrs{list-style:none;margin-bottom:10px}
+  .attrs li{font-size:12.5px;color:var(--muted);padding:2px 0;display:flex;gap:7px;align-items:baseline}
+  .attrs code{
+    color:#b45309;background:#fff7ed;border-radius:5px;padding:0 6px;font-size:12px;flex-shrink:0;
+  }
+  .example-label{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600;letter-spacing:.5px}
+  .code-block{
+    background:var(--code-bg);color:var(--code-text);border-radius:9px;
+    padding:11px 14px;font-size:12.8px;line-height:1.6;overflow-x:auto;
+    white-space:pre;margin-top:auto;
+  }
+  .code-block .hl{color:#a5b4fc}
+
+  /* ========== 回到顶部 / 遮罩 ========== */
+  .back-top{
+    position:fixed;right:22px;bottom:26px;width:44px;height:44px;border-radius:50%;
+    background:var(--accent);color:#fff;border:none;cursor:pointer;z-index:55;
+    box-shadow:0 6px 18px rgba(79,70,229,.4);
+    display:none;align-items:center;justify-content:center;
+    transition:transform .2s,opacity .2s;
+  }
+  .back-top.show{display:flex}
+  .back-top:hover{transform:translateY(-3px)}
+  .back-top svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2.4}
+  .overlay{
+    display:none;position:fixed;inset:0;background:rgba(20,24,40,.45);z-index:45;
+  }
+  .overlay.show{display:block}
+
+  footer{
+    margin-left:var(--sidebar-w);padding:26px 28px 40px;color:var(--muted);font-size:13px;
+    border-top:1px solid var(--border);text-align:center;background:#fff;
+  }
+
+  /* ========== 移动端适配 ========== */
+  @media (max-width:920px){
+    .menu-btn{display:flex}
+    .sidebar{
+      transform:translateX(-100%);transition:transform .28s ease;
+      box-shadow:4px 0 24px rgba(20,24,40,.15);width:270px;
+    }
+    .sidebar.open{transform:translateX(0)}
+    .main{margin-left:0;padding:calc(var(--header-h) + 18px) 16px 50px}
+    footer{margin-left:0}
+    .brand-title small{display:none}
+    .page-head h1{font-size:21px}
+    .cards{grid-template-columns:1fr}
+    .cat-head h2{font-size:17px}
+  }
+  @media (max-width:420px){
+    .topbar{padding:0 12px;gap:10px}
+    .brand-title{font-size:15px}
+    .main{padding-left:12px;padding-right:12px}
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部栏 -->
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-label="打开分类菜单">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round"/></svg>
+  </button>
+  <a class="brand" href="#top">
+    <span class="brand-logo">&lt;/&gt;</span>
+    <span class="brand-title">HTML 标签大全<small>HTML TAGS REFERENCE</small></span>
+  </a>
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+      <input type="search" id="searchInput" placeholder="搜索标签，如：div、表单、表格、图片…" autocomplete="off">
+      <button class="search-clear" id="searchClear" aria-label="清空搜索">✕</button>
+    </div>
+  </div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- 左侧分类选项卡 -->
+<aside class="sidebar" id="sidebar">
+  <h3>标签分类</h3>
+  <ul class="nav-list" id="navList"></ul>
+  <div class="nav-top">
+    <ul class="nav-list">
+      <li><a id="backTopLink"><span class="nav-dot"></span>回到顶部</a></li>
+    </ul>
+  </div>
+</aside>
+
+<!-- 主内容 -->
+<main class="main" id="top">
+  <div class="page-head">
+    <h1>HTML 标签速查手册</h1>
+    <p>覆盖 HTML 标准全部标签及常见废弃标签，按类别分组、常用标签优先；点击左侧分类可快速跳转，也可直接搜索标签名称或用途。</p>
+    <div class="stat-row">
+      <span class="stat-chip">共收录 <b id="tagTotal">0</b> 个标签</span>
+      <span class="stat-chip"><b id="catTotal">0</b> 大分类</span>
+      <span class="stat-chip">绿色标记 = <b style="color:var(--badge)">高频常用</b></span>
+    </div>
+  </div>
+  <div class="search-tip" id="searchTip"></div>
+  <div id="content"></div>
+</main>
+
+<button class="back-top" id="backTop" aria-label="回到顶部">
+  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<footer>
+  HTML 标签大全 · 单文件离线手册 · 兼容桌面端与移动端
+</footer>
+
+<script>
+/* =====================================================
+ * 数据：分类（按常用程度排序）
+ * ===================================================== */
+var CATEGORIES = [
+  { id:'basic',    name:'基础文档', en:'Document & Metadata' },
+  { id:'layout',   name:'布局与语义', en:'Layout & Semantics' },
+  { id:'text',     name:'文本内容', en:'Text Content' },
+  { id:'inline',   name:'文本样式', en:'Inline Text' },
+  { id:'link',     name:'链接与图像', en:'Links & Images' },
+  { id:'list',     name:'列表', en:'Lists' },
+  { id:'table',    name:'表格', en:'Tables' },
+  { id:'form',     name:'表单', en:'Forms' },
+  { id:'media',    name:'多媒体与嵌入', en:'Media & Embedding' },
+  { id:'script',   name:'脚本与交互', en:'Scripting & Template' },
+  { id:'obsolete', name:'已废弃标签', en:'Deprecated / Obsolete' }
+];
+
+/* =====================================================
+ * 数据：标签（每个分类内常用在前）
+ * t: 标签名  c: 是否常用  d: 简述  x: 详细说明
+ * a: 属性 [[属性, 说明]...]  e: 示例  k: 搜索关键词
+ * ===================================================== */
+var TAGS = [
+/* ---------- 基础文档 ---------- */
+{t:'!DOCTYPE',c:1,cat:'basic',d:'文档类型声明',x:'必须放在 HTML 文档的第一行，用于告诉浏览器当前页面使用 HTML5 标准解析，避免浏览器进入怪异模式（Quirks Mode）。它不是标签，而是一条声明语句。',a:[],e:'<!DOCTYPE html>\n<html lang="zh-CN">\n  ...\n</html>',k:'doctype 文档类型 声明 html5'},
+{t:'html',c:1,cat:'basic',d:'HTML 文档根元素',x:'所有 HTML 元素的根节点，包裹整个页面。lang 属性用于声明页面语言，有利于搜索引擎与屏幕阅读器。',a:[['lang','页面语言，如 zh-CN、en'],['dir','文本方向 ltr/rtl']],e:'<html lang="zh-CN">\n  <head>...</head>\n  <body>...</body>\n</html>',k:'根元素 root 语言 lang'},
+{t:'head',c:1,cat:'basic',d:'文档头部容器',x:'包含页面的元信息，如标题、字符集、样式表、脚本等，其中的内容不会直接显示在页面上。',a:[],e:'<head>\n  <meta charset="UTF-8">\n  <title>页面标题</title>\n</head>',k:'头部 header 元信息'},
+{t:'body',c:1,cat:'basic',d:'文档主体',x:'包含网页中所有可见内容，如文字、图片、链接、表格、按钮等。一个页面只能有一个 body。',a:[],e:'<body>\n  <h1>欢迎</h1>\n  <p>这里是页面内容。</p>\n</body>',k:'主体 可见内容'},
+{t:'title',c:1,cat:'basic',d:'文档标题',x:'定义浏览器标签页上显示的标题，同时用于收藏夹命名与搜索引擎结果展示，是 SEO 最重要的元素之一，必须放在 head 中。',a:[],e:'<head>\n  <title>HTML 标签大全</title>\n</head>',k:'标题 浏览器标签 seo'},
+{t:'meta',c:1,cat:'basic',d:'页面元信息',x:'空元素，用于提供字符集、视口、页面描述、关键词、作者等元数据，不会显示在页面上，但被浏览器和搜索引擎读取。',a:[['charset','声明字符编码，如 UTF-8'],['name','元信息名称，如 description、viewport'],['content','与 name 配对的内容值'],['http-equiv','HTTP 头等价指令，如 refresh']],e:'<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<meta name="description" content="HTML标签速查手册">',k:'meta 元数据 字符集 charset viewport 视口 描述 seo'},
+{t:'link',c:1,cat:'basic',d:'引入外部资源',x:'空元素，定义当前文档与外部资源的关系，最常用于引入外部 CSS 样式表、网站图标（favicon）等。',a:[['rel','关系类型，如 stylesheet、icon'],['href','资源地址'],['type','资源 MIME 类型']],e:'<link rel="stylesheet" href="style.css">\n<link rel="icon" href="favicon.ico">',k:'link 外部 css 样式表 图标 favicon 引入'},
+{t:'style',c:1,cat:'basic',d:'内嵌 CSS 样式',x:'用于在 HTML 文档中直接编写 CSS 样式规则，通常放在 head 中。样式较多时建议使用外部样式表（link 引入），便于复用与缓存。',a:[['type','MIME 类型，默认 text/css'],['media','适用媒体，如 screen、print']],e:'<style>\n  body { background: #f5f6fa; }\n  h1 { color: #4f46e5; }\n</style>',k:'style 样式 css 内嵌 内部样式'},
+{t:'base',c:0,cat:'basic',d:'基础 URL 与默认目标',x:'为页面中所有相对 URL 指定基础地址，并可设置链接默认打开方式。一个页面最多只能有一个 base，必须放在 head 中。',a:[['href','基础地址'],['target','默认打开方式，如 _blank']],e:'<head>\n  <base href="https://example.com/" target="_blank">\n</head>',k:'base 基础路径 根地址 默认 target'},
+
+/* ---------- 布局与语义 ---------- */
+{t:'div',c:1,cat:'layout',d:'通用块级容器',x:'最常用的无语义块级元素，用于把页面划分为不同区域并配合 CSS 进行布局，独占一行。',a:[['id','唯一标识'],['class','类名，用于样式与脚本'],['style','行内样式']],e:'<div class="card">\n  <h3>卡片标题</h3>\n  <p>卡片内容</p>\n</div>',k:'div 容器 块级 布局 盒子'},
+{t:'span',c:1,cat:'layout',d:'通用行内容器',x:'无语义的行内元素，用于包裹一小段文字或内容，配合 CSS 设置局部样式，不会换行。',a:[['class','类名'],['style','行内样式']],e:'<p>价格：<span style="color:red">￥99</span></p>',k:'span 行内 文本 局部样式'},
+{t:'header',c:1,cat:'layout',d:'页眉 / 区块头部',x:'表示页面或某个区块的头部区域，通常包含 Logo、标题、导航栏等。页面中可以有多个 header。',a:[],e:'<header>\n  <h1>网站名称</h1>\n  <nav>...</nav>\n</header>',k:'header 页眉 页头 头部 语义化'},
+{t:'nav',c:1,cat:'layout',d:'导航链接区域',x:'用于包裹主要的导航链接组，如顶部菜单、目录、分页等，便于屏幕阅读器识别。',a:[],e:'<nav>\n  <a href="/">首页</a>\n  <a href="/about">关于</a>\n</nav>',k:'nav 导航 菜单 目录 语义化'},
+{t:'main',c:1,cat:'layout',d:'页面主体内容',x:'表示页面的主要内容区域，每个页面只能有一个 main，且不应包含侧边栏、页脚等重复出现的内容。',a:[],e:'<main>\n  <article>...</article>\n</main>',k:'main 主体 主要内容 语义化'},
+{t:'section',c:1,cat:'layout',d:'主题区段',x:'表示文档中一个独立的主题区段，通常带有标题，用于对内容进行分块，如章节、标签页内容等。',a:[],e:'<section>\n  <h2>第一章</h2>\n  <p>章节内容...</p>\n</section>',k:'section 区块 章节 分区 语义化'},
+{t:'article',c:1,cat:'layout',d:'独立内容块',x:'表示可独立分发或复用的完整内容，如一篇文章、一条帖子、一条评论，即使脱离上下文也有意义。',a:[],e:'<article>\n  <h2>文章标题</h2>\n  <p>正文内容...</p>\n</article>',k:'article 文章 帖子 独立内容 语义化'},
+{t:'aside',c:1,cat:'layout',d:'侧边 / 附属内容',x:'表示与主内容相关但可独立的部分，如侧边栏、广告、相关推荐、引用说明等。',a:[],e:'<aside>\n  <h3>相关推荐</h3>\n  <ul>...</ul>\n</aside>',k:'aside 侧边栏 侧栏 广告 语义化'},
+{t:'footer',c:1,cat:'layout',d:'页脚 / 区块底部',x:'表示页面或区块的底部，通常包含版权信息、联系方式、友情链接、备案号等。',a:[],e:'<footer>\n  <p>© 2026 示例公司 版权所有</p>\n</footer>',k:'footer 页脚 底部 版权 语义化'},
+{t:'h1 ~ h6',c:1,cat:'layout',d:'六级标题',x:'h1 到 h6 表示六个级别的标题，h1 级别最高。应按层级使用（不要跳级），一个页面通常只有一个 h1，对 SEO 和无障碍非常重要。',a:[['align','（已废弃）对齐方式']],e:'<h1>一级标题</h1>\n<h2>二级标题</h2>\n<h3>三级标题</h3>',k:'h1 h2 h3 h4 h5 h6 标题 字号 heading seo',search:'h1 h2 h3 h4 h5 h6'},
+{t:'hgroup',c:0,cat:'layout',d:'标题组',x:'用于将一个主标题（h1–h6）与其紧随的副标题（p 或次级标题）组合成一个标题块，表明它们在语义上属于同一个标题，常用于"文章标题 + 副标题"场景。内部只能包含 h1~h6 和 p 元素。',a:[],e:'<hgroup>\n  <h1>HTML 标签大全</h1>\n  <p>前端标签速查手册</p>\n</hgroup>',k:'hgroup 标题组 副标题 子标题 heading group'},
+{t:'figure',c:0,cat:'layout',d:'独立流内容单元',x:'用于包裹独立引用的内容，如图片、图表、代码片段等，通常与 figcaption 配合，内容位置可移动而不影响正文。',a:[],e:'<figure>\n  <img src="chart.png" alt="销量图表">\n  <figcaption>图 1：年度销量</figcaption>\n</figure>',k:'figure 图文 插图 图表 语义化'},
+{t:'figcaption',c:0,cat:'layout',d:'figure 的标题说明',x:'为 figure 元素定义标题或说明文字，必须放在 figure 内部，可以是第一个或最后一个子元素。',a:[],e:'<figure>\n  <img src="photo.jpg" alt="照片">\n  <figcaption>这是图片说明</figcaption>\n</figure>',k:'figcaption 图注 图片说明 caption'},
+{t:'details',c:0,cat:'layout',d:'可折叠详情区',x:'创建一个可以展开和收起的区域，用户点击 summary 即可切换，常用于 FAQ、折叠面板，无需 JavaScript。',a:[['open','默认是否展开']],e:'<details>\n  <summary>点击查看详情</summary>\n  <p>这里是隐藏的详细内容。</p>\n</details>',k:'details 折叠 展开 手风琴 faq 详情'},
+{t:'summary',c:0,cat:'layout',d:'details 的可见标题',x:'为 details 定义可见的摘要标题，点击它可以展开或收起 details 内容。',a:[],e:'<details>\n  <summary>常见问题</summary>\n  <p>答案内容...</p>\n</details>',k:'summary 摘要 折叠标题'},
+{t:'dialog',c:0,cat:'layout',d:'对话框 / 模态框',x:'表示一个对话框或模态窗口，可通过 JavaScript 的 showModal() / show() 方法打开，自带遮罩与焦点管理。',a:[['open','是否显示对话框']],e:'<dialog id="dlg">\n  <p>确定要删除吗？</p>\n  <button onclick="dlg.close()">关闭</button>\n</dialog>',k:'dialog 弹窗 模态框 对话框 modal'},
+{t:'search',c:0,cat:'layout',d:'搜索区域容器',x:'HTML 2023 年新增的语义容器，用于包裹站点或应用中的搜索、筛选功能（通常是包含搜索框的表单），便于浏览器和屏幕阅读器识别"这是搜索区域"。它没有默认样式和行为，需配合 CSS 使用。',a:[],e:'<search>\n  <form action="/search">\n    <input type="search" name="q" placeholder="搜索内容…">\n    <button type="submit">搜索</button>\n  </form>\n</search>',k:'search 搜索 筛选 查找 新标签 2023'},
+
+/* ---------- 文本内容 ---------- */
+{t:'p',c:1,cat:'text',d:'段落',x:'定义一个文本段落，是最常用的文本块级元素，段落之间自动有间距。',a:[],e:'<p>这是第一个段落。</p>\n<p>这是第二个段落。</p>',k:'p 段落 文本 paragraph'},
+{t:'br',c:1,cat:'text',d:'换行',x:'空元素，在文本中插入一个换行符，常用于地址、诗歌等需要强制换行的场景，不要用来制造间距。',a:[],e:'<p>第一行内容<br>第二行内容</p>',k:'br 换行 断行 回车'},
+{t:'hr',c:1,cat:'text',d:'主题分隔线',x:'空元素，表示段落之间主题的转换，显示为一条水平分隔线，语义上是"分界"而非单纯装饰。',a:[],e:'<p>第一章内容</p>\n<hr>\n<p>第二章内容</p>',k:'hr 分隔线 水平线 分割'},
+{t:'pre',c:0,cat:'text',d:'预格式化文本',x:'保留文本中的空格、换行和缩进，默认以等宽字体显示，常用于展示代码块或 ASCII 图形。',a:[],e:'<pre>\nfunction hello() {\n  console.log("Hi");\n}\n</pre>',k:'pre 预格式 代码块 保留空格 等宽'},
+{t:'blockquote',c:0,cat:'text',d:'块级引用',x:'表示从其他来源引用的大段内容，浏览器默认缩进显示，cite 属性可注明来源地址。',a:[['cite','引用来源 URL']],e:'<blockquote cite="https://example.com">\n  <p>这是一段被引用的长文字。</p>\n</blockquote>',k:'blockquote 引用 块引用 名言 quote'},
+{t:'q',c:0,cat:'text',d:'短行内引用',x:'表示简短的行内引用，浏览器会自动为其添加引号，cite 属性可指定来源。',a:[['cite','引用来源 URL']],e:'<p>他说：<q>知识就是力量。</q></p>',k:'q 引用 引号 行内引用 quote'},
+{t:'cite',c:0,cat:'text',d:'作品标题引用',x:'表示作品（书籍、歌曲、电影、文章等）的标题，默认斜体显示。',a:[],e:'<p>我最喜欢的书是<cite>《小王子》</cite>。</p>',k:'cite 著作 作品名 引用 书名'},
+{t:'code',c:0,cat:'text',d:'行内代码',x:'表示计算机代码片段，默认以等宽字体显示；多行代码建议放在 pre 中。',a:[],e:'<p>使用 <code>console.log()</code> 输出内容。</p>',k:'code 代码 等宽 程序码'},
+{t:'kbd',c:0,cat:'text',d:'键盘输入',x:'表示用户键盘输入内容，如快捷键，浏览器通常以等宽字体显示。',a:[],e:'<p>按 <kbd>Ctrl</kbd> + <kbd>S</kbd> 保存文件。</p>',k:'kbd 键盘 按键 快捷键'},
+{t:'samp',c:0,cat:'text',d:'程序输出示例',x:'表示计算机程序或系统的输出示例内容，默认等宽字体显示。',a:[],e:'<p>程序运行结果：<samp>Hello World</samp></p>',k:'samp 输出 程序结果 示例'},
+{t:'var',c:0,cat:'text',d:'变量名',x:'表示数学或编程中的变量名称，默认斜体显示。',a:[],e:'<p>公式：<var>y</var> = <var>x</var> + 1</p>',k:'var 变量 数学 variable'},
+{t:'time',c:0,cat:'text',d:'日期 / 时间',x:'表示机器可读的日期或时间，datetime 属性提供标准格式，方便搜索引擎与日历工具解析。',a:[['datetime','标准日期时间，如 2026-09-04']],e:'<time datetime="2026-09-04">2026年9月4日</time>',k:'time 时间 日期 datetime'},
+{t:'mark',c:0,cat:'text',d:'高亮标记文本',x:'表示需要突出显示的文本，类似荧光笔效果，默认黄色背景，常用于搜索结果关键词标记。',a:[],e:'<p>搜索结果：<mark>HTML标签</mark>大全</p>',k:'mark 高亮 标记 荧光笔 重点'},
+{t:'small',c:0,cat:'text',d:'旁注小字',x:'表示旁注、版权声明、法律文本等小号文字，语义上是"次要注释"而非单纯缩小字号。',a:[],e:'<p>商品价格 ￥99 <small>（不含运费）</small></p>',k:'small 小字 注释 版权 旁注'},
+{t:'sub',c:0,cat:'text',d:'下标文本',x:'显示为下标，常用于化学式（H₂O）、数学公式脚注等。',a:[],e:'<p>水的化学式：H<sub>2</sub>O</p>',k:'sub 下标 化学 公式'},
+{t:'sup',c:0,cat:'text',d:'上标文本',x:'显示为上标，常用于幂运算（x²）、序号标注（注¹）等。',a:[],e:'<p>平方：x<sup>2</sup>，脚注<sup>[1]</sup></p>',k:'sup 上标 平方 角标 幂'},
+{t:'wbr',c:0,cat:'text',d:'可选换行位置',x:'空元素（Word Break Opportunity），在长单词或长 URL 中提示浏览器"此处可以换行"，是否换行由浏览器决定。',a:[],e:'<p>这是一个很长的单词：super<wbr>califragilistic</p>',k:'wbr 换行机会 长单词 断词'},
+{t:'address',c:0,cat:'text',d:'联系信息',x:'表示文档或文章作者的联系信息（地址、邮箱、电话等），默认斜体显示。',a:[],e:'<address>\n  联系邮箱：<a href="mailto:a@b.com">a@b.com</a>\n</address>',k:'address 地址 联系方式 联系信息'},
+{t:'ruby',c:0,cat:'text',d:'注音注释',x:'用于为文字添加注音（中文拼音、日文假名等），内部配合 rt 和 rp 使用。',a:[],e:'<ruby>汉<rt>hàn</rt>字<rt>zì</rt></ruby>',k:'ruby 注音 拼音 假名 日文'},
+{t:'rt',c:0,cat:'text',d:'ruby 注音文本',x:'在 ruby 中定义注音字符，如汉字上方的拼音。',a:[],e:'<ruby>你好<rt>nǐ hǎo</rt></ruby>',k:'rt 注音 拼音 ruby'},
+{t:'rp',c:0,cat:'text',d:'ruby 降级括号',x:'在不支持 ruby 的浏览器中显示括号，包裹备用内容。',a:[],e:'<ruby>汉<rp>(</rp><rt>hàn</rt><rp>)</rp></ruby>',k:'rp 括号 ruby 降级'},
+{t:'data',c:0,cat:'text',d:'机器可读数据',x:'将人类可读的文本与机器可读的值关联，value 属性提供数据，便于脚本处理。',a:[['value','机器可读的值']],e:'<data value="1088">热销爆款商品</data>',k:'data 数据 value 机器可读'},
+
+/* ---------- 文本样式 ---------- */
+{t:'strong',c:1,cat:'inline',d:'重要内容（粗体）',x:'语义上表示内容的重要性，浏览器默认加粗显示。强调"重要"时用 strong，而非单纯加粗。',a:[],e:'<p><strong>警告：</strong>操作不可恢复！</p>',k:'strong 加粗 重要 粗体 强调'},
+{t:'em',c:1,cat:'inline',d:'强调内容（斜体）',x:'语义上表示对内容的强调，浏览器默认斜体显示，重音在阅读时应落在该处。',a:[],e:'<p>请<em>务必</em>按时提交。</p>',k:'em 斜体 强调 语气'},
+{t:'b',c:0,cat:'inline',d:'粗体文本（无语义）',x:'将文本加粗显示，但不带任何强调语义，仅用于视觉上需要加粗的关键词、产品名等。',a:[],e:'<p>关键词：<b>前端开发</b></p>',k:'b 粗体 加粗 bold'},
+{t:'i',c:0,cat:'inline',d:'斜体文本（无语义）',x:'将文本斜体显示，无语义强调，常用于术语、外来语、想法、图标字体容器等。',a:[],e:'<p>术语 <i>HTML</i> 表示超文本标记语言。</p>',k:'i 斜体 italic 术语'},
+{t:'u',c:0,cat:'inline',d:'下划线文本',x:'为文本添加下划线，注意避免与链接样式混淆；语义上可用于标注拼写错误、专名。',a:[],e:'<p><u>这段文字带有下划线</u></p>',k:'u 下划线 underline'},
+{t:'s',c:0,cat:'inline',d:'删除线文本',x:'表示内容不再准确或不再相关（如原价），显示删除线；表示"编辑删除"语义时用 del。',a:[],e:'<p><s>原价 ￥199</s> 现价 ￥99</p>',k:'s 删除线 划线 原价'},
+{t:'del',c:0,cat:'inline',d:'已删除内容',x:'语义上表示文档中被删除的内容，显示删除线，cite 与 datetime 可记录删除原因与时间。',a:[['cite','删除原因说明 URL'],['datetime','删除时间']],e:'<p>特价：<del>￥200</del> <ins>￥99</ins></p>',k:'del 删除 已删除 修订'},
+{t:'ins',c:0,cat:'inline',d:'已插入内容',x:'语义上表示文档中新插入的内容，默认带下划线，常与 del 配合显示修改痕迹。',a:[['cite','插入原因 URL'],['datetime','插入时间']],e:'<p><del>旧文案</del> <ins>新文案</ins></p>',k:'ins 插入 新增 修订 下划线'},
+{t:'abbr',c:0,cat:'inline',d:'缩写词',x:'表示缩写或首字母缩略词，title 属性给出全称，鼠标悬停时显示。',a:[['title','缩写的完整含义']],e:'<p><abbr title="HyperText Markup Language">HTML</abbr> 是网页基础。</p>',k:'abbr 缩写 缩略词 全称 title'},
+{t:'bdi',c:0,cat:'inline',d:'双向文本隔离',x:'将一段文本隔离出来，使其文字方向不受周围双向文本（如阿拉伯语、希伯来语）影响。',a:[['dir','文本方向，默认 auto']],e:'<p>用户 <bdi>إيان</bdi> 已登录。</p>',k:'bdi 双向文本 方向 隔离 阿拉伯'},
+{t:'bdo',c:0,cat:'inline',d:'覆盖文本方向',x:'强制覆盖文本的显示方向，dir 属性指定 ltr（从左到右）或 rtl（从右到左）。',a:[['dir','ltr 或 rtl']],e:'<bdo dir="rtl">这段文字会反向显示</bdo>',k:'bdo 文本方向 反向 双向 rtl'},
+{t:'dfn',c:0,cat:'inline',d:'术语定义处',x:'表示一个术语在文档中首次被定义的位置，默认斜体，最近的父级段落即为其定义说明。',a:[['title','术语全称']],e:'<p><dfn>响应式设计</dfn>是指页面自适应不同屏幕尺寸。</p>',k:'dfn 定义 术语 概念'},
+
+/* ---------- 链接与图像 ---------- */
+{t:'a',c:1,cat:'link',d:'超链接',x:'最重要的标签之一，通过 href 创建指向其他页面、文件、邮箱、电话或页内锚点的链接，target 控制打开方式。',a:[['href','链接目标地址'],['target','打开方式：_blank 新标签页'],['rel','关系，如 noopener noreferrer'],['download','点击时下载而非打开']],e:'<a href="https://example.com" target="_blank">访问网站</a>\n<a href="mailto:a@b.com">发邮件</a>\n<a href="#section1">页内跳转</a>',k:'a 链接 超链接 anchor href 跳转 锚点'},
+{t:'img',c:1,cat:'link',d:'嵌入图片',x:'空元素，用于在页面中嵌入图片。src 指定图片路径，alt 提供替代文本（图片无法显示时显示，且对无障碍和 SEO 必需）。',a:[['src','图片地址'],['alt','替代文本（必填）'],['width/height','宽高，避免布局偏移'],['loading','lazy 懒加载']],e:'<img src="logo.png" alt="网站Logo" width="200" loading="lazy">',k:'img 图片 图像 图片标签 src alt 懒加载'},
+{t:'picture',c:0,cat:'link',d:'响应式图片容器',x:'为不同屏幕/设备提供多个图片源，浏览器选择最匹配的 source 加载，内部必须包含一个 img 作为兜底。',a:[],e:'<picture>\n  <source media="(min-width:800px)" srcset="big.jpg">\n  <img src="small.jpg" alt="响应式图片">\n</picture>',k:'picture 响应式图片 多图源 webp'},
+{t:'source',c:0,cat:'link',d:'媒体资源源',x:'空元素，为 picture、video、audio 指定多个可选资源（不同格式或尺寸），浏览器选用第一个支持的。',a:[['src/srcset','资源地址'],['type','MIME 类型，如 image/webp'],['media','媒体查询条件']],e:'<picture>\n  <source srcset="photo.webp" type="image/webp">\n  <img src="photo.jpg" alt="照片">\n</picture>',k:'source 资源源 格式 webp 视频源'},
+{t:'map',c:0,cat:'link',d:'图像映射',x:'定义客户端图像映射，即一张图片上包含多个可点击区域，配合 area 使用，name 属性与 img 的 usemap 关联。',a:[['name','映射名称，供 usemap 引用']],e:'<map name="mymap">\n  <area shape="rect" coords="0,0,50,50" href="a.html">\n</map>\n<img src="plan.jpg" usemap="#mymap" alt="平面图">',k:'map 图像映射 热点图 点击区域'},
+{t:'area',c:0,cat:'link',d:'图像映射热区',x:'空元素，定义 image map 中一个可点击区域，形状有 rect（矩形）、circle（圆形）、poly（多边形）。',a:[['shape','形状 rect/circle/poly'],['coords','区域坐标'],['href','链接目标'],['alt','替代文本']],e:'<area shape="circle" coords="100,100,50"\n      href="detail.html" alt="详情">',k:'area 热区 可点击区域 图像映射 地图'},
+
+/* ---------- 列表 ---------- */
+{t:'ul',c:1,cat:'list',d:'无序列表',x:'表示项目无顺序之分的列表，每项前默认显示圆点符号，常用于导航、菜单、功能列表。',a:[['type','（不推荐）项目符号样式']],e:'<ul>\n  <li>苹果</li>\n  <li>香蕉</li>\n</ul>',k:'ul 无序列表 列表 圆点 菜单'},
+{t:'ol',c:1,cat:'list',d:'有序列表',x:'表示有先后顺序的列表，每项前自动显示数字或字母序号，常用于步骤、排名。',a:[['type','序号类型 1/a/A/i/I'],['start','起始序号'],['reversed','倒序排列']],e:'<ol>\n  <li>第一步：注册</li>\n  <li>第二步：登录</li>\n</ol>',k:'ol 有序列表 序号 步骤 编号'},
+{t:'li',c:1,cat:'list',d:'列表项',x:'表示列表中的一个条目，必须放在 ul、ol 或 menu 中，可嵌套其他列表。',a:[['value','在 ol 中指定该项序号']],e:'<ul>\n  <li>前端\n    <ul><li>HTML</li><li>CSS</li></ul>\n  </li>\n</ul>',k:'li 列表项 条目 清单项'},
+{t:'dl',c:0,cat:'list',d:'描述列表',x:'描述列表（Definition List），包含一组"术语—描述"配对，用于名词解释、键值信息等，配合 dt、dd 使用。',a:[],e:'<dl>\n  <dt>HTML</dt>\n  <dd>超文本标记语言</dd>\n  <dt>CSS</dt>\n  <dd>层叠样式表</dd>\n</dl>',k:'dl 描述列表 定义列表 名词解释 键值'},
+{t:'dt',c:0,cat:'list',d:'描述列表的术语',x:'在 dl 中定义术语名称，相当于"键"。',a:[],e:'<dl>\n  <dt>浏览器</dt>\n  <dd>用于访问网页的软件</dd>\n</dl>',k:'dt 术语 名词 definition term'},
+{t:'dd',c:0,cat:'list',d:'术语的描述',x:'在 dl 中定义对 dt 术语的描述说明，相当于"值"，默认缩进显示。',a:[],e:'<dl>\n  <dt>CSS</dt>\n  <dd>层叠样式表，用于美化网页</dd>\n</dl>',k:'dd 描述 定义 说明 definition desc'},
+{t:'menu',c:0,cat:'list',d:'菜单列表',x:'语义上表示一组可执行命令的菜单（如右键菜单、工具栏），HTML 中表现与 ul 类似，用于交互命令集合。',a:[],e:'<menu>\n  <li><button>新建</button></li>\n  <li><button>保存</button></li>\n</menu>',k:'menu 菜单 命令列表 工具栏'},
+
+/* ---------- 表格 ---------- */
+{t:'table',c:1,cat:'table',d:'表格容器',x:'用于展示二维表格数据，内部包含 thead、tbody、tfoot、tr、th、td 等元素，不要再用于页面布局。',a:[['border','边框宽度（建议用 CSS）']],e:'<table>\n  <tr><th>姓名</th><th>年龄</th></tr>\n  <tr><td>张三</td><td>25</td></tr>\n</table>',k:'table 表格 数据表'},
+{t:'tr',c:1,cat:'table',d:'表格行',x:'定义表格中的一行，内部包含 th 或 td 单元格。',a:[],e:'<table>\n  <tr><th>表头1</th><th>表头2</th></tr>\n  <tr><td>数据1</td><td>数据2</td></tr>\n</table>',k:'tr 行 table row 表格行'},
+{t:'td',c:1,cat:'table',d:'表格单元格',x:'定义表格中的一个普通数据单元格（Table Data）。',a:[['colspan','横向合并列数'],['rowspan','纵向合并行数'],['headers','关联的表头 id']],e:'<tr>\n  <td colspan="2">跨两列的单元格</td>\n</tr>',k:'td 单元格 列 数据格 合并 colspan'},
+{t:'th',c:1,cat:'table',d:'表头单元格',x:'定义表格的表头单元格，默认加粗居中显示，scope 属性声明它是行表头还是列表头，利于无障碍。',a:[['scope','作用域 col/row'],['colspan/rowspan','合并单元格']],e:'<tr>\n  <th scope="col">姓名</th>\n  <th scope="col">成绩</th>\n</tr>',k:'th 表头 标题格 表头单元格 scope'},
+{t:'thead',c:0,cat:'table',d:'表格表头分组',x:'对表格的表头行进行分组，便于样式控制与打印时每页重复表头。',a:[],e:'<table>\n  <thead><tr><th>列名</th></tr></thead>\n  <tbody><tr><td>数据</td></tr></tbody>\n</table>',k:'thead 表头 表格头 分组'},
+{t:'tbody',c:0,cat:'table',d:'表格主体分组',x:'包裹表格的主体数据行，一个 table 可包含多个 tbody 用于对行分组。',a:[],e:'<tbody>\n  <tr><td>第一行数据</td></tr>\n  <tr><td>第二行数据</td></tr>\n</tbody>',k:'tbody 表体 数据行 表格主体'},
+{t:'tfoot',c:0,cat:'table',d:'表格表脚分组',x:'对表格底部的汇总行（如合计、平均值）进行分组。',a:[],e:'<tfoot>\n  <tr><td>合计</td><td>100</td></tr>\n</tfoot>',k:'tfoot 表脚 汇总 合计 表格底部'},
+{t:'caption',c:0,cat:'table',d:'表格标题',x:'为表格定义标题，必须放在 table 的第一个子元素位置。',a:[],e:'<table>\n  <caption>员工工资表</caption>\n  <tr><th>姓名</th></tr>\n</table>',k:'caption 表格标题 表名'},
+{t:'colgroup',c:0,cat:'table',d:'表格列分组',x:'对表格中的一列或多列进行分组，配合 col 统一设置列的样式或属性。',a:[['span','分组包含的列数']],e:'<colgroup>\n  <col style="background:#f3f4ff">\n  <col span="2">\n</colgroup>',k:'colgroup 列组 列分组'},
+{t:'col',c:0,cat:'table',d:'列属性定义',x:'空元素，为表格的列定义统一属性（宽度、对齐、背景等），放在 colgroup 中。',a:[['span','该定义作用的列数'],['style','列样式']],e:'<colgroup>\n  <col span="2" style="background:#eef0ff">\n</colgroup>',k:'col 列 列宽 列样式 column'},
+
+/* ---------- 表单 ---------- */
+{t:'form',c:1,cat:'form',d:'表单容器',x:'用于收集用户输入并提交数据的容器，action 指定提交地址，method 指定提交方式（GET/POST）。',a:[['action','提交地址 URL'],['method','提交方式 GET/POST'],['enctype','编码类型，文件上传用 multipart/form-data'],['novalidate','关闭浏览器默认校验']],e:'<form action="/api/login" method="post">\n  <input name="user">\n  <button type="submit">登录</button>\n</form>',k:'form 表单 提交 action method 登录'},
+{t:'input',c:1,cat:'form',d:'输入控件',x:'最常用的表单控件，空元素，通过 type 属性变换形态：文本、密码、复选框、单选框、文件、日期、颜色、范围等。',a:[['type','控件类型 text/password/checkbox/radio/file/date...'],['name','提交时的字段名'],['value','值'],['placeholder','提示文字'],['required','必填'],['checked','默认选中']],e:'<input type="text" name="username" placeholder="用户名" required>\n<input type="password" name="pwd">\n<input type="checkbox" checked> 记住我',k:'input 输入框 表单控件 文本框 密码框 复选框 单选 上传 type'},
+{t:'button',c:1,cat:'form',d:'按钮',x:'创建可点击按钮，type 决定行为：submit（提交表单，默认）、reset（重置）、button（普通按钮）。比 input 按钮更灵活，内部可放图标。',a:[['type','submit/reset/button'],['disabled','禁用'],['name/value','提交名与值']],e:'<button type="submit">提交</button>\n<button type="button" onclick="fn()">普通按钮</button>',k:'button 按钮 提交按钮 点击'},
+{t:'label',c:1,cat:'form',d:'表单标签文字',x:'为表单控件定义说明文字，用 for 关联控件 id 后，点击文字即可聚焦控件，是表单无障碍的关键。',a:[['for','关联控件的 id']],e:'<label for="email">邮箱：</label>\n<input id="email" type="email">',k:'label 标签 表单文字 关联 for 无障碍'},
+{t:'textarea',c:1,cat:'form',d:'多行文本输入',x:'用于输入多行文本（留言、简介等），rows/cols 设置行列，内容写在开闭标签之间。',a:[['rows','可见行数'],['cols','可见列数'],['placeholder','提示文字'],['maxlength','最大字符数']],e:'<textarea rows="4" cols="30"\n  placeholder="请输入留言"></textarea>',k:'textarea 多行 文本域 留言 文本框'},
+{t:'select',c:1,cat:'form',d:'下拉选择框',x:'创建下拉选择菜单，内部用 option 定义选项，可配合 optgroup 分组，加 multiple 支持多选。',a:[['name','字段名'],['multiple','允许多选'],['size','可见选项数'],['disabled','禁用']],e:'<select name="city">\n  <option value="bj">北京</option>\n  <option value="sh">上海</option>\n</select>',k:'select 下拉 选择框 下拉菜单 选项'},
+{t:'option',c:1,cat:'form',d:'下拉选项',x:'定义 select 或 datalist 中的一个选项，value 为提交值，标签内容为显示文字，selected 表示默认选中。',a:[['value','提交的值'],['selected','默认选中'],['disabled','禁选']],e:'<select>\n  <option value="1">选项一</option>\n  <option value="2" selected>选项二（默认）</option>\n</select>',k:'option 选项 下拉项 选择项'},
+{t:'optgroup',c:0,cat:'form',d:'选项分组',x:'将相关的 option 进行分组，label 属性显示为不可选的分组标题。',a:[['label','分组标题'],['disabled','整组禁用']],e:'<select>\n  <optgroup label="华东">\n    <option>上海</option><option>杭州</option>\n  </optgroup>\n</select>',k:'optgroup 选项分组 下拉分组'},
+{t:'fieldset',c:0,cat:'form',d:'表单控件分组',x:'将一组相关的表单控件包裹起来并显示边框，配合 legend 提供分组标题，利于长表单的组织与无障碍。',a:[['disabled','禁用组内所有控件'],['form','所属表单 id']],e:'<fieldset>\n  <legend>收货信息</legend>\n  <label>地址：<input></label>\n</fieldset>',k:'fieldset 分组 表单组 边框 field set'},
+{t:'legend',c:0,cat:'form',d:'fieldset 分组标题',x:'为 fieldset 定义标题说明，显示在分组边框的左上角。',a:[],e:'<fieldset>\n  <legend>个人信息</legend>\n  <input name="name">\n</fieldset>',k:'legend 分组标题 字段集标题'},
+{t:'datalist',c:0,cat:'form',d:'输入建议列表',x:'为 input 提供预定义的可选项，用户输入时自动联想补全，仍可自由输入，通过 input 的 list 属性关联。',a:[['id','列表 id，供 list 属性引用']],e:'<input list="cities" placeholder="选择城市">\n<datalist id="cities">\n  <option value="北京">\n  <option value="上海">\n</datalist>',k:'datalist 联想 自动补全 建议 输入提示'},
+{t:'output',c:0,cat:'form',d:'计算结果输出',x:'表示脚本计算的结果（如两个输入框的乘积），语义上是"输出值"，可被表单关联。',a:[['for','关联的控件 id'],['name','字段名'],['form','所属表单 id']],e:'<input type="range" id="r" value="50">\n<output for="r" id="out">50</output>',k:'output 输出 计算结果 表单输出'},
+{t:'progress',c:0,cat:'form',d:'进度条',x:'表示任务的完成进度，max 为总量、value 为当前进度；不设置 value 时显示为不确定的进行中状态。',a:[['value','当前进度值'],['max','最大值，默认 1']],e:'<progress value="70" max="100">70%</progress>',k:'progress 进度条 加载进度 完成度'},
+{t:'meter',c:0,cat:'form',d:'度量标尺',x:'表示已知范围内的标量度量，如电量、磁盘使用率、评分等，low/high/optimum 可定义区间颜色。',a:[['value','当前值'],['min/max','最小/最大值'],['low/high','低值/高值阈值'],['optimum','最佳值']],e:'<meter value="0.8">80%</meter>\n<meter value="6" min="0" max="10" low="3" high="8">6分</meter>',k:'meter 度量 标尺 电量 评分 仪表盘'},
+
+/* ---------- 多媒体与嵌入 ---------- */
+{t:'audio',c:1,cat:'media',d:'音频播放器',x:'在页面中嵌入音频，controls 显示播放控件，可包含多个 source 提供不同格式，浏览器选用支持的。',a:[['src','音频地址'],['controls','显示播放控件'],['autoplay','自动播放（通常被限制）'],['loop','循环播放'],['muted','静音'],['preload','预加载策略']],e:'<audio controls>\n  <source src="music.mp3" type="audio/mpeg">\n  您的浏览器不支持音频。\n</audio>',k:'audio 音频 声音 音乐 播放器 mp3'},
+{t:'video',c:1,cat:'media',d:'视频播放器',x:'在页面中嵌入视频，支持播放控件、封面图、循环、静音等属性，可用 source 提供多种格式（mp4/webm）。',a:[['src','视频地址'],['controls','播放控件'],['poster','封面图'],['width/height','尺寸'],['loop/muted/autoplay','循环/静音/自动播放']],e:'<video controls poster="cover.jpg" width="640">\n  <source src="movie.mp4" type="video/mp4">\n  <source src="movie.webm" type="video/webm">\n</video>',k:'video 视频 播放器 电影 mp4 webm'},
+{t:'iframe',c:1,cat:'media',d:'内联框架',x:'在当前页面中嵌入另一个网页（如地图、视频、第三方页面）。出于安全考虑，可用 sandbox 限制权限。',a:[['src','嵌入页面地址'],['width/height','宽高'],['sandbox','安全沙箱限制'],['loading','lazy 懒加载'],['allowfullscreen','允许全屏']],e:'<iframe src="https://example.com"\n  width="600" height="400"\n  loading="lazy" title="嵌入页面"></iframe>',k:'iframe 框架 内嵌 嵌入网页 地图 视频嵌入 frame'},
+{t:'canvas',c:0,cat:'media',d:'画布',x:'提供一块可通过 JavaScript 绘制图形、动画、游戏、图表的位图区域，本身只有 width/height 两个属性。',a:[['width/height','画布像素尺寸']],e:'<canvas id="c" width="300" height="150"></canvas>\n<scr'+'ipt>\n  var ctx = c.getContext("2d");\n  ctx.fillRect(20,20,80,50);\n<\/scr'+'ipt>',k:'canvas 画布 绘图 图形 动画 游戏 js绘制'},
+{t:'svg',c:0,cat:'media',d:'矢量图形',x:'可直接内联在 HTML 中绘制可缩放矢量图形（图标、图表、插画），放大不失真，可用 CSS 与 JS 控制。',a:[['width/height','尺寸'],['viewBox','视口坐标系']],e:'<svg width="100" height="100" viewBox="0 0 100 100">\n  <circle cx="50" cy="50" r="40"\n    fill="#4f46e5"/>\n</svg>',k:'svg 矢量图 图标 图形 矢量 内联svg'},
+{t:'math',c:0,cat:'media',d:'数学公式（MathML）',x:'MathML 的顶层元素，可直接内嵌在 HTML 中书写数学公式（分式、根号、上下标、矩阵等），现代浏览器原生支持渲染，无需插件，内部配合 mi、mn、mo、mfrac、msqrt 等 MathML 元素使用。',a:[['display','block 块级显示，默认行内']],e:'<math>\n  <mfrac>\n    <mi>a</mi><mi>b</mi>\n  </mfrac>\n</math>',k:'math 数学 公式 mathml 分式 根号 数学公式'},
+{t:'track',c:0,cat:'media',d:'字幕文本轨道',x:'空元素，为 video/audio 添加字幕、章节或描述文本轨道，kind 指定类型，src 指向 WebVTT 文件。',a:[['kind','subtitles/captions/descriptions'],['src','字幕文件（.vtt）'],['srclang','语言代码'],['label','轨道显示名'],['default','默认启用']],e:'<video controls>\n  <source src="v.mp4" type="video/mp4">\n  <track kind="subtitles" src="zh.vtt"\n         srclang="zh" label="中文" default>\n</video>',k:'track 字幕 文本轨道 vtt 无障碍'},
+{t:'embed',c:0,cat:'media',d:'嵌入外部内容',x:'空元素，用于嵌入外部资源（如 PDF、插件内容），现代网页中更推荐 object 或 iframe。',a:[['src','资源地址'],['type','MIME 类型'],['width/height','尺寸']],e:'<embed src="file.pdf" type="application/pdf"\n  width="600" height="500">',k:'embed 嵌入 插件 pdf 外部内容'},
+{t:'object',c:0,cat:'media',d:'嵌入外部对象',x:'嵌入外部资源（PDF、Flash 替代品等），内部可用 param 传参，不支持时显示兜底内容。',a:[['data','资源地址'],['type','MIME 类型'],['width/height','尺寸']],e:'<object data="book.pdf" type="application/pdf"\n  width="600" height="500">\n  您的浏览器无法显示 PDF。\n</object>',k:'object 嵌入对象 pdf 插件'},
+{t:'param',c:0,cat:'media',d:'object 参数（已过时）',x:'空元素，为 object 嵌入的对象传递参数（如自动播放、插件参数）。随插件内容的衰落，该标签已被标记为过时（deprecated），现代开发中很少使用。',a:[['name','参数名'],['value','参数值']],e:'<object data="player.swf">\n  <param name="autoplay" value="true">\n</object>',k:'param 参数 object参数 插件参数'},
+
+/* ---------- 脚本与交互 ---------- */
+{t:'script',c:1,cat:'script',d:'JavaScript 脚本',x:'用于嵌入或引用 JavaScript 代码。src 引用外部脚本文件；defer/async 控制加载执行时机；放在 body 末尾可避免阻塞渲染。',a:[['src','外部脚本地址'],['type','脚本类型，默认 text/javascript'],['defer','延迟到解析后执行'],['async','异步加载执行']],e:'<!-- 外部引入 -->\n<script src="app.js" defer><\/scr'+'ipt>\n<!-- 内嵌脚本 -->\n<scr'+'ipt>\n  console.log("页面加载完成");\n<\/scr'+'ipt>',k:'script 脚本 javascript js 引入 外部脚本 defer async'},
+{t:'noscript',c:0,cat:'script',d:'脚本不可用时的内容',x:'当浏览器不支持 JavaScript 或脚本被禁用时，显示 noscript 中的内容，用于给出提示或降级内容。',a:[],e:'<noscript>\n  <p>本页面需要启用 JavaScript 才能正常使用。</p>\n</noscript>',k:'noscript 禁用脚本 无脚本 降级 提示'},
+{t:'template',c:0,cat:'script',d:'内容模板',x:'定义页面加载时不会渲染的 HTML 模板片段，可通过 JavaScript 克隆（cloneNode）后插入文档，常用于组件化与列表渲染。',a:[['id','模板 id']],e:'<template id="tpl">\n  <li class="item">模板内容</li>\n</template>\n<scr'+'ipt>\n  var node = document.getElementById("tpl")\n    .content.cloneNode(true);\n<\/scr'+'ipt>',k:'template 模板 碎片 克隆 组件 template标签'},
+{t:'slot',c:0,cat:'script',d:'影子 DOM 插槽',x:'Web Components 技术的一部分，在 Shadow DOM 中标记一个位置，外部元素可通过 slot 属性"分发"到该位置显示。',a:[['name','具名插槽名称']],e:'<!-- 组件模板内 -->\n<slot name="header">默认头部</slot>\n<!-- 使用组件时 -->\n<my-card>\n  <h2 slot="header">自定义标题</h2>\n</my-card>',k:'slot 插槽 web components shadow dom 影子dom 占位'},
+
+/* ---------- 已废弃 / 不推荐 ---------- */
+{t:'font',c:0,cat:'obsolete',d:'（已废弃）字体样式',x:'旧标签，用于设置文字的字体、颜色、大小，HTML4 后已废弃，应使用 CSS 的 font-family、color、font-size 代替。',a:[['face/color/size','（废弃）字体/颜色/字号']],e:'<!-- 不推荐，请用 CSS -->\n<!-- <font color="red" size="4">文字</font> -->\n<span style="color:red;font-size:16px">文字</span>',k:'font 字体 废弃 旧标签 颜色 字号'},
+{t:'center',c:0,cat:'obsolete',d:'（已废弃）内容居中',x:'旧标签，使内部内容水平居中，已废弃，请使用 CSS 的 text-align:center 或 flex 布局代替。',a:[],e:'<!-- 不推荐 -->\n<!-- <center>居中文字</center> -->\n<div style="text-align:center">居中文字</div>',k:'center 居中 废弃 旧标签 对齐'},
+{t:'strike',c:0,cat:'obsolete',d:'（已废弃）删除线',x:'旧标签，为文字添加删除线，HTML4 起废弃，请使用 del、s 标签或 CSS text-decoration:line-through 代替。',a:[],e:'<!-- 不推荐 -->\n<!-- <strike>划线文字</strike> -->\n<del>划线文字</del>',k:'strike 删除线 废弃 划线 旧标签'},
+{t:'tt',c:0,cat:'obsolete',d:'（已废弃）电传字体',x:'旧标签，以等宽"电传打字机"字体显示文字，已废弃，请使用 code、kbd 或 CSS font-family:monospace 代替。',a:[],e:'<!-- 不推荐 -->\n<!-- <tt>等宽文字</tt> -->\n<code>等宽文字</code>',k:'tt 等宽 废弃 电传 打字机'},
+{t:'big',c:0,cat:'obsolete',d:'（已废弃）大字号',x:'旧标签，使文字比周围大一号，已废弃，请使用 CSS font-size 控制字号。',a:[],e:'<!-- 不推荐 -->\n<!-- <big>大文字</big> -->\n<span style="font-size:1.2em">大文字</span>',k:'big 大字号 废弃 放大 旧标签'},
+{t:'basefont',c:0,cat:'obsolete',d:'（已废弃）基准字体',x:'旧标签，设置整个文档的默认字体、字号和颜色，仅 IE 等旧浏览器支持，已废弃，请用 CSS 代替。',a:[['face/size/color','（废弃）默认字体设置']],e:'<!-- 已废弃，请勿使用 -->\n<!-- <basefont size="4" color="gray"> -->',k:'basefont 基准字体 废弃 默认字体'},
+{t:'acronym',c:0,cat:'obsolete',d:'（已废弃）缩写词',x:'旧标签，用于定义首字母缩写词，HTML5 中已废弃，请使用 abbr 标签代替。',a:[['title','缩写全称']],e:'<!-- 不推荐 -->\n<!-- <acronym title="CSS">CSS</acronym> -->\n<abbr title="Cascading Style Sheets">CSS</abbr>',k:'acronym 缩写 废弃 首字母'},
+{t:'applet',c:0,cat:'obsolete',d:'（已废弃）Java 小程序',x:'旧标签，用于嵌入 Java Applet 小程序，主流浏览器早已不再支持，请使用 object/embed 或现代前端技术代替。',a:[['code/width/height','（废弃）类名与尺寸']],e:'<!-- 已废弃，请勿使用 -->\n<!-- <applet code="Game.class" width="300" height="200"></applet> -->',k:'applet java 小程序 废弃 插件'},
+{t:'dir',c:0,cat:'obsolete',d:'（已废弃）目录列表',x:'旧标签，用于创建文件目录式列表，与 ul 类似，HTML4 起废弃，请使用 ul 代替。',a:[],e:'<!-- 不推荐 -->\n<!-- <dir><li>文件1</li></dir> -->\n<ul><li>文件1</li></ul>',k:'dir 目录列表 废弃 文件夹列表'},
+{t:'frame',c:0,cat:'obsolete',d:'（已废弃）框架窗口',x:'旧标签，在 frameset 中定义一个独立框架窗口（显示另一个页面），因无障碍与可用性问题已被废弃，请使用 iframe 代替。',a:[['src','框架页面地址'],['name','框架名'],['noresize','禁止调整大小']],e:'<!-- 已废弃，现代页面请用 iframe -->\n<iframe src="page.html"></iframe>',k:'frame 框架 框架窗口 废弃 旧布局'},
+{t:'frameset',c:0,cat:'obsolete',d:'（已废弃）框架集',x:'旧标签，用行列方式将浏览器窗口分割为多个 frame，替代 body 使用，已废弃，请用 iframe + CSS 布局代替。',a:[['rows/cols','（废弃）行/列分割比例']],e:'<!-- 已废弃的框架布局方式 -->\n<!-- <frameset cols="200,*">...</frameset> -->',k:'frameset 框架集 框架布局 废弃 分帧'},
+{t:'noframes',c:0,cat:'obsolete',d:'（已废弃）框架降级内容',x:'旧标签，在不支持 frame 框架的浏览器中显示提示内容，与 frameset 配合使用，已随框架一起废弃。',a:[],e:'<!-- 已废弃 -->\n<!-- <noframes>您的浏览器不支持框架</noframes> -->',k:'noframes 框架降级 废弃 不支持框架'},
+{t:'keygen',c:0,cat:'obsolete',d:'（已移除）密钥生成',x:'曾用于表单中生成公钥/私钥对（加密证书申请），因安全与兼容性问题已从 HTML 标准中移除，请勿使用。',a:[['name/keytype','（废弃）字段名与算法']],e:'<!-- 已从标准中移除，请勿使用 -->\n<!-- <keygen name="key"> -->',k:'keygen 密钥 加密 废弃 证书 表单'},
+{t:'marquee',c:0,cat:'obsolete',d:'（非标准）滚动文字',x:'非标准标签（IE 首创），创建滚动或走马灯效果的文字，从未进入正式标准，影响可读性，请使用 CSS 动画代替。',a:[['direction','滚动方向'],['behavior','滚动方式 scroll/slide/alternate'],['scrollamount','滚动速度']],e:'<!-- 非标准，推荐 CSS 动画 -->\n<!-- <marquee>滚动文字</marquee> -->\n<div class="marquee-css">滚动文字</div>',k:'marquee 滚动 走马灯 跑马灯 非标准 废弃'},
+{t:'xmp',c:0,cat:'obsolete',d:'（已废弃）预格式化文本',x:'旧标签，作用与 pre 类似，但内部内容完全不解析 HTML 标签。HTML5 已废弃，请使用 pre（配合 HTML 实体转义）代替。',a:[],e:'<!-- 不推荐 -->\n<!-- <xmp>原始文本 <b>不解析</b></xmp> -->\n<pre>&lt;b&gt;不解析&lt;/b&gt;</pre>',k:'xmp 预格式 废弃 原始文本'},
+{t:'nobr',c:0,cat:'obsolete',d:'（已废弃）禁止换行',x:'旧标签，使内部文本不自动换行，已废弃，请使用 CSS 的 white-space:nowrap 代替。',a:[],e:'<!-- 不推荐 -->\n<!-- <nobr>不换行的长文本</nobr> -->\n<span style="white-space:nowrap">不换行的长文本</span>',k:'nobr 不换行 废弃 nowrap'},
+{t:'noembed',c:0,cat:'obsolete',d:'（已废弃）嵌入降级内容',x:'旧标签，当 embed 嵌入内容无法显示时展示备用内容，已废弃，请使用 object 的内部兜底内容代替。',a:[],e:'<!-- 已废弃 -->\n<!-- <noembed>需要安装插件</noembed> -->\n<object data="movie.swf">\n  您的浏览器无法播放此内容。\n</object>',k:'noembed 嵌入降级 废弃 插件'},
+{t:'isindex',c:0,cat:'obsolete',d:'（已移除）搜索输入',x:'早期 HTML 的单行搜索输入元素，会自动生成输入框与提示文字，HTML5 之前已被移除，请使用 form + input 代替。',a:[['prompt','（废弃）提示文字']],e:'<!-- 已移除，请勿使用 -->\n<!-- <isindex prompt="请输入关键词"> -->\n<form><input type="search" placeholder="请输入关键词"></form>',k:'isindex 搜索输入 废弃 早期'},
+{t:'plaintext',c:0,cat:'obsolete',d:'（已移除）纯文本渲染',x:'极早期标签，使其后的所有内容按纯文本原样显示、不再解析任何标签，且无法闭合，早已从标准移除，请使用 pre 加实体转义代替。',a:[],e:'<!-- 已移除，请勿使用 -->\n<!-- <plaintext>之后的内容按纯文本显示 -->',k:'plaintext 纯文本 废弃 移除'},
+{t:'listing',c:0,cat:'obsolete',d:'（已废弃）等宽文本',x:'旧标签，以等宽字体显示内容并保留换行，行为类似 pre，HTML4 起废弃，请使用 pre 或 code 代替。',a:[],e:'<!-- 已废弃 -->\n<!-- <listing>等宽显示内容</listing> -->\n<pre>等宽显示内容</pre>',k:'listing 等宽 废弃 列表'},
+{t:'spacer',c:0,cat:'obsolete',d:'（非标准）空白间隔',x:'Netscape 私有标签，在页面中插入空白块或间隔，从未成为标准，请使用 CSS 的 margin/padding 代替。',a:[['type','（非标准）间隔类型'],['size','（非标准）间隔尺寸']],e:'<!-- 非标准，请用 CSS -->\n<!-- <spacer type="block" width="40"> -->\n<div style="margin:40px"></div>',k:'spacer 空白 间隔 非标准 netscape'},
+{t:'rb',c:0,cat:'obsolete',d:'（已移除）ruby 基础文本',x:'Ruby Base，用于在 ruby 中标记被注音的基础文字。已从 HTML 标准移除（浏览器仍兼容），现代写法直接在 ruby 中书写文字即可，无需 rb。',a:[],e:'<!-- 现代写法不再需要 rb -->\n<ruby>汉<rt>hàn</rt></ruby>',k:'rb ruby base 基础文本 注音 废弃'},
+{t:'rtc',c:0,cat:'obsolete',d:'（已移除）ruby 注音容器',x:'Ruby Text Container，用于包裹一层注音文本（可支持双层注音，如注音符号 + 拼音）。已从 HTML 标准移除（浏览器仍兼容），一般场景用 rt 即可。',a:[],e:'<!-- 双层注音（旧写法） -->\n<!-- <ruby><rb>漢</rb><rtc><rt>ㄏㄢˋ</rt></rtc></ruby> -->\n<ruby>汉<rt>hàn</rt></ruby>',k:'rtc ruby text container 注音容器 废弃'},
+{t:'menuitem',c:0,cat:'obsolete',d:'（已移除）菜单命令项',x:'曾用于在 menu 中定义一条可执行命令（配合右键菜单 contextmenu 使用），HTML5.2 起已从标准移除，现代浏览器不再支持，请使用 button 或 li 代替。',a:[['label','（废弃）命令名称'],['icon','（废弃）命令图标']],e:'<!-- 已移除，请勿使用 -->\n<!-- <menu type="context"><menuitem label="刷新"></menu></menu> -->\n<menu><li><button>刷新</button></li></menu>',k:'menuitem 菜单项 右键菜单 废弃 移除'},
+{t:'bgsound',c:0,cat:'obsolete',d:'（非标准）背景音乐',x:'IE 私有标签，为页面自动播放背景音乐，从未成为标准，请使用 audio 元素代替。',a:[['src','（非标准）音频地址'],['loop','（非标准）循环次数']],e:'<!-- 非标准，请用 audio -->\n<!-- <bgsound src="bg.mp3" loop="1"> -->\n<audio src="bg.mp3" loop controls></audio>',k:'bgsound 背景音乐 非标准 ie'},
+{t:'blink',c:0,cat:'obsolete',d:'（非标准）文字闪烁',x:'Netscape 私有标签，让文字闪烁显示，从未成为标准，且严重影响可读性与无障碍，如需类似效果请使用 CSS 动画代替。',a:[],e:'<!-- 非标准，请用 CSS 动画 -->\n<!-- <blink>闪烁文字</blink> -->\n<span class="blink-css">闪烁文字</span>',k:'blink 闪烁 非标准 废弃'},
+{t:'multicol',c:0,cat:'obsolete',d:'（非标准）多栏布局',x:'Netscape 私有标签，把内容分成多栏显示，从未进入标准，请使用 CSS 多栏布局（columns / column-count）代替。',a:[['cols','（非标准）栏数'],['gutter','（非标准）栏间距']],e:'<!-- 非标准，请用 CSS -->\n<!-- <multicol cols="2">内容</multicol> -->\n<div style="columns:2">内容</div>',k:'multicol 多栏 分栏 非标准 废弃'},
+{t:'nextid',c:0,cat:'obsolete',d:'（已移除）id 命名基准',x:'极早期标签，用于向 HTML 编辑器声明后续锚点 id 的命名基准，浏览器不渲染它，早已从标准移除，无现代替代需求。',a:[['n','（废弃）起始编号']],e:'<!-- 已移除，请勿使用 -->\n<!-- <nextid n="12"> -->',k:'nextid 编辑器 锚点 废弃 移除'},
+{t:'image',c:0,cat:'obsolete',d:'（已废弃）图片旧写法',x:'img 的历史误写别名，早期浏览器（Mosaic、IE）为兼容容错而支持，从未进入标准，请一律使用 img 标签。',a:[],e:'<!-- 错误写法，请勿使用 -->\n<!-- <image src="a.png"> -->\n<img src="a.png" alt="图片">',k:'image 图片 旧写法 废弃 img 别名'},
+{t:'content',c:0,cat:'obsolete',d:'（已移除）Shadow DOM v0 插槽',x:'Web Components 早期方案（Shadow DOM v0）的插槽元素，已被标准方案 slot 取代，现代浏览器已移除支持，请使用 slot。',a:[['select','（废弃）内容选择器']],e:'<!-- 旧方案，已移除 -->\n<!-- <content select=".title"></content> -->\n<slot name="title"></slot>',k:'content 插槽 shadow dom v0 废弃 slot'},
+{t:'element',c:0,cat:'obsolete',d:'（未标准化）自定义元素注册',x:'Web Components 早期实验方案中用于定义自定义元素的标签（配合 document.registerElement），从未进入正式标准，已被 Custom Elements V1 API（customElements.define）取代。',a:[['name/is','（废弃）元素名与继承对象']],e:'<!-- 从未标准化 -->\n<!-- <element name="my-el" extends="div">...</element> -->\n<!-- 现代写法使用 customElements.define() -->',k:'element 自定义元素 web components 废弃 注册'},
+{t:'shadow',c:0,cat:'obsolete',d:'（已移除）Shadow DOM v0 根插入点',x:'Shadow DOM v0 中标记 shadow 根插入位置的元素，已被浏览器移除支持，现代写法使用 Element.attachShadow() 创建 Shadow DOM。',a:[],e:'<!-- 旧方案，已移除 -->\n<!-- <shadow></shadow> -->\n<!-- 现代写法：host.attachShadow({ mode: "open" }) -->',k:'shadow shadow dom v0 根 废弃 attachShadow'}
+];
+
+/* =====================================================
+ * 渲染
+ * ===================================================== */
+(function(){
+  'use strict';
+
+  var navList = document.getElementById('navList');
+  var content = document.getElementById('content');
+  var searchInput = document.getElementById('searchInput');
+  var searchClear = document.getElementById('searchClear');
+  var searchTip = document.getElementById('searchTip');
+  var sidebar = document.getElementById('sidebar');
+  var overlay = document.getElementById('overlay');
+  var menuBtn = document.getElementById('menuBtn');
+  var backTop = document.getElementById('backTop');
+  var backTopLink = document.getElementById('backTopLink');
+
+  /* 统计每个分类的标签数 */
+  var catCount = {};
+  TAGS.forEach(function(tag){
+    catCount[tag.cat] = (catCount[tag.cat] || 0) + 1;
+  });
+  document.getElementById('tagTotal').textContent = TAGS.length;
+  document.getElementById('catTotal').textContent = CATEGORIES.length;
+
+  function el(tag, cls, text){
+    var node = document.createElement(tag);
+    if(cls) node.className = cls;
+    if(text != null) node.textContent = text;
+    return node;
+  }
+
+  /* 渲染左侧导航 */
+  CATEGORIES.forEach(function(cat){
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.setAttribute('data-target', cat.id);
+    a.innerHTML = '<span class="nav-dot"></span><span class="nav-name"></span><span class="nav-count"></span>';
+    a.querySelector('.nav-name').textContent = cat.name;
+    a.querySelector('.nav-count').textContent = catCount[cat.id] || 0;
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = document.getElementById('cat-' + cat.id);
+      if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+      closeSidebar();
+    });
+    li.appendChild(a);
+    navList.appendChild(li);
+  });
+
+  /* 渲染分类区块与卡片 */
+  var allCards = [];
+  CATEGORIES.forEach(function(cat){
+    var section = el('section', 'category');
+    section.id = 'cat-' + cat.id;
+
+    var head = el('div', 'cat-head');
+    var bar = el('div', 'cat-bar');
+    var h2 = el('h2');
+    h2.textContent = cat.name;
+    var en = el('span', 'cat-en');
+    en.textContent = cat.en;
+    var num = el('span', 'cat-num');
+    num.textContent = (catCount[cat.id] || 0) + ' 个标签';
+    head.appendChild(bar);
+    head.appendChild(h2);
+    head.appendChild(en);
+    head.appendChild(num);
+    section.appendChild(head);
+
+    var grid = el('div', 'cards');
+
+    TAGS.filter(function(t){ return t.cat === cat.id; }).forEach(function(tag){
+      var card = el('article', 'card');
+      card.setAttribute('data-name', (tag.search || tag.t).toLowerCase());
+      card.setAttribute('data-haystack',
+        (tag.t + ' ' + tag.d + ' ' + tag.x + ' ' + (tag.k || '') + ' ' +
+         (tag.a || []).map(function(p){ return p[0]; }).join(' ')).toLowerCase()
+      );
+
+      var top = el('div', 'card-top');
+      top.appendChild(el('span', 'tag-chip', '<' + tag.t + '>'));
+      if(tag.c) top.appendChild(el('span', 'badge hot', '常用'));
+      if(cat.id === 'obsolete') top.appendChild(el('span', 'badge dep', '已废弃'));
+      card.appendChild(top);
+
+      card.appendChild(el('div', 'desc', tag.d));
+      card.appendChild(el('div', 'detail', tag.x));
+
+      if(tag.a && tag.a.length){
+        var ul = el('ul', 'attrs');
+        tag.a.forEach(function(pair){
+          var li = document.createElement('li');
+          var code = el('code', null, pair[0]);
+          li.appendChild(code);
+          li.appendChild(document.createTextNode('— ' + pair[1]));
+          ul.appendChild(li);
+        });
+        card.appendChild(ul);
+      }
+
+      card.appendChild(el('div', 'example-label', '代码示例'));
+      var pre = el('pre', 'code-block');
+      pre.textContent = tag.e;
+      card.appendChild(pre);
+
+      grid.appendChild(card);
+      allCards.push({ card: card, section: section });
+    });
+
+    section.appendChild(grid);
+    content.appendChild(section);
+  });
+
+  /* ========== 搜索过滤 ========== */
+  function doSearch(){
+    var q = searchInput.value.trim().toLowerCase();
+    searchClear.classList.toggle('show', q.length > 0);
+
+    var matchCount = 0;
+    var sectionCount = {};
+
+    allCards.forEach(function(item){
+      var match = !q || item.card.getAttribute('data-haystack').indexOf(q) !== -1;
+      item.card.style.display = match ? '' : 'none';
+      if(match){
+        matchCount++;
+        sectionCount[item.section.id] = true;
+      }
+    });
+
+    CATEGORIES.forEach(function(cat){
+      var sec = document.getElementById('cat-' + cat.id);
+      if(sec) sec.style.display = (!q || sectionCount[sec.id]) ? '' : 'none';
+    });
+
+    if(q){
+      searchTip.style.display = 'block';
+      if(matchCount > 0){
+        searchTip.classList.remove('empty');
+        searchTip.textContent = '搜索 “' + searchInput.value.trim() + '” 共找到 ' + matchCount + ' 个相关标签';
+      }else{
+        searchTip.classList.add('empty');
+        searchTip.textContent = '没有找到与 “' + searchInput.value.trim() + '” 相关的标签，换个关键词试试（如：表单、图片、表格、链接）';
+      }
+    }else{
+      searchTip.style.display = 'none';
+    }
+  }
+  searchInput.addEventListener('input', doSearch);
+  searchClear.addEventListener('click', function(){
+    searchInput.value = '';
+    doSearch();
+    searchInput.focus();
+  });
+
+  /* ========== 移动端抽屉 ========== */
+  function openSidebar(){
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+  }
+  function closeSidebar(){
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+  menuBtn.addEventListener('click', openSidebar);
+  overlay.addEventListener('click', closeSidebar);
+
+  /* ========== 回到顶部 ========== */
+  function scrollTop(){
+    window.scrollTo({ top:0, behavior:'smooth' });
+  }
+  backTop.addEventListener('click', scrollTop);
+  backTopLink.addEventListener('click', function(e){
+    e.preventDefault();
+    scrollTop();
+    closeSidebar();
+  });
+  window.addEventListener('scroll', function(){
+    backTop.classList.toggle('show', window.pageYOffset > 400);
+  }, { passive:true });
+
+  /* ========== 滚动监听：高亮当前分类 ========== */
+  var navLinks = navList.querySelectorAll('a');
+  function setActive(id){
+    navLinks.forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('data-target') === id);
+    });
+  }
+  if('IntersectionObserver' in window){
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          setActive(entry.target.id.replace('cat-', ''));
+        }
+      });
+    }, { rootMargin:'-90px 0px -65% 0px', threshold:0 });
+    CATEGORIES.forEach(function(cat){
+      var sec = document.getElementById('cat-' + cat.id);
+      if(sec) observer.observe(sec);
+    });
+  }
+
+})();
+</script>
+</body>
+</html>
