@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript 速查手册 · JS Cheat Sheet</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1f2329;
+    --text-soft: #646a73;
+    --text-fade: #8a8f99;
+    --border: #e5e6eb;
+    --primary: #3370ff;
+    --primary-soft: #e8f0ff;
+    --code-bg: #2b303b;
+    --code-text: #cdd3de;
+    --shadow: 0 2px 8px rgba(0,0,0,.06);
+    --shadow-hover: 0 6px 18px rgba(0,0,0,.1);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+  }
+
+  /* 顶栏 */
+  header.topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 11px 20px;
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap;
+  }
+  header.topbar .brand {
+    font-weight: 700; font-size: 17px; color: var(--primary);
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  header.topbar .brand small { color: var(--text-fade); font-weight: 400; font-size: 12px; }
+  .search-wrap { flex: 1; min-width: 220px; max-width: 520px; position: relative; }
+  .search-wrap input {
+    width: 100%; padding: 9px 14px 9px 36px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; background: var(--card); outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .search-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+  .search-wrap svg {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: var(--text-fade); pointer-events: none;
+  }
+  .search-count { font-size: 12px; color: var(--text-fade); white-space: nowrap; }
+  .clear-btn {
+    background: none; border: none; color: var(--text-fade);
+    cursor: pointer; font-size: 12px; padding: 4px 8px; border-radius: 4px;
+    display: none;
+  }
+  .clear-btn:hover { color: var(--text); background: var(--bg); }
+
+  /* 布局 */
+  .layout { display: flex; max-width: 1320px; margin: 0 auto; }
+
+  /* 侧栏 */
+  aside.sidebar {
+    width: 260px; flex-shrink: 0;
+    position: sticky; top: 57px;
+    height: calc(100vh - 57px);
+    overflow-y: auto;
+    padding: 14px 10px 24px 18px;
+    border-right: 1px solid var(--border);
+    background: var(--card);
+  }
+  aside.sidebar::-webkit-scrollbar { width: 6px; }
+  aside.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  aside.sidebar h3 {
+    font-size: 11px; color: var(--text-fade);
+    text-transform: uppercase; letter-spacing: .5px;
+    margin: 12px 8px 6px; font-weight: 600;
+  }
+  aside.sidebar a {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; color: var(--text-soft);
+    text-decoration: none; font-size: 13px;
+    border-radius: 6px; transition: background .15s, color .15s;
+  }
+  aside.sidebar a:hover { background: var(--primary-soft); color: var(--primary); }
+  aside.sidebar a.active { background: var(--primary-soft); color: var(--primary); font-weight: 600; }
+  aside.sidebar a .ico { font-size: 14px; width: 18px; text-align: center; }
+  aside.sidebar a .cnt {
+    margin-left: auto; font-size: 11px; color: var(--text-fade);
+    background: var(--bg); padding: 1px 6px; border-radius: 8px;
+  }
+  aside.sidebar a.active .cnt { background: #fff; color: var(--primary); }
+
+  .sidebar-toggle {
+    display: none; position: fixed; bottom: 20px; right: 20px; z-index: 200;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--primary); color: #fff; border: none; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(51,112,255,.4);
+    align-items: center; justify-content: center;
+  }
+  .sidebar-toggle svg { width: 22px; height: 22px; }
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 140;
+  }
+  .sidebar-overlay.show { display: block; }
+
+  /* 主体 */
+  main.content { flex: 1; min-width: 0; padding: 22px 26px 80px; }
+  .intro {
+    background: linear-gradient(135deg, #3370ff 0%, #5b8def 100%);
+    color: #fff; border-radius: 12px;
+    padding: 22px 26px; margin-bottom: 24px;
+    box-shadow: 0 4px 14px rgba(51,112,255,.2);
+  }
+  .intro h1 { font-size: 22px; margin-bottom: 6px; font-weight: 700; }
+  .intro p { font-size: 13.5px; opacity: .92; }
+  .intro .stats { margin-top: 10px; display: flex; gap: 18px; flex-wrap: wrap; font-size: 12px; opacity: .9; }
+  .intro .stats b { font-size: 15px; font-weight: 700; }
+
+  section.category { margin-bottom: 32px; scroll-margin-top: 72px; }
+  section.category > h2 {
+    font-size: 18px; font-weight: 700;
+    padding: 6px 0 10px; margin-bottom: 12px;
+    border-bottom: 2px solid var(--primary);
+    display: flex; align-items: center; gap: 8px;
+  }
+  section.category > h2 .ico { font-size: 20px; }
+  section.category > h2 .badge {
+    font-size: 11px; font-weight: 500; color: var(--text-fade);
+    background: var(--bg); padding: 2px 8px; border-radius: 10px;
+  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+
+  /* 卡片 */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 13px 15px;
+    box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s, border-color .15s;
+    display: flex; flex-direction: column;
+  }
+  .card:hover { transform: translateY(-1px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+  .card-head {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .card-head .name {
+    font-family: "SF Mono", "JetBrains Mono", Consolas, Monaco, monospace;
+    font-size: 13.5px; font-weight: 700; color: var(--primary);
+  }
+  .card-head .tag {
+    font-size: 10px; padding: 1px 6px; border-radius: 4px;
+    background: var(--bg); color: var(--text-fade);
+  }
+  .card-head .tag.hot { background: #fff1e6; color: #e3680a; }
+  .card-head .tag.common { background: #e8f0ff; color: var(--primary); }
+  .card-head .tag.rare { background: #f0f0f0; color: #909399; }
+  .card-head .tag.deprecated { background: #fde2e2; color: #c45656; }
+  .card-desc { color: var(--text-soft); font-size: 12.5px; margin-bottom: 8px; flex: 1; }
+  pre.code {
+    background: var(--code-bg); color: var(--code-text);
+    border-radius: 6px; padding: 9px 11px; overflow-x: auto;
+    font-family: "SF Mono", "JetBrains Mono", Consolas, Monaco, monospace;
+    font-size: 12px; line-height: 1.55;
+    margin: 0;
+  }
+  pre code .kw { color: #c678dd; }
+  pre code .str { color: #98c379; }
+  pre code .num { color: #d19a66; }
+  pre code .com { color: #7d8799; font-style: italic; }
+  pre code .fn { color: #61afef; }
+  pre code .prop { color: #e5c07b; }
+
+  .empty-tip {
+    text-align: center; color: var(--text-fade);
+    padding: 60px 20px; font-size: 15px; display: none;
+  }
+  .empty-tip.show { display: block; }
+  .hidden { display: none !important; }
+
+  footer {
+    text-align: center; color: var(--text-fade);
+    padding: 30px 20px; font-size: 12px;
+  }
+  footer a { color: var(--primary); text-decoration: none; }
+
+  /* 响应式 */
+  @media (max-width: 860px) {
+    aside.sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 80%; max-width: 300px;
+      height: 100vh; z-index: 150;
+      transform: translateX(-100%);
+      transition: transform .25s ease;
+      padding-top: 60px;
+    }
+    aside.sidebar.open { transform: translateX(0); }
+    .sidebar-toggle { display: flex; }
+    main.content { padding: 16px 14px 80px; }
+    header.topbar { padding: 10px 14px; gap: 10px; }
+    header.topbar .brand { font-size: 15px; }
+    header.topbar .brand small { display: none; }
+    .intro { padding: 18px; }
+    .intro h1 { font-size: 19px; }
+    .grid { grid-template-columns: 1fr; gap: 10px; }
+    section.category > h2 { font-size: 16px; }
+  }
+  @media (max-width: 480px) {
+    .search-count { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">📘 JS 速查手册 <small>JavaScript Cheat Sheet</small></div>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="7"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+    <input id="search" type="text" placeholder="搜索 JS 语句 / 方法 / API…" autocomplete="off">
+  </div>
+  <div class="search-count" id="searchCount"></div>
+  <button class="clear-btn" id="clearBtn">清除</button>
+</header>
+
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="目录">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="21" y2="18"></line>
+  </svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <h3>分类目录</h3>
+    <div id="navList"></div>
+  </aside>
+
+  <main class="content" id="content">
+    <div class="intro">
+      <h1>JavaScript 速查手册</h1>
+      <p>覆盖语句、内置对象、DOM、BOM、ES6+、异步等核心知识，按热度排序，支持搜索快速定位。</p>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div id="sections"></div>
+    <div class="empty-tip" id="emptyTip">未找到匹配项，换个关键词试试 ✨</div>
+    <footer>📘 JavaScript 速查手册 · 数据基于 ES2023 标准 · 仅供参考</footer>
+  </main>
+</div>
+
+<script>
+/* ============================
+ *  数据：JS 知识体系（分类+条目）
+ *  条目格式: [name, tag, desc, code]
+ *  tag: hot(常用) / common(普通) / rare(少见) / deprecated(已废弃)
+ * ============================ */
+const DATA = [
+  {
+    id: 'variables', icon: '📦', title: '变量与声明',
+    items: [
+      ['let', 'common', '声明块级作用域的局部变量，可重新赋值。存在暂时性死区（TDZ），声明前访问会报错。', 'let count = 0;\ncount = 5;'],
+      ['const', 'common', '声明块级作用域的常量，必须初始化。基本类型不可改；引用类型绑定不可变但内部可改。', 'const PI = 3.14;\nconst arr = [1,2];\narr.push(3); // OK'],
+      ['var', 'common', '函数级/全局作用域变量，会被提升（hoisting），初始为 undefined。现代代码建议用 let/const。', 'var x = 1;\nfunction f(){ var y = 2; }'],
+      ['解构赋值', 'common', '从数组/对象按模式提取值。支持默认值、剩余元素、嵌套解构、变量交换。', 'const {a, b=2, ...rest} = obj;\nconst [x, , z] = [1,2,3];\n// 变量交换（需要提前用 let 声明）\nlet i = 1, j = 2;\n[i, j] = [j, i];'],
+      ['import', 'common', '静态导入 ES 模块的导出绑定。支持具名/默认/命名空间/动态 import()。', 'import React from "react";\nimport {useState} from "react";\nconst m = await import("./m");'],
+      ['export', 'common', '从 ES 模块导出值（变量/函数/类），支持具名导出与默认导出。', 'export const PI = 3.14;\nexport default function App(){}'],
+    ]
+  },
+  {
+    id: 'control', icon: '🔀', title: '控制流程',
+    items: [
+      ['if...else', 'hot', '根据条件真假执行分支，支持 else if 链。条件会被强制转布尔。', 'if (x > 0) pos();\nelse if (x < 0) neg();\nelse zero();'],
+      ['switch', 'common', '多分支选择，用 === 严格匹配 case；配合 break 阻止穿透，default 处理其他。', 'switch(color){\n  case "red": a(); break;\n  case "blue": b(); break;\n  default: d();\n}'],
+      ['三元运算符 ? :', 'hot', 'condition ? a : b，根据条件返回其一表达式。可嵌套但建议适度。', 'const m = age>=18 ? "成年" : "未成年";'],
+      ['try...catch...finally', 'common', '捕获同步运行时错误。try 抛错被 catch 捕获；finally 必执行。不捕获异步错误。', 'try { risky(); }\ncatch(e){ console.error(e); }\nfinally { cleanup(); }'],
+      ['throw', 'common', '主动抛出异常（建议 Error 对象）。throw 后代码不再执行。', 'function div(a, b){\n  if (b === 0) throw new RangeError("除零");\n  return a / b;\n}'],
+      ['空语句 ;', 'rare', '仅分号，不执行任何操作。多用于循环体为空时占位。', 'let i = 0;\n// 空循环体，每次仅执行 while 的条件与 i++\nwhile (++i < 5) ;\nconsole.log(i); // 5'],
+      ['with', 'deprecated', '把对象属性扩展到块作用域。已废弃：严格模式禁用，性能/可读性差。', 'with (obj) {\n  a = 1; // 等于 obj.a = 1\n}'],
+    ]
+  },
+  {
+    id: 'iteration', icon: '🔁', title: '循环与迭代',
+    items: [
+      ['for', 'hot', 'C 风格循环：初始化; 条件; 后置。三段可省但分号不可。', 'for (let i=0; i<5; i++){\n  console.log(i);\n}'],
+      ['for...of', 'hot', '遍历可迭代对象（Array/String/Map/Set）的元素值。不能用于普通对象。', 'for (const item of arr) {\n  console.log(item);\n}'],
+      ['for...in', 'common', '遍历对象自身和继承的可枚举属性（键名）。不建议用于数组。', 'for (const k in obj) {\n  if (obj.hasOwnProperty(k)) console.log(k);\n}'],
+      ['while', 'hot', '先判断后执行的循环。条件为 true 时反复执行。', 'let n = 0;\nwhile (n < 3) n++;'],
+      ['do...while', 'common', '先执行后判断，至少执行一次。结尾分号不可省。', 'let i = 0;\ndo { i++; } while (i < 5);'],
+      ['for await...of', 'rare', '异步遍历异步可迭代对象（异步生成器、流），逐个 await。', 'for await (const chunk of stream) {\n  console.log(chunk);\n}'],
+      ['break', 'common', '跳出当前最内层循环或 switch；可配合 label 跳多层。', 'for (const v of arr) {\n  if (v === t) break;\n}'],
+      ['continue', 'common', '跳过本次循环剩余语句，进入下一次迭代。可配 label。', 'for (let i=0;i<10;i++){\n  if (i%2) continue;\n  console.log(i);\n}'],
+      ['label', 'rare', '为语句打标签，供 break/continue 引用，跳出多层循环。', 'outer:\nfor (let i=0;i<3;i++)\n  for (let j=0;j<3;j++)\n    if (i+j>3) break outer;'],
+    ]
+  },
+  {
+    id: 'function', icon: '⚡', title: '函数与异步',
+    items: [
+      ['function', 'hot', '声明函数。函数声明会被提升，可在声明前调用。', 'function add(a, b) {\n  return a + b;\n}'],
+      ['return', 'hot', '终止函数并返回值。无表达式的 return 返回 undefined。', 'function f(x){ return x * 2; }'],
+      ['箭头函数 =>', 'hot', 'ES6 简洁函数写法。无自己的 this/arguments/super/new.target；单表达式可省 return 和 {}。', 'const sq = x => x * x;\nconst add = (a, b) => a + b;\nconst log = () => console.log("hi");'],
+      ['async function', 'hot', '声明异步函数，函数体内可用 await，返回值自动包成 Promise。', 'async function fetch(){\n  const r = await fetch(url);\n  return r.json();\n}'],
+      ['await', 'hot', '暂停 async 函数等待 Promise 完成；fulfilled 取值，rejected 抛错（需 try/catch）。', 'async function load(){\n  const data = await api.get();\n  return data;\n}'],
+      ['function*', 'rare', '声明生成器函数，返回 Generator，可多次 yield 暂停再恢复。', 'function* gen(){\n  yield 1;\n  yield 2;\n  yield 3;\n}'],
+      ['yield', 'rare', '生成器中产出值并暂停；可接收 next() 传入参数。yield* 委托另一个可迭代对象。', 'function* g(){\n  const x = yield 1;\n  yield* [2, 3];\n}'],
+      ['async function*', 'rare', '声明异步生成器，可 yield Promise，需用 for await...of 遍历。', 'async function* gen(){\n  yield await fetch("/a");\n}'],
+    ]
+  },
+  {
+    id: 'object', icon: '🧩', title: '对象与类',
+    items: [
+      ['class', 'common', '声明一个类，含 constructor、方法、字段。类不提升；可被 extends 继承。', 'class Animal {\n  constructor(name){ this.name = name; }\n  speak(){ return this.name; }\n}'],
+      ['extends', 'common', '类继承父类（类或含 [[Construct]] 的函数）。子类构造函数中需调用 super。', 'class Dog extends Animal {\n  speak(){ return "woof"; }\n}'],
+      ['super', 'common', '调用父类的构造函数或方法。子类 constructor 在使用 this 前必须先调 super(...)。', 'class Cat extends Animal {\n  constructor(){ super("cat"); }\n}'],
+      ['new', 'hot', '以构造函数/类创建实例，执行 [[Construct]] 并把 this 绑到新对象。', 'const d = new Dog("Rex");'],
+      ['this', 'common', '当前执行上下文对象。值随调用方式变化（方法/构造/箭头/bind/call/apply）。', 'const obj = {\n  name: "x",\n  get(){ return this.name; }\n};'],
+      ['typeof', 'common', '运算符：返回操作数类型的字符串。null 返回 "object"（历史 bug）。', 'typeof "a";    // "string"\ntypeof null;   // "object"\ntypeof f;      // "function"'],
+      ['instanceof', 'common', '检查对象原型链上是否存在构造函数的 prototype。', '[] instanceof Array;        // true\nnew Date() instanceof Date; // true'],
+      ['delete', 'common', '删除对象自身属性。不可删除 var 声明变量；严格模式不可配置属性会抛错。', 'const o = {a:1};\ndelete o.a;\nconsole.log(o.a); // undefined'],
+      ['in', 'common', '判断对象中是否存在某属性（含原型链）。', '"toString" in {};  // true\n"length" in [];    // true'],
+    ]
+  },
+  {
+    id: 'array', icon: '📋', title: 'Array 数组',
+    items: [
+      ['map', 'hot', '对每个元素调用回调，返回新数组。不改原数组。', 'const r = [1,2,3].map(x => x*2);\n// [2,4,6]'],
+      ['filter', 'hot', '过滤出回调返回 truthy 的元素，返回新数组。', 'const r = [1,2,3,4].filter(x => x>2);\n// [3,4]'],
+      ['reduce', 'hot', '从左到右累计：回调 (acc, cur, idx, arr)。初始值可选但建议传。', 'const sum = [1,2,3].reduce((a,b)=>a+b, 0);\n// 6'],
+      ['forEach', 'hot', '遍历每个元素执行回调，无返回值（不能用 break）。', '[1,2,3].forEach((v,i) => {\n  console.log(i, v);\n});'],
+      ['find', 'common', '返回第一个满足回调的元素，无则 undefined。', 'const u = users.find(u => u.id === 5);'],
+      ['findIndex', 'common', '返回第一个满足回调的元素索引，无则 -1。', 'const i = arr.findIndex(x => x>10);'],
+      ['some', 'common', '是否有元素满足回调（返回 boolean，遇到 true 即停）。', 'const has = arr.some(x => x > 0);'],
+      ['every', 'common', '是否所有元素都满足回调（遇到 false 即停）。', 'const all = arr.every(x => x > 0);'],
+      ['includes', 'hot', '判断数组是否包含某值（NaN 也能正确匹配）。', '[1,2,3].includes(2);   // true\n[NaN].includes(NaN);   // true'],
+      ['indexOf', 'common', '返回某值首次出现的索引，无则 -1。不能识别 NaN。', '[1,2,3].indexOf(2);   // 1'],
+      ['lastIndexOf', 'common', '从后向前找，返回某值最后出现的索引，无则 -1。', '[1,2,2,3].lastIndexOf(2); // 2'],
+      ['slice', 'common', '返回 [start, end) 的浅拷贝片段，不改原数组。', 'const r = [1,2,3,4].slice(1,3);\n// [2,3]'],
+      ['splice', 'common', '在指定位置删除/插入元素，会修改原数组，返回被删元素。', 'const a = [1,2,3];\na.splice(1, 1, "x");\n// a = [1,"x",3]'],
+      ['push', 'hot', '末尾追加元素，返回新长度。', 'const a = [1];\na.push(2, 3); // 3'],
+      ['pop', 'hot', '删除并返回末尾元素。空数组返回 undefined。', 'const a = [1,2];\na.pop(); // 2'],
+      ['shift', 'common', '删除并返回首元素，其余前移。', 'const a = [1,2];\na.shift(); // 1'],
+      ['unshift', 'common', '在开头插入元素，返回新长度。', 'const a = [2];\na.unshift(0, 1); // 3'],
+      ['concat', 'common', '合并数组（含可迭代），返回新数组，不改原数组。', '[1].concat([2], [3]); // [1,2,3]'],
+      ['join', 'common', '用分隔符把元素连成字符串。', '[1,2,3].join("-"); // "1-2-3"'],
+      ['reverse', 'common', '反转数组（原地修改），返回原数组引用。', 'const a = [1,2,3];\na.reverse(); // [3,2,1]'],
+      ['sort', 'common', '原地排序。默认按 UTF-16 码点比较，数字需传比较函数。', '[3,1,2].sort((a,b)=>a-b);\n// [1,2,3]'],
+      ['flat', 'rare', '按指定深度拍平嵌套数组，默认 1 层。', '[1,[2,[3]]].flat(2);\n// [1,2,3]'],
+      ['flatMap', 'rare', '先 map 再 flat(1)，等价 flat(map().)，常用且高效。', '[1,2].flatMap(x => [x, x*10]);\n// [1,10,2,20]'],
+      ['fill', 'rare', '用固定值填充 [start, end) 区间，会修改原数组。', 'const a = [0,0,0];\na.fill(7, 0, 2);\n// [7,7,0]'],
+      ['copyWithin', 'rare', '把数组内部一段拷贝到另一段位置，不改长度。', '[1,2,3,4,5].copyWithin(0,3);\n// [4,5,3,4,5]'],
+      ['at', 'rare', '按索引取元素，支持负索引（从末尾数）。', '[1,2,3].at(-1); // 3'],
+      ['keys / values / entries', 'rare', '返回键/值/键值对的迭代器对象。', 'for (const [i,v] of arr.entries()) {\n  console.log(i, v);\n}'],
+      ['Array.from', 'common', '把类数组/可迭代转成真数组，可带 map 函数。', 'Array.from("abc");          // ["a","b","c"]\nArray.from([1,2], x=>x*2); // [2,4]'],
+      ['Array.of', 'rare', '用参数列表创建数组，避免 new Array(n) 的歧义。', 'Array.of(7);     // [7]\nnew Array(7);    // [empty×7]'],
+      ['Array.isArray', 'hot', '判断是否为数组，跨 iframe 也准确。', 'Array.isArray([]);  // true\nArray.isArray({});  // false'],
+    ]
+  },
+  {
+    id: 'string', icon: '🔤', title: 'String 字符串',
+    items: [
+      ['length', 'hot', '字符串长度（UTF-16 单元数，emoji 等可能不准）。', '"abc".length; // 3'],
+      ['charAt', 'common', '返回指定位置字符。越界返回空字符串。', '"abc".charAt(1); // "b"'],
+      ['charCodeAt', 'common', '返回指定位置 UTF-16 码单元值。', '"A".charCodeAt(0); // 65'],
+      ['codePointAt', 'rare', '返回指定位置 Unicode 码点，能正确处理代理对。', '"𝌆".codePointAt(0); // 119558'],
+      ['indexOf', 'common', '返回子串首次出现的索引，无则 -1。', '"abc".indexOf("b"); // 1'],
+      ['includes', 'hot', '判断是否包含子串（返回 boolean）。', '"hello".includes("ell"); // true'],
+      ['startsWith', 'common', '判断是否以指定前缀开头。', '"abc".startsWith("ab"); // true'],
+      ['endsWith', 'common', '判断是否以指定后缀结尾。', '"abc".endsWith("bc"); // true'],
+      ['slice', 'common', '返回 [start, end) 子串，支持负索引。', '"abcdef".slice(1,4);  // "bcd"\n"abc".slice(-1);    // "c"'],
+      ['substring', 'common', '类似 slice，但参数会自动 swap，不支持负索引。', '"abc".substring(2,0); // "ab"'],
+      ['split', 'hot', '按分隔符拆分为数组，可限制长度。', '"a,b,c".split(",");  // ["a","b","c"]'],
+      ['replace', 'common', '替换第一个匹配（字符串或正则）。', '"a-b".replace("-", "_"); // "a_b"'],
+      ['replaceAll', 'common', '替换所有匹配（ES2021）。', '"a-b-c".replaceAll("-", "_"); // "a_b_c"'],
+      ['match', 'common', '用正则匹配，返回结果数组或 null。', '"2024".match(/\\d+/); // ["2024"]'],
+      ['matchAll', 'rare', '返回所有匹配的迭代器（须带 g 标志）。', 'for (const m of "a1b2".matchAll(/\\w(\\d)/g)){}\n'],
+      ['search', 'rare', '返回首个匹配的索引，无则 -1。', '"abc".search(/b/); // 1'],
+      ['trim', 'common', '去除两端空白字符，返回新字符串。', '" a ".trim(); // "a"'],
+      ['trimStart / trimEnd', 'rare', '只去除一端空白。', '" a ".trimStart(); // "a "'],
+      ['toUpperCase', 'common', '转大写。', '"abc".toUpperCase(); // "ABC"'],
+      ['toLowerCase', 'common', '转小写。', '"ABC".toLowerCase(); // "abc"'],
+      ['padStart', 'common', '从左侧用指定字符填充到指定长度。', '"5".padStart(3, "0"); // "005"'],
+      ['padEnd', 'rare', '从右侧填充到指定长度。', '"5".padEnd(3, "0"); // "500"'],
+      ['repeat', 'rare', '重复字符串 n 次。', '"ab".repeat(3); // "ababab"'],
+      ['at', 'rare', '按索引取字符，支持负索引。', '"abc".at(-1); // "c"'],
+      ['concat', 'rare', '拼接字符串，多用 + 或模板字符串。', '"a".concat("b","c"); // "abc"'],
+      ['normalize', 'rare', 'Unicode 规范化（NFC/NFD/NFKC/NFKD）。', '"café".normalize("NFC");'],
+      ['模板字符串 ` `', 'hot', '反引号字符串，支持多行与 ${} 插值。', 'const name = "Tom";\n`Hi, ${name}!`; // "Hi, Tom!"'],
+      ['String.fromCharCode', 'rare', '由多个 UTF-16 码点构造字符串。', 'String.fromCharCode(65,66); // "AB"'],
+      ['String.fromCodePoint', 'rare', '由码点构造字符串，能处理代理对。', 'String.fromCodePoint(0x1F600); // "😀"'],
+    ]
+  },
+  {
+    id: 'object-methods', icon: '🗂️', title: 'Object 对象方法',
+    items: [
+      ['Object.keys', 'hot', '返回对象自身可枚举属性名数组。', 'Object.keys({a:1,b:2});\n// ["a","b"]'],
+      ['Object.values', 'common', '返回对象自身可枚举属性值数组。', 'Object.values({a:1,b:2});\n// [1,2]'],
+      ['Object.entries', 'common', '返回 [key, value] 二维数组。', 'Object.entries({a:1});\n// [["a",1]]'],
+      ['Object.assign', 'common', '把多个源对象的可枚举属性合并到目标对象（浅拷贝）。', 'const t = {};\nObject.assign(t, {a:1}, {b:2});'],
+      ['Object.fromEntries', 'rare', '把键值对列表转成对象，与 entries 互逆。', 'Object.fromEntries([["a",1]]);\n// {a:1}'],
+      ['Object.freeze', 'common', '冻结对象：不可增删改属性（浅冻结）。', 'const o = Object.freeze({a:1});\n// o.a = 2; (静默失败或抛错)'],
+      ['Object.isFrozen', 'rare', '判断对象是否被冻结。', 'Object.isFrozen(Object.freeze({})); // true'],
+      ['Object.seal', 'rare', '密封对象：不可增删，但可改现有属性。', 'const o = Object.seal({a:1});\no.a = 2;  // OK\n// o.b = 3; (失败)'],
+      ['Object.create', 'rare', '以指定原型创建新对象。', 'const o = Object.create({greet(){return "hi";}});\no.greet(); // "hi"'],
+      ['Object.getPrototypeOf', 'rare', '获取对象原型。', 'Object.getPrototypeOf([]) === Array.prototype;'],
+      ['Object.setPrototypeOf', 'rare', '设置对象原型（性能差，慎用）。', 'Object.setPrototypeOf(obj, proto);'],
+      ['Object.defineProperty', 'rare', '精确添加/修改属性，可控制 enumerable/writable/getter 等。', 'Object.defineProperty(o, "a", {\n  value: 1, writable: false\n});'],
+      ['Object.defineProperties', 'rare', '一次定义多个属性。', 'Object.defineProperties(o, {\n  a:{value:1}, b:{value:2}\n});'],
+      ['Object.getOwnPropertyNames', 'rare', '返回自身所有属性名（含不可枚举）。', 'Object.getOwnPropertyNames([]);\n// ["length"]'],
+      ['Object.getOwnPropertyDescriptor', 'rare', '获取某属性的描述符。', 'const d = Object.getOwnPropertyDescriptor(o,"a");'],
+      ['Object.hasOwn', 'rare', '判断对象自身（不含原型链）是否有某属性。ES2022。', 'Object.hasOwn({a:1}, "a"); // true'],
+      ['Object.is', 'rare', '比 === 更严格的相等判断，能区分 +0/-0 与 NaN。', 'Object.is(NaN, NaN);   // true\nObject.is(+0, -0);    // false'],
+    ]
+  },
+  {
+    id: 'math', icon: '➗', title: 'Math 数学',
+    items: [
+      ['Math.max', 'hot', '返回参数中最大值。空参返回 -Infinity。', 'Math.max(1, 2, 3); // 3'],
+      ['Math.min', 'hot', '返回参数中最小值。空参返回 Infinity。', 'Math.min(1, 2, 3); // 1'],
+      ['Math.abs', 'common', '返回绝对值。', 'Math.abs(-5); // 5'],
+      ['Math.floor', 'common', '向下取整。', 'Math.floor(2.9); // 2'],
+      ['Math.ceil', 'common', '向上取整。', 'Math.ceil(2.1); // 3'],
+      ['Math.round', 'common', '四舍五入到最近整数（.5 向大数取）。', 'Math.round(2.5); // 3'],
+      ['Math.trunc', 'common', '直接截断小数部分。', 'Math.trunc(-2.9); // -2'],
+      ['Math.random', 'hot', '返回 [0,1) 之间的伪随机浮点数。', 'const r = Math.random();\nconst n = Math.floor(Math.random()*100);'],
+      ['Math.pow', 'common', '求幂 x^y。也可用 ** 运算符。', 'Math.pow(2, 10); // 1024\n2 ** 10;        // 1024'],
+      ['Math.sqrt', 'common', '平方根。', 'Math.sqrt(16); // 4'],
+      ['Math.cbrt', 'rare', '立方根。', 'Math.cbrt(27); // 3'],
+      ['Math.sign', 'rare', '返回符号：1 / -1 / 0 / -0 / NaN。', 'Math.sign(-5); // -1'],
+      ['Math.log', 'rare', '自然对数 ln(x)。', 'Math.log(Math.E); // 1'],
+      ['Math.log2 / log10', 'rare', '以 2 / 10 为底的对数。', 'Math.log2(8);   // 3\nMath.log10(1000); // 3'],
+      ['Math.exp', 'rare', 'e^x。', 'Math.exp(1); // 2.718...'],
+      ['Math.hypot', 'rare', '勾股定理 √(x²+y²+...)，避免溢出。', 'Math.hypot(3, 4); // 5'],
+      ['Math.PI', 'common', '圆周率常量 π ≈ 3.14159。', 'const area = Math.PI * r * r;'],
+      ['Math.E', 'rare', '自然对数底 e ≈ 2.71828。', 'Math.E; // 2.718...'],
+      ['Math.sin / cos / tan', 'rare', '三角函数（弧度制）。', 'Math.sin(Math.PI/2); // 1'],
+      ['Math.atan2', 'rare', 'atan2(y, x)，返回与 x 轴夹角弧度。', 'Math.atan2(1, 1); // 0.785...'],
+    ]
+  },
+  {
+    id: 'number', icon: '🔢', title: 'Number 数字',
+    items: [
+      ['parseInt', 'hot', '把字符串解析为整数，可指定进制（2~36）。', 'parseInt("42px");    // 42\nparseInt("ff", 16);  // 255'],
+      ['parseFloat', 'common', '把字符串解析为浮点数。', 'parseFloat("3.14abc"); // 3.14'],
+      ['Number', 'common', '把任意值转为数字。', 'Number("123");   // 123\nNumber(true);    // 1'],
+      ['isNaN', 'common', '判断参数转 Number 后是否为 NaN。建议用 Number.isNaN。', 'isNaN("abc");   // true\nisNaN("12");    // false'],
+      ['Number.isNaN', 'common', '严格判断是否为 NaN（不强制转换）。', 'Number.isNaN(NaN);   // true\nNumber.isNaN("abc"); // false'],
+      ['isFinite', 'common', '判断参数转 Number 后是否有限。', 'isFinite(1);      // true\nisFinite(Infinity); // false'],
+      ['Number.isFinite', 'common', '严格判断是否有限（不强制转换）。', 'Number.isFinite(1);   // true\nNumber.isFinite("1"); // false'],
+      ['Number.isInteger', 'common', '判断是否为整数。', 'Number.isInteger(5);   // true\nNumber.isInteger(5.5); // false'],
+      ['Number.isSafeInteger', 'rare', '是否在安全整数范围内。', 'Number.isSafeInteger(2**53-1); // true'],
+      ['toFixed', 'common', '保留指定位小数（返回字符串）。', '(3.14159).toFixed(2); // "3.14"'],
+      ['toPrecision', 'rare', '保留指定位有效数字。', '(123.4).toPrecision(2); // "1.2e+2"'],
+      ['toExponential', 'rare', '转科学计数法字符串。', '(12345).toExponential(2); // "1.23e+4"'],
+      ['Number.MAX_SAFE_INTEGER', 'rare', '2^53 - 1，最大安全整数。', 'Number.MAX_SAFE_INTEGER; // 9007199254740991'],
+      ['Number.MIN_SAFE_INTEGER', 'rare', '最小安全整数 -(2^53 - 1)。', 'Number.MIN_SAFE_INTEGER;'],
+      ['Number.EPSILON', 'rare', '1 与比 1 大的最小浮点数之差，用于浮点比较。', 'Math.abs(0.1+0.2-0.3) < Number.EPSILON;'],
+      ['Number.MAX_VALUE', 'rare', '可表示的最大正数 ≈ 1.8e308。', 'Number.MAX_VALUE;'],
+      ['Number.MIN_VALUE', 'rare', '可表示的最小正数 ≈ 5e-324。', 'Number.MIN_VALUE;'],
+      ['Number.POSITIVE_INFINITY', 'rare', '正无穷常量。', 'Number.POSITIVE_INFINITY === Infinity;'],
+      ['NaN', 'common', '非数字常量，与任何值都不相等（包括自身）。', 'NaN === NaN; // false\nNumber.isNaN(NaN); // true'],
+      ['BigInt', 'hot', '任意精度整数类型，字面量加 n 后缀。不能与 Number 混用（需手动转换）。', 'const b = 123456789012345678901234567890n;\nBigInt("99999999999999999");'],
+      ['BigInt 运算符', 'common', 'BigInt 支持 + - * / % ** 位运算等，结果仍为 BigInt。除法自动截断为 0。', '10n / 3n;  // 3n\n2n ** 64n;  // 18446744073709551616n'],
+      ['Infinity / -Infinity', 'common', '正/负无穷常量。由除以 0、溢出等产生。', '1 / 0;        // Infinity\nMath.max();   // -Infinity'],
+      ['undefined', 'common', '未初始化值。未声明的变量使用会抛错，取属性返回 undefined。', 'let x;\nconsole.log(x);  // undefined\n({}).a;         // undefined'],
+      ['null', 'common', '空对象指针（typeof null === "object"）。通常作为明确为空。', 'typeof null;  // "object"\nnull === undefined; // false\nnull == undefined;  // true'],
+      ['globalThis', 'rare', '全局对象的统一入口（浏览器=window，Node=global，Worker=self）。', 'globalThis.setTimeout === setTimeout;'],
+    ]
+  },
+  {
+    id: 'operators', icon: '➕', title: '操作符',
+    items: [
+      ['== 相等 / === 严格相等', 'hot', '== 会做类型转换；=== 类型和值都相等才为 true。建议默认使用 ===。', '1 == "1";     // true\n1 === "1";    // false\nnull == undefined; // true'],
+      ['!= / !== 不等', 'common', '对应于 == / === 的取反。', '1 != "1";    // false\n1 !== "1";   // true'],
+      ['> < >= <= 比较', 'hot', '大小比较。不同类型会先转 Number（两字符串则按码点比较）。', '"10" > 2;   // true\n"abc" < "abd"; // true'],
+      ['! 非 / && 与 / || 或', 'hot', '逻辑运算。&& 和 || 短路求值，返回实际操作数。', '!true; // false\ntrue && "x"; // "x"\n"" || "fallback"; // "fallback"'],
+      ['?? 空值合并', 'hot', '只有左为 null/undefined 才取右。比 || 更精确（不屏蔽 0/空串/false）。', '0 ?? 42;      // 0\n0 || 42;      // 42'],
+      ['?. 可选链', 'hot', '访问前先判断非 null/undefined，遇空短路返回 undefined。支持函数调用与索引。', 'user?.address?.city;\nfunc?.();\narr?.[0];'],
+      ['? : 三元', 'hot', 'condition ? a : b，根据条件返回两个表达式之一。', 'const r = score >= 60 ? "及格" : "不及格";'],
+      ['= 赋值 / += -= *= /= %= **=', 'hot', '赋值以及与算术结合的缩写赋值。', 'let x = 1;\nx += 2;  // 3\nx **= 2; // 9'],
+      ['&&= / ||= / ??=', 'common', '逻辑赋值（短路赋值）。ES2021。', 'a ||= "默认值";   // a falsy 时赋值\nb ??= "默认值";   // b null/undefined 时赋值\nobj.id &&= 5;     // id truthy 时改为 5'],
+      ['++ / -- 自增减', 'hot', '前/后置自增减。前置返回新值，后置返回旧值。', 'let i = 0;\nconsole.log(i++); // 0\nconsole.log(++i); // 2'],
+      ['+ 加法 / - 减法 / * 乘法 / / 除法', 'hot', '四则运算。+ 若有字符串会做拼接。', '1 + 2;     // 3\n"a" + 1;   // "a1"\n7 / 2;     // 3.5'],
+      ['% 取余 / ** 幂', 'hot', '% 返回两数相除的余数；** 为幂运算（右结合）。', '7 % 3;      // 1\n2 ** 3;     // 8\n2 ** 2 ** 3; // 256'],
+      ['- 取负 / + 转数字', 'common', '单目 - 取负；单目 + 把操作数转 Number。', '-5;           // -5\n+"123";       // 123\n+true;        // 1'],
+      ['& / | / ^ / ~ 位运算', 'rare', '按位与、或、异或、取反（先转 32 位整数）。', '5 & 6; // 4\n5 | 6; // 7\n5 ^ 6; // 3\n~0;   // -1'],
+      ['<< / >> / >>> 位移', 'rare', '左移、算术右移（带符号）、逻辑右移（补 0）。', '1 << 3;     // 8\n-8 >> 2;    // -2\n-8 >>> 2;   // 1073741822'],
+      ['... 展开运算符', 'hot', '把可迭代对象展开为参数列表或数组元素；对象浅拷贝/合并。', 'Math.max(...[1,2,3]);\nconst arr = [1, ...[2,3]];\nconst obj = {...a, ...b};'],
+      ['... 剩余参数 / 剩余解构', 'common', '在函数参数或解构中把多余的部分收集为数组/对象。', 'function sum(...args){ return args.reduce((a,b)=>a+b, 0); }\nconst {a, ...rest} = obj;'],
+      ['typeof 运算符', 'common', '返回类型字符串。null → object（历史 bug）。', 'typeof 42;     // "number"\ntypeof "";     // "string"\ntypeof null;   // "object"'],
+      ['instanceof', 'common', '判断对象原型链上是否存在构造函数的 prototype。', '[] instanceof Array; // true'],
+      ['in', 'common', '判断对象中是否存在某属性（含原型链）。', '"length" in []; // true'],
+      ['delete 运算符', 'common', '删除对象自身的属性。返回布尔；不可配置属性在严格模式下抛错。', 'const o = {a:1}; delete o.a;'],
+      [', 逗号运算符', 'rare', '依次执行左右表达式，返回右侧结果。常出现在 for 头。', 'let a, b;\na = 1, b = 2;  // 返回 2'],
+    ]
+  },
+  {
+    id: 'coercion', icon: '🎯', title: '类型转换',
+    items: [
+      ['String() 转换', 'hot', '显式转字符串。数字、布尔、null、undefined 都有直观结果。', 'String(123);      // "123"\nString(true);     // "true"\nString(undefined);// "undefined"\nString(null);     // "null"'],
+      ['Number() 转换', 'hot', '显式转数字。空串、null、false → 0；不可解析 → NaN。', 'Number("12");    // 12\nNumber("");      // 0\nNumber("abc");   // NaN\nNumber(true);    // 1'],
+      ['Boolean() 转换', 'hot', '显式转布尔。falsy 集合：false/0/0n/""/null/undefined/NaN/document.all。', 'Boolean(0);   // false\nBoolean(" "); // true\nBoolean({});  // true'],
+      ['+ 号隐式转换', 'hot', 'a + b：任一侧字符串→拼接；否则两侧都转 Number 相加。Date 走 toString。', '1 + "2";    // "12"\n1 + 2;      // 3\n1 + null;   // 1\n"a" + +"b"; // "aNaN"'],
+      ['- * / % 隐式转换', 'common', '两侧都转为数字后运算。', '"5" - 1;   // 4\n"10" / 2;  // 5\n"6" % 4;   // 2'],
+      ['== 隐式转换规则', 'common', '不同类型时：null/undefined 互等；对象转原始；基本类型优先转 Number 比较。', '"" == false;     // true\n0 == "";         // true\n[] == false;     // true\nnull == undefined; // true'],
+      ['falsy / truthy 值', 'hot', '共 8 个 falsy：false, 0, 0n, "", null, undefined, NaN, document.all。其余 truthy。', 'Boolean([]);    // true\nBoolean({});    // true\nBoolean(-0);    // false\nBoolean(0n);    // false'],
+      ['ToPrimitive 规则', 'rare', '对象需要原始值时，依次尝试 Symbol.toPrimitive / valueOf / toString（可配置 hint）。', 'const o = {\n  [Symbol.toPrimitive](){ return 10; }\n};\nNumber(o); // 10'],
+    ]
+  },
+  {
+    id: 'regexp', icon: '🔍', title: 'RegExp 正则',
+    items: [
+      ['字面量 / 构造', 'hot', '/pattern/flags 字面量，或 new RegExp(str, flags) 动态构造。', 'const r1 = /abc/;\nconst r2 = new RegExp("ab" + "c", "i");'],
+      ['修饰符 g/i/m/s/u/y', 'common', 'g 全局、i 忽略大小写、m 多行 ^$、s 点匹配换行、u Unicode、y 粘性。', '"aAaA".match(/a/g);   // ["a","a"]\n/a/i.test("A");      // true'],
+      ['test()', 'hot', '是否匹配，返回 boolean。使用 g 时每次推进 lastIndex。', '/^\\d+$/.test("123"); // true'],
+      ['exec()', 'common', '返回首个匹配（或 g 模式下迭代每个匹配），结果带 index/groups。', 'const m = /(\\d+)\\.(\\d+)/.exec("v1.2.3");\n// m[1]="1", m[2]="2"'],
+      ['String.match()', 'common', '无 g 返回数组（含 index/groups）；有 g 返回所有匹配字符串数组；无匹配 null。', '"a1b2".match(/\\d/g);  // ["1","2"]\n"a1b2".match(/\\d/);   // ["1", index:1]'],
+      ['String.matchAll()', 'common', '需带 g，返回所有匹配（包含捕获组）的迭代器。', 'for (const m of "a1b2".matchAll(/(\\w)(\\d)/g)) {\n  console.log(m[1], m[2]);\n}'],
+      ['String.replace()', 'common', '替换第一处；正则带 g 可全局替换；可在替换串里用 $1/$2 引用捕获组或传函数。', '"abcab".replace(/ab/g, "AB");   // "ABcAB"\n"a-b".replace(/-/, m => "+");   // "a+b"'],
+      ['String.replaceAll()', 'common', '替换全部匹配；用正则必须带 g。ES2021。', '"1-2-3".replaceAll("-", "."); // "1.2.3"'],
+      ['String.search()', 'rare', '返回首次匹配的索引；无匹配 -1。', '"hi 你好".search(/你好/); // 3'],
+      ['. 任意字符', 'hot', '除换行符外的任一字符；加 s 修饰符则包含 \\n。', '/a.c/.test("abc"); // true\n/a.c/s.test("a\\nc"); // true'],
+      ['^ 行首 / $ 行尾', 'hot', '默认文本首尾；加 m 修饰符则每行。', '/^hello$/.test("hello");   // true\n/^b/m.test("a\\nb\\nc");    // true'],
+      ['\\d \\w \\s 字符类', 'hot', '\\d 数字、\\w 单词字符[A-Za-z0-9_]、\\s 空白。', '/\\d+/.test("42");\n/\\s+/.test("a  b");'],
+      ['\\D \\W \\S 否定类', 'common', '与 \\d \\w \\s 取反。', '/\\D/.test("a");    // true'],
+      ['[abc] 字符集 / [^abc] 否定', 'common', '匹配集合中任一字符；^ 开头表示否定。', '/[aeiou]/.test("hello");   // true\n/[^0-9]/.test("abc");      // true'],
+      ['[a-z] [A-Z] 范围', 'common', '字符范围内匹配。', '/[A-Za-z]+/.test("Abc"); // true'],
+      ['* + ? 量词', 'hot', '* 0+ 次、+ 1+ 次、? 0 或 1 次。默认贪婪。', '/a*/.test("");      // true\n/a+/.test("aaa");   // true\n/colou?r/.test("color"); // true'],
+      ['{n} {n,} {n,m} 精确量词', 'common', '匹配 n 次 / 至少 n 次 / n 到 m 次。', '/\\d{3}-\\d{4}/.test("123-4567"); // true'],
+      ['*? +? ?? {n,m}? 非贪婪', 'rare', '在量词后加 ? 转非贪婪（匹配尽可能少）。', '"<a><b>".match(/<.*?>/g); // ["<a>","<b>"]'],
+      ['( ) 捕获组', 'common', '把括号里的匹配存下来，结果中用 [1] 或 $1 引用。', 'const m = "12-34".match(/(\\d+)-(\\d+)/);\n// m[1]="12", m[2]="34"'],
+      ['(?: ) 非捕获组', 'rare', '只分组不记录，结果中没有对应项。', '"ab".match(/(?:ab)+/); // ["ab"]'],
+      ['| 或分支', 'common', '匹配左或右。', '/cat|dog/.test("a dog");   // true\n/^(cat|dog)$/.test("cat"); // true'],
+      ['(?= ) 正向先行断言', 'rare', '后面必须是某模式才匹配，且不消耗字符。', '"100px".match(/\\d+(?=px)/); // ["100"]'],
+      ['(?! ) 负向先行断言', 'rare', '后面必须不是某模式。', '"100%".match(/\\d+(?!px)/); // ["100"]'],
+      ['(?<= ) 正向后行断言', 'rare', '前面必须是某模式才匹配。ES2018。', 'const r = /(?<=￥)\\d+/;\nr.exec("￥99")[0]; // "99"'],
+      ['(?<! ) 负向后行断言', 'rare', '前面必须不是某模式。ES2018。', 'const r = /(?<!￥)\\d+/;\nr.exec("$99")[0]; // "99"'],
+      ['(?<name> ) 命名捕获组', 'rare', '为捕获组命名，结果在 .groups.name 中。ES2018。', 'const m = "2024-01".match(/(?<y>\\d{4})-(?<m>\\d{2})/);\n// m.groups = {y:"2024", m:"01"}'],
+      ['\\b 单词边界 / \\B 非边界', 'rare', '单词字符与非单词字符之间的位置。', '/\\bcat\\b/.test("cat fish");    // true\n/\\bcat\\b/.test("category");     // false'],
+      ['lastIndex 机制', 'rare', 'g/y 修饰符时每次 test/exec 会推进 lastIndex，循环匹配需小心重置。', 'const r = /a/g;\nr.test("ab"); // true; r.lastIndex=1\nr.test("ab"); // false; r.lastIndex=0'],
+    ]
+  },
+  {
+    id: 'json', icon: '📦', title: 'JSON',
+    items: [
+      ['JSON.parse', 'hot', '把 JSON 字符串解析成 JS 值。可传 reviver 函数。', 'const o = JSON.parse(\'{"a":1}\');\n// {a: 1}'],
+      ['JSON.stringify', 'hot', '把 JS 值序列化为 JSON 字符串。可传 replacer 与缩进。', 'JSON.stringify({a:1}, null, 2);'],
+    ]
+  },
+  {
+    id: 'date', icon: '📅', title: 'Date 日期',
+    items: [
+      ['new Date()', 'hot', '创建日期对象，无参为当前时间。', 'const now = new Date();\nnew Date("2024-01-01");\nnew Date(2024, 0, 1);'],
+      ['Date.now', 'hot', '返回自 1970-01-01 起的毫秒数（时间戳）。', 'Date.now(); // 1700000000000'],
+      ['Date.parse', 'common', '解析日期字符串为时间戳。', 'Date.parse("2024-01-01");'],
+      ['getFullYear', 'common', '返回 4 位年份。', 'new Date().getFullYear(); // 2024'],
+      ['getMonth', 'common', '返回月份 0~11（注意 +1）。', 'new Date().getMonth(); // 0~11'],
+      ['getDate', 'common', '返回当月几号 1~31。', 'new Date().getDate();'],
+      ['getDay', 'common', '返回星期 0~6（0 是周日）。', 'new Date().getDay();'],
+      ['getHours / getMinutes / getSeconds', 'common', '返回时/分/秒 0~59。', 'new Date().getHours();'],
+      ['getMilliseconds', 'rare', '返回毫秒 0~999。', 'new Date().getMilliseconds();'],
+      ['getTime', 'common', '返回距 1970-01-01 的毫秒数（时间戳）。', 'new Date().getTime();'],
+      ['setFullYear / setMonth / setDate', 'common', '设置对应字段。会自动调整越界值。', 'const d = new Date();\nd.setFullYear(2025);'],
+      ['setTime', 'rare', '用时间戳设置日期。', 'd.setTime(Date.now());'],
+      ['toISOString', 'common', '返回 ISO 8601 格式字符串。', 'new Date().toISOString();\n// "2024-01-01T00:00:00.000Z"'],
+      ['toJSON', 'rare', '返回 JSON 序列化用的字符串（同 ISO）。', 'JSON.stringify(new Date());'],
+      ['toLocaleString', 'common', '按本地格式输出日期字符串。', 'new Date().toLocaleString("zh-CN");'],
+      ['toLocaleDateString', 'common', '按本地格式输出日期部分。', 'new Date().toLocaleDateString();'],
+      ['toLocaleTimeString', 'common', '按本地格式输出时间部分。', 'new Date().toLocaleTimeString();'],
+      ['toString', 'rare', '返回完整可读字符串。', 'new Date().toString();'],
+    ]
+  },
+  {
+    id: 'promise', icon: '🤝', title: 'Promise 与异步',
+    items: [
+      ['new Promise', 'hot', '创建 Promise，接收 (resolve, reject)。三种状态：pending/fulfilled/rejected。', 'const p = new Promise((resolve, reject) => {\n  setTimeout(() => resolve("ok"), 100);\n});'],
+      ['then', 'hot', '注册 fulfilled 回调，返回新 Promise，可链式调用。', 'p.then(v => console.log(v));'],
+      ['catch', 'hot', '注册 rejected 回调，相当于 then(null, fn)。', 'p.catch(e => console.error(e));'],
+      ['finally', 'common', '无论成功失败都执行的回调，不接收参数。', 'p.finally(() => loading = false);'],
+      ['Promise.all', 'hot', '所有都成功才成功，任一失败即失败。', 'Promise.all([p1, p2]).then(results => {});'],
+      ['Promise.race', 'common', '第一个完成（成功或失败）的结果胜出。', 'Promise.race([p, timeout])\n  .then(v => console.log(v));'],
+      ['Promise.allSettled', 'common', '等所有完成，返回每个的状态与结果。', 'Promise.allSettled([p1,p2]).then(arr => {});'],
+      ['Promise.any', 'common', '第一个成功的胜出；全失败才失败。ES2021。', 'Promise.any([p1, p2]).then(v => {});'],
+      ['Promise.resolve', 'common', '创建一个已 fulfilled 的 Promise。', 'Promise.resolve(42).then(v => {});'],
+      ['Promise.reject', 'common', '创建一个已 rejected 的 Promise。', 'Promise.reject(new Error("x"));'],
+      ['setTimeout', 'hot', '延时执行一次回调，返回定时器 id。', 'setTimeout(() => console.log("hi"), 1000);'],
+      ['setInterval', 'common', '周期执行回调，返回定时器 id。', 'const id = setInterval(() => {}, 1000);\nclearInterval(id);'],
+      ['clearTimeout / clearInterval', 'common', '取消对应的定时器。', 'const id = setTimeout(fn, 1000);\nclearTimeout(id);'],
+      ['queueMicrotask', 'rare', '把回调加入微任务队列（在宏任务前执行）。', 'queueMicrotask(() => console.log("micro"));'],
+      ['requestAnimationFrame', 'common', '在下一次重绘前执行回调，常用于动画。', 'function loop(){\n  draw();\n  requestAnimationFrame(loop);\n}'],
+    ]
+  },
+  {
+    id: 'set-map', icon: '🗂️', title: 'Set / Map / Weak',
+    items: [
+      ['new Set', 'common', '唯一值集合，元素不可重复。', 'const s = new Set([1,2,2]);\n// s = Set(2) {1, 2}'],
+      ['Set.add', 'common', '添加元素，返回 Set 本身。', 's.add(3).add(4);'],
+      ['Set.has', 'common', '判断是否包含某元素。', 's.has(2); // true'],
+      ['Set.delete', 'common', '删除元素，返回是否删除成功。', 's.delete(2);'],
+      ['Set.size', 'common', '返回元素个数。', 's.size;'],
+      ['Set.forEach', 'common', '遍历所有元素。', 's.forEach(v => console.log(v));'],
+      ['new Map', 'common', '键值对集合，键可为任意值（含对象）。', 'const m = new Map();\nm.set("k", 1);'],
+      ['Map.get / set / has / delete', 'common', '取/设/查/删键值对。', 'm.get("k");   // 1\nm.set("k", 2);\nm.has("k");   // true\nm.delete("k");'],
+      ['Map.forEach', 'common', '遍历键值对。', 'm.forEach((v, k) => {});'],
+      ['WeakMap / WeakSet', 'rare', '键/元素只能是对象，且是弱引用，不阻止 GC。WeakMap 不支持遍历/size/clear。', 'const wm = new WeakMap();\nwm.set(obj, "data");\nconst ws = new WeakSet();\nws.add(obj);'],
+      ['Set.clear / Set.keys / Set.values / Set.entries', 'common', '清空集合；返回键/值/键值对迭代器。Set.keys 与 Set.values 相同。', 'const s = new Set([1,2]);\ns.size;     // 2\nfor (const v of s.values()) {};\ns.clear();'],
+      ['Map.clear / Map.size / Map.keys / Map.values / Map.entries', 'common', '清空、大小、返回键/值/条目迭代器。', 'm.size;\nm.keys();\nm.values();\nm.entries();\nm.clear();'],
+      ['Set.union / intersection / difference', 'rare', 'ES2024 新增集合运算：并集 / 交集 / 差集 / 对称差 / 子集 / 超集。', 'new Set([1,2]).union(new Set([2,3]));        // {1,2,3}\nnew Set([1,2]).intersection(new Set([2,3])); // {2}\nnew Set([1,2]).difference(new Set([2]));     // {1}'],
+      ['Set.symmetricDifference / isSubsetOf / isSupersetOf / isDisjointFrom', 'rare', 'ES2024 对称差集、子集、超集、不相交判断。', 'new Set([1,2]).isSubsetOf(new Set([1,2,3])); // true\nnew Set([1,2]).isDisjointFrom(new Set([3]));  // true'],
+      ['Map.groupBy / Object.groupBy', 'common', 'ES2024：将可迭代元素按键函数分组，分别返回 Map 或对象。', 'const byAge = Object.groupBy(people, p => p.age >= 18 ? "adult" : "minor");'],
+      ['WeakRef / FinalizationRegistry', 'rare', 'ES2021：持有对象弱引用；对象被 GC 时触发回调。慎用。', 'const ref = new WeakRef(obj);\nref.deref(); // obj 或 undefined'],
+    ]
+  },
+  {
+    id: 'errors', icon: '🚨', title: '错误类型',
+    items: [
+      ['Error', 'hot', '所有错误类型的基类。含 message/name/stack/cause 属性。', 'try {\n  throw new Error("出错了");\n} catch(e) {\n  console.log(e.message, e.stack);\n}'],
+      ['Error.cause', 'common', 'ES2022：构造错误时可挂 cause，保留原始错误链。', 'try { JSON.parse(s); }\ncatch (e) {\n  throw new Error("解析失败", { cause: e });\n}'],
+      ['TypeError', 'common', '值的类型不符合预期（例如给 undefined 调方法）。', 'null.toString();  // TypeError\n(1)();            // TypeError'],
+      ['ReferenceError', 'common', '引用了未声明的变量，或暂时性死区取 let/const。', 'console.log(a);  // a 未定义时 ReferenceError'],
+      ['SyntaxError', 'common', '语法非法（解析阶段抛出）。eval 中会触发。', 'try { eval("a ==="); } catch(e){ e instanceof SyntaxError; }'],
+      ['RangeError', 'common', '数值越界，如数组长度负数、toFixed 参数过大、栈溢出。', 'new Array(-1);        // RangeError\nfunction f(){ f(); }  // 栈溢出 RangeError'],
+      ['URIError', 'rare', 'URI 编解码出错（decodeURIComponent("%")）。', 'decodeURIComponent("%"); // URIError'],
+      ['EvalError', 'rare', '历史遗留类型，现不再由引擎直接抛出，但仍可手动构造。', 'throw new EvalError("eval failed");'],
+      ['AggregateError', 'rare', 'ES2021：把多个错误打包成一个，常见于 Promise.any 全部失败。', 'try {\n  Promise.any([Promise.reject(1), Promise.reject(2)])\n    .catch(e => {\n      e instanceof AggregateError; // true\n      e.errors; // [1, 2]\n    });\n} catch(_) {}'],
+      ['自定义错误', 'rare', '继承 Error 构建业务错误类，便于 catch 识别。', 'class AppError extends Error {\n  constructor(msg, code){\n    super(msg);\n    this.code = code;\n  }\n}'],
+    ]
+  },
+  {
+    id: 'es6', icon: '✨', title: 'ES6+ 新特性',
+    items: [
+      ['箭头函数', 'hot', '无自己的 this，常用于回调。单表达式可省 return。', 'const add = (a, b) => a + b;'],
+      ['模板字符串', 'hot', '反引号字符串，支持 ${} 插值与多行。', '`a=${1+2}\\nb`'],
+      ['扩展运算符 ...', 'hot', '展开可迭代对象为数组/参数；浅拷贝。', 'const a = [...[1,2], 3];\nconst c = {...obj};'],
+      ['剩余参数 ...args', 'hot', '把多余参数收集为数组。', 'function sum(...nums){\n  return nums.reduce((a,b)=>a+b,0);\n}'],
+      ['默认参数', 'common', '函数参数的默认值。', 'function f(x = 10){ return x; }\nf(); // 10'],
+      ['可选链 ?.', 'hot', '安全访问深层属性，遇 null/undefined 短路返回 undefined。', 'const name = user?.profile?.name;\nconst fn = obj?.method?.();'],
+      ['空值合并 ??', 'hot', '当左侧为 null/undefined 才取右侧值。比 || 更精确。', 'const v = a ?? "default";'],
+      ['Symbol', 'rare', '唯一且不可变的基本类型，常做私有属性键。', 'const s = Symbol("id");\nobj[s] = "private";'],
+      ['Proxy', 'rare', '代理对象，可拦截基本操作（get/set/has 等）。', 'const p = new Proxy(obj, {\n  get(t,k){ return t[k]; }\n});'],
+      ['Reflect', 'rare', '提供对象操作的静态方法，常与 Proxy 配合。', 'Reflect.has(obj, "a");\nReflect.set(obj, "a", 1);'],
+      ['可选 catch 绑定', 'rare', 'catch 不需要参数时可省略。ES2019。', 'try { f(); } catch { g(); }'],
+      ['数字分隔符', 'rare', '长数字可用 _ 分隔提高可读性。ES2021。', 'const n = 1_000_000;'],
+      ['解构高级用法', 'common', '解构时重命名、嵌套解构、默认值组合。', 'const {a: alias = 0, b:{c}} = {a:1, b:{c:2}};\n// alias=1, c=2'],
+      ['参数 + 解构 + 默认值', 'common', '函数形参同时用解构和默认值，非常常用。', 'function setup({host="0.0.0.0", port=80} = {}){\n  console.log(host, port);\n}'],
+      ['bind / call / apply', 'hot', '改变函数 this：call 传多个参数，apply 传数组，bind 返回新函数（科里化）。', 'obj.fn.call(other, 1, 2);\nobj.fn.apply(other, [1, 2]);\nconst f = obj.fn.bind(other, 1);'],
+      ['getter / setter', 'common', '对象属性用 get/set 定义访问器。类中同样可用。', 'const o = {\n  get x(){ return this._x ?? 0; },\n  set x(v){ this._x = Number(v); }\n};'],
+      ['类 static / # 私有字段', 'common', 'static 挂在类本身；# 为真正的私有语法（ES2022，外部无法访问）。', 'class A {\n  static TYPE = "A";\n  #secret = 1;\n  #m(){ return this.#secret; }\n}'],
+      ['static 初始化块', 'rare', 'static {} 在类加载时执行一次，可用复杂逻辑初始化静态字段。', 'class C {\n  static map;\n  static { C.map = new Map(); }\n}'],
+      ['super 调用父方法', 'common', '在子类中 super.method() 调用父方法；super() 调用父构造器。', 'class Child extends Parent {\n  fn() { return super.fn() + "!"; }\n}'],
+      ['new.target', 'rare', '函数内使用，指向被 new 调用的构造函数；可用于强制必须 new。', 'function A() {\n  if (!new.target) throw new Error("必须用 new");\n}'],
+      ['Symbol.iterator / 自定义迭代', 'rare', '对象实现 [Symbol.iterator]() 即可被 for...of / ... 展开。', 'const r = { [Symbol.iterator](){ let i=0; return { next(){ return i<3 ? {value:i++} : {done:true}; }}}};\n[...r]; // [0,1,2]'],
+      ['Symbol.hasInstance / match / replace / toPrimitive 等', 'rare', '内置符号可重载 instanceof、match、替换、类型转换等内部行为。', 'const r = /x/;\nr[Symbol.match]("x");'],
+      ['await 顶层', 'rare', 'ES2022：模块（.mjs 或 <script type=module>）顶层可直接 await。', 'async function main() {\n  const cfg = await Promise.resolve({ver:1});\n  console.log(cfg);\n}\n// 模块顶层也可直接：await import("./m.js");'],
+      ['structuredClone 深拷贝', 'hot', '原生深拷贝。支持 Date/RegExp/ArrayBuffer/Map/Set 等；不可拷贝函数/Promise 等。', 'const copy = structuredClone(obj);\n// 比 JSON.parse(JSON.stringify()) 更强（可保留 Date 等）'],
+      ['Array.findLast / findLastIndex', 'common', 'ES2023：从后向前找第一个满足的元素/索引。', '[1,2,3,2].findLast(x => x === 2);    // 2\n[1,2,3,2].findLastIndex(x => x === 2); // 3'],
+      ['Array.with / toSorted / toReversed / toSpliced', 'common', 'ES2023 不修改原数组，返回新数组的"变更副本"方法。', 'const a = [3,1,2];\na.with(0, 0);      // [0,1,2]\na.toSorted();     // [1,2,3]\na.toReversed();   // [2,1,3]\na.toSpliced(0,1); // [1,2]'],
+      ['Array.fromAsync', 'rare', 'ES2022：从异步可迭代创建数组，必须 await。', 'async function main(){\n  const rows = await Array.fromAsync(asyncIterable);\n}'],
+    ]
+  },
+  {
+    id: 'proto', icon: '🧬', title: '原型链 & this',
+    items: [
+      ['原型 prototype', 'common', '构造函数的 prototype 是其实例共享的原型对象；实例.__proto__ 指向它。', 'function F(){}\nF.prototype.greet = function(){ return "hi"; };\nnew F().greet();'],
+      ['__proto__', 'rare', '实例对原型的引用（访问器属性，不建议直接写）。改用 Object.create / getPrototypeOf。', '[1,2].__proto__ === Array.prototype;  // true'],
+      ['Object.create(proto)', 'rare', '创建空对象并绑定指定原型，常用于经典继承。', 'const p = {greet(){ return "hi"; }};\nconst o = Object.create(p);'],
+      ['原型链查找', 'common', '访问属性时：自身 → 原型 → 原型的原型 → … → Object.prototype → null。', 'const arr = [];\narr.push;   // 从 Array.prototype 上找到\narr.toString;   // 从 Object.prototype 上找到'],
+      ['instanceof 原理', 'common', 'obj instanceof C：沿着 obj.__proto__ 链查找是否等于 C.prototype。', '[] instanceof Array;          // true\n[] instanceof Object;         // true\n({}) instanceof Object;       // true'],
+      ['Class extends 本质', 'rare', 'ES6 class extends 本质还是基于原型链，但语法糖更直观，必须 super() 才能用 this。', 'class A {} class B extends A {}\nObject.getPrototypeOf(B.prototype) === A.prototype;'],
+      ['this 指向：直接调用', 'common', '非严格模式下指向 window/globalThis；严格模式下为 undefined。', 'function f(){ return this; }\nf(); // window (非严格) / undefined (严格)'],
+      ['this 指向：作为对象方法', 'common', 'obj.fn() 调用时 this 是 obj。取出后再调用 this 会丢失。', 'const o = {n:1, f(){ return this.n; }};\no.f();      // 1\nconst g = o.f; g(); // undefined'],
+      ['this 指向：箭头函数', 'common', '箭头函数没有自己的 this，取外层作用域的 this。常用来避免闭包回调里 this 丢。', 'const o = {\n  data: [1,2],\n  run(){ setTimeout(()=>this.data.length, 0); }\n};'],
+      ['this 指向：new 构造', 'common', 'new F() 时 this 指向新对象（引擎创建并绑定），最终返回 this。', 'function F(name){ this.name = name; }\nconst a = new F("x"); a.name; // "x"'],
+      ['this 指向：call/apply/bind', 'common', 'call/apply 临时改 this；bind 返回永久绑死的新函数（bind 只第一次生效）。', 'function say(g){ return g + this.name; }\nsay.call({name:"a"}, "hi");   // "hia"\nsay.bind({name:"b"})("yo");   // "yob"'],
+    ]
+  },
+  {
+    id: 'events', icon: '🎫', title: '事件系统',
+    items: [
+      ['addEventListener(type, fn, opts)', 'hot', '绑定事件监听。opts 可传 capture/passive/once/signal。', 'el.addEventListener("click", onClick, { passive: true });'],
+      ['removeEventListener', 'common', '解绑时必须使用同一函数引用（箭头函数和匿名函数无法解绑）。', 'function onClick(){}\nel.addEventListener("click", onClick);\nel.removeEventListener("click", onClick);'],
+      ['事件对象 Event', 'hot', '回调首参为事件对象：type/target/currentTarget/timeStamp 等。', 'el.addEventListener("click", e => {\n  e.target;          // 触发元素\n  e.currentTarget;   // 绑定元素\n});'],
+      ['preventDefault', 'hot', '阻止默认行为（a 跳转、表单提交、右键菜单等）。', 'a.addEventListener("click", e => {\n  e.preventDefault();\n});'],
+      ['stopPropagation', 'common', '阻止冒泡/捕获继续向外/向内传播。stopImmediatePropagation 连同级都阻断。', 'el.addEventListener("click", e => {\n  e.stopPropagation();\n});'],
+      ['冒泡与捕获', 'common', '捕获阶段（document→目标）→ 目标 → 冒泡阶段（目标→document）。addEventListener 第三个参数 true 走捕获。', 'el.addEventListener("click", fn, true);  // 捕获\nel.addEventListener("click", fn, false); // 冒泡（默认）'],
+      ['click 事件', 'hot', '点击时触发，mousedown+mouseup 且指针在同一元素上才触发。', 'btn.addEventListener("click", e => {});'],
+      ['input / change 事件', 'hot', 'input 实时值变动触发；change 通常在失焦或 commit 时触发（select/radio/checkbox/input[type=file]）。', 'inp.addEventListener("input", e => e.target.value);\nsel.addEventListener("change", e => {});'],
+      ['submit / reset 事件', 'common', '绑定在 <form> 上。提交表单 / 重置表单时触发。', 'form.addEventListener("submit", e => {\n  e.preventDefault();\n});'],
+      ['focus / blur', 'common', '元素获得/失去焦点。不冒泡；focusin/focusout 冒泡版本。', 'inp.addEventListener("focus",  onFocus);\ninp.addEventListener("blur",   onBlur);'],
+      ['keydown / keyup', 'common', '键盘按下/抬起。e.key 为按键名（"Enter"/"Escape"/"a"）。', 'document.addEventListener("keydown", e => {\n  if (e.key === "Enter") submit();\n});'],
+      ['mousedown / mouseup / mousemove', 'common', '鼠标按下、抬起、移动。', 'el.addEventListener("mousedown", e => {});'],
+      ['mouseenter / mouseleave', 'common', '指针进入/离开元素（不冒泡，不会因子元素进出反复触发，优于 mouseover/out）。', 'el.addEventListener("mouseenter", () => {});'],
+      ['scroll', 'common', '滚动事件。建议 addEventListener 第三参数 passive:true 提升滚动性能。', 'window.addEventListener("scroll", onScroll, { passive: true });'],
+      ['resize', 'common', '窗口尺寸变化时触发，仅 window 上。', 'window.addEventListener("resize", onResize);'],
+      ['DOMContentLoaded / load', 'common', 'DOMContentLoaded：DOM 就绪（不必等图片）。load：所有资源就绪。', 'document.addEventListener("DOMContentLoaded", onReady);\nwindow.addEventListener("load", onAllLoaded);'],
+      ['contextmenu', 'rare', '右键菜单事件。可 preventDefault 自定义菜单。', 'el.addEventListener("contextmenu", e => e.preventDefault());'],
+      ['beforeunload / unload', 'rare', '用户离开/刷新页面时触发。可提示未保存更改。', 'window.addEventListener("beforeunload", e => {\n  e.preventDefault(); e.returnValue = "";\n});'],
+      ['popstate / hashchange', 'common', 'history.back()/前进按钮 或 location.hash 变化。', 'window.addEventListener("popstate", onBack);\nwindow.addEventListener("hashchange", onHash);'],
+      ['touchstart / touchend / touchmove', 'rare', '触摸事件。e.touches/e.changedTouches 为触点列表。', 'el.addEventListener("touchstart", e => {});'],
+      ['copy / cut / paste', 'rare', '剪贴板事件。可通过 e.clipboardData 读写。', 'inp.addEventListener("paste", e => {\n  const text = e.clipboardData.getData("text");\n});'],
+      ['drag / drop / dragover', 'rare', 'HTML5 原生拖拽 API。draggable=true 的元素可拖。', 'el.addEventListener("dragover", e => e.preventDefault());\nel.addEventListener("drop", e => e.preventDefault());'],
+      ['Event.currentTarget 与 target', 'common', 'target 是真正触发源，currentTarget 是绑定监听器的元素。', 'ul.addEventListener("click", e => {\n  e.currentTarget; // ul\n  e.target;        // li\n});'],
+      ['事件委托', 'common', '把监听绑到统一父容器上，利用 target 判断具体子项，动态生成元素也能命中。', 'list.addEventListener("click", e => {\n  if (e.target.matches(".item")) onItem(e.target);\n});'],
+    ]
+  },
+  {
+    id: 'dom', icon: '🌐', title: 'DOM 操作',
+    items: [
+      ['querySelector', 'hot', '按 CSS 选择器返回第一个匹配元素，无则 null。', 'const el = document.querySelector(".btn");'],
+      ['querySelectorAll', 'hot', '返回所有匹配元素的 NodeList（静态）。', 'const els = document.querySelectorAll("li");'],
+      ['getElementById', 'hot', '按 id 获取元素（最快）。', 'const el = document.getElementById("app");'],
+      ['getElementsByClassName / TagName', 'common', '返回实时 HTMLCollection。', 'const ls = document.getElementsByTagName("li");'],
+      ['addEventListener', 'hot', '绑定事件监听，可指定捕获/被动等选项。', 'el.addEventListener("click", handler, {\n  once: true, passive: true\n});'],
+      ['removeEventListener', 'common', '解绑事件监听，需传同一函数引用。', 'el.removeEventListener("click", handler);'],
+      ['classList', 'hot', '元素的类名集合，提供 add/remove/toggle/contains。', 'el.classList.add("active");\nel.classList.toggle("on");\nel.classList.contains("on");'],
+      ['className', 'common', '读写元素的 class 字符串。', 'el.className = "btn active";'],
+      ['id / tagName', 'common', '读写元素 id / 标签名（大写）。', 'el.id = "main";\nel.tagName; // "DIV"'],
+      ['innerHTML', 'hot', '读写元素内部 HTML。注意 XSS 风险。', 'el.innerHTML = "<b>hi</b>";'],
+      ['textContent', 'common', '读写纯文本内容，自动转义 HTML。', 'el.textContent = "<b>safe</b>";'],
+      ['innerText', 'rare', '渲染后的可见文本（受样式影响，性能略差）。', 'el.innerText;'],
+      ['setAttribute / getAttribute', 'common', '设置/获取属性（字符串）。', 'el.setAttribute("data-id", "5");\nel.getAttribute("href");'],
+      ['removeAttribute / hasAttribute', 'common', '删除/判断属性。', 'el.removeAttribute("disabled");\nel.hasAttribute("checked");'],
+      ['dataset', 'common', '读写 data-* 自定义属性（驼峰命名）。', 'el.dataset.userId = "5";\n// HTML: data-user-id="5"'],
+      ['style', 'hot', '读写元素内联样式。CSS 属性用驼峰。', 'el.style.color = "red";\nel.style.backgroundColor = "#fff";'],
+      ['createElement', 'hot', '创建元素节点。', 'const div = document.createElement("div");'],
+      ['createTextNode', 'rare', '创建文本节点。', 'const t = document.createTextNode("hi");'],
+      ['appendChild', 'common', '把节点追加为最后一个子节点。', 'parent.appendChild(child);'],
+      ['removeChild', 'common', '删除指定子节点，返回被删节点。', 'parent.removeChild(child);'],
+      ['insertBefore', 'common', '在指定子节点前插入新节点。', 'parent.insertBefore(newNode, refNode);'],
+      ['replaceChild', 'rare', '替换子节点。', 'parent.replaceChild(newN, oldN);'],
+      ['cloneNode', 'rare', '克隆节点，传 true 深拷贝（含后代）。', 'const c = el.cloneNode(true);'],
+      ['contains', 'common', '判断是否包含某后代节点（含自身）。', 'parent.contains(child);'],
+      ['closest', 'common', '从当前元素向上找第一个匹配选择器的祖先。', 'el.closest(".card");'],
+      ['matches', 'rare', '判断元素是否匹配选择器。', 'el.matches(".active");'],
+      ['parentNode / parentElement', 'common', '获取父节点/父元素。', 'el.parentNode;\nel.parentElement;'],
+      ['children / childNodes', 'common', '子元素集合 / 子节点集合（含文本节点）。', 'el.children;    // HTMLCollection\nel.childNodes;   // NodeList'],
+      ['firstElementChild / lastElementChild', 'common', '第一个/最后一个元素子节点。', 'el.firstElementChild;'],
+      ['nextElementSibling / previousElementSibling', 'common', '相邻兄弟元素。', 'el.nextElementSibling;'],
+      ['document / window', 'hot', '全局文档/窗口对象入口。', 'document.title;\nwindow.innerWidth;'],
+      ['form / form.elements', 'common', 'document.forms[name] 或 form.elements 返回所有表单控件。', 'const f = document.forms.myForm;\nconst nameInput = f.elements.name;\nconst v = f.elements["name"].value;'],
+      ['input.value / .checked / .selectedIndex', 'hot', '常用表单控件属性：文本取 .value、复选/单选看 .checked、下拉用 .selectedIndex 或 .value。', 'const v = input.value;\nconst ok = cb.checked;\nconst idx = select.selectedIndex;'],
+      ['input.files / FileList', 'common', '<input type=file> 的 files 是 FileList（类数组，每个 File 继承 Blob）。', 'const f = input.files[0];\nf.name; f.size; f.type; f.lastModified;'],
+      ['form.submit / form.reset / requestSubmit', 'common', 'submit() 会直接提交（不触发 submit 事件）；requestSubmit() 会触发事件并做校验。', 'form.requestSubmit();\nform.reset();'],
+      ['append / prepend / before / after / replaceWith / remove', 'common', '现代 DOM API：直接传字符串或多个节点。IE 不支持。', 'parent.append("hi", child);   // 末尾\nparent.prepend(child);        // 开头\nchild.before(sibling);\nsibling.after(child);\nchild.replaceWith(other);\nchild.remove();'],
+      ['getBoundingClientRect()', 'common', '返回元素相对视口的 top/left/right/bottom/width/height。滚动会变。', 'const r = el.getBoundingClientRect();\nr.top; r.width;'],
+      ['getComputedStyle', 'common', '读取元素最终计算后的样式（含 class 与样式表结果）。只读。', 'const s = getComputedStyle(el);\ns.color; s.marginTop;'],
+      ['Element.animate() / Web Animations', 'rare', '用 JS 驱动 CSS 动画，返回 Animation 实例（可 pause/cancel/finish）。', 'el.animate(\n  [{opacity: 0}, {opacity: 1}],\n  { duration: 300, easing: "ease-out" }\n);'],
+      ['closest() / matches()', 'common', 'closest 向上找首个匹配祖先；matches 判断元素本身是否匹配选择器。', 'e.target.closest(".card");\nel.matches(":hover");'],
+      ['dispatchEvent / CustomEvent', 'rare', '手动派发事件，可创建自定义事件并传 detail。', 'el.dispatchEvent(new CustomEvent("my-event", {\n  detail: { id: 5 },\n  bubbles: true\n}));'],
+      ['elementFromPoint / elementsFromPoint', 'rare', '返回指定坐标下最顶层的元素（或所有元素）。', 'document.elementFromPoint(clientX, clientY);'],
+      ['contains / compareDocumentPosition', 'rare', '判断一个节点是否包含另一个；或两节点位置关系。', 'parent.contains(child);\nA.compareDocumentPosition(B);'],
+      ['textContent vs innerText vs innerHTML', 'common', 'textContent 纯文本（最快，安全）；innerText 考虑 CSS；innerHTML 解析 HTML（当心 XSS）。', 'el.textContent = "<b>safe</b>";  // 纯文本\nel.innerHTML   = "<b>HTML</b>";  // 会解析'],
+      ['DOMParser', 'rare', '把 HTML/XML 字符串解析为 Document（可安全提取节点）。', 'const doc = new DOMParser().parseFromString("<b>hi</b>", "text/html");'],
+    ]
+  },
+  {
+    id: 'bom', icon: '🪟', title: 'BOM / Web API',
+    items: [
+      ['window', 'hot', '全局对象，所有全局变量/函数都是其属性。', 'window.innerWidth;\nwindow.location;'],
+      ['location', 'hot', '当前 URL 信息，可读写跳转。', 'location.href;\nlocation.reload();\nlocation.assign("/x");'],
+      ['location.search / hash', 'common', '查询串 / 锚点部分。', 'location.search; // "?id=1"\nlocation.hash;   // "#top"'],
+      ['navigator', 'common', '浏览器信息。userAgent 已逐渐被弱化。', 'navigator.userAgent;\nnavigator.language;'],
+      ['history', 'common', '操作浏览历史，支持 SPA 路由。', 'history.back();\nhistory.pushState({}, "", "/x");'],
+      ['screen', 'rare', '屏幕尺寸信息。', 'screen.width;\nscreen.height;'],
+      ['localStorage', 'hot', '持久化本地存储（同源可共享），约 5~10MB。', 'localStorage.setItem("k", "v");\nlocalStorage.getItem("k");'],
+      ['sessionStorage', 'common', '会话级本地存储，关闭标签即清空。', 'sessionStorage.setItem("k", "v");'],
+      ['Storage 方法', 'common', 'localStorage / sessionStorage 共有 API。', 'localStorage.setItem(k, v);\nlocalStorage.getItem(k);\nlocalStorage.removeItem(k);\nlocalStorage.clear();'],
+      ['alert', 'common', '弹出警告框（阻塞）。', 'alert("Hello");'],
+      ['confirm', 'common', '弹出确认框，返回 boolean。', 'if (confirm("删除？")) del();'],
+      ['prompt', 'rare', '弹出输入框，取消返回 null。', 'const name = prompt("姓名？");'],
+      ['fetch', 'hot', '现代异步请求 API，返回 Promise。', 'const res = await fetch(url);\nconst data = await res.json();'],
+      ['Request / Response', 'rare', 'fetch 的请求/响应对象抽象。', 'const req = new Request(url, {method:"POST"});\nfetch(req);'],
+      ['URL / URLSearchParams', 'common', '解析/构造 URL 与查询串。', 'const u = new URL("https://a.com/x?y=1");\nu.searchParams.get("y"); // "1"'],
+      ['console', 'hot', '控制台输出。log/warn/error/table/time 等。', 'console.log("x");\nconsole.table(arr);\nconsole.time("a");'],
+      ['window.scrollTo', 'common', '滚动到指定位置或元素。', 'window.scrollTo({top:0, behavior:"smooth"});'],
+      ['window.scrollBy', 'rare', '相对滚动。', 'window.scrollBy(0, 200);'],
+      ['IntersectionObserver', 'rare', '观察元素是否进入视口，常用于懒加载。', 'const io = new IntersectionObserver(es => {\n  es.forEach(e => {});\n});\nio.observe(el);'],
+      ['MutationObserver', 'rare', '观察 DOM 子树变化。', 'const mo = new MutationObserver(ms => {});\nmo.observe(el, {childList:true});'],
+      ['Worker', 'rare', '在后台线程执行 JS，不阻塞 UI。主线程与 Worker 通过 postMessage 通信。', 'const w = new Worker("task.js");\nw.postMessage(data);\nw.onmessage = e => console.log(e.data);'],
+      ['Blob / FileReader', 'common', 'Blob 为不可变二进制块；FileReader 异步读取 Blob/File 为文本或 DataURL。', 'const blob = new Blob(["hello"], {type:"text/plain"});\nconst fr = new FileReader();\nfr.onload = () => console.log(fr.result);\nfr.readAsText(file);'],
+      ['FormData', 'common', '构建/读取 multipart/form-data，常配合 fetch 上传文件或表单。', 'const fd = new FormData(form);\nfd.append("file", file);\nawait fetch(url, { method: "POST", body: fd });'],
+      ['Headers / Request / Response', 'common', 'fetch 三剑客。Headers 操纵请求头；Response.json/text/blob 解析。', 'const hdrs = new Headers();\nhdrs.append("Authorization", token);\nconst res = await fetch(url, { headers: hdrs });\nawait res.json();'],
+      ['AbortController / 取消 fetch', 'common', 'fetch 取消 / 取消监听：传 signal 选项，调用 controller.abort() 即可中止。', 'const ctl = new AbortController();\nfetch(url, { signal: ctl.signal });\nctl.abort();'],
+      ['fetch CORS / credentials', 'common', '跨域携带 cookie 需 credentials:"include"，后端需返回 Access-Control-Allow-Credentials: true。', 'await fetch(url, { credentials: "include" });'],
+      ['XMLHttpRequest', 'rare', '老一代异步请求 API（fetch 前身）。onreadystatechange / send。', 'const xhr = new XMLHttpRequest();\nxhr.open("GET", url);\nxhr.onload = () => console.log(xhr.responseText);\nxhr.send();'],
+      ['Clipboard API', 'common', '现代剪贴板 API：navigator.clipboard.readText/writeText。需用户手势。', 'await navigator.clipboard.writeText("hello");\nconst t = await navigator.clipboard.readText();'],
+      ['navigator.geolocation', 'rare', '获取经纬度。需 HTTPS 和用户授权。', 'navigator.geolocation.getCurrentPosition(pos => {\n  console.log(pos.coords.latitude);\n});'],
+      ['matchMedia / 媒体查询', 'common', '在 JS 中监听 CSS 媒体查询变化（如暗黑模式、窄屏）。', 'const mq = window.matchMedia("(prefers-color-scheme: dark)");\nconsole.log(mq.matches);\nmq.addEventListener("change", e => {});'],
+      ['ResizeObserver', 'rare', '观察元素尺寸变化（性能优于 resize 事件 + getBoundingClientRect）。', 'const ro = new ResizeObserver(entries => {\n  entries.forEach(en => console.log(en.contentRect));\n});\nro.observe(el);'],
+      ['BroadcastChannel', 'rare', '同源、多标签页之间广播消息。', 'const ch = new BroadcastChannel("app");\nch.postMessage({ type: "logout" });\nch.onmessage = e => console.log(e.data);'],
+      ['history.pushState / replaceState', 'common', 'SPA 不刷新切换 URL。pushState 加入历史；replaceState 替换当前。', 'history.pushState({id: 5}, "", "/post/5");\nwindow.addEventListener("popstate", onBack);'],
+      ['structuredClone', 'hot', '原生深拷贝。支持 Date/ArrayBuffer/Map/Set、正则等。不可拷贝函数/Promise/节点。', 'const x = { a: [new Date()], m: new Map([["k","v"]]) };\nconst y = structuredClone(x);'],
+      ['Intl.NumberFormat / DateTimeFormat', 'rare', '国际化数字与日期。格式化数字（千分位、货币、百分比）、多语言日期。', 'new Intl.NumberFormat("zh-CN", {style:"currency", currency:"CNY"}).format(12345);\nnew Intl.DateTimeFormat("en-US").format(new Date());'],
+      ['Intl.Collator / 国际化排序', 'rare', '按不同语言规则进行字符串排序/比较。', '["Ü","A","Z"].sort(new Intl.Collator("de").compare);'],
+      ['URL.createObjectURL / revokeObjectURL', 'common', '把 Blob/File 转成临时 blob: URL 供预览；使用完要 revoke 释放内存。', 'const u = URL.createObjectURL(file);\nimg.src = u;\nURL.revokeObjectURL(u);'],
+      ['SharedWorker / ServiceWorker', 'rare', 'ServiceWorker 用于离线缓存、网络拦截、PWA 基础；SharedWorker 多页共享同一后台线程。', 'if ("serviceWorker" in navigator) {\n  navigator.serviceWorker.register("/sw.js");\n}'],
+      ['navigator.onLine / online offline', 'rare', '是否联网；网络状态变化事件。', 'console.log(navigator.onLine);\nwindow.addEventListener("offline", () => {});'],
+      ['navigator.language / languages', 'rare', '用户首选语言及优先级列表。', 'navigator.language;   // "zh-CN"\nnavigator.languages;  // ["zh-CN","zh","en"]'],
+      ['performance.now / performance.mark', 'rare', '高精度计时（毫秒，小数级）；可打 mark + measure 做性能剖面。', 'const t0 = performance.now();\nf();\nconsole.log("用时 ms:", performance.now() - t0);'],
+      ['requestIdleCallback', 'rare', '在浏览器空闲时期执行低优先级任务。', 'requestIdleCallback(didTimeout => {\n  console.log("idle");\n});'],
+      ['btoa / atob Base64', 'rare', '对二进制字符串做 Base64 编解码。（含中文需先 encodeURIComponent/TextEncoder）', 'btoa("hello");     // "aGVsbG8="\natob("aGVsbG8=");  // "hello"'],
+      ['setTimeout / this 丢失注意', 'rare', 'setTimeout 里的普通函数 this 会丢失指向（非严格时=window），常用箭头函数或 bind。', 'const o = {\n  name:"hi",\n  run(){ setTimeout(()=>console.log(this.name), 0); }\n};'],
+    ]
+  },
+  {
+    id: 'advanced', icon: '🚀', title: '进阶 & 原理',
+    items: [
+      ['宏任务 & 微任务（事件循环）', 'common', '每轮事件循环：执行同步代码→清空微任务队列→取一个宏任务→清微任务…Promise/queueMicrotask 是微任务；setTimeout 是宏任务。', 'console.log(1);\nsetTimeout(()=>console.log(2), 0);\nPromise.resolve().then(()=>console.log(3));\n// 输出：1 3 2'],
+      ['CommonJS vs ES Module', 'rare', 'CJS：module.exports / require 同步动态；ESM：import / export 静态分析（可 tree shaking），支持 import() 动态。', '// CJS 示例：\n//   const fs = require("fs");\n//   module.exports = { add };\n// ESM 示例：\n//   import fs from "node:fs";\n//   export const add = (a, b) => a + b;\n//   const lib = await import("./lib.js");'],
+      ['import.meta.url', 'rare', 'ESM 中获取当前模块 URL，常用于拼接同目录资源路径。', '// ESM 环境中可用：\n//   const file = new URL("./a.json", import.meta.url);\n//   const json = await fs.readFile(file, "utf8");'],
+      ['package.json exports / import maps', 'rare', 'Node 包入口与浏览器裸模块映射（import "lodash" → 真实路径）。', '// HTML 中使用 importmap 的示意（省略标签包围）：\n//   { "imports": { "lodash": "/cdn/lodash.js" } }'],
+      ['内存 / GC & 引用', 'rare', 'JS 采用可达性分析的 GC。闭包、全局引用、未解绑监听、未清的定时器会导致内存泄漏。', 'const el = document.createElement("div");\n// 使用后移除 + 去掉引用 = 可回收\nel.remove();\n// 若仍被数组 hold 住则不会释放'],
+      ['闭包 Closure', 'hot', '函数与其词法环境的组合：内部函数可以访问外层函数的局部变量，即使外层已返回。', 'function makeCounter(){\n  let n = 0;\n  return () => ++n;\n}\nconst c = makeCounter();\nc(); c(); // 1, 2'],
+      ['IIFE 立即执行函数', 'common', '(function(){...})(); 模拟私有作用域（现代可用块作用域/模块替代）。', '(function(){\n  const x = 1;\n})();\nconsole.log(x); // ReferenceError'],
+      ['高阶函数 HOF', 'common', '接收/返回函数的函数，如 Array.map / 装饰器 / 函数节流。', 'const withLog = fn => (...a) => { console.log(...a); return fn(...a); };\nconst safeAdd = withLog((x,y)=>x+y);'],
+      ['柯里化 / 部分应用', 'rare', '把多参函数转换为一系列单参函数的链式调用。bind 也可做部分应用。', 'const add = a => b => a + b;\nadd(1)(2);  // 3'],
+      ['组合 compose', 'rare', '函数的组合执行：compose(f, g)(x) = f(g(x))；管道 pipe 则从左到右。', 'const inc = x => x+1;\nconst double = x => x*2;\nconst pipe = (...fns) => x => fns.reduce((v,f)=>f(v), x);\npipe(inc, double)(3); // 8'],
+      ['节流 throttle', 'common', '在一段时间内最多只执行一次（滚动/拖拽等高频事件）。', 'function throttle(fn, ms){\n  let last = 0;\n  return (...a) => {\n    const now = Date.now();\n    if (now - last >= ms) { last = now; fn(...a); }\n  };\n}'],
+      ['防抖 debounce', 'common', '连续触发不执行，停下来（间隔达到阈值）才执行最后一次。', 'function debounce(fn, ms){\n  let t;\n  return (...a) => {\n    clearTimeout(t);\n    t = setTimeout(()=>fn(...a), ms);\n  };\n}'],
+      ['单例模式', 'rare', '只允许一个实例。常见写法：模块级变量 + 懒初始化。', 'const App = (() => {\n  let inst = null;\n  return () => inst ?? (inst = { init:() => {} });\n})();'],
+      ['发布订阅 / EventEmitter', 'rare', 'on/off/emit 机制。解耦事件发送与接收方。', 'class Emitter {\n  map = new Map();\n  on(t,fn){ (this.map.get(t) ?? this.map.set(t,[]).get(t)).push(fn); }\n  emit(t, ...a){ (this.map.get(t)??[]).forEach(f=>f(...a)); }\n}'],
+      ['try/catch + async/await 捕获', 'common', 'async 里抛的错用 try/catch 捕获；promise.catch() 也可。未处理会触发 unhandledrejection。', 'async function load(){\n  try { const r = await api.get(); }\n  catch(e){ console.error(e); }\n}'],
+      ['Promise.prototype.catch / unhandledrejection', 'rare', '全局未处理的 Promise reject 会触发 window 的 unhandledrejection。', 'window.addEventListener("unhandledrejection", e => {\n  console.error("未处理的 Promise:", e.reason);\n});'],
+      ['Proxy vs Object.defineProperty', 'rare', 'Proxy 拦截整对象（含新增属性、数组下标/长度）；defineProperty 只能按属性绑。Vue3 用 Proxy。', 'const p = new Proxy({}, {\n  set(t,k,v){ /*拦截写*/ Reflect.set(t,k,v); return true; }\n});'],
+      ['Iterator / Generator', 'rare', '迭代器协议是 next() 返回 {value, done}；生成器 function* 是创建迭代器的语法糖。', 'function* range(from, to){\n  for (let i = from; i <= to; i++) yield i;\n}\nfor (const n of range(1,3)) console.log(n);'],
+      ['TypedArray / ArrayBuffer / DataView', 'rare', '二进制缓冲区与视图：Uint8Array/Float64Array；DataView 可跨平台精确读写字节序。', 'const buf = new ArrayBuffer(8);\nconst u32 = new Uint32Array(buf);\nu32[0] = 1; u32[1] = 2;'],
+      ['Atomics / SharedArrayBuffer', 'rare', '多线程对共享内存做原子操作；需配合 Worker。现代浏览器要求跨源隔离。', 'Atomics.add(u32, 0, 1);'],
+      ['Web Components 三件套', 'rare', 'Custom Elements + Shadow DOM + HTML Template/HTMLTemplateElement。', 'class XCard extends HTMLElement {\n  constructor(){\n    super();\n    this.attachShadow({mode:"open"}).innerHTML = "<b>Hi</b>";\n  }\n}\ncustomElements.define("x-card", XCard);'],
+      ['WebAssembly.instantiate', 'rare', '加载并实例化 .wasm 模块，返回 exports 里的可调用函数。', 'async function loadWasm(){\n  const bytes = fetch("a.wasm");\n  const { instance } = await WebAssembly.instantiateStreaming(bytes);\n  return instance.exports.add(1, 2);\n}'],
+      ['垃圾回收 GC 与内存泄漏', 'rare', '常见泄漏：未解绑事件、未清定时器、闭包持有大对象、全局 Map/Array 不回收、Console 保存引用、循环引用（现代 GC 已能处理）。', '/* 避免：用完后 removeEventListener / clearTimeout / Map 用 WeakMap */'],
+    ]
+  },
+  {
+    id: 'misc', icon: '🔧', title: '其他语句',
+    items: [
+      ['块语句 { }', 'common', '用大括号组合多条语句，let/const 的作用域为块级。', '{\n  let x = 1;\n  // x 仅在块内可见\n}'],
+      ['表达式语句', 'common', '表达式后跟分号即语句，如函数调用、赋值、自增。', 'counter++;\nconsole.log("hi");\nfoo();'],
+      ['debugger', 'rare', '存在调试器时暂停执行，生产环境无效果。', 'function f(){\n  debugger; // 调试暂停\n}'],
+      ['"use strict"', 'rare', '启用严格模式指令。置脚本/函数顶部，禁止 with、未声明变量赋值等。', '"use strict";\nfunction f(){ "use strict"; }'],
+      ['逗号运算符 ,', 'rare', '从左到右执行每个表达式，返回最后一个值。', 'const x = (a=1, b=2, a+b); // 3'],
+      ['void 运算符', 'rare', '执行表达式并返回 undefined。常用于阻止 a 标签跳转。', 'void 0;            // undefined\n// HTML 用法：\n// <a href="javascript:void 0">不跳转链接</a>'],
+    ]
+  }
+];
+
+/* ============================
+ *  渲染
+ * ============================ */
+const contentEl = document.getElementById('content');
+const sectionsEl = document.getElementById('sections');
+const navListEl = document.getElementById('navList');
+const searchInput = document.getElementById('search');
+const searchCountEl = document.getElementById('searchCount');
+const clearBtn = document.getElementById('clearBtn');
+const emptyTip = document.getElementById('emptyTip');
+const statsEl = document.getElementById('stats');
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function highlightCode(code){
+  let s = escapeHtml(code);
+  s = s.replace(/(\/\/[^\n]*)/g, '<span class="com">$1</span>');
+  s = s.replace(/(&quot;[^&]*?&quot;|&#39;[^&]*?&#39;)/g, '<span class="str">$1</span>');
+  s = s.replace(/("[^"\n]*"|'[^'\n]*'|`[^`\n]*`)/g, '<span class="str">$1</span>');
+  s = s.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="num">$1</span>');
+  const kw = ['var','let','const','function','return','if','else','for','while','do','switch','case','break','continue','new','class','extends','super','this','try','catch','finally','throw','import','export','default','from','as','async','await','yield','in','of','instanceof','delete','typeof','void','debugger','use strict'];
+  s = s.replace(new RegExp('\\b(' + kw.join('|') + ')\\b','g'), '<span class="kw">$1</span>');
+  return s;
+}
+function tagLabel(tag){
+  switch(tag){
+    case 'hot': return ['常用','hot'];
+    case 'common': return ['普通','common'];
+    case 'rare': return ['少见','rare'];
+    case 'deprecated': return ['废弃','deprecated'];
+    default: return ['普通','common'];
+  }
+}
+
+function render(){
+  let navHtml = '';
+  let sectionsHtml = '';
+  let totalItems = 0;
+
+  DATA.forEach((cat, ci) => {
+    const cnt = cat.items.length;
+    totalItems += cnt;
+    navHtml += `<a href="#${cat.id}" data-target="${cat.id}" class="${ci===0?'active':''}">
+      <span class="ico">${cat.icon}</span>
+      <span>${cat.title}</span>
+      <span class="cnt">${cnt}</span>
+    </a>`;
+    sectionsHtml += `<section class="category" id="${cat.id}">
+      <h2><span class="ico">${cat.icon}</span>${cat.title} <span class="badge">${cnt} 条</span></h2>
+      <div class="grid">`;
+    cat.items.forEach(item => {
+      const [name, tag, desc, code] = item;
+      const [lbl, cls] = tagLabel(tag);
+      sectionsHtml += `<article class="card" data-search="${escapeHtml((name+' '+desc).toLowerCase())}">
+        <div class="card-head">
+          <span class="name">${escapeHtml(name)}</span>
+          <span class="tag ${cls}">${lbl}</span>
+        </div>
+        <p class="card-desc">${escapeHtml(desc)}</p>
+        <pre class="code"><code>${highlightCode(code)}</code></pre>
+      </article>`;
+    });
+    sectionsHtml += `</div></section>`;
+  });
+
+  navListEl.innerHTML = navHtml;
+  sectionsEl.innerHTML = sectionsHtml;
+
+  statsEl.innerHTML = `<span>📚 <b>${DATA.length}</b> 大类</span>
+    <span>🗂️ <b>${totalItems}</b> 条目</span>
+    <span>⭐ 标签：常用 / 普通 / 少见 / 废弃</span>`;
+}
+
+/* ============================
+ *  侧栏交互
+ * ============================ */
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+const toggleBtn = document.getElementById('sidebarToggle');
+
+function openSidebar(){ sidebar.classList.add('open'); overlay.classList.add('show'); }
+function closeSidebar(){ sidebar.classList.remove('open'); overlay.classList.remove('show'); }
+toggleBtn.addEventListener('click', openSidebar);
+overlay.addEventListener('click', closeSidebar);
+
+navListEl.addEventListener('click', (e) => {
+  const a = e.target.closest('a[data-target]');
+  if(!a) return;
+  if(window.innerWidth <= 860) closeSidebar();
+});
+
+function navLinks(){ return navListEl.querySelectorAll('a[data-target]'); }
+function sectionEls(){ return sectionsEl.querySelectorAll('section.category'); }
+
+function onScroll(){
+  if(window.innerWidth <= 860) return;
+  const top = window.scrollY + 80;
+  let current = null;
+  sectionEls().forEach(sec => {
+    if(sec.offsetTop <= top) current = sec.id;
+  });
+  navLinks().forEach(a => {
+    a.classList.toggle('active', a.dataset.target === current);
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+
+/* ============================
+ *  搜索
+ * ============================ */
+function doSearch(){
+  const q = searchInput.value.trim().toLowerCase();
+  const cards = sectionsEl.querySelectorAll('.card');
+  let visible = 0;
+  cards.forEach(card => {
+    const hay = card.dataset.search || '';
+    const match = !q || hay.indexOf(q) !== -1;
+    card.classList.toggle('hidden', !match);
+    if(match) visible++;
+  });
+  sectionEls().forEach(sec => {
+    const anyVisible = sec.querySelectorAll('.card:not(.hidden)').length > 0;
+    sec.classList.toggle('hidden', !anyVisible && !!q);
+  });
+  emptyTip.classList.toggle('show', !!q && visible === 0);
+  searchCountEl.textContent = q ? `${visible} / ${cards.length} 项` : '';
+  clearBtn.style.display = q ? 'inline-block' : 'none';
+}
+searchInput.addEventListener('input', doSearch);
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  doSearch();
+  searchInput.focus();
+});
+
+/* ============================
+ *  快捷键 "/" 聚焦搜索
+ * ============================ */
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+  }
+  if (e.key === 'Escape' && document.activeElement === searchInput) {
+    searchInput.value = '';
+    doSearch();
+    searchInput.blur();
+  }
+});
+
+/* ============================
+ *  初始化
+ * ============================ */
+render();
+onScroll();
+</script>
+</body>
+</html>
