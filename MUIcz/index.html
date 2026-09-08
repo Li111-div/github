@@ -1,0 +1,138 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#2f6df6">
+  <title>5+App MUI 框架超级详细学习手册</title>
+  <link rel="stylesheet" href="css/mui.min.css">
+  <link rel="stylesheet" href="css/guide.css">
+</head>
+<body>
+  <!-- 顶部固定导航：使用 MUI 的 mui-bar / mui-bar-nav / mui-title 基础结构 -->
+  <header class="mui-bar mui-bar-nav app-header">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left header-back" href="javascript:void(0)" aria-label="返回"></a>
+    <h1 class="mui-title">5+App MUI 学习手册</h1>
+  </header>
+
+  <!-- 页面主体：mui-content 是 MUI 常用主体容器，会自动处理顶部栏占位 -->
+  <main class="mui-content page-shell">
+    <section class="hero-card">
+      <div class="hero-text">
+        <p class="kicker">DCloud HTML5+ / 5+App / MUI</p>
+        <h2>一份面向实战的 MUI 框架功能汇总</h2>
+        <p class="hero-desc">系统整理 CSS 常用类名、HTML 常用组件、JS 常用语句与联动写法，适合课程作业、移动端页面开发、5+App 初始项目学习。</p>
+        <div class="hero-actions">
+          <a class="mui-btn mui-btn-primary smooth-link" href="#css-section">看 CSS 类名</a>
+          <a class="mui-btn mui-btn-outlined smooth-link" href="#js-section">看 JS 语句</a>
+        </div>
+      </div>
+      <div class="hero-badge" aria-hidden="true"><span>MUI</span><small>Mobile UI</small></div>
+    </section>
+
+    <!-- 快速统计信息 -->
+    <section class="stat-grid" aria-label="内容概览">
+      <article><strong>70+</strong><span>常用类名</span></article>
+      <article><strong>25+</strong><span>HTML 组件</span></article>
+      <article><strong>90+</strong><span>快捷输入</span></article>
+      <article><strong>10+</strong><span>联动示例</span></article>
+    </section>
+
+    <!-- 搜索框：使用 MUI input-row 的风格 -->
+    <section class="search-card">
+      <div class="mui-input-row mui-search">
+        <input id="keywordInput" type="search" class="mui-input-clear" placeholder="搜索：按钮、列表、toast、下拉刷新、picker...">
+      </div>
+      <p id="searchHint">输入关键词后，会高亮匹配的知识卡片。</p>
+    </section>
+
+    <!-- 目录 -->
+    <nav class="toc-card" aria-label="页面目录">
+      <a class="smooth-link" href="#intro-section">01 详细介绍</a>
+      <a class="smooth-link" href="#pros-section">02 优缺点</a>
+      <a class="smooth-link" href="#css-section">03 CSS 类名</a>
+      <a class="smooth-link" href="#html-section">04 HTML 组件</a>
+      <a class="smooth-link" href="#snippet-section">05 HBuilder 快捷输入</a>
+      <a class="smooth-link" href="#js-section">06 JS 语句</a>
+      <a class="smooth-link" href="#combine-section">07 联动写法</a>
+      <a class="smooth-link" href="#summary-section">08 总结</a>
+    </nav>
+
+    <section id="intro-section" class="guide-section searchable">
+      <div class="section-title"><span>01</span><h2>MUI 框架详细介绍</h2></div>
+      <div class="content-card">
+        <p><strong>MUI</strong> 是 DCloud 生态中常见的移动端 UI 框架，常用于 HBuilder / HBuilderX 创建的 HTML5+ App，也就是常说的 5+App 项目。它主要负责移动端页面的布局、组件样式和常用交互。</p>
+        <p>在 5+App 中，MUI 通常和 <strong>HTML5+ API</strong> 配合使用：MUI 负责页面好不好看、交互顺不顺；HTML5+ API 负责调用手机原生能力，例如相机、定位、扫码、文件、Webview、原生弹窗等。</p>
+        <div class="relation-box">
+          <div><b>5+App 容器</b><small>让 HTML/CSS/JS 页面以 App 形式运行</small></div>
+          <i>+</i>
+          <div><b>MUI 框架</b><small>提供移动端 UI 组件和交互</small></div>
+          <i>+</i>
+          <div><b>HTML5+ API</b><small>调用原生能力，如扫码、相机、定位</small></div>
+        </div>
+        <ul class="clean-list">
+          <li><b>定位：</b>面向移动端 WebApp / 5+App 的前端 UI 与交互框架。</li>
+          <li><b>组成：</b>主要包含 mui.css、mui.js，以及 picker、dtpicker、poppicker、pullRefresh 等扩展文件。</li>
+          <li><b>适合：</b>移动端页面、课程项目、简单业务 App、新闻资讯、商城、生活服务、个人中心等。</li>
+          <li><b>注意：</b>DCloud MUI 不是 React 的 Material UI，二者不是同一个框架。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="pros-section" class="guide-section searchable">
+      <div class="section-title"><span>02</span><h2>MUI 的优点与缺点</h2></div>
+      <div class="two-column">
+        <article class="content-card success-card"><h3>优点</h3><ul class="clean-list"><li>上手快，会 HTML、CSS、JavaScript 就能写页面。</li><li>移动端组件完整，按钮、导航、列表、弹窗、轮播、刷新都有。</li><li>适合 5+App，和 plusready、plus.webview 等原生能力配合自然。</li><li>不强制依赖 Vue、React，普通静态页面也能直接使用。</li><li>默认样式接近移动 App，适合快速完成原型和课程项目。</li></ul></article>
+        <article class="content-card warning-card"><h3>缺点</h3><ul class="clean-list"><li>整体技术比较老，新项目现在更常用 uni-app、Vue、Vant 等方案。</li><li>大型项目中，原生 JS 写法维护成本会逐渐升高。</li><li>默认视觉风格偏传统，如果想要现代风格，需要自己重写 CSS。</li><li>部分扩展组件需要单独引入对应 CSS 和 JS 文件。</li><li>与复杂工程化、组件化开发相比，组织代码的能力较弱。</li></ul></article>
+      </div>
+    </section>
+
+    <section id="css-section" class="guide-section searchable">
+      <div class="section-title"><span>03</span><h2>CSS 常用类名汇总</h2></div>
+      <div class="content-card"><p>下面按功能整理 MUI 常用 CSS 类名。实际开发中，一般先使用 MUI 类名完成基础结构，再用自己的 CSS 覆盖颜色、间距、圆角、阴影等细节。</p></div>
+      <div id="cssTableList" class="table-list"></div>
+    </section>
+
+    <section id="html-section" class="guide-section searchable">
+      <div class="section-title"><span>04</span><h2>HTML 常用框架组件</h2></div>
+      <div class="component-list" id="htmlComponentList"></div>
+    </section>
+
+
+    <section id="snippet-section" class="guide-section searchable">
+      <div class="section-title"><span>05</span><h2>HBuilder 快速输入方法汇总</h2></div>
+      <div class="content-card">
+        <p><strong>快速输入</strong>也可以理解为 HBuilder / HBuilderX 里的代码块提示。通常在 HTML、CSS 或 JS 文件中输入快捷词，按 <b>Tab</b> 或 <b>回车</b>，即可快速生成对应的 MUI 组件结构或常用语句。</p>
+        <p>不同 HBuilder 版本、插件配置或代码块库可能略有差异。如果某个快捷词没有弹出，可以手动输入对应 MUI 类名或语句，本手册仍可作为组件结构参考。</p>
+      </div>
+      <div id="snippetTableList" class="table-list"></div>
+    </section>
+    <section id="js-section" class="guide-section searchable">
+      <div class="section-title"><span>06</span><h2>JS 常用语句汇总</h2></div>
+      <div class="content-card"><p>MUI 的 JS 常用于初始化页面、弹窗提示、事件绑定、轮播、下拉刷新、页面跳转以及 5+App 的原生能力配合。</p></div>
+      <div id="jsList" class="component-list"></div>
+    </section>
+
+    <section id="combine-section" class="guide-section searchable">
+      <div class="section-title"><span>07</span><h2>需要联动使用的常见写法</h2></div>
+      <div id="combineList" class="component-list"></div>
+    </section>
+
+    <section id="summary-section" class="guide-section searchable">
+      <div class="section-title"><span>08</span><h2>总结</h2></div>
+      <div class="content-card summary-card">
+        <p><strong>一句话总结：</strong>MUI 是 5+App 中常用的移动端 UI 框架，适合快速制作 App 风格页面；它负责界面和交互，HTML5+ API 负责调用手机原生能力。</p>
+        <p>学习时建议按这个顺序掌握：先会 <b>顶部栏、内容区、底部栏</b>，再会 <b>列表、按钮、表单、弹窗</b>，最后掌握 <b>下拉刷新、轮播图、选择器、Webview 与 plusready</b>。</p>
+        <div class="final-tip">如果是课程或比赛项目，MUI 的优势是“搭得快、改得快、手机端效果明显”；如果是长期商业项目，则建议结合 Vue / uni-app 等更现代的方案。</div>
+      </div>
+    </section>
+  </main>
+
+  <button id="backTop" class="back-top" aria-label="返回顶部">↑</button>
+
+  <script src="js/mui.min.js"></script>
+  <script src="js/guide.js"></script>
+</body>
+</html>
+
+
