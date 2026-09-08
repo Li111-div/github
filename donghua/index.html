@@ -1,0 +1,176 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Anime.js 详细介绍</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e7e9f0;--brand:#6657e8;--brand2:#8d7bff;--code:#151827;--shadow:0 14px 38px rgba(30,36,70,.08)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.75 Inter,"PingFang SC","Microsoft YaHei",sans-serif}
+.layout{display:grid;grid-template-columns:260px minmax(0,860px);gap:34px;max-width:1220px;margin:auto;padding:32px 24px 70px}.sidebar{position:sticky;top:24px;height:calc(100vh - 48px);overflow:auto}.brand{font-size:22px;font-weight:800;margin-bottom:20px}.brand span{color:var(--brand)}.search{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#fff;outline:none}.search:focus{border-color:var(--brand2);box-shadow:0 0 0 3px #ebe9ff}.toc{list-style:none;padding:16px 0 0;margin:0}.toc li{margin:3px 0}.toc a{display:block;padding:7px 10px;border-radius:8px;color:var(--muted);text-decoration:none}.toc a:hover,.toc a.active{background:#eceaff;color:var(--brand);font-weight:600}.hero{background:linear-gradient(135deg,#6557e8,#8979ff);color:#fff;border-radius:24px;padding:42px 44px;box-shadow:var(--shadow);margin-bottom:24px}.eyebrow{opacity:.8;font-weight:700;letter-spacing:.08em}.hero h1{font-size:42px;line-height:1.2;margin:10px 0}.hero p{font-size:17px;max-width:680px;opacity:.92}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.chip{padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.16);font-size:13px}.section{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px 30px;margin:18px 0;box-shadow:0 5px 20px rgba(30,36,70,.03)}h2{font-size:25px;margin:0 0 15px;display:flex;gap:10px;align-items:center}h2 .num{color:var(--brand);font-size:14px;background:#efedff;padding:4px 8px;border-radius:7px}h3{font-size:18px;margin:24px 0 8px}p{margin:8px 0;color:#354052}ul,ol{padding-left:22px}li{margin:5px 0}code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.92em;background:#f0efff;color:#5146c6;padding:2px 5px;border-radius:5px}.code-wrap{position:relative;margin:12px 0 18px}.code{margin:0;padding:18px;overflow:auto;border-radius:12px;background:var(--code);color:#e8eafa;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace}.copy{position:absolute;right:10px;top:10px;border:0;border-radius:7px;padding:6px 9px;background:#2b3048;color:#fff;cursor:pointer;font-size:12px}.copy:hover{background:var(--brand)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.item{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fcfcff}.item b{display:block;margin-bottom:4px}.table{width:100%;border-collapse:collapse;margin:12px 0}.table th,.table td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}.table th{color:var(--muted);font-weight:600}.callout{border-left:4px solid var(--brand);background:#f3f1ff;padding:13px 16px;border-radius:0 10px 10px 0;margin:14px 0}.footer{text-align:center;color:var(--muted);padding-top:22px}.hidden{display:none}@media(max-width:900px){.layout{display:block}.sidebar{position:relative;top:auto;height:auto;margin-bottom:24px}.toc{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}.hero{padding:30px 25px}.hero h1{font-size:34px}.section{padding:23px 20px}}@media(max-width:560px){.grid{grid-template-columns:1fr}.toc{display:block}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar"><div class="brand">Anime<span>.js</span> 指南</div><input id="search" class="search" placeholder="搜索章节或关键词…" /><ul class="toc" id="toc"></ul></aside>
+<main>
+<header class="hero"><div class="eyebrow">JAVASCRIPT ANIMATION ENGINE</div><h1>Anime.js 详细介绍</h1><p>一个轻量、灵活、易上手的 JavaScript 动画引擎。本文以列表模式整理核心概念、常用 API、示例与性能建议。</p><div class="chips"><span class="chip">DOM</span><span class="chip">CSS</span><span class="chip">SVG</span><span class="chip">Timeline</span><span class="chip">JavaScript 对象</span></div></header>
+
+<section class="section" data-title="Anime.js 是什么"><h2 id="intro"><span class="num">01</span>Anime.js 是什么？</h2><p>Anime.js 是一个用于创建网页动画的 JavaScript 动画引擎，能够控制 HTML / DOM 元素、CSS 属性、SVG 属性、SVG 路径以及普通 JavaScript 对象。</p><ul><li>页面加载动画</li><li>按钮悬停和点击效果</li><li>卡片、菜单、弹窗动画</li><li>滚动触发动画</li><li>数字计数和数据可视化</li><li>SVG 图形绘制与路径运动</li><li>文字逐字出现、页面转场和交互式拖拽</li></ul></section>
+
+<section class="section" data-title="安装 Anime.js"><h2 id="install"><span class="num">02</span>安装 Anime.js</h2><h3>npm</h3><div class="code-wrap"><button class="copy">复制</button><pre class="code">npm install animejs</pre></div><h3>ESM 导入</h3><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { animate } from 'animejs';</pre></div><h3>CDN</h3><div class="code-wrap"><button class="copy">复制</button><pre class="code">&lt;script type="module"&gt;
+  import { animate } from 'https://esm.sh/animejs';
+  animate('.box', { x: 300 });
+&lt;/script&gt;</pre></div></section>
+
+<section class="section" data-title="基本动画"><h2 id="basic"><span class="num">03</span>最基本的动画</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { animate } from 'animejs';
+
+animate('.box', {
+  x: 300,
+  duration: 1000
+});</pre></div><p>基本结构是 <code>animate(目标元素, 动画参数)</code>。上例让元素沿 X 轴移动 300 像素，持续 1000 毫秒。</p></section>
+
+<section class="section" data-title="常用动画属性"><h2 id="properties"><span class="num">04</span>常用动画属性</h2><div class="grid"><div class="item"><b>位移</b><code>x: 200, y: 100</code></div><div class="item"><b>旋转</b><code>rotate: 360</code> 或 <code>rotate: '1turn'</code></div><div class="item"><b>缩放</b><code>scale: 1.5</code>、<code>scaleX</code>、<code>scaleY</code></div><div class="item"><b>倾斜</b><code>skewX: 30</code></div><div class="item"><b>透明度</b><code>opacity: 0</code></div><div class="item"><b>CSS 属性</b><code>backgroundColor</code>、<code>borderRadius</code>、<code>width</code></div></div><div class="code-wrap"><button class="copy">复制</button><pre class="code">animate('.box', {
+  x: 200,
+  rotate: 360,
+  scale: 1.2,
+  opacity: 0.8,
+  backgroundColor: '#ff3366',
+  borderRadius: '50%',
+  duration: 1000
+});</pre></div></section>
+
+<section class="section" data-title="动画参数"><h2 id="params"><span class="num">05</span>动画参数</h2><table class="table"><tr><th>参数</th><th>作用</th><th>示例</th></tr><tr><td>duration</td><td>持续时间</td><td><code>duration: 1000</code></td></tr><tr><td>delay</td><td>开始前延迟</td><td><code>delay: 500</code></td></tr><tr><td>ease</td><td>缓动函数</td><td><code>ease: 'outElastic'</code></td></tr><tr><td>loop</td><td>循环播放</td><td><code>loop: true</code> 或 <code>loop: 3</code></td></tr><tr><td>alternate</td><td>往返播放</td><td><code>alternate: true</code></td></tr><tr><td>loopDelay</td><td>循环间隔</td><td><code>loopDelay: 500</code></td></tr><tr><td>reversed</td><td>反向播放</td><td><code>reversed: true</code></td></tr></table><p>常见缓动包括 <code>linear</code>、<code>outQuad</code>、<code>outExpo</code>、<code>outElastic</code>、<code>outBounce</code>。</p></section>
+
+<section class="section" data-title="起始值和结束值"><h2 id="values"><span class="num">06</span>起始值和结束值</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">// from / to
+animate('.box', {
+  x: { from: -300, to: 300 },
+  duration: 1200
+});
+
+// 数组
+animate('.box', {
+  opacity: [0, 1],
+  scale: [0.5, 1]
+});
+
+// 相对值
+animate('.box', { x: '+=100' });</pre></div></section>
+
+<section class="section" data-title="多个元素与 stagger"><h2 id="stagger"><span class="num">07</span>多个元素与交错动画</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { animate, stagger } from 'animejs';
+
+animate('.box', {
+  x: 300,
+  delay: stagger(100),
+  duration: 800
+});
+
+// 从中间开始
+animate('.box', {
+  scale: 1.5,
+  delay: stagger(100, { from: 'center' })
+});</pre></div><p><code>stagger()</code> 可用于列表逐项出现、菜单展开、图片墙和数据图表。</p></section>
+
+<section class="section" data-title="Keyframes 关键帧"><h2 id="keyframes"><span class="num">08</span>Keyframes：关键帧动画</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">animate('.box', {
+  keyframes: [
+    { x: 100, scale: 1.2, duration: 500 },
+    { x: 300, rotate: 180, scale: 1, duration: 800 },
+    { x: 0, rotate: 360, duration: 1000 }
+  ]
+});</pre></div><p>适合实现弹跳、摇摆、入场与出场组合、多阶段交互和复杂运动效果。</p></section>
+
+<section class="section" data-title="Timeline 时间轴"><h2 id="timeline"><span class="num">09</span>Timeline：时间轴</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { createTimeline } from 'animejs';
+
+const timeline = createTimeline();
+
+timeline
+  .add('.box', { x: 200, duration: 600 })
+  .add('.circle', { scale: 1.5, duration: 500 })
+  .add('.title', { opacity: 1, y: 0, duration: 700 });</pre></div><p>可以使用第二个位置参数控制时间：<code>300</code> 表示从第 300 毫秒开始，<code>'-=300'</code> 表示提前 300 毫秒并产生重叠。</p></section>
+
+<section class="section" data-title="回调与控制"><h2 id="control"><span class="num">10</span>回调与控制动画</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">const animation = animate('.box', {
+  x: 300,
+  duration: 1000,
+  onBegin: () =&gt; console.log('开始'),
+  onUpdate: animation =&gt; console.log(animation.progress),
+  onComplete: () =&gt; console.log('完成')
+});
+
+animation.pause();
+animation.play();
+animation.restart();
+animation.reverse();
+animation.seek(500);</pre></div><p>常见回调：<code>onBegin</code>、<code>onUpdate</code>、<code>onRender</code>、<code>onLoop</code>、<code>onComplete</code>。</p></section>
+
+<section class="section" data-title="SVG 和 JavaScript 对象"><h2 id="svg"><span class="num">11</span>SVG 与 JavaScript 对象</h2><h3>SVG 路径绘制</h3><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { animate, svg } from 'animejs';
+
+animate('path', {
+  strokeDashoffset: svg.drawLine(),
+  duration: 2000
+});</pre></div><h3>JavaScript 对象与数字计数</h3><div class="code-wrap"><button class="copy">复制</button><pre class="code">const counter = { value: 0 };
+
+animate(counter, {
+  value: 1000,
+  duration: 2000,
+  ease: 'outExpo',
+  onUpdate: () =&gt; {
+    document.querySelector('#number').textContent =
+      Math.round(counter.value);
+  }
+});</pre></div></section>
+
+<section class="section" data-title="Animatable 和 Timer"><h2 id="advanced"><span class="num">12</span>Animatable 与 Timer</h2><h3>鼠标跟随</h3><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { createAnimatable } from 'animejs';
+
+const box = createAnimatable('.box', {
+  x: 400, y: 400,
+  duration: 500,
+  ease: 'outQuad'
+});
+
+document.addEventListener('mousemove', event =&gt; {
+  box.x(event.clientX);
+  box.y(event.clientY);
+});</pre></div><h3>Timer</h3><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { createTimer } from 'animejs';
+
+createTimer({
+  duration: 3000,
+  onUpdate: timer =&gt; console.log(timer.currentTime),
+  onComplete: () =&gt; console.log('计时结束')
+});</pre></div></section>
+
+<section class="section" data-title="WAAPI 模式"><h2 id="waapi"><span class="num">13</span>WAAPI 模式</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { waapi } from 'animejs';
+
+waapi.animate('.box', {
+  x: 300,
+  opacity: 0.5,
+  duration: 1000
+});</pre></div><p>WAAPI 模式适合简单、体积敏感的动画；完整 JavaScript 版本更适合时间轴、SVG、对象动画、复杂回调和精细控制。</p></section>
+
+<section class="section" data-title="v3 与 v4 区别"><h2 id="version"><span class="num">14</span>Anime.js v3 与 v4 的区别</h2><table class="table"><tr><th>v3</th><th>v4</th></tr><tr><td><code>import anime from 'animejs'</code></td><td><code>import { animate } from 'animejs'</code></td></tr><tr><td><code>targets</code></td><td>作为 <code>animate()</code> 第一个参数</td></tr><tr><td><code>easing</code></td><td><code>ease</code></td></tr><tr><td><code>begin / update / complete</code></td><td><code>onBegin / onUpdate / onComplete</code></td></tr><tr><td><code>anime.timeline()</code></td><td><code>createTimeline()</code></td></tr><tr><td><code>anime.stagger()</code></td><td><code>stagger()</code></td></tr><tr><td><code>anime.path()</code></td><td><code>svg.createMotionPath()</code></td></tr></table></section>
+
+<section class="section" data-title="优点和不足"><h2 id="pros"><span class="num">15</span>优点与不足</h2><div class="grid"><div class="item"><b>优点</b><ul><li>API 简洁，入门成本低</li><li>支持 DOM、CSS、SVG 和对象</li><li>时间轴和交错动画强大</li><li>支持 ESM tree-shaking</li><li>适合高质量交互效果</li></ul></div><div class="item"><b>不足</b><ul><li>简单效果用 CSS 可能更直接</li><li>复杂 3D 场景不如 Three.js</li><li>大型项目需要注意动画清理</li><li>大量滤镜、阴影和布局动画可能卡顿</li></ul></div></div></section>
+
+<section class="section" data-title="性能建议"><h2 id="performance"><span class="num">16</span>性能建议</h2><ol><li>优先动画化 <code>transform</code> 和 <code>opacity</code>。</li><li>避免在每次鼠标移动或滚动事件中不断创建新动画。</li><li>连续交互优先考虑 <code>createAnimatable()</code>。</li><li>减少同时执行复杂滤镜、阴影和布局动画的元素数量。</li><li>对不可见元素暂停动画，合理控制循环。</li></ol><div class="callout">经验法则：能用 <code>x</code>、<code>y</code>、<code>scale</code>、<code>rotate</code>、<code>opacity</code> 解决时，尽量不要频繁修改布局属性。</div></section>
+
+<section class="section" data-title="完整卡片示例"><h2 id="demo"><span class="num">17</span>完整示例：卡片入场动画</h2><div class="code-wrap"><button class="copy">复制</button><pre class="code">import { animate, stagger } from 'animejs';
+
+animate('.card', {
+  opacity: 1,
+  y: 0,
+  delay: stagger(120),
+  duration: 800,
+  ease: 'outExpo'
+});</pre></div><p>这段代码会让卡片依次从下方移动并淡入，适合页面首屏、列表和内容模块展示。</p></section>
+
+<section class="section" data-title="总结"><h2 id="summary"><span class="num">18</span>总结</h2><p>Anime.js 可以理解为一个用 JavaScript 精确控制 DOM、CSS、SVG 和数据对象动画的轻量级动画引擎。</p><ul><li><code>animate()</code>：创建普通动画</li><li><code>createTimeline()</code>：组织多个动画</li><li><code>stagger()</code>：制作交错动画</li><li><code>createAnimatable()</code>：制作持续响应式动画</li><li><code>createTimer()</code>：创建计时逻辑</li><li><code>svg.createMotionPath()</code>：让元素沿 SVG 路径运动</li></ul></section>
+<div class="footer">Anime.js 学习笔记 · 简洁单页版</div>
+</main></div>
+<script>
+const sections=[...document.querySelectorAll('.section')];
+const toc=document.querySelector('#toc');
+sections.forEach((s,i)=>{const h=s.querySelector('h2');const a=document.createElement('a');a.href='#'+h.id;a.textContent=(String(i+1).padStart(2,'0'))+'  '+s.dataset.title;const li=document.createElement('li');li.appendChild(a);toc.appendChild(li)});
+const search=document.querySelector('#search');search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();sections.forEach(s=>s.classList.toggle('hidden',q&&!s.innerText.toLowerCase().includes(q)))});
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{const text=btn.nextElementSibling.innerText;await navigator.clipboard.writeText(text);const old=btn.textContent;btn.textContent='已复制';setTimeout(()=>btn.textContent=old,1200)}));
+const links=[...document.querySelectorAll('.toc a')];const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.hash==='#'+e.target.querySelector('h2').id))}}),{rootMargin:'-20% 0px -65%'});sections.forEach(s=>observer.observe(s));
+</script>
+</body></html>
