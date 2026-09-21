@@ -1,0 +1,962 @@
+[
+  {
+    "id": "beijing",
+    "city": "北京",
+    "caption": "北京 · 北京长城山景",
+    "source": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1508804185872-d7badad00f7d"
+  },
+  {
+    "id": "tokyo",
+    "city": "东京",
+    "caption": "东京 · 霓虹之下的街区日常",
+    "source": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf"
+  },
+  {
+    "id": "singapore",
+    "city": "新加坡",
+    "caption": "新加坡 · 滨海湾的热带天际线",
+    "source": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd"
+  },
+  {
+    "id": "paris",
+    "city": "巴黎",
+    "caption": "巴黎 · 塞纳河畔的埃菲尔铁塔",
+    "source": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34"
+  },
+  {
+    "id": "london",
+    "city": "伦敦",
+    "caption": "伦敦 · 泰晤士河与城市全景",
+    "source": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad"
+  },
+  {
+    "id": "newyork",
+    "city": "纽约",
+    "caption": "纽约 · 曼哈顿的垂直天际线",
+    "source": "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee"
+  },
+  {
+    "id": "rio",
+    "city": "里约热内卢",
+    "caption": "里约热内卢 · 山峦环抱的海湾",
+    "source": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325"
+  },
+  {
+    "id": "sydney",
+    "city": "悉尼",
+    "caption": "悉尼 · 悉尼歌剧院与海港",
+    "source": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9"
+  },
+  {
+    "id": "shanghai",
+    "city": "上海",
+    "caption": "上海 · 黄浦江与陆家嘴",
+    "source": "https://images.unsplash.com/photo-1545893835-abaa50cbe628",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1545893835-abaa50cbe628"
+  },
+  {
+    "id": "hongkong",
+    "city": "香港",
+    "caption": "香港 · 维多利亚港与城市天际线",
+    "source": "https://images.unsplash.com/photo-1536599018102-9f803c140fc1",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1536599018102-9f803c140fc1"
+  },
+  {
+    "id": "seoul",
+    "city": "首尔",
+    "caption": "首尔 · 南山首尔塔",
+    "source": "https://k.sina.cn/article_1918611551_p725bb05f02700u9f4.html?from=travel",
+    "sourceTitle": "N首尔塔（N Seoul Tower）位于韩国首尔的南山上，高236.7米",
+    "original": "https://n.sinaimg.cn/sinacn20109/160/w1920h1440/20191129/805a-iixnuaa3893593.jpg"
+  },
+  {
+    "id": "bangkok",
+    "city": "曼谷",
+    "caption": "曼谷 · 唐人街的夜间街景",
+    "source": "https://images.unsplash.com/photo-1508009603885-50cf7c579365",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1508009603885-50cf7c579365"
+  },
+  {
+    "id": "dubai",
+    "city": "迪拜",
+    "caption": "迪拜 · 海湾城市的高层天际线",
+    "source": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c"
+  },
+  {
+    "id": "istanbul",
+    "city": "伊斯坦布尔",
+    "caption": "伊斯坦布尔 · 海峡两岸的历史城景",
+    "source": "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200"
+  },
+  {
+    "id": "rome",
+    "city": "罗马",
+    "caption": "罗马 · 古代遗迹与历史街区",
+    "source": "https://images.unsplash.com/photo-1552832230-c0197dd311b5",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1552832230-c0197dd311b5"
+  },
+  {
+    "id": "barcelona",
+    "city": "巴塞罗那",
+    "caption": "巴塞罗那 · 圣家堂与扩展区街网",
+    "source": "https://images.unsplash.com/photo-1583422409516-2895a77efded",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1583422409516-2895a77efded"
+  },
+  {
+    "id": "amsterdam",
+    "city": "阿姆斯特丹",
+    "caption": "阿姆斯特丹 · 运河与沿岸街屋",
+    "source": "https://images.unsplash.com/photo-1534351590666-13e3e96b5017",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1534351590666-13e3e96b5017"
+  },
+  {
+    "id": "sanfrancisco",
+    "city": "旧金山",
+    "caption": "旧金山 · 金门大桥与海湾",
+    "source": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29"
+  },
+  {
+    "id": "vancouver",
+    "city": "温哥华",
+    "caption": "温哥华 · 海湾与城市天际线",
+    "source": "https://images.unsplash.com/photo-1559511260-66a654ae982a",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1559511260-66a654ae982a"
+  },
+  {
+    "id": "buenosaires",
+    "city": "布宜诺斯艾利斯",
+    "caption": "布宜诺斯艾利斯 · 大道与城市街区",
+    "source": "https://images.unsplash.com/photo-1589909202802-8f4aadce1849",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1589909202802-8f4aadce1849"
+  },
+  {
+    "id": "cairo",
+    "city": "开罗",
+    "caption": "开罗 · 历史城区的清真寺与街屋",
+    "source": "https://images.unsplash.com/photo-1572252009286-268acec5ca0a",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1572252009286-268acec5ca0a"
+  },
+  {
+    "id": "capetown",
+    "city": "开普敦",
+    "caption": "开普敦 · 桌山与海岸城市",
+    "source": "https://images.unsplash.com/photo-1580060839134-75a5edca2e99",
+    "sourceTitle": "",
+    "original": "https://images.unsplash.com/photo-1580060839134-75a5edca2e99"
+  },
+  {
+    "id": "marrakech",
+    "city": "马拉喀什",
+    "caption": "马拉喀什 · 库图比亚清真寺",
+    "source": "https://touch.travel.qunar.com/comment/10158197381?bd_source=h5_topic_qiongyou",
+    "sourceTitle": "2024库图比亚清真寺游玩攻略,是个有标志性的景点，对面就...【去哪儿攻略】",
+    "original": "https://youimg1.c-ctrip.com/target/100m12000000t7a8v09D0.jpg"
+  },
+  {
+    "id": "auckland",
+    "city": "奥克兰",
+    "caption": "奥克兰 · 天空塔与海港",
+    "source": "http://travel.qunar.com/p-cs308827-aokelan",
+    "sourceTitle": "奥克兰旅游攻略-2021奥克兰自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/201403/26/21442fc20b2c93b8ddb12cfb.jpg"
+  },
+  {
+    "id": "guangzhou",
+    "city": "广州",
+    "caption": "广州 · 广州塔与珠江",
+    "source": "https://travel.qunar.com/p-oi10014534-zhujiangyeyou",
+    "sourceTitle": "2025珠江夜游-旅游攻略-门票-地址-问答-游记点评，广州旅游旅游景点推荐-去哪儿攻略",
+    "original": "https://youimg1.c-ctrip.com/target/10051b000001c0kzy8CA0_D_10000_1200.jpg?proc=autoorient"
+  },
+  {
+    "id": "shenzhen",
+    "city": "深圳",
+    "caption": "深圳 · 市民中心与城市天际线",
+    "source": "https://travel.qunar.com/p-cs300118-shenzhen",
+    "sourceTitle": "深圳旅游攻略-2026深圳自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/d1021152c7a3be16e12b136577a62c57.jpg"
+  },
+  {
+    "id": "chengdu",
+    "city": "成都",
+    "caption": "成都 · 锦江沿岸",
+    "source": "https://zhuanlan.zhihu.com/p/92933165",
+    "sourceTitle": "推荐|成都都有哪些值得一去的地方 - 知乎",
+    "original": "https://pic1.zhimg.com/v2-741814ad1f36ebe2d2b96a399468741a_1440w.jpg?source=172ae18b"
+  },
+  {
+    "id": "chongqing",
+    "city": "重庆",
+    "caption": "重庆 · 洪崖洞夜景",
+    "source": "https://travel.qunar.com/travelbook/note/7597224",
+    "sourceTitle": "1日游-重庆旅游攻略-游记-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-mapi/img/79a0dec7f1ef18f4624e4e1f2c038212.jpg_r_1360x1360x95_c96df887.jpg"
+  },
+  {
+    "id": "xian",
+    "city": "西安",
+    "caption": "西安 · 钟楼夜景",
+    "source": "https://touch.travel.qunar.com/smartlist/7093222",
+    "sourceTitle": "西安这么玩最省力，这些景点可以一起去,2026西安榜单,景点/住宿/美食/购物/游玩排行榜【去哪儿攻略】",
+    "original": "https://img1.qunarzz.com/travel/poi/1809/17/9cbf57cb17ed437.jpg_r_640x380x70_4c5dbfaa.jpg"
+  },
+  {
+    "id": "hangzhou",
+    "city": "杭州",
+    "caption": "杭州 · 西湖",
+    "source": "https://travel.qunar.com/p-oi708952-xihu",
+    "sourceTitle": "2024西湖风景名胜区-旅游攻略-门票-地址-问答-游记点评，杭州旅游旅游景点推荐-去哪儿攻略",
+    "original": "https://youimg1.c-ctrip.com/target/100d14000000vu15e552D_D_10000_1200.jpg?proc=autoorient"
+  },
+  {
+    "id": "nanjing",
+    "city": "南京",
+    "caption": "南京 · 城市中轴与天际线",
+    "source": "https://go.qunar.com/travelbook/note/7726200",
+    "sourceTitle": "我眼中的南京：在桨声灯影里，在金陵一梦间-旅游攻略-游记-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-space/img/cb436cbbd415a4b1a5e1ba7bbd7bc23b.jpg?ver=1"
+  },
+  {
+    "id": "wuhan",
+    "city": "武汉",
+    "caption": "武汉 · 黄鹤楼",
+    "source": "http://www.cc-linkchina.org.cn/site/news/507",
+    "sourceTitle": "武汉！今次，我们来到了这座英雄之城",
+    "original": "http://www.cc-linkchina.org.cn/uploads/0120_1.jpg"
+  },
+  {
+    "id": "suzhou",
+    "city": "苏州",
+    "caption": "苏州 · 古城水巷",
+    "source": "http://travel.qunar.com/p-cs299937-suzhou",
+    "sourceTitle": "2019【苏州旅游攻略】苏州自助游_周边游攻略,苏州旅游吃喝玩乐指南 - 去哪儿攻略社区",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/27d682bf2b006d04e541b46c179b5a16.jpg"
+  },
+  {
+    "id": "tianjin",
+    "city": "天津",
+    "caption": "天津 · 海河沿岸",
+    "source": "https://k.sina.cn/article_7469208462_1bd33138e0010176re.html?from=travel",
+    "sourceTitle": "天津市名胜古迹、简介，都在这里",
+    "original": "http://n.sinaimg.cn/sinakd20221128ac/229/w1200h629/20221128/5ae5-98bc205b26d8efc03a4e3daa53b9567b.jpg"
+  },
+  {
+    "id": "qingdao",
+    "city": "青岛",
+    "caption": "青岛 · 海滨城区",
+    "source": "https://zhuanlan.zhihu.com/p/110740418",
+    "sourceTitle": "2020青岛最全旅游攻略：青岛值得打卡的景点全在这儿了！ - 知乎",
+    "original": "https://pic2.zhimg.com/v2-6c10d41213babc413243070807680b3f_r.jpg?source=172ae18b"
+  },
+  {
+    "id": "xiamen",
+    "city": "厦门",
+    "caption": "厦门 · 世茂海峡大厦与海岸",
+    "source": "http://travel.qunar.com/p-cs299782-xiamen",
+    "sourceTitle": "厦门旅游攻略-2021厦门自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/7671fd3c5dca3d3d9e3fbab33d07f01f.jpg"
+  },
+  {
+    "id": "fuzhou",
+    "city": "福州",
+    "caption": "福州 · 闽江沿岸",
+    "source": "https://www.szzg.gov.cn/2024/english/Introduction_of_Fuzhou/",
+    "sourceTitle": "Introduction of Fuzhou_English_数字中国建设峰会",
+    "original": "https://www.szzg.gov.cn/2024/english/Introduction_of_Fuzhou/202405/W020240508422448475273.jpg"
+  },
+  {
+    "id": "changsha",
+    "city": "长沙",
+    "caption": "长沙 · 杜甫江阁夜景",
+    "source": "https://travel.qunar.com/p-cs300022-changsha",
+    "sourceTitle": "长沙旅游攻略-2026长沙自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/86c0ee67ce0806e95201b211143b802b.jpg"
+  },
+  {
+    "id": "zhengzhou",
+    "city": "郑州",
+    "caption": "郑州 · 中原福塔夜景",
+    "source": "https://www.ly.com/travels/21902.html",
+    "sourceTitle": "河南之行 - 郑州游记攻略【同程旅游攻略】",
+    "original": "https://pic5.40017.cn/02/000/6b/ca/rBLkCFtWn4uADrD-AAE1Pd6w508796_680x_02.jpg"
+  },
+  {
+    "id": "hefei",
+    "city": "合肥",
+    "caption": "合肥 · 天鹅湖",
+    "source": "https://labs.qunar.com/travelbook/note/6693433",
+    "sourceTitle": "【合肥】遇见徽州魅力，饱览视觉盛宴。-合肥旅游攻略-游记-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/d2/1701/c4/3776510b2a740fb5.jpg_r_680x453x95_1215c5ac.jpg"
+  },
+  {
+    "id": "jinan",
+    "city": "济南",
+    "caption": "济南 · 大明湖夜景",
+    "source": "https://travel.qunar.com/p-cs300150-jinan",
+    "sourceTitle": "济南旅游攻略-2026济南自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/afc38862dfe22c55d32fb0cfa90d6b53.jpg"
+  },
+  {
+    "id": "shenyang",
+    "city": "沈阳",
+    "caption": "沈阳 · 彩电塔与城市天际线",
+    "source": "https://travel.qunar.com/p-oi8435809-caidianta",
+    "sourceTitle": "2024彩电塔-旅游攻略-门票-地址-问答-游记点评，沈阳旅游旅游景点推荐-去哪儿攻略",
+    "original": "https://youimg1.c-ctrip.com/target/0100b120008jnf5q5D78A_W_10000_1200.jpg?proc=autoorient"
+  },
+  {
+    "id": "dalian",
+    "city": "大连",
+    "caption": "大连 · 滨海风光",
+    "source": "https://go.qunar.com/travelbook/note/6606963",
+    "sourceTitle": "浪漫之都—大连四日游-大连旅游攻略-游记-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/d9/1610/5c/9ddd6f26cc8583b5.jpg_r_680x453x95_da146917.jpg"
+  },
+  {
+    "id": "harbin",
+    "city": "哈尔滨",
+    "caption": "哈尔滨 · 圣索菲亚教堂",
+    "source": "https://touch.travel.qunar.com/bookElement/7439999/3032668-2",
+    "sourceTitle": "2024哈尔滨游玩攻略,哈尔滨交通/住宿/行程/美食/购物攻略,哈尔滨注意事项/实用信息【去哪儿攻略】",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-space/img/f356cf08caf150dbc44903d308bfa2c1.jpg_r_720x480x95_130ef87d.jpg"
+  },
+  {
+    "id": "changchun",
+    "city": "长春",
+    "caption": "长春 · 北湖湿地公园",
+    "source": "https://travel.qunar.com/p-oi18717022-zhangchunbeihushidigong",
+    "sourceTitle": "2025长春北湖湿地公园-旅游攻略-门票-地址-问答-游记点评，长春旅游旅游景点推荐-去哪儿攻略",
+    "original": "https://youimg1.c-ctrip.com/target/100e1f000001gt2inBFBA_W_10000_1200.jpg?proc=autoorient"
+  },
+  {
+    "id": "kunming",
+    "city": "昆明",
+    "caption": "昆明 · 翠湖",
+    "source": "https://travel.qunar.com/p-cs300088-kunming",
+    "sourceTitle": "昆明旅游攻略-2026昆明自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/201405/28/b80b9d71a7fb861dddb12cfb.jpg_r_720x400x95_6ade29ed.jpg"
+  },
+  {
+    "id": "guiyang",
+    "city": "贵阳",
+    "caption": "贵阳 · 城市滨水景观",
+    "source": "https://travel.qunar.com/p-cs299856-guiyang",
+    "sourceTitle": "贵阳旅游攻略-2026贵阳自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/2725fb333e28a659432213abf16fefc1.jpg"
+  },
+  {
+    "id": "lhasa",
+    "city": "拉萨",
+    "caption": "拉萨 · 布达拉宫",
+    "source": "http://travel.qunar.com/p-cs299809-lasa",
+    "sourceTitle": "拉萨旅游攻略-2021拉萨自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/5e2ce3e84e241eb32d5d07e497d59570.jpg"
+  },
+  {
+    "id": "osaka",
+    "city": "大阪",
+    "caption": "大阪 · 道顿堀街景",
+    "source": "http://travel.qunar.com/smartlist/7425993",
+    "sourceTitle": "大阪热门商业街，不止心斋桥！-2020大阪旅游榜单-大阪必体验-自助游攻略-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/b69cabfdb586d8c733d2019380555a4c.jpg"
+  },
+  {
+    "id": "kyoto",
+    "city": "京都",
+    "caption": "京都 · 清水寺",
+    "source": "https://www.japan-travel.cn/destinations/kansai/kyoto/",
+    "sourceTitle": "京都｜目的地｜【官方】日本国家旅游局(JNTO)",
+    "original": "https://www.japan-travel.cn/assets_c/2020/01/Kyoto1058_1-thumb-1200x630-559.jpg"
+  },
+  {
+    "id": "nagoya",
+    "city": "名古屋",
+    "caption": "名古屋 · 名古屋站周边",
+    "source": "https://cn.japan-travel-note.com/posts/86",
+    "sourceTitle": "名古屋终极旅游指南：热门景点、当地美食和完美的一日游行程",
+    "original": "https://cdn.japan-travel-note.com/images/00086/01.jpg"
+  },
+  {
+    "id": "sapporo",
+    "city": "札幌",
+    "caption": "札幌 · 札幌电视塔与城市街区",
+    "source": "https://www.japan-travel.cn/destinations/hokkaido/hokkaido/sapporo-and-around/",
+    "sourceTitle": "札幌及周边地区｜目的地｜【官方】日本国家旅游局(JNTO)",
+    "original": "https://www.japan-travel.cn/assets_c/2020/01/Hokkaido1363_2-thumb-1200x630---2.jpg"
+  },
+  {
+    "id": "fukuoka",
+    "city": "福冈",
+    "caption": "福冈 · 福冈塔",
+    "source": "https://www.triptojapan.com/blog/15-best-things-to-do-in-fukuoka-for-first-time-visitors",
+    "sourceTitle": "15 Best Things to Do in Fukuoka for First-Time Visitors - Trip To Japan",
+    "original": "https://www.datocms-assets.com/101439/1722260907-fukuoka-tower.jpg?dpr=4&h=640&w=1280&fm=webp"
+  },
+  {
+    "id": "busan",
+    "city": "釜山",
+    "caption": "釜山 · 广安大桥与海湾",
+    "source": "https://www.expedia.co.in/Busan.dx602043",
+    "sourceTitle": "Busan Travel Guide: Best of Busan, South Korea Travel 2025 | Expedia.co.in",
+    "original": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/246000/246849-Busan.jpg?impolicy=fcrop&w=1040&h=580&q=mediumHigh"
+  },
+  {
+    "id": "taipei",
+    "city": "台北",
+    "caption": "台北 · 台北101与城区",
+    "source": "https://travel.qunar.com/travelbook/note/2107458",
+    "sourceTitle": "台北3日游-台北旅游攻略-游记-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/201405/28/5a360ef43ce7ffdaddb12cfb.jpg_r_1000x555x95_61750eec.jpg"
+  },
+  {
+    "id": "macau",
+    "city": "澳门",
+    "caption": "澳门 · 新葡京与城市夜景",
+    "source": "https://travel.ifeng.com/c/801TKjQPgVU",
+    "sourceTitle": "澳门近日恢复通关！超全旅行攻略奉上_凤凰网",
+    "original": "https://x0.ifengimg.com/ucms/2020_39/E2F94BA7C472128B9E2C92E15B90408A2BA9B41E_w1024_h683.jpg"
+  },
+  {
+    "id": "hanoi",
+    "city": "河内",
+    "caption": "河内 · 西湖与城市灯火",
+    "source": "https://www.nationalgeographic.com/travel/destination/hanoi",
+    "sourceTitle": "Hanoi Travel Guide",
+    "original": "https://i.natgeofe.com/n/39181071-db55-488f-bd54-707759ad924e/river-hanoi-vietnam.jpg"
+  },
+  {
+    "id": "hochiminh",
+    "city": "胡志明市",
+    "caption": "胡志明市 · 西贡河与城市天际线",
+    "source": "https://www.conicaltravel.com/complete-ho-chi-minh-city-travel-guide/",
+    "sourceTitle": "Complete Ho Chi Minh City Travel Guide | Top Unique Things To Do",
+    "original": "https://www.conicaltravel.com/wp-content/uploads/2020/04/Ho-Chi-Minh-City-Travel-Guide.jpg"
+  },
+  {
+    "id": "kualalumpur",
+    "city": "吉隆坡",
+    "caption": "吉隆坡 · 双子塔",
+    "source": "https://www.nationalgeographic.com/travel/destination/kuala-lumpur",
+    "sourceTitle": "Kuala Lumpur Travel Guide | National Geographic",
+    "original": "https://i.natgeofe.com/n/1690f081-f44f-4fbe-a1b6-9123819b737c/petronas-kualalumpur-malaysia_16x9.jpg?w=1200"
+  },
+  {
+    "id": "jakarta",
+    "city": "雅加达",
+    "caption": "雅加达 · 城市天际线",
+    "source": "https://touch.travel.qunar.com/smartlist/6359954",
+    "sourceTitle": "雅加达必体验,2026雅加达榜单,景点/住宿/美食/购物/游玩排行榜【去哪儿攻略】",
+    "original": "https://img1.qunarzz.com/travel/d3/1604/23/d581af21743de0f7.jpg_r_640x380x70_ef9c21c7.jpg"
+  },
+  {
+    "id": "manila",
+    "city": "马尼拉",
+    "caption": "马尼拉 · 马尼拉大教堂",
+    "source": "https://touch.travel.qunar.com/smartlist/7085901",
+    "sourceTitle": "菲律宾|马尼拉必打卡,2026马尼拉榜单,景点/住宿/美食/购物/游玩排行榜【去哪儿攻略】",
+    "original": "https://img1.qunarzz.com/travel/poi/1810/17/867f37ff85825f37.jpg_r_640x380x70_0dbfa27e.jpg"
+  },
+  {
+    "id": "delhi",
+    "city": "德里",
+    "caption": "德里 · 印度门",
+    "source": "https://pixabay.com/photos/travel-delhi-gate-culture-stone-4813658/",
+    "sourceTitle": "Travel Delhi Gate - Free photo on Pixabay",
+    "original": "https://cdn.pixabay.com/photo/2020/02/02/17/24/travel-4813658_1280.jpg"
+  },
+  {
+    "id": "mumbai",
+    "city": "孟买",
+    "caption": "孟买 · 印度之门",
+    "source": "https://travel.qunar.com/p-cs302102-mengmai",
+    "sourceTitle": "孟买旅游攻略-2026孟买自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/1412/9b/9b8b90e9b31a3b15cdb.jpg"
+  },
+  {
+    "id": "kathmandu",
+    "city": "加德满都",
+    "caption": "加德满都 · 城市街区与寺庙",
+    "source": "https://travel.ifeng.com/c/7nxHCSM2pzU",
+    "sourceTitle": "尼泊尔加德满都，一场关于信仰的流浪_凤凰网旅游_凤凰网",
+    "original": "https://p3.ifengimg.com/2019_27/6DFF3EE714017FEBE82D6BA633D5E8D7E5356849_w1000_h667.jpg"
+  },
+  {
+    "id": "colombo",
+    "city": "科伦坡",
+    "caption": "科伦坡 · 贝拉湖与城市天际线",
+    "source": "https://www.andbeyond.com/advice/asia/sri-lanka/colombo/why-visit-colombo/",
+    "sourceTitle": "Why Visit Colombo | 15 Reasons to Visit Colombo | andBeyond",
+    "original": "https://www.andbeyond.com/wp-content/uploads/sites/5/colombo-sri-lanka.jpg"
+  },
+  {
+    "id": "doha",
+    "city": "多哈",
+    "caption": "多哈 · 滨海城区",
+    "source": "https://ruebnyc188.com/que-visiter-a-doha-qatar-que-faire-au-qatar-20-lieux-a-visiter-a-doha-et-dans-les-environs/",
+    "sourceTitle": "Que Visiter A Doha Qatar : Que faire au Qatar ? 20 lieux à visiter à ...",
+    "original": "https://a.cdn-hotels.com/gdcs/production177/d1299/e8daa5a7-f1a1-486b-9390-29cede3d070a.jpg"
+  },
+  {
+    "id": "abudhabi",
+    "city": "阿布扎比",
+    "caption": "阿布扎比 · 谢赫扎耶德大清真寺",
+    "source": "http://you.ctrip.com/sight/abudhabi1353/71290.html",
+    "sourceTitle": "【携程攻略】谢赫扎耶德清真寺门票,阿布扎比谢赫扎耶德清真寺攻略/地址/图片/门票价格",
+    "original": "http://youimg1.c-ctrip.com/target/100i090000004b28j607B.jpg"
+  },
+  {
+    "id": "riyadh",
+    "city": "利雅得",
+    "caption": "利雅得 · 王国中心",
+    "source": "https://travel.qunar.com/p-cs316863-liyade",
+    "sourceTitle": "利雅得旅游攻略-2026利雅得自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/201403/29/38f5054eb09cf7d6ddb12cfb.jpg_r_720x400x95_df870fcb.jpg"
+  },
+  {
+    "id": "berlin",
+    "city": "柏林",
+    "caption": "柏林 · 勃兰登堡门",
+    "source": "https://www.visitberlin.de/en",
+    "sourceTitle": "Berlin's official travel website - visitBerlin.de",
+    "original": "https://www.visitberlin.de/system/files/image/og_image.jpg"
+  },
+  {
+    "id": "munich",
+    "city": "慕尼黑",
+    "caption": "慕尼黑 · 圣母教堂与老城",
+    "source": "https://www.munich.travel/en",
+    "sourceTitle": "Simply Munich: The Official Travel Guide",
+    "original": "https://www.muenchen.travel/var/ger_muc/storage/images/_aliases/stage_large/4/4/1/1/2181144-1-ger-DE/marienplatz-D-2687s-v1-foto-redline.jpg"
+  },
+  {
+    "id": "hamburg",
+    "city": "汉堡",
+    "caption": "汉堡 · 内阿尔斯特湖与市政厅",
+    "source": "https://www.flyingandtravel.com/things-to-do-in-hamburg/",
+    "sourceTitle": "15 of the top unmissable things to do in Hamburg",
+    "original": "https://www.flyingandtravel.com/wp-content/uploads/2018/06/things-to-do-in-hamburg-walking-tour-1.jpg"
+  },
+  {
+    "id": "vienna",
+    "city": "维也纳",
+    "caption": "维也纳 · 圣斯蒂芬大教堂",
+    "source": "https://k.sina.com.cn/article_1195299925_m473ed45503300qos1.html",
+    "sourceTitle": "去过奥地利吗？带你领略世界音乐之都维也纳之美！……_新浪新闻",
+    "original": "http://n.sinaimg.cn/sinakd20201118ac/600/w1920h1080/20201118/4f0f-kcysmrw4761903.jpg"
+  },
+  {
+    "id": "prague",
+    "city": "布拉格",
+    "caption": "布拉格 · 老城广场与泰恩教堂",
+    "source": "http://travel.qunar.com/youji/6425930",
+    "sourceTitle": "【捷克】布拉格-布拉格旅游攻略-游记-去哪儿攻略",
+    "original": "http://img1.qunarzz.com/travel/d7/1606/d4/df3de22c0f13baf7.jpg"
+  },
+  {
+    "id": "budapest",
+    "city": "布达佩斯",
+    "caption": "布达佩斯 · 国会大厦与多瑙河",
+    "source": "https://travel.qunar.com/p-cs65577-budapeisi",
+    "sourceTitle": "布达佩斯旅游攻略-2021布达佩斯自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/9f76c0d91efd5d2fce1b7faf5dd6dcb0.jpg"
+  },
+  {
+    "id": "warsaw",
+    "city": "华沙",
+    "caption": "华沙 · 科学文化宫",
+    "source": "https://touch.travel.qunar.com/poi/9133992",
+    "sourceTitle": "2023科学文化宫门票,华沙科学文化宫游玩攻略,科学文化宫游览攻略路线/地址/门票价格-【去哪儿攻略】",
+    "original": "https://img1.qunarzz.com/travel/d9/1603/c3/5eb58dffeed70cf7.jpg_600x600x70_fdb9e6b1.jpg"
+  },
+  {
+    "id": "krakow",
+    "city": "克拉科夫",
+    "caption": "克拉科夫 · 中央广场与圣母圣殿",
+    "source": "https://www.travelffeine.com/16-memorable-things-to-do-in-krakow-poland/",
+    "sourceTitle": "16 Memorable Things to Do in Krakow Poland | Travelffeine",
+    "original": "https://www.travelffeine.com/wp-content/uploads/2020/05/main-market-square-with-basilica-scaled.jpg"
+  },
+  {
+    "id": "lisbon",
+    "city": "里斯本",
+    "caption": "里斯本 · 老城与四月二十五日大桥",
+    "source": "https://k.sina.cn/article_1250590793_p4a8a804902700h7re.html",
+    "sourceTitle": "暮光之城，历久弥新。爱上葡萄牙里斯本，无需太多理由。",
+    "original": "https://n.sinaimg.cn/sinacn20121/0/w2048h1152/20181205/957d-hpfycet4168572.jpg"
+  },
+  {
+    "id": "madrid",
+    "city": "马德里",
+    "caption": "马德里 · 格兰大道",
+    "source": "https://travel.qunar.com/p-cs65553-madeli",
+    "sourceTitle": "马德里旅游攻略-2026马德里自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-manager/img/7ca683ef4999ef2564f6d6abd4ecbd20.jpg"
+  },
+  {
+    "id": "seville",
+    "city": "塞维利亚",
+    "caption": "塞维利亚 · 西班牙广场",
+    "source": "https://oldtravelbag.com/publicacion/things-to-visit-in-seville-spain",
+    "sourceTitle": "Things to visit in seville spain | Oldtravelbag.com",
+    "original": "https://www.cktravels.com/wp-content/uploads/2020/01/DSC02735.jpg"
+  },
+  {
+    "id": "venice",
+    "city": "威尼斯",
+    "caption": "威尼斯 · 大运河与安康圣母教堂",
+    "source": "https://travel.qunar.com/p-cs65539-weinisi-zhinan",
+    "sourceTitle": "威尼斯旅游注意事项-2025威尼斯旅游指南，自助游指南，游玩指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/1801/38/6274fb01996c9937.jpg"
+  },
+  {
+    "id": "florence",
+    "city": "佛罗伦萨",
+    "caption": "佛罗伦萨 · 圣母百花大教堂与老城",
+    "source": "https://www.tripsavvy.com/florence-italy-travel-guide-1507240",
+    "sourceTitle": "Florence Italy Travel Guide",
+    "original": "https://www.tripsavvy.com/thmb/gvhnd2X2LFF4oBgHcD52hNZ6MKA=/2119x1414/filters:fill(auto,1)/beautiful-cityscape-skyline-of-florence-with-cathedral-and-torre-di-arnolfo---tuscany--italy-1136168524-5c9248a1c9e77c00014a9e63.jpg"
+  },
+  {
+    "id": "milan",
+    "city": "米兰",
+    "caption": "米兰 · 米兰大教堂",
+    "source": "https://travel.qunar.com/p-cs65543-milan",
+    "sourceTitle": "米兰旅游攻略-2026米兰自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/201404/09/20f0e9c53fa002cfddb12cfb.jpg_r_720x400x95_e579ffce.jpg"
+  },
+  {
+    "id": "athens",
+    "city": "雅典",
+    "caption": "雅典 · 雅典卫城",
+    "source": "https://travelfoodnlife.com/explore-top-attractions-at-acropolis-of-athens/",
+    "sourceTitle": "Explore Top Attractions at Acropolis of Athens",
+    "original": "https://travelfoodnlife.com/wp-content/uploads/2024/05/Top-Tourist-Attractions-Acropolis-of-Athens-Greece.jpg"
+  },
+  {
+    "id": "zurich",
+    "city": "苏黎世",
+    "caption": "苏黎世 · 利马特河与老城",
+    "source": "http://travel.qunar.com/youji/7072563",
+    "sourceTitle": "苏黎世 一半湖泊，一半雪山-苏黎世旅游攻略-游记-去哪儿攻略",
+    "original": "http://img1.qunarzz.com/travel/d6/1807/f0/21b5fefa7ceea2b5.jpg?ver=1"
+  },
+  {
+    "id": "copenhagen",
+    "city": "哥本哈根",
+    "caption": "哥本哈根 · 新港沿岸",
+    "source": "https://www.visitcopenhagen.com/",
+    "sourceTitle": "The official guide to Copenhagen | Visit Copenhagen",
+    "original": "https://www.visitcopenhagen.com/sites/visitcopenhagen.com/files/2020-08/Stormbroen2_Daniel_Rasmussen.jpg"
+  },
+  {
+    "id": "stockholm",
+    "city": "斯德哥尔摩",
+    "caption": "斯德哥尔摩 · 老城与滨水建筑",
+    "source": "https://www.travelmag.com/things-to-do-in-stockholm/",
+    "sourceTitle": "20 Unique Things to Do in Stockholm - Travelmag",
+    "original": "https://www.travelmag.com/wp-content/uploads/2019/03/Feature-10.jpg"
+  },
+  {
+    "id": "oslo",
+    "city": "奥斯陆",
+    "caption": "奥斯陆 · 港湾",
+    "source": "https://travel.qunar.com/p-cs65579-aosilu",
+    "sourceTitle": "奥斯陆旅游攻略-2024奥斯陆自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/1508/76/1eb3a4bc2338dd.jpg_r_480x360x95_35d5e5ed.jpg"
+  },
+  {
+    "id": "helsinki",
+    "city": "赫尔辛基",
+    "caption": "赫尔辛基 · 赫尔辛基大教堂",
+    "source": "https://travel.qunar.com/p-oi7560708-heerxinjidajiaotang-0-1",
+    "sourceTitle": "2019赫尔辛基大教堂-旅游攻略-门票-地址-问答-游记点评，赫尔辛基旅游旅游景点推荐-去哪儿攻略",
+    "original": "https://youimg1.c-ctrip.com/target/100s16000000zhn6v8549.jpg"
+  },
+  {
+    "id": "losangeles",
+    "city": "洛杉矶",
+    "caption": "洛杉矶 · 城市天际线与远山",
+    "source": "http://travel.qunar.com/p-cs310189-luoshanji",
+    "sourceTitle": "2016【洛杉矶旅游攻略】洛杉矶自助游_周边游攻略,洛杉矶旅游吃喝玩乐指南 - 去哪儿攻略社区",
+    "original": "http://img1.qunarzz.com/travel/poi/1603/2c/78cf30add65ff9f7.jpg"
+  },
+  {
+    "id": "chicago",
+    "city": "芝加哥",
+    "caption": "芝加哥 · 千禧公园云门",
+    "source": "https://travel.qunar.com/p-pl5712512",
+    "sourceTitle": "2024第四天的行程开始于芝加哥千禧公园。千禧公园随拍。特点一：市中心，特点二：不要钱_千禧公园-评论-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/d3/1712/a7/e04f4253642649b5.jpg_r_720x480x95_a9231502.jpg"
+  },
+  {
+    "id": "boston",
+    "city": "波士顿",
+    "caption": "波士顿 · 查尔斯河",
+    "source": "https://touch.travel.qunar.com/comment/5937389",
+    "sourceTitle": "2026波士顿空中漫步观景台游玩攻略,...起，就一直喜欢登顶城市高...【去哪儿攻略】",
+    "original": "https://tr-osdcp.qunarzz.com/tr-osd-tr-space/img/764cc6f7fee59fcd9d9cdec6d855dfe7.jpg"
+  },
+  {
+    "id": "washington",
+    "city": "华盛顿",
+    "caption": "华盛顿 · 美国国会大厦",
+    "source": "https://k.sina.cn/article_3994494943_ee1727df00100artf.html?from=travel",
+    "sourceTitle": "一睹美国首都华盛顿城市面貌",
+    "original": "http://n.sinaimg.cn/sinacn12/321/w640h481/20180731/bb1c-hhacrce1401783.jpg"
+  },
+  {
+    "id": "seattle",
+    "city": "西雅图",
+    "caption": "西雅图 · 太空针塔",
+    "source": "https://travel.qunar.com/p-cs310214-xiyatu",
+    "sourceTitle": "西雅图旅游攻略-2025西雅图自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/1603/b0/3863e489a94134f7.jpg"
+  },
+  {
+    "id": "miami",
+    "city": "迈阿密",
+    "caption": "迈阿密 · 滨水城区",
+    "source": "https://travel.qunar.com/p-cs310197-maiami",
+    "sourceTitle": "迈阿密旅游攻略-2026迈阿密自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/1412/d2/d2dc96127793d986cdb.jpg"
+  },
+  {
+    "id": "toronto",
+    "city": "多伦多",
+    "caption": "多伦多 · 多伦多市政厅",
+    "source": "https://wikitravel.org/en/Toronto",
+    "sourceTitle": "Toronto - Wikitravel",
+    "original": "https://wikitravel.org/upload/shared/thumb/6/6c/800px-Toronto_City_Hall_night_view.jpg/300px-800px-Toronto_City_Hall_night_view.jpg"
+  },
+  {
+    "id": "montreal",
+    "city": "蒙特利尔",
+    "caption": "蒙特利尔 · 蒙特利尔圣母圣殿",
+    "source": "https://touch.travel.qunar.com/comment/10163984450",
+    "sourceTitle": "2023蒙特利尔圣母大教堂游玩攻略,...它的外观就足以震撼人，内...【去哪儿攻略】",
+    "original": "https://youimg1.c-ctrip.com/target/0104i120007b0jzc833AD.jpg"
+  },
+  {
+    "id": "quebec",
+    "city": "魁北克城",
+    "caption": "魁北克城 · 魁北克老城与芳堤娜城堡",
+    "source": "https://travel.destinationcanada.cn/places-to-go/quebec/quebec-city",
+    "sourceTitle": "魁北克城 | 加拿大旅游局",
+    "original": "https://travel.destinationcanada.cn/_next/image?url=https:%2F%2Fadmin.destinationcanada.cn%2Fsites%2Fdefault%2Ffiles%2Fstyles%2Fcard_grid_item_three_across%2Fpublic%2F2026-04%2FQuebec%2520City%252C%2520Quebec%2520-%2520Credit%2520Re%25CC%2581gion%2520de%2520Que%25CC%2581bec%2520%25C2%25A9%2520GouvQc%2520Harmony%2520Le%2520Reste.jpg%3Fh%3Ddc317ad6%26itok%3DVpZNRb01&w=1920&q=75"
+  },
+  {
+    "id": "mexicocity",
+    "city": "墨西哥城",
+    "caption": "墨西哥城 · 宪法广场与大都会主教座堂",
+    "source": "https://tourandtravelblog.com/best-hotels-in-mexico-city/",
+    "sourceTitle": "Here Are The 25+ Best Hotels In Mexico City That You Must Visit!",
+    "original": "https://i.natgeofe.com/n/6c02ad5a-977b-4f12-b9c0-02ffb0736e07/metropolitan-cathedral-zocalo-mexico-city.JPG"
+  },
+  {
+    "id": "havana",
+    "city": "哈瓦那",
+    "caption": "哈瓦那 · 国会大厦",
+    "source": "http://commons.wikipedia.org/wiki/File:El_Capitolio_Havana_Cuba.jpg",
+    "sourceTitle": "File:El Capitolio Havana Cuba.jpg - Wikimedia Commons",
+    "original": "http://upload.wikimedia.org/wikipedia/commons/1/1d/El_Capitolio_Havana_Cuba.jpg"
+  },
+  {
+    "id": "bogota",
+    "city": "波哥大",
+    "caption": "波哥大 · 玻利瓦尔广场与主教座堂",
+    "source": "https://www.civitatis.com/blog/pt-br/o-que-ver-em-bogota-em-1-dia/",
+    "sourceTitle": "O que fazer em Bogotá: 11 planos e dicas na capital colombiana ...",
+    "original": "https://www.civitatis.com/blog/wp-content/uploads/2022/10/panoramica-plaza-bolivar-bogota.jpg"
+  },
+  {
+    "id": "lima",
+    "city": "利马",
+    "caption": "利马 · 利马大教堂",
+    "source": "http://travel.qunar.com/p-oi7588548-limadajiaotang",
+    "sourceTitle": "2021利马大教堂-旅游攻略-门票-地址-问答-游记点评，利马旅游旅游景点推荐-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/1501/58/580318afeaa3a961cdb.jpg_480x360x95_64be3ea7.jpg"
+  },
+  {
+    "id": "santiago",
+    "city": "圣地亚哥",
+    "caption": "圣地亚哥 · 科斯塔内拉中心与城区",
+    "source": "https://sayhueque.com/travel-guide/santiago-de-chile/",
+    "sourceTitle": "Santiago de Chile Ultimate Travel Guide | Say Hueque",
+    "original": "https://sayhueque.com/wp-content/uploads/2021/02/parks-in-santiago-1.jpg"
+  },
+  {
+    "id": "saopaulo",
+    "city": "圣保罗",
+    "caption": "圣保罗 · 城市夜景",
+    "source": "https://travel.ifeng.com/a/20160811/44435692_0.shtml",
+    "sourceTitle": "圣保罗：南美洲最繁华的城市_凤凰旅游",
+    "original": "http://p1.ifengimg.com/a/2016_33/003d387055fc27b_size135_w984_h637.jpg"
+  },
+  {
+    "id": "quito",
+    "city": "基多",
+    "caption": "基多 · 国家誓言圣殿",
+    "source": "https://arptravels.com/travel/quito-tourist-attractions",
+    "sourceTitle": "Quito tourist attractions 60 photos - Arptravels.com",
+    "original": "https://thegreenadventurers.com/wp-content/uploads/2023/03/weboptimised-5.jpg"
+  },
+  {
+    "id": "nairobi",
+    "city": "内罗毕",
+    "caption": "内罗毕 · 城市天际线",
+    "source": "https://www.expedia.com/Nairobi.dx178290",
+    "sourceTitle": "Visit Nairobi: Best of Nairobi Tourism | Expedia Travel Guide",
+    "original": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/38000/38950-Nairobi.jpg"
+  },
+  {
+    "id": "addisababa",
+    "city": "亚的斯亚贝巴",
+    "caption": "亚的斯亚贝巴 · 城市街区",
+    "source": "https://travel.qunar.com/p-cs316788-yadesiyabeiba",
+    "sourceTitle": "亚的斯亚贝巴旅游攻略-2026亚的斯亚贝巴自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/201403/28/e54a4b620a9f3d9cddb12cfb.jpg_r_720x400x95_1fab93dc.jpg"
+  },
+  {
+    "id": "lagos",
+    "city": "拉各斯",
+    "caption": "拉各斯 · 滨水城区",
+    "source": "https://k.sina.cn/article_6479944975_1823c1d0f00100atn7.html",
+    "sourceTitle": "直击西非最大城市拉各斯：尼日利亚超一线城市，感觉很落后",
+    "original": "http://n.sinaimg.cn/sinacn21/492/w783h509/20180909/42dc-hivtsyk7108574.jpg"
+  },
+  {
+    "id": "accra",
+    "city": "阿克拉",
+    "caption": "阿克拉 · 独立广场",
+    "source": "https://fao.sz.gov.cn/ztzl/yhjlcs/content/post_11389.html",
+    "sourceTitle": "加纳阿克拉市 - 友好交流城市 - 深圳市人民政府外事办公室",
+    "original": "https://fao.sz.gov.cn/img/0/11/11416/11389.jpg"
+  },
+  {
+    "id": "dakar",
+    "city": "达喀尔",
+    "caption": "达喀尔 · 城市街区",
+    "source": "https://www.voyageavecnous.fr/que-faire-a-dakar/",
+    "sourceTitle": "Que faire à Dakar : mon Top 14 des activités à ne pas manquer",
+    "original": "https://www.voyageavecnous.fr/wp-content/uploads/2024/09/capitale-senegal.jpg"
+  },
+  {
+    "id": "tunis",
+    "city": "突尼斯市",
+    "caption": "突尼斯市 · 城市街区",
+    "source": "https://k.sina.com.cn/article_6896671977_19b12dce900100dz6t.html",
+    "sourceTitle": "游览美丽的突尼斯市，感受独特风土人情和旅游景区|突尼斯市|图书馆|博物馆_新浪新闻",
+    "original": "http://n.sinaimg.cn/front/260/w640h420/20190314/RLAs-hufnxfn1931887.jpg"
+  },
+  {
+    "id": "casablanca",
+    "city": "卡萨布兰卡",
+    "caption": "卡萨布兰卡 · 哈桑二世清真寺",
+    "source": "https://touch.go.qunar.com/poi/8450860",
+    "sourceTitle": "2026哈桑二世清真寺门票,卡萨布兰卡哈桑二世清真寺游玩攻略,哈桑二世清真寺游览攻略路线/地址/门票价格-【去哪儿攻略】",
+    "original": "https://img1.qunarzz.com/travel/d4/1707/ab/8f1b43e8b59625b5.jpg_r_640x426x70_417277a5.jpg"
+  },
+  {
+    "id": "johannesburg",
+    "city": "约翰内斯堡",
+    "caption": "约翰内斯堡 · 城市天际线",
+    "source": "https://www.odysseytraveller.com/articles/johannesburg-south-african-tour/",
+    "sourceTitle": "Johannesburg | South African tour guide to the history - Odyssey Traveller",
+    "original": "https://res.cloudinary.com/odysseytraveller/image/fetch/f_auto,q_auto,dpr_auto,r_4,w_765,h_535.5,c_limit/https://cdn.odysseytraveller.com/app/uploads/2020/06/GettyImages-1139743558.jpg"
+  },
+  {
+    "id": "kigali",
+    "city": "基加利",
+    "caption": "基加利 · 山城街区",
+    "source": "https://www.nationalgeographic.com/travel/destination/kigali",
+    "sourceTitle": "Kigali Travel Guide",
+    "original": "https://i.natgeofe.com/n/1cd98224-d5ad-4f2c-a556-8b9105bb96a2/downtown-kigali-rwanda.jpg"
+  },
+  {
+    "id": "daressalaam",
+    "city": "达累斯萨拉姆",
+    "caption": "达累斯萨拉姆 · 海港城区",
+    "source": "https://www.rhinoafrica.com/en/destinations/dar-es-salaam/21707",
+    "sourceTitle": "Dar Es Salaam, Tanzania - Travel Guide | Rhino Africa",
+    "original": "https://cdn.rhinoafrica.com/tmp/image-thumbnails/media/_en/destinations/root/africa/east-africa/tanzania/coast-of-tanzania/dar-es-salaam/_img/image-thumb__57318__background-cover/dar-es-salaam-aerial-view-01.jpg"
+  },
+  {
+    "id": "melbourne",
+    "city": "墨尔本",
+    "caption": "墨尔本 · 弗林德斯街车站",
+    "source": "https://travel.qunar.com/p-cs307817-moerben",
+    "sourceTitle": "墨尔本旅游攻略-2026墨尔本自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/201407/04/a2eacf882e5320b8ddb12cfb.jpg_r_720x400x95_782915cf.jpg"
+  },
+  {
+    "id": "brisbane",
+    "city": "布里斯班",
+    "caption": "布里斯班 · 布里斯班河沿岸",
+    "source": "https://baike.baidu.com/item/布里斯班/887554",
+    "sourceTitle": "布里斯班（澳大利亚第三大城市及昆士兰州首府）_百度百科",
+    "original": "https://bkimg.cdn.bcebos.com/pic/d043ad4bd11373f02aff6dc6ab0f4bfbfaed04a2?x-bce-process=image/format,f_auto/resize,m_lfit,limit_1,h_336"
+  },
+  {
+    "id": "perth",
+    "city": "珀斯",
+    "caption": "珀斯 · 城市天际线",
+    "source": "http://www.fattytour.com/珀斯生活完善攻略/",
+    "sourceTitle": "珀斯市区旅行总攻略 | Fattytour",
+    "original": "http://www.fattytour.com/wp-content/uploads/2016/10/perth_sunrise2s-800x468.jpg"
+  },
+  {
+    "id": "adelaide",
+    "city": "阿德莱德",
+    "caption": "阿德莱德 · 托伦斯河与会展中心",
+    "source": "http://travel.qunar.com/p-cs308540-adelaide",
+    "sourceTitle": "阿德莱德旅游攻略-2021阿德莱德自助游-周边自驾-游玩攻略-自由行-吃喝玩乐指南-去哪儿攻略",
+    "original": "https://img1.qunarzz.com/travel/poi/1409/04/3bc5655201073c32ffffffffc8d65eac.jpg_r_720x400x95_183578c1.jpg"
+  },
+  {
+    "id": "wellington",
+    "city": "惠灵顿",
+    "caption": "惠灵顿 · 海港全景",
+    "source": "https://touch.travel.qunar.com/h5/smart/detail/7089146",
+    "sourceTitle": "新西兰惠灵顿最美海滩TOP5！,2026惠灵顿榜单,景点/住宿/美食/购物/游玩排行榜【去哪儿攻略】",
+    "original": "https://img1.qunarzz.com/travel/poi/1808/52/ad2a23ebe6a37237.jpg_r_640x640_267c7573.jpg"
+  },
+  {
+    "id": "christchurch",
+    "city": "基督城",
+    "caption": "基督城 · 基督城美术馆",
+    "source": "https://www.holidify.com/places/christchurch/sightseeing-and-things-to-do.html",
+    "sourceTitle": "46 Best Things to do in Christchurch New-Zealand 2026 | Holidify",
+    "original": "https://www.holidify.com/images/cmsuploads/compressed/Christchurch_Art_Gallery2C_Christchurch2C_New_Zealand_20190705123129.jpg"
+  }
+]
