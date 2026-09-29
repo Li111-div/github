@@ -1,0 +1,29 @@
+{
+  "stats": {
+    "parts": 79,
+    "meshes": 557,
+    "tris": 168596
+  },
+  "health": {
+    "bad": [],
+    "cam": [
+      1.42,
+      1.72,
+      3.3
+    ],
+    "state": {
+      "fridgeTemp": 7.06,
+      "freezerTemp": -14.67,
+      "load": 0.025,
+      "power": 184,
+      "cop": 2.2,
+      "cond": 31.6,
+      "reject": 27,
+      "kwh": 0.001,
+      "simTime": 217
+    },
+    "fps": "24 FPS"
+  },
+  "errors": [],
+  "view": "1920x1080"
+}

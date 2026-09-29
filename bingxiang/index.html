@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>冰箱数字实验室 · THE SCIENCE OF COOLING</title>
+<style>
+:root{
+  --page:#f4f4f0;
+  --stage:#ecedE8;
+  --panel:rgba(251,252,249,.92);
+  --panel-solid:#fbfcf9;
+  --ink:#163846;
+  --ink-2:#2b4d5b;
+  --muted:#6f8790;
+  --line:#d5e0df;
+  --line-2:#e6ecea;
+  --accent:#1d8792;
+  --accent-soft:#ddeff0;
+  --cold:#4eabc2;
+  --heat:#d88456;
+  --warn:#c9704a;
+  --shadow:0 1px 2px rgba(22,56,70,.05), 0 10px 30px -12px rgba(22,56,70,.18);
+  --shadow-sm:0 1px 2px rgba(22,56,70,.06), 0 4px 14px -8px rgba(22,56,70,.16);
+  --r:14px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--page)}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--ink);font-size:13px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;color:inherit;border:0;background:none;cursor:pointer;font-size:12px}
+input,select{font-family:inherit}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#cfd9d8;border-radius:9px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:#b6c4c3;background-clip:padding-box}
+::-webkit-scrollbar-track{background:transparent}
+
+#app{display:flex;flex-direction:column;height:100vh;width:100vw}
+
+/* ============================ 顶栏 ============================ */
+#topbar{
+  height:68px;flex:0 0 68px;display:flex;align-items:center;gap:22px;
+  padding:0 22px;background:linear-gradient(180deg,#fdfdfa,#f7f8f4);
+  border-bottom:1px solid var(--line);z-index:30;position:relative;
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:250px}
+.logo{
+  width:34px;height:34px;border-radius:9px;flex:0 0 34px;position:relative;
+  background:linear-gradient(150deg,#2ba0ab,#146d78 60%,#0e5159);
+  box-shadow:0 4px 12px -4px rgba(20,109,120,.6), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.logo::before{content:"";position:absolute;inset:9px 15px 9px 9px;border-radius:2px;background:rgba(255,255,255,.82)}
+.logo::after{content:"";position:absolute;left:15px;top:9px;bottom:9px;width:1px;background:rgba(14,81,89,.55)}
+.brand h1{margin:0;font-size:15px;font-weight:650;letter-spacing:.4px}
+.brand p{margin:1px 0 0;font-size:9.5px;letter-spacing:1.5px;color:var(--muted);font-weight:500}
+
+#modenav{display:flex;gap:4px;background:#eef1ee;border:1px solid var(--line-2);padding:4px;border-radius:11px}
+#modenav button{
+  padding:7px 15px;border-radius:8px;font-weight:550;color:var(--ink-2);
+  letter-spacing:.6px;transition:.18s;position:relative;
+}
+#modenav button:hover{background:rgba(255,255,255,.75);color:var(--accent)}
+#modenav button.on{background:#fff;color:var(--accent);box-shadow:var(--shadow-sm)}
+#modenav button.on::after{
+  content:"";position:absolute;left:50%;bottom:2px;width:14px;height:2px;margin-left:-7px;
+  border-radius:2px;background:var(--accent);opacity:.75;
+}
+.tools{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tools button{
+  padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:#fff;
+  color:var(--ink-2);font-weight:500;transition:.18s;box-shadow:var(--shadow-sm)
+}
+.tools button:hover{border-color:var(--accent);color:var(--accent)}
+.simchip{
+  display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:20px;
+  background:#fff6ec;border:1px solid #f0d9c2;color:#a4602f;font-size:10.5px;font-weight:600;letter-spacing:.3px
+}
+.simchip i{width:6px;height:6px;border-radius:50%;background:#d88456;box-shadow:0 0 0 3px rgba(216,132,86,.18);animation:pulse 2.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ============================ 主体 ============================ */
+main{flex:1;display:flex;min-height:0}
+
+/* ---------------------------- 舞台 ---------------------------- */
+#stage{
+  position:relative;flex:1;min-width:0;overflow:hidden;
+  background:radial-gradient(120% 90% at 42% 32%,#f4f5ef 0%,#e4e6de 44%,#c6ccc4 100%);
+}
+#stage canvas{display:block;width:100%;height:100%}
+#stage::after{content://;position:absolute;inset:0;pointer-events:none;z-index:2;/n  background:radial-gradient(115% 88% at 44% 34%,rgba(0,0,0,0) 46%,rgba(22,40,48,.10) 100%)}
+.label-layer{position:absolute;inset:0;pointer-events:none;z-index:8}
+
+.lbl{
+  position:absolute;left:0;top:0;display:flex;align-items:center;gap:8px;
+  will-change:transform;pointer-events:none;white-space:nowrap;
+}
+.lbl-dot{
+  width:7px;height:7px;border-radius:50%;background:#fff;flex:0 0 7px;
+  box-shadow:0 0 0 1.5px var(--accent),0 0 0 5px rgba(29,135,146,.14);
+}
+.lbl-tx{display:flex;flex-direction:column;line-height:1.18}
+.lbl-tx b{font-size:11.5px;font-weight:650;color:var(--ink);letter-spacing:.2px}
+.lbl-tx i{font-size:8.5px;font-style:normal;color:var(--muted);letter-spacing:1px;font-weight:500}
+.lbl-left{transform-origin:left center}
+.lbl-left .lbl-tx{order:-1;text-align:right}
+.lbl-right .lbl-dot{order:-1}
+
+/* Hero 文案 */
+.hero{
+  position:absolute;left:34px;bottom:104px;z-index:9;pointer-events:none;
+  max-width:min(46%,520px);transition:opacity .45s ease;
+}
+.hero .hero-en{
+  font-size:10.5px;letter-spacing:3.6px;color:var(--accent);font-weight:650;
+  margin-bottom:9px;text-transform:uppercase;
+}
+.hero .hero-cn{font-size:27px;line-height:1.34;font-weight:600;letter-spacing:.6px;color:var(--ink)}
+.hero .hero-cn em{font-style:normal;color:var(--accent)}
+.hero .hero-line{margin-top:13px;width:52px;height:2px;background:linear-gradient(90deg,var(--accent),transparent);border-radius:2px}
+
+/* 底部模式条 */
+.modebar{
+  position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:10;
+  display:flex;align-items:center;gap:6px;padding:6px;border-radius:14px;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(14px);
+  border:1px solid rgba(213,224,223,.9);box-shadow:var(--shadow);
+}
+.modebar button{
+  padding:8px 14px;border-radius:9px;font-weight:550;color:var(--ink-2);transition:.18s;
+  display:flex;align-items:center;gap:6px;white-space:nowrap
+}
+.modebar button:hover{background:#f0f5f4;color:var(--accent)}
+.modebar button.on{background:var(--accent);color:#fff;box-shadow:0 6px 16px -6px rgba(29,135,146,.7)}
+.modebar .sep{width:1px;height:20px;background:var(--line);margin:0 3px}
+
+/* 上下文滑块 */
+.ctxpanel{
+  position:absolute;right:24px;bottom:26px;z-index:10;width:238px;
+  padding:13px 15px;border-radius:13px;background:rgba(255,255,255,.9);
+  backdrop-filter:blur(14px);border:1px solid rgba(213,224,223,.9);box-shadow:var(--shadow);
+  display:none;
+}
+.ctxpanel.on{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ctxpanel h4{margin:0 0 9px;font-size:10.5px;letter-spacing:1.4px;color:var(--muted);font-weight:650;text-transform:uppercase}
+.ctxpanel .rowv{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-2);margin-bottom:6px}
+.ctxpanel .rowv b{color:var(--accent);font-weight:650}
+
+/* 特写名牌 */
+.inspectbar{
+  position:absolute;left:34px;bottom:26px;z-index:10;display:none;
+  padding:12px 16px 12px 15px;border-radius:13px;background:rgba(255,255,255,.92);
+  backdrop-filter:blur(14px);border:1px solid rgba(213,224,223,.9);box-shadow:var(--shadow);
+  min-width:220px;
+}
+.inspectbar.on{display:block;animation:fadeUp .3s ease}
+.inspectbar .ib-en{font-size:9px;letter-spacing:2.4px;color:var(--accent);font-weight:650}
+.inspectbar .ib-cn{font-size:17px;font-weight:650;margin-top:3px;letter-spacing:.4px}
+.inspectbar button{margin-top:9px;font-size:11px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.inspectbar button:hover{color:var(--accent)}
+
+.stagebadge{
+  position:absolute;left:34px;top:20px;z-index:9;font-size:10px;letter-spacing:.6px;
+  color:var(--muted);background:rgba(255,255,255,.7);padding:4px 10px;border-radius:20px;
+  border:1px solid rgba(213,224,223,.8);backdrop-filter:blur(6px);
+}
+.stagehint{
+  position:absolute;right:24px;top:20px;z-index:9;font-size:10px;letter-spacing:.4px;
+  color:var(--muted);background:rgba(255,255,255,.7);padding:4px 10px;border-radius:20px;
+  border:1px solid rgba(213,224,223,.8);backdrop-filter:blur(6px);
+}
+#fps{
+  position:absolute;right:24px;bottom:22px;z-index:9;font-size:10px;letter-spacing:.5px;
+  color:var(--muted);font-variant-numeric:tabular-nums
+}
+
+/* ---------------------------- 右侧面板 ---------------------------- */
+#panel{
+  flex:0 0 402px;width:402px;display:flex;flex-direction:column;min-height:0;
+  background:var(--panel);backdrop-filter:blur(18px);border-left:1px solid var(--line);z-index:20;
+}
+.tabs{display:flex;gap:2px;padding:12px 14px 0;flex:0 0 auto;border-bottom:1px solid var(--line-2)}
+.tabs button{
+  flex:1;padding:9px 4px 10px;border-radius:9px 9px 0 0;font-weight:600;color:var(--muted);
+  letter-spacing:.8px;position:relative;transition:.18s
+}
+.tabs button:hover{color:var(--accent);background:rgba(221,239,240,.4)}
+.tabs button.on{color:var(--accent)}
+.tabs button.on::after{content:"";position:absolute;left:16%;right:16%;bottom:-1px;height:2px;background:var(--accent);border-radius:2px}
+.panes{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 14px 26px}
+.pane{display:none}
+.pane.on{display:block;animation:fadeIn .26s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+.card{
+  background:#fff;border:1px solid var(--line-2);border-radius:var(--r);
+  padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow-sm)
+}
+.card-t{
+  font-size:10.5px;letter-spacing:1.6px;color:var(--muted);font-weight:650;
+  text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px
+}
+.card-t::before{content:"";width:3px;height:11px;border-radius:2px;background:var(--accent);opacity:.75}
+.card-t .tag{margin-left:auto;font-size:9.5px;letter-spacing:.5px;color:var(--muted);
+  background:#f2f5f3;padding:2px 7px;border-radius:20px;text-transform:none}
+
+/* 温度大数 */
+.temps{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.tempbox{
+  border-radius:11px;padding:11px 12px;background:linear-gradient(160deg,#f2fbfc,#e7f5f7);
+  border:1px solid #d8ecef
+}
+.tempbox.z{background:linear-gradient(160deg,#f4f8fb,#e8f0f6);border-color:#d9e6ef}
+.tempbox .lbl2{font-size:10px;color:var(--muted);letter-spacing:1px;font-weight:600}
+.tempbox .val{font-size:27px;font-weight:600;letter-spacing:-.5px;font-variant-numeric:tabular-nums;
+  color:var(--ink);line-height:1.16;margin-top:2px}
+.tempbox .val span{font-size:14px;font-weight:500;color:var(--muted);margin-left:1px}
+.tempbox .set{font-size:9.5px;color:var(--muted);margin-top:2px}
+
+/* 指标行 */
+.metric{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line-2)}
+.metric:last-child{border-bottom:0;padding-bottom:0}
+.metric .k{font-size:11.5px;color:var(--ink-2)}
+.metric .v{font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;color:var(--ink)}
+.metric .v u{text-decoration:none;font-size:10px;color:var(--muted);margin-left:2px;font-weight:500}
+
+/* 进度条 */
+.bar{height:6px;border-radius:6px;background:#eef2f1;overflow:hidden;margin-top:7px}
+.bar>i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),#4fb6bf);
+  transition:width .3s ease}
+.bar.heat>i{background:linear-gradient(90deg,#e8a06a,var(--heat))}
+
+/* 热量卡片 */
+.heatcard{
+  background:linear-gradient(150deg,#fff9f4,#fdf1e8);border:1px solid #f2ddcb;border-radius:var(--r);
+  padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow-sm)
+}
+.heatcard h5{margin:0 0 4px;font-size:13.5px;font-weight:650;letter-spacing:.3px}
+.heatcard p.sub{margin:0 0 12px;font-size:10.5px;color:var(--muted)}
+.heq{display:flex;align-items:stretch;gap:7px;margin-bottom:10px}
+.heq .term{
+  flex:1;border-radius:10px;padding:9px 6px;text-align:center;background:#fff;border:1px solid #f0e0d1
+}
+.heq .term .n{font-size:16px;font-weight:650;font-variant-numeric:tabular-nums;color:#b3652f}
+.heq .term .n small{font-size:10px;font-weight:500;margin-left:1px;color:var(--muted)}
+.heq .term .t{font-size:9.5px;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+.heq .op{display:flex;align-items:center;font-size:14px;color:#d8a37a;font-weight:600}
+.heatbar{display:flex;height:9px;border-radius:9px;overflow:hidden;background:#f0e5db}
+.heatbar i{display:block;transition:width .3s ease}
+.heatbar i.a{background:linear-gradient(90deg,#7fc6dd,#4eabc2)}
+.heatbar i.b{background:linear-gradient(90deg,#e8a06a,#d88456)}
+.heatlegend{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);margin-top:6px}
+
+/* 图表 */
+.chartwrap{position:relative;height:96px;margin-top:4px}
+.chartwrap canvas{width:100%;height:100%;display:block}
+.chartlegend{display:flex;gap:14px;font-size:9.5px;color:var(--muted);margin-top:7px}
+.chartlegend i{display:inline-block;width:9px;height:2.5px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+/* 控件 */
+.ctl{margin-bottom:13px}
+.ctl:last-child{margin-bottom:0}
+.ctl .ctop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.ctl .ctop label{font-size:11.5px;color:var(--ink-2)}
+.ctl .ctop b{font-size:12px;color:var(--accent);font-variant-numeric:tabular-nums;font-weight:650}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:4px;background:#e6ecea;outline:none}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;
+  border:2.5px solid var(--accent);cursor:pointer;box-shadow:0 2px 6px -1px rgba(29,135,146,.5)
+}
+.switchrow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line-2)}
+.switchrow:last-child{border-bottom:0}
+.switchrow span{font-size:11.5px;color:var(--ink-2)}
+.sw{width:38px;height:21px;border-radius:21px;background:#dde4e3;position:relative;transition:.22s;flex:0 0 38px}
+.sw::after{content:"";position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.18);transition:.22s}
+.sw.on{background:var(--accent)}
+.sw.on::after{left:19.5px}
+.sw.warn.on{background:var(--warn)}
+
+/* 实验卡 */
+.exp{
+  border:1px solid var(--line-2);border-radius:var(--r);padding:12px 13px;margin-bottom:9px;
+  background:#fff;box-shadow:var(--shadow-sm);transition:.2s;position:relative;overflow:hidden
+}
+.exp:hover{border-color:#c6dcde}
+.exp.active{border-color:var(--accent);background:linear-gradient(150deg,#f7fdfd,#eef8f9)}
+.exp h5{margin:0 0 5px;font-size:12.5px;font-weight:650;display:flex;align-items:center;gap:7px}
+.exp h5 em{
+  font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.5px;color:#fff;background:var(--accent);
+  width:17px;height:17px;border-radius:6px;display:grid;place-items:center;flex:0 0 17px
+}
+.exp p{margin:0 0 10px;font-size:10.8px;color:var(--muted);line-height:1.55}
+.exp .acts{display:flex;gap:7px;flex-wrap:wrap}
+.exp button{
+  padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:#fff;font-weight:550;
+  font-size:11px;color:var(--ink-2);transition:.18s
+}
+.exp button:hover{border-color:var(--accent);color:var(--accent);background:#f6fcfc}
+.exp button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.exp button.pri:hover{background:#17707a;color:#fff}
+.exp .prog{position:absolute;left:0;bottom:0;height:2.5px;background:var(--accent);width:0;transition:width .2s linear}
+
+/* 结构目录 */
+.catgroup{margin-bottom:8px}
+.catgroup>h5{
+  margin:0 0 6px;font-size:10px;letter-spacing:1.5px;color:var(--muted);font-weight:650;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px
+}
+.catgroup>h5::after{content:"";flex:1;height:1px;background:var(--line-2)}
+.comp{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:10px;cursor:pointer;
+  transition:.16s;border:1px solid transparent;margin-bottom:2px
+}
+.comp:hover{background:#f2f8f8;border-color:#dcecec}
+.comp.on{background:var(--accent-soft);border-color:#b9dee0}
+.comp .dot{width:6px;height:6px;border-radius:50%;background:#c4d2d2;flex:0 0 6px;transition:.16s}
+.comp.on .dot{background:var(--accent);box-shadow:0 0 0 3px rgba(29,135,146,.16)}
+.comp .nm{font-size:11.8px;font-weight:550}
+.comp .en{margin-left:auto;font-size:8.5px;letter-spacing:.9px;color:var(--muted)}
+
+/* 原理教学 */
+.step{
+  border:1px solid var(--line-2);border-radius:var(--r);padding:12px 13px;margin-bottom:8px;background:#fff;
+  cursor:pointer;transition:.2s;box-shadow:var(--shadow-sm)
+}
+.step:hover{border-color:#c6dcde;transform:translateX(2px)}
+.step.on{border-color:var(--accent);background:linear-gradient(150deg,#f7fdfd,#eef8f9)}
+.step .hd{display:flex;align-items:center;gap:10px}
+.step .no{
+  font-size:11px;font-weight:700;letter-spacing:.5px;color:#fff;background:var(--accent);
+  width:26px;height:26px;border-radius:9px;display:grid;place-items:center;flex:0 0 26px
+}
+.step .hd b{font-size:12.5px;font-weight:650}
+.step .hd .en{margin-left:auto;font-size:8.5px;letter-spacing:1px;color:var(--muted)}
+.step .bd{font-size:10.8px;color:var(--muted);line-height:1.6;margin-top:8px;display:none}
+.step.on .bd{display:block}
+.step .bd .flow{
+  display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap
+}
+.step .bd .flow em{
+  font-style:normal;font-size:10px;padding:3px 8px;border-radius:6px;background:#eef5f6;
+  color:var(--ink-2);font-weight:550
+}
+.step .bd .flow s{text-decoration:none;color:var(--accent);font-weight:700}
+
+.note{
+  border-left:3px solid var(--accent);background:linear-gradient(90deg,#f3fafa,#fbfdfd);
+  padding:11px 13px;border-radius:0 11px 11px 0;margin-bottom:9px
+}
+.note b{display:block;font-size:11.5px;margin-bottom:4px;color:var(--ink)}
+.note p{margin:0;font-size:10.8px;color:var(--muted);line-height:1.65}
+.note.cold{border-left-color:var(--cold);background:linear-gradient(90deg,#f0f9fc,#fbfdfe)}
+.note.heat{border-left-color:var(--heat);background:linear-gradient(90deg,#fdf5ef,#fffcf9)}
+
+.meta-facts{display:grid;gap:6px;margin-top:10px}
+.meta-facts .fr{display:flex;gap:10px;font-size:10.8px;padding-bottom:6px;border-bottom:1px dashed var(--line-2)}
+.meta-facts .fr:last-child{border-bottom:0;padding-bottom:0}
+.meta-facts .fr b{flex:0 0 84px;color:var(--muted);font-weight:600}
+.meta-facts .fr span{flex:1;color:var(--ink-2);line-height:1.55}
+
+/* 帮助弹层 */
+#modal{
+  position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;
+  background:rgba(20,40,48,.36);backdrop-filter:blur(5px)
+}
+#modal.on{display:flex;animation:fadeIn .2s ease}
+#modal .box{
+  width:min(720px,90vw);max-height:82vh;overflow-y:auto;background:#fff;border-radius:18px;
+  padding:26px 30px 24px;box-shadow:0 30px 80px -20px rgba(16,40,50,.5)
+}
+#modal h3{margin:0 0 4px;font-size:19px;font-weight:650}
+#modal .sub{font-size:10.5px;letter-spacing:2px;color:var(--accent);font-weight:650;margin-bottom:18px}
+#modal h4{margin:18px 0 7px;font-size:12.5px;font-weight:650;color:var(--ink);display:flex;align-items:center;gap:7px}
+#modal h4::before{content:"";width:3px;height:12px;background:var(--accent);border-radius:2px}
+#modal p,#modal li{font-size:11.8px;color:var(--ink-2);line-height:1.72;margin:0 0 5px}
+#modal ul{margin:0;padding-left:17px}
+#modal .close{position:sticky;bottom:-24px;display:flex;justify-content:flex-end;margin-top:20px}
+#modal .close button{padding:9px 20px;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;font-size:12px}
+.kbd{display:inline-block;padding:1px 6px;border-radius:5px;border:1px solid var(--line);background:#f6f8f7;
+  font-size:10px;font-weight:600;color:var(--ink-2);margin:0 1px}
+
+/* 加载 */
+#boot{
+  position:fixed;inset:0;z-index:200;background:linear-gradient(160deg,#f7f8f4,#e9ece6);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s
+}
+#boot.gone{opacity:0;pointer-events:none}
+#boot .ring{width:38px;height:38px;border-radius:50%;border:2.5px solid #d5e0df;border-top-color:var(--accent);
+  animation:spin .85s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#boot b{font-size:13px;letter-spacing:2px;color:var(--ink)}
+#boot p{margin:0;font-size:10.5px;color:var(--muted);letter-spacing:1px}
+
+/* 窄屏适配 */
+@media (max-width:1560px){
+  #panel{flex-basis:372px;width:372px}
+  .hero .hero-cn{font-size:24px}
+}
+@media (max-width:1400px){
+  #panel{flex-basis:344px;width:344px}
+  .brand p{display:none}
+  #modenav button{padding:7px 11px}
+  .hero{left:24px;bottom:96px}
+  .hero .hero-cn{font-size:21px}
+  .hero .hero-en{font-size:9.5px;letter-spacing:2.6px}
+}
+@media (max-width:1180px){
+  .tools .simchip{display:none}
+  .hero{max-width:56%}
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>冰箱数字实验室</h1>
+        <p>THE SCIENCE OF COOLING · 3D DIGITAL LAB</p>
+      </div>
+    </div>
+    <nav id="modenav">
+      <button data-mode="product" class="on">整机</button>
+      <button data-mode="open">开门</button>
+      <button data-mode="explode">爆炸</button>
+      <button data-mode="section">剖面</button>
+      <button data-mode="cycle">回路</button>
+    </nav>
+    <div class="tools">
+      <span class="simchip"><i></i>教学模拟 · 非实测数据</span>
+      <button id="btnStage">棚拍：浅色</button>
+      <button id="btnHelp">帮助 / 说明</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="stage">
+      <div class="stagebadge">概念设计 · 非品牌 1:1 CAD 复刻</div>
+      <div class="stagehint">左键旋转 · 右键平移 · 滚轮缩放 · WASD 平移 · Q/E 升降</div>
+
+      <div class="hero" id="hero">
+        <div class="hero-en">THE SCIENCE OF COOLING</div>
+        <div class="hero-cn">看见冷的每一处细节。</div>
+        <div class="hero-line"></div>
+      </div>
+
+      <div class="modebar" id="modebar">
+        <button data-mode="product" class="on">整机</button>
+        <button data-mode="open">开门</button>
+        <button data-mode="explode">爆炸</button>
+        <button data-mode="section">剖面</button>
+        <button data-mode="cycle">回路</button>
+        <span class="sep"></span>
+        <button id="btnDoorL">开冷冻门</button>
+        <button id="btnDoorR">开冷藏门</button>
+        <button id="btnReset" title="复位全部动作">复位</button>
+      </div>
+
+      <div class="ctxpanel" id="ctxExplode">
+        <h4>Explode Progress</h4>
+        <div class="rowv"><span>爆炸进度</span><b id="explodeVal">0 %</b></div>
+        <input type="range" id="explodeRange" min="0" max="100" value="0" />
+      </div>
+
+      <div class="ctxpanel" id="ctxSection">
+        <h4>Section Plane</h4>
+        <div class="rowv"><span>剖面位置（左 → 右）</span><b id="sectionVal">62 %</b></div>
+        <input type="range" id="sectionRange" min="0" max="100" value="62" />
+        <p style="margin:9px 0 0;font-size:10px;color:var(--muted);line-height:1.6">
+          剖切只改变显示，不改变热工模型边界。门体已暂时隐藏，其「外皮 / 发泡 / 内衬」三明治结构见「结构 → 门体系统」。</p>
+      </div>
+
+      <div class="inspectbar" id="inspectbar">
+        <div class="ib-en" id="ibEn">COMPONENT</div>
+        <div class="ib-cn" id="ibCn">部件</div>
+        <button id="ibExit">返回整机视角</button>
+      </div>
+
+      <div id="fps">— FPS</div>
+    </section>
+
+    <aside id="panel">
+      <div class="tabs">
+        <button data-tab="live" class="on">实时</button>
+        <button data-tab="exp">实验</button>
+        <button data-tab="struct">结构</button>
+        <button data-tab="theory">原理</button>
+      </div>
+      <div class="panes">
+
+        <!-- ============ 实时 ============ -->
+        <div class="pane on" data-pane="live">
+          <div class="card">
+            <div class="card-t">双温区实时状态<span class="tag" id="simClock">模拟 00:00</span></div>
+            <div class="temps">
+              <div class="tempbox">
+                <div class="lbl2">冷藏室</div>
+                <div class="val" id="tFridge">4.6<span>°C</span></div>
+                <div class="set" id="tFridgeSet">设定 4 °C</div>
+              </div>
+              <div class="tempbox z">
+                <div class="lbl2">冷冻室</div>
+                <div class="val" id="tFreezer">-17.4<span>°C</span></div>
+                <div class="set" id="tFreezerSet">设定 -18 °C</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-t">整机运行<span class="tag" id="runState">运行中</span></div>
+            <div class="metric"><span class="k">整机输入功率</span><span class="v" id="mPower">0<u>W</u></span></div>
+            <div class="metric"><span class="k">压缩机负荷</span><span class="v" id="mLoad">0<u>%</u></span></div>
+            <div class="bar"><i id="mLoadBar" style="width:0%"></i></div>
+            <div class="metric" style="margin-top:9px"><span class="k">冷凝器表面温度</span><span class="v" id="mCond">34<u>°C</u></span></div>
+            <div class="metric"><span class="k">蒸发器温度</span><span class="v" id="mEvap">-15<u>°C</u></span></div>
+            <div class="metric"><span class="k">有效 COP</span><span class="v" id="mCop">2.35</span></div>
+            <div class="metric"><span class="k">环境温度</span><span class="v" id="mAmb">25<u>°C</u></span></div>
+            <div class="metric"><span class="k">有效热容（含食材）</span><span class="v" id="mHeatCap">—<u>kJ/K</u></span></div>
+            <div class="metric"><span class="k">食材质量</span><span class="v" id="mFoodMass">—<u>kg</u></span></div>
+            <div class="metric"><span class="k">累计能耗</span><span class="v" id="mKwh">0.000<u>kWh</u></span></div>
+          </div>
+
+          <div class="heatcard">
+            <h5>热量，到哪里去了？</h5>
+            <p class="sub">箱内吸热 + 压缩机做功 = 向室内排热</p>
+            <div class="heq">
+              <div class="term"><div class="n" id="hAbsorb">0<small>W</small></div><div class="t">箱内吸热</div></div>
+              <div class="op">+</div>
+              <div class="term"><div class="n" id="hComp">0<small>W</small></div><div class="t">压缩机做功</div></div>
+              <div class="op">=</div>
+              <div class="term"><div class="n" id="hReject">0<small>W</small></div><div class="t">向室内排热</div></div>
+            </div>
+            <div class="heatbar"><i class="a" id="hBarA" style="width:58%"></i><i class="b" id="hBarB" style="width:42%"></i></div>
+            <div class="heatlegend"><span>吸热占比</span><span>压缩机输入功占比</span></div>
+          </div>
+
+          <div class="card">
+            <div class="card-t">趋势（近 60 s）</div>
+            <div class="chartwrap"><canvas id="trend"></canvas></div>
+            <div class="chartlegend">
+              <span><i style="background:#4eabc2"></i>冷藏室</span>
+              <span><i style="background:#2f6f8f"></i>冷冻室</span>
+              <span><i style="background:#d88456"></i>输入功率</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-t">控制台</div>
+            <div class="ctl">
+              <div class="ctop"><label>环境温度</label><b id="vAmb">25 °C</b></div>
+              <input type="range" id="rAmb" min="10" max="43" step="1" value="25" />
+            </div>
+            <div class="ctl">
+              <div class="ctop"><label>冷藏设定温度</label><b id="vSetF">4 °C</b></div>
+              <input type="range" id="rSetF" min="1" max="8" step="1" value="4" />
+            </div>
+            <div class="ctl">
+              <div class="ctop"><label>冷冻设定温度</label><b id="vSetZ">-18 °C</b></div>
+              <input type="range" id="rSetZ" min="-24" max="-14" step="1" value="-18" />
+            </div>
+            <div class="ctl">
+              <div class="ctop"><label>模拟速度</label><b id="vSpeed">30 ×</b></div>
+              <input type="range" id="rSpeed" min="0" max="4" step="1" value="2" />
+            </div>
+            <div class="ctl">
+              <div class="ctop"><label>食材装载量</label><b id="vFoodLoad">65 %</b></div>
+              <input type="range" id="rFoodLoad" min="0" max="100" step="5" value="65" />
+              <p style="margin:6px 0 0;font-size:10px;color:var(--muted);line-height:1.55">
+                装载量同时决定 3D 中显示多少食材，以及箱内有效热容。</p>
+            </div>
+            <div class="switchrow"><span>显示食材</span><div class="sw on" id="swFood"></div></div>
+            <div class="switchrow"><span>供电</span><div class="sw on" id="swPower"></div></div>
+            <div class="switchrow"><span>散热受阻</span><div class="sw warn" id="swBlocked"></div></div>
+            <div class="switchrow"><span>除霜</span><div class="sw" id="swDefrost"></div></div>
+            <div class="switchrow"><span>冷媒粒子</span><div class="sw on" id="swRef"></div></div>
+            <div class="switchrow"><span>冷气路径</span><div class="sw on" id="swAir"></div></div>
+            <div class="switchrow"><span>热量路径</span><div class="sw on" id="swHeat"></div></div>
+          </div>
+        </div>
+
+        <!-- ============ 实验 ============ -->
+        <div class="pane" data-pane="exp">
+          <div class="exp" id="expA">
+            <div class="prog" id="expAProg"></div>
+            <h5><em>A</em>开门一分钟</h5>
+            <p>自动打开双门并保持模拟 1 分钟。蒸发器风机因门控停机，冷气路径减弱，箱温缓慢上升；关门后观察恢复过程与压缩机负荷的平滑爬升。</p>
+            <div class="acts">
+              <button class="pri" data-exp="door">开始实验</button>
+              <button data-exp="doorStop">停止并关门</button>
+            </div>
+          </div>
+
+          <div class="exp" id="expB">
+            <div class="prog" id="expBProg"></div>
+            <h5><em>B</em>放入常温食材</h5>
+            <p>模拟一次性放入一批常温食材：装载量上升，同时按质量 × 比热 × 温差注入显热负荷（指数衰减释放）。冷藏温度短时上升、压缩机负荷随之上升，随后逐渐恢复；注意恢复速度会明显慢于空箱——这正是食材热惯性的作用。</p>
+            <div class="acts">
+              <button class="pri" data-exp="load">放入常温食材</button>
+              <button data-exp="fill">装满食材</button>
+              <button data-exp="clear">清空食材</button>
+            </div>
+          </div>
+
+          <div class="exp" id="expC">
+            <div class="exp-h"></div>
+            <h5><em>C</em>散热受阻</h5>
+            <p>把冷凝器的有效散热能力降到约 1/3（模拟贴墙、积灰、通风不良）。冷凝温度上升 → 蒸发/冷凝温差变大 → COP 下降 → 压缩机负荷与功率上升，背部热流可视化明显增强。</p>
+            <div class="acts">
+              <button class="pri" data-exp="block">开启散热受阻</button>
+              <button data-exp="unblock">恢复正常散热</button>
+            </div>
+          </div>
+
+          <div class="exp" id="expD">
+            <h5><em>D</em>断电</h5>
+            <p>切断供电：压缩机与风机停止，制冷剂粒子逐渐静止，冷气循环消失，冷藏与冷冻温度缓慢回升并趋近环境温度。</p>
+            <div class="acts">
+              <button class="pri" data-exp="poweroff">切断供电</button>
+              <button data-exp="poweron">恢复供电</button>
+            </div>
+          </div>
+
+          <div class="exp" id="expE">
+            <div class="prog" id="expEProg"></div>
+            <h5><em>E</em>除霜</h5>
+            <p>压缩机与蒸发器风机停机，除霜加热管点亮，蒸发器温度快速回升，翅片间出现水滴；化霜水沿接水槽 → 排水管 → 压缩机上方接水盘流动，并靠压缩机余热自然蒸发。</p>
+            <div class="acts">
+              <button class="pri" data-exp="defrost">开始除霜循环</button>
+              <button data-exp="defrostStop">中止除霜</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-t">实验说明</div>
+            <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.75">
+              所有实验运行在同一个热工模型上，参数会互相影响。实验过程中的温度、功率、COP 均为<b style="color:var(--ink-2)">教学仿真值</b>，用于说明物理趋势，不代表任何真实机型实测数据。
+            </p>
+          </div>
+        </div>
+
+        <!-- ============ 结构 ============ -->
+        <div class="pane" data-pane="struct">
+          <div class="card" style="padding:11px 13px">
+            <div class="card-t" style="margin-bottom:6px">整机装配统计</div>
+            <div class="metric"><span class="k">独立装配节点</span><span class="v" id="sParts">—</span></div>
+            <div class="metric"><span class="k">网格数量</span><span class="v" id="sMeshes">—</span></div>
+            <div class="metric"><span class="k">三角形数量</span><span class="v" id="sTris">—</span></div>
+          </div>
+          <div id="catalog"></div>
+        </div>
+
+        <!-- ============ 原理 ============ -->
+        <div class="pane" data-pane="theory">
+          <div class="card-t" style="margin:2px 0 10px">制冷循环四步</div>
+          <div id="steps"></div>
+
+          <div class="note heat">
+            <b>为什么开着冰箱门，房间不会变凉？</b>
+            <p>因为冷凝器向房间排出的热量，等于从箱内吸收的热量<b>加上</b>压缩机的输入功。压缩机不断把电能转成热，整间房最终反而多得到了一份热量——冰箱本质上是一台“把热从箱内搬到箱外”的搬运工，而不是制冷机。</p>
+          </div>
+          <div class="note cold">
+            <b>两种“流”不要混淆</b>
+            <p>青色曲线与粒子表示<b>箱内空气循环</b>：空气被蒸发器冷却后由风道送入箱内，再经回风格栅返回。铜管中的彩色粒子表示<b>制冷剂</b>：它在密闭回路中循环，永不进入箱内。两者只在蒸发器与冷凝器的管壁处交换热量，绝不混合。</p>
+          </div>
+          <div class="note">
+            <b>为什么冰箱里东西越多，温度越稳？</b>
+            <p>食材（尤其是含水量高的食物）比热约 3000 J/(kg·K)，一箱 8 kg 食材的热容就相当于把箱内有效热容提高一倍以上。热容越大，同样的漏热或开门热负荷引起的温升越小、升温越慢——所以装满的冰箱比空冰箱更“抗折腾”，但降温也更慢。右侧「食材装载量」会实时改变这个热容，可以直接对比。</p>
+          </div>
+          <div class="note">
+            <b>真实性边界</b>
+            <p>本页外观为高端双门家用冰箱概念设计，不是任何品牌具体产品的 1:1 CAD 复刻。温度、功率、COP 为教学仿真参数；空气流线不是 CFD 求解结果；压缩机内部动画是原理教学慢动作，不代表真实转速。模型结构可按同一接口替换为真实测量数据或更高级求解器。</p>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div id="modal">
+  <div class="box">
+    <h3>冰箱数字实验室 · 使用说明</h3>
+    <div class="sub">THE SCIENCE OF COOLING</div>
+
+    <h4>视角操作（所有模式一致）</h4>
+    <p><span class="kbd">左键拖动</span> 旋转 &nbsp;·&nbsp; <span class="kbd">右键拖动</span> 平移 &nbsp;·&nbsp;
+      <span class="kbd">滚轮</span> 缩放 &nbsp;·&nbsp; <span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span> 平移观察中心 &nbsp;·&nbsp;
+      <span class="kbd">Q</span> / <span class="kbd">E</span> 下降 / 上升</p>
+
+    <h4>六种模式</h4>
+    <ul>
+      <li><b>整机</b>：产品 Hero 视角，门关闭，少量热点标签。</li>
+      <li><b>开门</b>：双门绕真实铰链打开（最大 138°），内部照明亮起，可点击抽屉抽拉。</li>
+      <li><b>爆炸</b>：每个零件沿合理装配方向分离，0–100% 进度可调；进入前自动收抽屉、关门，并暂停热工时钟。</li>
+      <li><b>剖面</b>：沿竖直切平面剖开，显示外层钣金 / 发泡保温 / 内胆的三明治结构，位置可调。</li>
+      <li><b>回路</b>：突出制冷剂管路，箱体半隐藏，粒子按温度区段着色。</li>
+      <li><b>特写</b>：在“结构”页或 3D 中点击部件，镜头自动重新构图，其他部件降权为半透明剪影。</li>
+    </ul>
+
+    <h4>联锁规则</h4>
+    <ul>
+      <li>抽屉拉出前必须先开启对应门体至安全角（76°）。</li>
+      <li>关门前必须先收回该侧全部抽屉。</li>
+      <li>进入爆炸图前自动收回全部抽屉并关闭双门。</li>
+      <li>爆炸过程中禁止门 / 抽屉产生操作。</li>
+    </ul>
+
+    <h4>食材系统</h4>
+    <p>箱内食材全部为程序化建模，包含冷藏 / 冷冻 / 门架三处共 <b>40 余件</b>示意食材。右侧「显示食材」开关控制显隐，「食材装载量」滑块同时决定
+      <b>显示多少食材</b> 与 <b>箱内有效热容</b>——食材越多，温度越稳、降温越慢。食材挂在真实承托物上：抽屉食材随抽屉抽拉，门架食材随门体旋转，不会穿模。</p>
+
+    <h4>数据说明</h4>
+    <p>右侧面板的所有数值来自一个双温区集总参数热工模型，满足 Q<sub>排</sub> ≈ Q<sub>吸</sub> + P<sub>压缩机</sub> 的守恒关系。
+      它用于说明物理趋势（环境越热负荷越高、开门升温、散热受阻 COP 下降、断电回升、除霜停机），<b>不是</b>实测数据。</p>
+
+    <div class="close"><button id="btnCloseModal">开始探索</button></div>
+  </div>
+</div>
+
+<div id="boot">
+  <div class="ring"></div>
+  <b>正在构建 3D 数字实验室</b>
+  <p>程序化建模 · 材质 · 灯光 · 仿真</p>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="src/00-core.js"></script>
+<script src="src/10-textures.js"></script>
+<script src="src/20-materials.js"></script>
+<script src="src/30-model-cabinet.js"></script>
+<script src="src/31-model-doors.js"></script>
+<script src="src/32-model-interior.js"></script>
+<script src="src/33-model-cooling.js"></script>
+<script src="src/34-model-electronics.js"></script>
+<script src="src/36-model-food.js"></script>
+<script src="src/40-model.js"></script>
+<script src="src/50-stage.js"></script>
+<script src="src/55-controls.js"></script>
+<script src="src/60-camera.js"></script>
+<script src="src/65-kinematics.js"></script>
+<script src="src/70-thermal.js"></script>
+<script src="src/75-flow.js"></script>
+<script src="src/80-labels.js"></script>
+<script src="src/85-ui.js"></script>
+<script src="src/90-main.js"></script>
+</body>
+</html>
