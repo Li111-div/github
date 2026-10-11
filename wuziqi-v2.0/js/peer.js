@@ -18,6 +18,18 @@
     this._disposed = false;
   }
 
+  /* 把候选列表压成 "host×1 srflx×1" 这样的短串，便于在一行里展示 */
+  function summarizeCandidates(list) {
+    const byType = {};
+    list.forEach(function (c) {
+      const t = c.candidateType || 'unknown';
+      byType[t] = (byType[t] || 0) + 1;
+    });
+    const keys = Object.keys(byType);
+    if (!keys.length) return '无';
+    return keys.map(function (k) { return k + '×' + byType[k]; }).join(' ');
+  }
+
   PeerLink.prototype = {
 
     /* ---------- 创建底层连接对象 ---------- */
@@ -121,6 +133,20 @@
       const self = this;
       if (!this.pc) return Promise.reject(new Error('请先生成邀请码'));
 
+      /* 回传码只能喂给「已经发出 offer、正在等 answer」的连接。
+         若状态不是 have-local-offer，说明这段回传码对应的邀请码已经作废
+         （重新生成过），或者这段回传码本身已经用过一次。
+         这里必须提前拦下：否则 setRemoteDescription 会抛出英文的
+         "Failed to set remote answer sdp: Called in wrong state: stable"，
+         用户完全看不懂，只能看到一串 DOMException。 */
+      if (this.pc.signalingState !== 'have-local-offer') {
+        return Promise.reject(new Error(
+          this.pc.signalingState === 'stable'
+            ? '这段回传码已经用过了（或邀请码已被重新生成）。请点「重新生成」，再把新的邀请码发给好友'
+            : '连接状态已失效，请点「重新生成」重新开始'
+        ));
+      }
+
       return GM.unpackSignal(answerText).then(function (data) {
         if (!data || !data.sdp || data.kind !== 'answer') {
           throw new Error('这不是一段有效的回传码');
@@ -169,6 +195,46 @@
       } catch (e) {
         return false;
       }
+    },
+
+    /* ---------- 连接诊断 ----------
+       联机失败时用户只会看到「打不通」，但原因有很多种，解法完全不同：
+         · 本机候选里没有 srflx → STUN 没返回，可能被网络拦截
+         · 对端候选为「无」       → 对端的候选压根没送达
+         · 候选对全部 failed      → 双方互相发包但收不到（AP 隔离 / 防火墙）
+       把这几项摊成一行文本，用户截图或复制发出来就能直接定位。 */
+    diagnose: function () {
+      const self = this;
+      const pc = this.pc;
+      if (!pc) return Promise.resolve('尚未创建连接');
+
+      return pc.getStats().then(function (stats) {
+        const local = [];
+        const remote = [];
+        let total = 0;
+        let failed = 0;
+        let succeeded = 0;
+
+        stats.forEach(function (s) {
+          if (s.type === 'local-candidate') local.push(s);
+          else if (s.type === 'remote-candidate') remote.push(s);
+          else if (s.type === 'candidate-pair') {
+            total++;
+            if (s.state === 'failed') failed++;
+            else if (s.state === 'succeeded') succeeded++;
+          }
+        });
+
+        return [
+          '本机候选 ' + summarizeCandidates(local),
+          '对端候选 ' + summarizeCandidates(remote),
+          '候选对 成功' + succeeded + '/失败' + failed + '/共' + total,
+          'ICE ' + pc.iceConnectionState,
+          '通道 ' + (self.dc ? self.dc.readyState : 'none')
+        ].join('；');
+      }).catch(function () {
+        return '诊断信息读取失败';
+      });
     },
 
     /* ---------- 释放资源 ---------- */

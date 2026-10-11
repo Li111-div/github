@@ -14,15 +14,26 @@
 
     /* ------------------------------------------------------------
        ICE 服务器
-       局域网直连只需 host candidate，无需 STUN，因此默认为空数组，
-       ICE 收集可瞬间完成、建连最快。
-       如需跨网络（不在同一 Wi-Fi）使用，请填入 STUN / TURN，例如：
-         ICE_SERVERS: [
-           { urls: 'stun:stun.l.google.com:19302' },
-           { urls: 'turn:你的服务器:3478', username: 'user', credential: 'pass' }
-         ]
+       为什么不能留空：页面没有申请摄像头 / 麦克风权限时，Chrome 会把
+       host candidate 里的内网 IP 混淆成 mDNS 名（形如 9c4f1a02-….local）。
+       这种候选必须靠局域网多播 DNS 才能解析，一旦路由器开了 AP 隔离、
+       屏蔽多播，或两台设备跨网段 / 跨浏览器，就解析失败 → 没有可用候选对。
+       配上 STUN 后会额外收集 srflx 候选作为兜底，显著提升建连成功率。
+
+       ⚠️ 只填「实测能响应」的服务器。任何一个不响应的 STUN 都会让
+       iceGatheringState 永远停在 gathering，导致每次生成邀请码都要
+       干等到 ICE_GATHER_TIMEOUT 才截断（实测混入 stun.qq.com 后，
+       生成耗时从 0.6s 涨到 3.8s，且后续候选会被丢弃）。
+       下面三个均为实测可达（首个 srflx 约 40~50ms，收集完成约 130ms）。
+
+       跨网络（不在同一 Wi-Fi）对战时还需自备 TURN 中继：
+         { urls: 'turn:你的服务器:3478', username: 'user', credential: 'pass' }
        ------------------------------------------------------------ */
-    ICE_SERVERS: [],
+    ICE_SERVERS: [
+      { urls: 'stun:stun.miwifi.com:3478' },
+      { urls: 'stun:stun.chat.bilibili.com:3478' },
+      { urls: 'stun:stun.hitv.com:3478' }
+    ],
 
     /* 等待 ICE 收集完成的超时（毫秒） */
     ICE_GATHER_TIMEOUT: 2500,
@@ -43,7 +54,17 @@
     SYNC_REQUEST_INTERVAL: 3000,
 
     /* 等待对手响应请求的超时（毫秒） */
-    REQUEST_TIMEOUT: 15000
+    REQUEST_TIMEOUT: 15000,
+
+    /* 房主提交回传码后，等待数据通道打通的最长时间（毫秒）。
+       超时即判定两端网络打不通 —— 没有这道闸，用户会永远停在
+       「握手完成，正在打通数据通道…」上，看不出是失败还是慢。 */
+    HANDSHAKE_TIMEOUT: 15000,
+
+    /* 挑战者生成回传码后，等待房主确认的最长时间（毫秒）。
+       比 HANDSHAKE_TIMEOUT 宽松得多：房主得先收到回传码、粘贴、再点确认，
+       中间隔着聊天软件，慢一点是正常的，不能过早判失败。 */
+    HANDSHAKE_WAIT_HOST: 90000
   };
 
   /* 棋盘配色：随主题切换 */

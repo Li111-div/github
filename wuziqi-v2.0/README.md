@@ -118,9 +118,16 @@ WebRTC 建立连接前需要交换 SDP（会话描述信息）。常规做法是
 `renderer.pointFromEvent()` 会用 `逻辑尺寸 / 显示尺寸` 的比例校正坐标，
 即使棋盘被 CSS 缩放，落点也不会偏移。
 
-### 局域网为什么可以不要 STUN？
-同一局域网内的两台设备可以通过 host candidate 直接互通，不需要 STUN 服务器。
-默认 `ICE_SERVERS` 为空数组，ICE 收集瞬间完成，建连最快。
+### 为什么默认也配了 STUN？
+早期版本把 `ICE_SERVERS` 留空，理由是「同一局域网内两台设备可以靠 host candidate 直接互通」。
+**这个理由对现代 Chrome 已经不成立**：页面没有申请摄像头 / 麦克风权限时，Chrome 会把 host
+candidate 里的内网 IP **混淆成 mDNS 名**（形如 `9c4f1a02-….local`）。这种候选必须靠局域网
+多播 DNS 才能解析，一旦路由器开了 AP 隔离、屏蔽了多播，或两台设备跨网段 / 跨浏览器，就会
+解析失败 —— 表现为一直停在「连接中…」。
+
+因此默认填入几个**实测可达**的公共 STUN，多收集一份 `srflx` 候选作为兜底。
+注意：只填能响应的服务器，任何一个不响应的 STUN 都会让 ICE 收集永远无法完成，
+每次生成邀请码都要干等到超时（实测混入 `stun.qq.com` 后生成耗时从 0.6s 涨到 3.8s）。
 
 ---
 
@@ -132,22 +139,23 @@ WebRTC 建立连接前需要交换 SDP（会话描述信息）。常规做法是
 GM.CONFIG = {
   BOARD_SIZE: 15,        // 棋盘规格，改成 19 即为 19 路
   WIN_COUNT: 5,          // 连成几子获胜
-  ICE_SERVERS: [],       // 跨网络使用时填入 STUN / TURN
+  ICE_SERVERS: [...],    // 默认已配 3 个实测可达的公共 STUN，可自行替换
   CHAT_MAX_LENGTH: 60,   // 单条消息最大长度
   ...
 };
 ```
 
-**需要跨网络（不在同一 Wi-Fi）对战时**，填入 STUN / TURN：
+**跨网络（不在同一 Wi-Fi）对战时**，还需要自备 TURN 中继：
 
 ```js
 ICE_SERVERS: [
-  { urls: 'stun:stun.l.google.com:19302' },
+  { urls: 'stun:stun.miwifi.com:3478' },
   { urls: 'turn:你的服务器:3478', username: 'user', credential: 'pass' }
 ]
 ```
 
 > 纯 P2P 在双方都处于对称 NAT 时无法直连，此时必须借助 TURN 中继服务器。
+> 只想局域网用时，STUN 列表里**不要**放不响应的服务器（见上文说明）。
 
 ---
 

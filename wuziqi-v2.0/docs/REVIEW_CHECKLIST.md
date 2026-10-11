@@ -103,6 +103,40 @@
 > 2026-10-10 通读全部源码定位出 17 个问题，**当日已全部修复并回归验证**。
 > 下表保留完整记录，既作为修复档案，也作为后续同类问题的排查参考。
 
+### 2026-10-11 联机建连可靠性修复
+
+> 起因：用户反馈「局域网连不上」。实测定位到两类互相独立的问题。
+
+**一、ICE 候选只剩 mDNS 名，没有兜底（网络层）**
+
+| # | 位置 | 问题 | 修复方式 |
+|---|---|---|---|
+| 19 | `config.js` `ICE_SERVERS` | 留空导致只有 1 个 host candidate，且被 Chrome 混淆成 `xxxx.local` 的 mDNS 名（实测：关掉 `WebRtcHideLocalIpsWithMdns` 后才会露出真实内网 IP）。同机回环能连（浏览器自己解析自己的名字），两台真机则依赖局域网多播 DNS，遇到 AP 隔离 / 屏蔽多播 / 跨网段即失败。README 中「局域网不需要 STUN」的说明对现代 Chrome 已过时 | 填入 3 个**实测可达**的公共 STUN（`stun.miwifi.com` / `stun.chat.bilibili.com` / `stun.hitv.com`），额外收集 `srflx` 候选；同步改写 README 与技术说明 |
+
+> 排查中发现的关键坑：**只要列表里有不响应的 STUN，`iceGatheringState` 就永远停在 `gathering`**，
+> 每次生成邀请码都要干等到 `ICE_GATHER_TIMEOUT` 才截断（实测混入 `stun.qq.com` 后从 0.6s 涨到 3.8s，
+> 且后续候选会被丢弃）。批量探测结果：`stun.qq.com:3478`、`stun.syncthing.net:3478` **无响应**，已排除。
+
+**二、握手失败的反馈链路是坏的（体验层）**
+
+| # | 位置 | 问题 | 修复方式 |
+|---|---|---|---|
+| 20 | `app.js` `_onPeerState` | 失败时调 `_showBanner()`，但横幅 DOM（`#board-banner`）在 `#view-game` 内部，而失败时用户还在创建 / 加入房间页，`.view` 非 `is-active` 时为 `display:none` → 实测 `bannerActuallyRendered: false`，**用户看不到任何提示** | 新增 `_failHandshake()`：提示写进当前页的内联状态 + Toast，并恢复按钮可用；仅在真正处于对局页时才用横幅 |
+| 21 | `app.js` `_hostAcceptAnswer` | 成功分支从不恢复 `#btn-accept-answer` 的 `disabled`，状态文案停在「握手完成，正在打通数据通道…」→ 按钮永久变灰 | 成功分支立即恢复按钮；并新增握手看门狗 `_startHandshakeTimer()`（房主 `HANDSHAKE_TIMEOUT` 15s / 挑战者 `HANDSHAKE_WAIT_HOST` 90s），超时给出明确失败原因 |
+| 22 | `app.js` `_startHost` / `_startGuest` / `Views` 守卫 | 从 host / guest 视图点「返回」时守卫直接放行、不做清理，旧连接残留；再进创建房间后按钮被 `_resetHostView()` 重新启用，此时旧 pc 的 `signalingState` 已是 `stable` → 再点「确认连接」必报 `Called in wrong state: stable` | `_startHost` / `_startGuest` 与视图守卫都调用 `_teardownLink()`；`_teardownLink()` 同时清掉看门狗定时器 |
+| 23 | `peer.js` `finishWithAnswer` | 未校验 `pc.signalingState`，原始英文 `DOMException` 直接透给用户（`Failed to set remote answer sdp: Called in wrong state: stable`） | 前置校验必须处于 `have-local-offer`，否则抛出可读中文；`app.js` 新增 `_readableError()` 兜底翻译英文异常 |
+
+**回归结果（Playwright 双浏览器进程，均为同机回环）**
+
+| 验证项 | 结果 |
+|---|---|
+| 邀请码含 `srflx` 候选、`iceGatheringState` 正常 `complete`（候选未被截断） | ✅ 2/2 |
+| 正常流程：握手 289ms、双方进入棋盘、连接状态、落子同步、聊天、无 `pageerror` | ✅ 10/10 |
+| 失败路径：重复使用回传码给中文提示、返回后旧连接释放、失败提示真实可见、按钮恢复、超时提示 | ✅ 11/11 |
+
+> ⚠️ 仍未验证：**真实两台设备 + 真实 Wi-Fi**。同机回环时 ICE 选中的仍是 `host <-> host`，
+> `srflx` 只是备用路径，其真实效果必须在两台设备上确认。
+
 ### 🟠 影响功能或性能（已修复）
 
 | # | 位置 | 问题 | 修复方式 |

@@ -27,6 +27,8 @@
     _chatScrollRaf: null,  // 聊天滚动合并
     _lastSyncReq: 0,       // 上次请求全量同步的时间
     _orientationTimer: null,
+    _handshakeTimer: null,   // 握手看门狗定时器
+    _handshakeFailed: false, // 本轮握手是否已提示过失败（状态回调会重复触发）
 
     /* ================= 初始化 ================= */
     init: function () {
@@ -182,6 +184,11 @@
 
     /* ================= 创建房间 ================= */
     _startHost: function () {
+      /* 每次进入创建房间都从零开始，必须丢掉上一次的连接。
+         否则「生成邀请码 → 确认连接 → 返回 → 再进创建房间」会复用那个
+         已经完成过 offer/answer 交换的旧连接（signalingState 已是 stable），
+         再点「确认连接」就会报 Called in wrong state: stable。 */
+      this._teardownLink();
       this._resetHostView();
       this.mode = 'host';
       this.myColor = 1;
@@ -211,6 +218,9 @@
     },
 
     _resetHostView: function () {
+      this._clearHandshakeTimer();
+      this._clearDiagnostics();
+      this._handshakeFailed = false;
       $('#offer-text').value = '';
       $('#answer-input').value = '';
       GM.show($('#offer-box'), false);
@@ -247,7 +257,7 @@
         self._setStage('host', 2);
         GM.Sound.play('click');
       }).catch(function (err) {
-        GM.setStatus(status, 'err', '生成失败：' + (err.message || '未知错误'));
+        GM.setStatus(status, 'err', '生成失败：' + self._readableError(err));
         GM.Sound.play('error');
       }).then(function () {
         btn.disabled = false;
@@ -275,9 +285,12 @@
       this.link.finishWithAnswer(text).then(function () {
         self._setStage('host', 4);
         GM.setStatus(status, 'ok', '握手完成，正在打通数据通道…');
+        /* 立刻恢复按钮：SDP 交换成功不代表能连上（ICE 才是真正的关卡），
+           万一随后超时失败，用户必须还能直接重试，而不是被卡在禁用态 */
+        btn.disabled = false;
+        self._startHandshakeTimer(C.HANDSHAKE_TIMEOUT);
       }).catch(function (err) {
-        GM.setStatus(status, 'err',
-          '连接失败：' + (err.message || '未知错误') + '。请确认回传码完整复制。');
+        GM.setStatus(status, 'err', '连接失败：' + self._readableError(err) + '。');
         GM.Sound.play('error');
         btn.disabled = false;
       });
@@ -285,6 +298,8 @@
 
     /* ================= 加入房间 ================= */
     _startGuest: function () {
+      /* 同 _startHost：重新进入必须丢掉上一次的连接，避免复用失效的旧连接 */
+      this._teardownLink();
       this._resetGuestView();
       this.mode = 'guest';
       this.myColor = 2;
@@ -312,6 +327,9 @@
     },
 
     _resetGuestView: function () {
+      this._clearHandshakeTimer();
+      this._clearDiagnostics();
+      this._handshakeFailed = false;
       $('#offer-input').value = '';
       $('#guest-answer-text').value = '';
       GM.show($('#guest-answer-box'), false);
@@ -343,8 +361,11 @@
         GM.setStatus(status, 'ok', '回传码已生成，复制后发回给房主即可');
         self._setStage('guest', 3);
         GM.Sound.play('click');
+        /* 挑战者这边同样要看门狗：房主可能一直没点「确认连接」，
+           此时 ICE 根本不会开始，不会有任何状态回调，界面会静默卡住 */
+        self._startHandshakeTimer(C.HANDSHAKE_WAIT_HOST);
       }).catch(function (err) {
-        GM.setStatus(status, 'err', '生成失败：' + (err.message || '未知错误') +
+        GM.setStatus(status, 'err', '生成失败：' + self._readableError(err) +
           '。请确认粘贴的是完整的邀请码。');
         GM.Sound.play('error');
       }).then(function () {
@@ -367,6 +388,7 @@
       const self = this;
       this._teardownLink();
       this._leaving = false;
+      this._handshakeFailed = false;
 
       this.link = new GM.PeerLink({
         onOpen: function () { self._onChannelOpen(); },
@@ -379,14 +401,102 @@
     },
 
     _teardownLink: function () {
+      /* 定时器要先清：即便 link 已经为 null，也可能还挂着一个待触发的看门狗 */
+      this._clearHandshakeTimer();
       if (!this.link) return;
       this._leaving = true;
-      try { this.link.dispose(); } catch (e) {}
+      try { this.link.dispose(); } catch (e) { /* 已释放，忽略 */ }
       this.link = null;
+    },
+
+    /* ---------- 握手阶段的失败反馈 ----------
+       为什么不用 _showBanner：横幅的 DOM（#board-banner）在 #view-game 内部，
+       而握手失败时用户还停在创建 / 加入房间页，.view 非 is-active 时为 display:none，
+       横幅会被写进一个隐藏容器 —— 用户什么都看不到，只感觉「界面卡住了」。
+       所以这里改为写进当前页的内联状态，并同时恢复按钮可用。 */
+    _failHandshake: function (text) {
+      if (this._handshakeFailed) return;   // 状态回调会重复触发，只提示一次
+      this._handshakeFailed = true;
+
+      const isHost = this.mode === 'host';
+      const status = $(isHost ? '#answer-status' : '#guest-status');
+
+      GM.setStatus(status, 'err', text);
+      GM.UI.toast(text, 'warn', 4500);
+      this._setDisabled($('#btn-accept-answer'), false);
+      this._setDisabled($('#btn-gen-answer'), false);
+      GM.Sound.play('error');
+
+      this._renderDiagnostics(status);
+    },
+
+    /* 失败时在提示下方摊开 ICE 诊断。
+       只说「打不通」没法排查：是没有 srflx？对端候选一个没收到？
+       还是候选对全 failed？三者的解法完全不同。 */
+    _renderDiagnostics: function (status) {
+      if (!status || !this.link || !this.link.diagnose) return;
+
+      this._clearDiagnostics();
+
+      const box = GM.el('div', 'diag-box');
+      const head = GM.el('div', 'diag-head');
+      head.appendChild(GM.el('span', 'diag-title', '诊断信息（可复制发给开发者）'));
+
+      const body = GM.el('code', 'diag-body', '正在读取…');
+      const copy = GM.el('button', 'btn btn-sm', '复制');
+      copy.addEventListener('click', function () {
+        GM.copyText(body.textContent).then(function (ok) {
+          GM.UI.toast(ok ? '诊断信息已复制' : '复制失败，请手动选中文本', ok ? 'ok' : 'warn');
+        });
+      });
+      head.appendChild(copy);
+
+      box.appendChild(head);
+      box.appendChild(body);
+      status.insertAdjacentElement('afterend', box);
+
+      this.link.diagnose().then(function (info) {
+        body.textContent = info;
+      }).catch(function () { /* 诊断读取失败不影响主提示，忽略 */ });
+    },
+
+    _clearDiagnostics: function () {
+      GM.$$('.diag-box').forEach(function (n) { n.remove(); });
+    },
+
+    /* 把浏览器抛出的英文 DOMException 翻成人话。
+       例如 "Failed to set remote answer sdp: Called in wrong state: stable"
+       对用户没有任何意义，只会让人以为是网络坏了。 */
+    _readableError: function (err) {
+      const raw = (err && err.message) || '';
+      if (/wrong state/i.test(raw)) return '这段回传码已经用过或已失效，请重新生成邀请码后再试';
+      if (/sdp|ice|dtls|fingerprint/i.test(raw)) return '回传码内容无效，可能没有完整复制';
+      return raw || '未知错误';
+    },
+
+    /* 握手看门狗：超过时限仍未打通就明确报失败。
+       没有它的话，ICE 打不通时界面会永远停在「正在打通数据通道…」，
+       用户无法区分「还在连」和「已经失败」。 */
+    _startHandshakeTimer: function (limit) {
+      const self = this;
+      clearTimeout(this._handshakeTimer);
+      this._handshakeTimer = setTimeout(function () {
+        if (self.link && self.link.connected) return;
+        self._failHandshake('连接超时：两端网络打不通。请确认两台设备连在同一个 Wi-Fi 下，' +
+          '并留意路由器是否开启了「AP 隔离」或屏蔽了多播；也可以改用手机热点重试。');
+      }, limit);
+    },
+
+    _clearHandshakeTimer: function () {
+      clearTimeout(this._handshakeTimer);
+      this._handshakeTimer = null;
     },
 
     _onChannelOpen: function () {
       this._leaving = false;
+      /* 通道已打开，撤掉握手看门狗，并清掉可能已经弹出的失败提示 */
+      this._clearHandshakeTimer();
+      this._handshakeFailed = false;
       GM.Sound.play('connect');
 
       /* 双方各自重置棋盘 → 状态天然一致 */
@@ -417,11 +527,17 @@
 
     _onPeerState: function (s) {
       this._updateConn(s);
-      if (s.connection === 'failed') {
-        if (!this.game || !this.game.ended) {
-          this._showBanner('⚠️', '连接异常', '网络似乎不稳定，可以尝试重新创建房间',
-            '返回首页', this._leaveToHome.bind(this));
-        }
+      if (s.connection !== 'failed') return;
+      if (this.game && this.game.ended) return;
+
+      if (GM.Views.inGame()) {
+        this._showBanner('⚠️', '连接异常', '网络似乎不稳定，可以尝试重新创建房间',
+          '返回首页', this._leaveToHome.bind(this));
+      } else {
+        /* 握手阶段就失败：此时用户不在对局页，banner 会被藏在隐藏视图里，
+           必须走当前页可见的提示，否则用户只会看到「界面卡住无反应」 */
+        this._failHandshake('连接失败：两端网络打不通。请确认两台设备连在同一个 Wi-Fi 下，' +
+          '并留意路由器是否开启了「AP 隔离」或屏蔽了多播；也可以改用手机热点重试。');
       }
     },
 
@@ -883,6 +999,7 @@
       this._teardownLink();
       this.mode = 'idle';
       this.pending = null;
+      this._handshakeFailed = false;
       clearTimeout(this._reqTimer);
       this._hideTyping();
       this.game.reset();
@@ -1337,6 +1454,14 @@
     _initViewGuard: function () {
       const self = this;
       GM.Views.setGuard(function (from, to) {
+        /* 离开创建 / 加入房间页 = 放弃这次握手，顺手把连接释放掉。
+           否则会残留一个「已经完成过 offer/answer 交换」的旧连接
+           （signalingState 已是 stable），下次再点「确认连接」必然报错。 */
+        if (from === 'host' || from === 'guest') {
+          self._teardownLink();
+          return Promise.resolve(true);
+        }
+
         if (from !== 'game') return Promise.resolve(true);
 
         /* 本机对局无需征询对方 */
