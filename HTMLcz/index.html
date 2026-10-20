@@ -193,6 +193,9 @@
     margin-left:var(--sidebar-w);padding:26px 28px 40px;color:var(--muted);font-size:13px;
     border-top:1px solid var(--border);text-align:center;background:#fff;
   }
+  .footer-credit{
+    margin-top:8px;font-size:13.5px;font-weight:600;color:var(--accent-dark);letter-spacing:.5px;
+  }
 
   /* ========== 移动端适配 ========== */
   @media (max-width:920px){
@@ -203,7 +206,7 @@
     }
     .sidebar.open{transform:translateX(0)}
     .main{margin-left:0;padding:calc(var(--header-h) + 18px) 16px 50px}
-    footer{margin-left:0}
+    footer{margin-left:0;padding-bottom:72px}   /* 给右下角“回到顶部”留出位置 */
     .brand-title small{display:none}
     .page-head h1{font-size:21px}
     .cards{grid-template-columns:minmax(0,1fr)}
@@ -287,9 +290,9 @@
 </button>
 
 <footer>
-  HTML 标签大全 · 单文件离线手册 · 兼容桌面端与移动端
+  <div>HTML 标签大全 · 单文件离线手册 · 兼容桌面端与移动端</div>
+  <div class="footer-credit">移动应用与开发 · 实训作品</div>
 </footer>
-
 <script>
 /* =====================================================
  * 数据：分类（按常用程度排序）
