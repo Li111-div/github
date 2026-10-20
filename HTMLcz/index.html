@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#4f46e5">
+<meta name="format-detection" content="telephone=no">
+<meta name="description" content="HTML 标签速查手册：收录 143 个 HTML 标签，按 11 个分类整理，含属性说明与代码示例，支持关键词搜索，桌面与手机均可离线使用。">
 <title>HTML 标签大全 · 前端标签速查手册</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%234f46e5'/%3E%3Ctext x='32' y='45' font-size='32' font-family='Arial,sans-serif' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E">
 <style>
   :root{
     --bg:#f5f6fa;
@@ -40,7 +44,7 @@
   /* ========== 顶部栏 ========== */
   .topbar{
     position:fixed;top:0;left:0;right:0;height:var(--header-h);z-index:60;
-    background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+    background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
     display:flex;align-items:center;gap:14px;padding:0 20px;
   }
@@ -66,9 +70,10 @@
   }
   #searchInput{
     width:100%;height:40px;border:1px solid var(--border);border-radius:10px;
-    padding:0 14px 0 40px;font-size:14.5px;background:#f8f9fc;color:var(--text);outline:none;
+    padding:0 38px 0 40px;font-size:14.5px;background:#f8f9fc;color:var(--text);outline:none;
     transition:border-color .2s,box-shadow .2s,background .2s;
   }
+  #searchInput::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
   #searchInput:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.12)}
   .search-clear{
     position:absolute;right:8px;top:50%;transform:translateY(-50%);
@@ -138,6 +143,8 @@
     padding:16px 18px 14px;box-shadow:var(--shadow);
     transition:transform .18s,box-shadow .18s;
     display:flex;flex-direction:column;
+    min-width:0;overflow-wrap:anywhere;
+    scroll-margin-top:calc(var(--header-h) + 16px);
   }
   .card:hover{transform:translateY(-3px);box-shadow:0 6px 22px rgba(30,40,80,.12)}
   .card-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
@@ -161,8 +168,8 @@
   .example-label{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600;letter-spacing:.5px}
   .code-block{
     background:var(--code-bg);color:var(--code-text);border-radius:9px;
-    padding:11px 14px;font-size:12.8px;line-height:1.6;overflow-x:auto;
-    white-space:pre;margin-top:auto;
+    padding:11px 14px;font-size:12.8px;line-height:1.6;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    white-space:pre;margin-top:auto;max-width:100%;
   }
   .code-block .hl{color:#a5b4fc}
 
@@ -199,13 +206,28 @@
     footer{margin-left:0}
     .brand-title small{display:none}
     .page-head h1{font-size:21px}
-    .cards{grid-template-columns:1fr}
+    .cards{grid-template-columns:minmax(0,1fr)}
     .cat-head h2{font-size:17px}
+    /* 16px 可避免 iOS 聚焦输入框时自动放大页面 */
+    #searchInput{font-size:16px}
+    body.drawer-open{overflow:hidden}
+    /* 低端手机上 backdrop-filter 会拖慢滚动，移动端改用纯色顶栏 */
+    .topbar{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}
+    .card:hover{transform:none;box-shadow:var(--shadow)}
   }
   @media (max-width:420px){
     .topbar{padding:0 12px;gap:10px}
     .brand-title{font-size:15px}
     .main{padding-left:12px;padding-right:12px}
+    .cat-en{display:none}
+    .cat-head h2{font-size:16px;white-space:nowrap}
+    .cat-num{white-space:nowrap;font-size:11.5px;padding:3px 9px}
+  }
+  /* 窄屏时隐藏品牌文字，把宽度让给搜索框 */
+  @media (max-width:560px){
+    .brand-title{display:none}
+    .search-wrap{justify-content:flex-end}
+    .search-box{max-width:none}
   }
 </style>
 </head>
@@ -223,7 +245,7 @@
   <div class="search-wrap">
     <div class="search-box">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
-      <input type="search" id="searchInput" placeholder="搜索标签，如：div、表单、表格、图片…" autocomplete="off">
+      <input type="search" id="searchInput" placeholder="搜索标签，如：div、表单、表格、图片…" autocomplete="off" aria-label="搜索 HTML 标签">
       <button class="search-clear" id="searchClear" aria-label="清空搜索">✕</button>
     </div>
   </div>
@@ -237,7 +259,7 @@
   <ul class="nav-list" id="navList"></ul>
   <div class="nav-top">
     <ul class="nav-list">
-      <li><a id="backTopLink"><span class="nav-dot"></span>回到顶部</a></li>
+      <li><a id="backTopLink" href="#top"><span class="nav-dot"></span>回到顶部</a></li>
     </ul>
   </div>
 </aside>
@@ -255,6 +277,9 @@
   </div>
   <div class="search-tip" id="searchTip"></div>
   <div id="content"></div>
+  <noscript>
+    <div class="search-tip empty" style="display:block">当前浏览器没有启用 JavaScript，页面内容（共 143 个标签）无法渲染。请在浏览器设置中开启 JavaScript 后刷新本页。</div>
+  </noscript>
 </main>
 
 <button class="back-top" id="backTop" aria-label="回到顶部">
@@ -444,7 +469,7 @@ var TAGS = [
 {t:'spacer',c:0,cat:'obsolete',d:'（非标准）空白间隔',x:'Netscape 私有标签，在页面中插入空白块或间隔，从未成为标准，请使用 CSS 的 margin/padding 代替。',a:[['type','（非标准）间隔类型'],['size','（非标准）间隔尺寸']],e:'<!-- 非标准，请用 CSS -->\n<!-- <spacer type="block" width="40"> -->\n<div style="margin:40px"></div>',k:'spacer 空白 间隔 非标准 netscape'},
 {t:'rb',c:0,cat:'obsolete',d:'（已移除）ruby 基础文本',x:'Ruby Base，用于在 ruby 中标记被注音的基础文字。已从 HTML 标准移除（浏览器仍兼容），现代写法直接在 ruby 中书写文字即可，无需 rb。',a:[],e:'<!-- 现代写法不再需要 rb -->\n<ruby>汉<rt>hàn</rt></ruby>',k:'rb ruby base 基础文本 注音 废弃'},
 {t:'rtc',c:0,cat:'obsolete',d:'（已移除）ruby 注音容器',x:'Ruby Text Container，用于包裹一层注音文本（可支持双层注音，如注音符号 + 拼音）。已从 HTML 标准移除（浏览器仍兼容），一般场景用 rt 即可。',a:[],e:'<!-- 双层注音（旧写法） -->\n<!-- <ruby><rb>漢</rb><rtc><rt>ㄏㄢˋ</rt></rtc></ruby> -->\n<ruby>汉<rt>hàn</rt></ruby>',k:'rtc ruby text container 注音容器 废弃'},
-{t:'menuitem',c:0,cat:'obsolete',d:'（已移除）菜单命令项',x:'曾用于在 menu 中定义一条可执行命令（配合右键菜单 contextmenu 使用），HTML5.2 起已从标准移除，现代浏览器不再支持，请使用 button 或 li 代替。',a:[['label','（废弃）命令名称'],['icon','（废弃）命令图标']],e:'<!-- 已移除，请勿使用 -->\n<!-- <menu type="context"><menuitem label="刷新"></menu></menu> -->\n<menu><li><button>刷新</button></li></menu>',k:'menuitem 菜单项 右键菜单 废弃 移除'},
+{t:'menuitem',c:0,cat:'obsolete',d:'（已移除）菜单命令项',x:'曾用于在 menu 中定义一条可执行命令（配合右键菜单 contextmenu 使用），HTML5.2 起已从标准移除，现代浏览器不再支持，请使用 button 或 li 代替。',a:[['label','（废弃）命令名称'],['icon','（废弃）命令图标']],e:'<!-- 已移除，请勿使用 -->\n<!-- <menu type="context"><menuitem label="刷新"></menuitem></menu> -->\n<menu><li><button>刷新</button></li></menu>',k:'menuitem 菜单项 右键菜单 废弃 移除'},
 {t:'bgsound',c:0,cat:'obsolete',d:'（非标准）背景音乐',x:'IE 私有标签，为页面自动播放背景音乐，从未成为标准，请使用 audio 元素代替。',a:[['src','（非标准）音频地址'],['loop','（非标准）循环次数']],e:'<!-- 非标准，请用 audio -->\n<!-- <bgsound src="bg.mp3" loop="1"> -->\n<audio src="bg.mp3" loop controls></audio>',k:'bgsound 背景音乐 非标准 ie'},
 {t:'blink',c:0,cat:'obsolete',d:'（非标准）文字闪烁',x:'Netscape 私有标签，让文字闪烁显示，从未成为标准，且严重影响可读性与无障碍，如需类似效果请使用 CSS 动画代替。',a:[],e:'<!-- 非标准，请用 CSS 动画 -->\n<!-- <blink>闪烁文字</blink> -->\n<span class="blink-css">闪烁文字</span>',k:'blink 闪烁 非标准 废弃'},
 {t:'multicol',c:0,cat:'obsolete',d:'（非标准）多栏布局',x:'Netscape 私有标签，把内容分成多栏显示，从未进入标准，请使用 CSS 多栏布局（columns / column-count）代替。',a:[['cols','（非标准）栏数'],['gutter','（非标准）栏间距']],e:'<!-- 非标准，请用 CSS -->\n<!-- <multicol cols="2">内容</multicol> -->\n<div style="columns:2">内容</div>',k:'multicol 多栏 分栏 非标准 废弃'},
@@ -492,11 +517,17 @@ var TAGS = [
     var li = document.createElement('li');
     var a = document.createElement('a');
     a.setAttribute('data-target', cat.id);
+    a.setAttribute('href', '#cat-' + cat.id);
     a.innerHTML = '<span class="nav-dot"></span><span class="nav-name"></span><span class="nav-count"></span>';
     a.querySelector('.nav-name').textContent = cat.name;
     a.querySelector('.nav-count').textContent = catCount[cat.id] || 0;
     a.addEventListener('click', function(e){
       e.preventDefault();
+      /* 正在搜索时点分类：先退出搜索，否则目标区块是隐藏的，跳过去没反应 */
+      if(searchInput.value){
+        searchInput.value = '';
+        doSearch();
+      }
       var target = document.getElementById('cat-' + cat.id);
       if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
       closeSidebar();
@@ -529,11 +560,6 @@ var TAGS = [
 
     TAGS.filter(function(t){ return t.cat === cat.id; }).forEach(function(tag){
       var card = el('article', 'card');
-      card.setAttribute('data-name', (tag.search || tag.t).toLowerCase());
-      card.setAttribute('data-haystack',
-        (tag.t + ' ' + tag.d + ' ' + tag.x + ' ' + (tag.k || '') + ' ' +
-         (tag.a || []).map(function(p){ return p[0]; }).join(' ')).toLowerCase()
-      );
 
       var top = el('div', 'card-top');
       top.appendChild(el('span', 'tag-chip', '<' + tag.t + '>'));
@@ -562,49 +588,152 @@ var TAGS = [
       card.appendChild(pre);
 
       grid.appendChild(card);
-      allCards.push({ card: card, section: section });
+      allCards.push({
+        card: card,
+        grid: grid,
+        section: section,
+        name: tag.t.toLowerCase(),
+        kw: (tag.k || '').toLowerCase(),
+        desc: (tag.d + ' ' + tag.x + ' ' +
+               (tag.a || []).map(function(p){ return p[0] + ' ' + p[1]; }).join(' ')).toLowerCase()
+      });
     });
 
     section.appendChild(grid);
     content.appendChild(section);
   });
 
+  /* ========== 搜索结果区（搜索时命中的卡片移到顶部，按相关度排序） ========== */
+  var searchSection = el('section', 'category');
+  searchSection.id = 'cat-search';
+  searchSection.style.display = 'none';
+
+  var sHead = el('div', 'cat-head');
+  sHead.appendChild(el('div', 'cat-bar'));
+  sHead.appendChild(el('h2', null, '搜索结果'));
+  sHead.appendChild(el('span', 'cat-en', 'Search Results'));
+  var searchNum = el('span', 'cat-num', '');
+  sHead.appendChild(searchNum);
+
+  var searchGrid = el('div', 'cards');
+  searchSection.appendChild(sHead);
+  searchSection.appendChild(searchGrid);
+  content.insertBefore(searchSection, content.firstChild);
+
+  /* ========== 搜索：相关度评分 ========== */
+  var LATIN_Q = /^[a-z0-9 _.\/\-]+$/;
+
+  function escRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  /* 拉丁字母按“整词”匹配：避免 p 命中 DOCTYPE、viewport、stylesheet */
+  function makeWordRe(q){
+    return new RegExp('(^|[^a-z0-9])' + escRe(q) + '([^a-z0-9]|$)');
+  }
+
+  function scoreTag(item, q, wordRe){
+    var single = !!wordRe && q.length === 1;
+    var s = 0;
+    function hit(text){
+      return wordRe ? wordRe.test(text) : text.indexOf(q) !== -1;
+    }
+
+    if(item.name === q) return 100;   /* 标签名完全一致 */
+
+    /* 单个字母只认“标签名完全一致”和“关键词整词命中”，否则 p 会满屏都是 */
+    if(single) return hit(item.kw) ? 60 : 0;
+
+    /* 名称按词一致（h6 命中 “h1 ~ h6”）> 前缀 > 包含 */
+    if((' ' + item.name.replace(/[^a-z0-9]+/g, ' ') + ' ').indexOf(' ' + q + ' ') !== -1) s = 90;
+    else if(item.name.indexOf(q) === 0) s = 80;
+    else if(item.name.indexOf(q) !== -1) s = 70;
+
+    if(hit(item.kw)) s = Math.max(s, 60);
+    if(hit(item.desc)) s = Math.max(s, 30);
+
+    return s;
+  }
+
   /* ========== 搜索过滤 ========== */
-  function doSearch(){
-    var q = searchInput.value.trim().toLowerCase();
-    searchClear.classList.toggle('show', q.length > 0);
+  var searching = false;
 
-    var matchCount = 0;
-    var sectionCount = {};
-
-    allCards.forEach(function(item){
-      var match = !q || item.card.getAttribute('data-haystack').indexOf(q) !== -1;
-      item.card.style.display = match ? '' : 'none';
-      if(match){
-        matchCount++;
-        sectionCount[item.section.id] = true;
+  function resetCards(){
+    for(var i = 0; i < allCards.length; i++){
+      if(allCards[i].card.parentNode !== allCards[i].grid){
+        allCards[i].grid.appendChild(allCards[i].card);
       }
+    }
+  }
+
+  function exitSearchMode(){
+    searchTip.style.display = 'none';
+    if(!searching) return;
+    searching = false;
+    resetCards();
+    CATEGORIES.forEach(function(cat){
+      var sec = document.getElementById('cat-' + cat.id);
+      if(sec) sec.style.display = '';
     });
+    searchSection.style.display = 'none';
+  }
+
+  function doSearch(){
+    var raw = searchInput.value.trim();
+    var q = raw.toLowerCase();
+    searchClear.classList.toggle('show', raw.length > 0);
+
+    if(!q){ exitSearchMode(); return; }
+
+    var wordRe = LATIN_Q.test(q) ? makeWordRe(q) : null;
+
+    var hits = [];
+    for(var i = 0; i < allCards.length; i++){
+      var score = scoreTag(allCards[i], q, wordRe);
+      if(score > 0) hits.push({ item: allCards[i], s: score, i: i });
+    }
+    hits.sort(function(a, b){ return b.s - a.s || a.i - b.i; });
+
+    searching = true;
+    resetCards();
+    setActive('');
 
     CATEGORIES.forEach(function(cat){
       var sec = document.getElementById('cat-' + cat.id);
-      if(sec) sec.style.display = (!q || sectionCount[sec.id]) ? '' : 'none';
+      if(sec) sec.style.display = 'none';
     });
 
-    if(q){
-      searchTip.style.display = 'block';
-      if(matchCount > 0){
-        searchTip.classList.remove('empty');
-        searchTip.textContent = '搜索 “' + searchInput.value.trim() + '” 共找到 ' + matchCount + ' 个相关标签';
-      }else{
-        searchTip.classList.add('empty');
-        searchTip.textContent = '没有找到与 “' + searchInput.value.trim() + '” 相关的标签，换个关键词试试（如：表单、图片、表格、链接）';
-      }
+    for(var j = 0; j < hits.length; j++){
+      searchGrid.appendChild(hits[j].item.card);
+    }
+
+    searchNum.textContent = hits.length ? hits.length + ' 个结果' : '';
+    searchSection.style.display = hits.length ? '' : 'none';
+
+    searchTip.style.display = 'block';
+    if(hits.length){
+      searchTip.classList.remove('empty');
+      searchTip.textContent = '搜索 “' + raw + '” 共找到 ' + hits.length + ' 个相关标签，已按匹配度排序';
     }else{
-      searchTip.style.display = 'none';
+      searchTip.classList.add('empty');
+      searchTip.textContent = '没有找到与 “' + raw + '” 相关的标签，换个关键词试试（如：表单、图片、表格、链接）';
+    }
+
+    /* 结果不在视野内时滚过去，避免“明明有结果却看到空白” */
+    if(hits.length){
+      var rect = searchSection.getBoundingClientRect();
+      var topLimit = 64 + 16;
+      if(rect.top < topLimit || rect.top > window.innerHeight - 100){
+        searchSection.scrollIntoView({ behavior:'smooth', block:'start' });
+      }
     }
   }
+
   searchInput.addEventListener('input', doSearch);
+  searchInput.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' || e.keyCode === 27){
+      searchInput.value = '';
+      doSearch();
+    }
+  });
   searchClear.addEventListener('click', function(){
     searchInput.value = '';
     doSearch();
@@ -615,10 +744,12 @@ var TAGS = [
   function openSidebar(){
     sidebar.classList.add('open');
     overlay.classList.add('show');
+    document.body.classList.add('drawer-open');
   }
   function closeSidebar(){
     sidebar.classList.remove('open');
     overlay.classList.remove('show');
+    document.body.classList.remove('drawer-open');
   }
   menuBtn.addEventListener('click', openSidebar);
   overlay.addEventListener('click', closeSidebar);
@@ -640,9 +771,9 @@ var TAGS = [
   /* ========== 滚动监听：高亮当前分类 ========== */
   var navLinks = navList.querySelectorAll('a');
   function setActive(id){
-    navLinks.forEach(function(a){
-      a.classList.toggle('active', a.getAttribute('data-target') === id);
-    });
+    for(var i = 0; i < navLinks.length; i++){
+      navLinks[i].classList.toggle('active', navLinks[i].getAttribute('data-target') === id);
+    }
   }
   if('IntersectionObserver' in window){
     var observer = new IntersectionObserver(function(entries){
