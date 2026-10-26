@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HBuilderX 3.1.22 快捷键速查</title>
+<script>
+  (function(){
+    try{
+      var t = localStorage.getItem('hbx-theme');
+      if(!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    }catch(e){}
+  })();
+</script>
+<meta name="description" content="HBuilderX 3.1.22（20210709）Windows 默认键位速查表，170 条带默认快捷键，支持搜索与分类浏览。">
+<style>
+:root{
+  --bg:#f5f7f9; --panel:#ffffff; --ink:#1b2430; --muted:#6a7686; --line:#e4e9ef;
+  --accent:#0aa06e; --accent-soft:#e6f7f0; --accent-ink:#067a54;
+  --kbd-bg:#ffffff; --kbd-border:#d5dde6; --kbd-ink:#26313d; --kbd-shadow:#c9d3de;
+  --star:#f0a020; --radius:14px; --maxw:1120px;
+}
+html[data-theme="dark"]{
+  --bg:#0f1419; --panel:#161c23; --ink:#e6edf3; --muted:#93a1b1; --line:#242d38;
+  --accent:#2ee6a0; --accent-soft:#123026; --accent-ink:#7ef0c4;
+  --kbd-bg:#1c242e; --kbd-border:#33404e; --kbd-ink:#e6edf3; --kbd-shadow:#0b0f14;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{display:grid;grid-template-columns:236px minmax(0,1fr);gap:0;max-width:1600px;margin:0 auto}
+
+/* ---------- sidebar ---------- */
+.side{position:sticky;top:0;height:100vh;overflow:auto;padding:22px 14px 30px;
+  border-right:1px solid var(--line);background:var(--panel)}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 16px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#12c98a,#04916a);
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;letter-spacing:-.5px;
+  box-shadow:0 4px 12px rgba(10,160,110,.35)}
+.brand b{display:block;font-size:14px;line-height:1.2}
+.brand small{color:var(--muted);font-size:11.5px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;
+  color:var(--muted);font-size:13px;transition:.15s}
+.nav a:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.nav a.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
+.nav a span{font-size:11px;opacity:.7;font-variant-numeric:tabular-nums}
+.side-foot{margin-top:18px;padding:12px 10px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;line-height:1.6}
+
+/* ---------- main ---------- */
+main{padding:0 34px 70px;min-width:0}
+.hero{padding:38px 0 8px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.badge{font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);
+  border:1px solid rgba(10,160,110,.18);font-weight:600}
+.badge.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+h1{margin:0 0 10px;font-size:31px;letter-spacing:-.6px;line-height:1.25}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{margin:0;color:var(--muted);max-width:70ch;font-size:14px}
+
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:112px}
+.stat b{display:block;font-size:21px;line-height:1.2;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:11.5px}
+
+/* ---------- logic ---------- */
+.block{margin-top:40px}
+.block>h2{font-size:19px;margin:0 0 6px;letter-spacing:-.3px}
+.block>p.sub{margin:0 0 16px;color:var(--muted);font-size:13px}
+.logic{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.card h3{margin:0 0 6px;font-size:13.5px;display:flex;align-items:center;gap:7px}
+.card h3 i{width:20px;height:20px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);
+  display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700}
+.card p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.6}
+.card p kbd{margin:1px 2px}
+
+/* ---------- cheat ---------- */
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px}
+.cheat{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:10px 12px;
+  display:flex;flex-direction:column;gap:6px;transition:.15s}
+.cheat:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(10,160,110,.10)}
+.cheat-desc{font-size:12.5px;color:var(--muted);line-height:1.35}
+.cheat-keys{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+
+kbd{display:inline-block;padding:2px 7px;border-radius:6px;background:var(--kbd-bg);
+  border:1px solid var(--kbd-border);border-bottom-width:2px;box-shadow:0 1px 0 var(--kbd-shadow);
+  font-family:ui-monospace,SFMono-Regular,"SF Mono",Consolas,"Liberation Mono",monospace;
+  font-size:11.5px;color:var(--kbd-ink);line-height:1.5;white-space:nowrap}
+.keys .combo{display:inline-flex;align-items:center;gap:3px}
+.keys{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.keys .plus{color:var(--muted);font-size:10px}
+.keys .or{color:var(--muted);font-size:11px;margin:0 2px}
+
+/* ---------- toolbar ---------- */
+.toolbar{position:sticky;top:0;z-index:20;background:var(--bg);
+  padding:12px 0;margin:0 -34px;padding-left:34px;padding-right:34px;
+  border-bottom:1px solid transparent;transition:.2s}
+.toolbar.stuck{border-bottom-color:var(--line)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{position:relative;flex:1;min-width:220px;max-width:480px}
+.search input{width:100%;padding:10px 36px 10px 36px;border-radius:10px;border:1px solid var(--line);
+  background:var(--panel);color:var(--ink);font-size:13.5px;outline:none;transition:.15s;font-family:inherit}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search .ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px}
+.search .clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;
+  color:var(--muted);cursor:pointer;font-size:15px;display:none;padding:2px 5px;border-radius:6px}
+.search .clear:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:9px;
+  padding:8px 12px;font-size:12.5px;cursor:pointer;font-family:inherit;transition:.15s;white-space:nowrap}
+.btn:hover,.btn.on{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+.hint{margin:8px 0 0;font-size:11.5px;color:var(--muted)}
+.hint kbd{font-size:10.5px;padding:1px 5px}
+.hidden{display:none !important}
+
+/* ---------- category ---------- */
+.cat{margin-top:30px;scroll-margin-top:86px}
+.cat h2{display:flex;align-items:center;gap:9px;font-size:14px;margin:0 0 8px;
+  padding-bottom:8px;border-bottom:1px solid var(--line);font-weight:650;letter-spacing:.2px}
+.cat h2 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.cat h2 .count{margin-left:auto;font-size:11px;color:var(--muted);font-weight:500;font-variant-numeric:tabular-nums}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto 190px;align-items:center;gap:12px;
+  padding:7px 10px;border-radius:9px;transition:background .12s}
+.row:hover{background:var(--panel)}
+.row .desc{font-size:13.5px;display:flex;align-items:center;gap:7px;min-width:0}
+.row .star{color:var(--star);font-size:10px}
+.row .keys{justify-self:end}
+.row .cmd{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--muted);
+  background:transparent;border:1px dashed transparent;border-radius:6px;padding:2px 6px;
+  cursor:pointer;opacity:.55;transition:.15s;white-space:nowrap;justify-self:end;
+  max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.row:hover .cmd{border-color:var(--line);opacity:.95}
+.row .cmd:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+mark{background:rgba(240,180,30,.28);color:inherit;border-radius:3px;padding:0 1px}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius)}
+.tbl{width:100%;border-collapse:collapse;background:var(--panel);font-size:13px;min-width:440px}
+.tbl th{text-align:left;font-weight:650;font-size:12px;color:var(--muted);background:var(--bg);
+  padding:10px 14px;border-bottom:1px solid var(--line)}
+.tbl td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td:first-child{white-space:nowrap;color:var(--muted)}
+
+details{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:0 16px}
+details summary{cursor:pointer;padding:13px 0;font-size:13.5px;font-weight:600;list-style:none;display:flex;gap:8px;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸";color:var(--muted);font-size:11px;transition:.2s}
+details[open] summary::before{transform:rotate(90deg)}
+.nk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;padding:4px 0 18px}
+.nk-group h4{margin:0 0 5px;font-size:12px;color:var(--muted);font-weight:600}
+.nk-group ul{margin:0;padding-left:15px}
+.nk-group li{font-size:12.5px;margin:2px 0;color:var(--ink)}
+
+/* ---------- footer ---------- */
+footer{margin-top:54px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);
+  padding:9px 16px;border-radius:10px;font-size:12.5px;opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.empty{display:none;padding:40px 0;color:var(--muted);text-align:center;font-size:13.5px}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .tbl{min-width:0}
+  .tbl th,.tbl td{padding:8px 10px}
+  .tools{gap:8px}
+  .toolbar .search{flex:1 1 100%;max-width:none}
+  .stats{gap:8px}
+  .stat{flex:1 1 42%;min-width:0;padding:9px 12px}
+  .stat b{font-size:19px}
+  .hero{padding:26px 0 4px}
+  h1{font-size:23px}
+  .lede{font-size:13.5px}
+  .side{display:none}
+  main{padding:0 16px 60px}
+  .toolbar{margin:0 -16px;padding-left:16px;padding-right:16px}
+  h1{font-size:24px}
+  .row{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .row .cmd{display:none}
+  .row .keys{justify-self:end}
+}
+@media print{
+  .side,.toolbar,.toast,.row .cmd{display:none!important}
+  .wrap{display:block}
+  main{padding:0}
+  .row .cmd{display:none}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">HX</div>
+      <div><b>快捷键速查</b><small>HBuilderX 3.1.22</small></div>
+    </div>
+    <nav class="nav" id="nav">
+<a href="#cat-0" data-target="cat-0">项目管理器<span>4</span></a>
+<a href="#cat-1" data-target="cat-1">标签卡与窗口<span>19</span></a>
+<a href="#cat-2" data-target="cat-2">文件<span>6</span></a>
+<a href="#cat-3" data-target="cat-3">光标与跳转<span>22</span></a>
+<a href="#cat-4" data-target="cat-4">书签、折叠与错误<span>13</span></a>
+<a href="#cat-5" data-target="cat-5">选择与多光标<span>27</span></a>
+<a href="#cat-6" data-target="cat-6">行操作<span>5</span></a>
+<a href="#cat-7" data-target="cat-7">删除<span>7</span></a>
+<a href="#cat-8" data-target="cat-8">剪贴板<span>9</span></a>
+<a href="#cat-9" data-target="cat-9">撤销与重做<span>3</span></a>
+<a href="#cat-10" data-target="cat-10">编辑：格式化与注释<span>6</span></a>
+<a href="#cat-11" data-target="cat-11" title="编辑：包围 / 大小写 / 代码助手">编辑：包围 · 大小写 · 助手<span>10</span></a>
+<a href="#cat-12" data-target="cat-12">列表符<span>7</span></a>
+<a href="#cat-13" data-target="cat-13">查找与替换<span>8</span></a>
+<a href="#cat-14" data-target="cat-14">视图与分栏<span>18</span></a>
+<a href="#cat-15" data-target="cat-15">运行与调试<span>3</span></a>
+<a href="#cat-16" data-target="cat-16">发行<span>1</span></a>
+<a href="#cat-17" data-target="cat-17">工具与设置<span>2</span></a>
+    </nav>
+    <div class="side-foot">
+      数据取自 3.1.22 安装包内置键位表<br>
+      <span style="opacity:.75">keybindings.json · 20210709</span>
+    </div>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div class="badges">
+        <span class="badge">HBuilderX 3.1.22.20210709</span>
+        <span class="badge ghost">Windows 默认键位</span>
+        <span class="badge ghost">原生键位表</span>
+      </div>
+      <h1>HBuilderX <em>3.1.22</em> 快捷键速查</h1>
+      <p class="lede">从 3.1.22 安装包的 <code>HBuilderX.dll</code> 里解出的内置默认键位表，不是网上抄来的二手版本。共 250 条命令，170 条带默认快捷键；另外内置了 VS Code / Sublime / IntelliJ / Eclipse 四套方案，这里是「HBuilderX 默认」那套。</p>
+      <div class="stats">
+        <div class="stat"><b>170</b><small>带默认快捷键</small></div>
+        <div class="stat"><b>66</b><small>未绑定（可自配）</small></div>
+        <div class="stat"><b>18</b><small>分类</small></div>
+        <div class="stat"><b>250</b><small>内置命令总数</small></div>
+      </div>
+    </div>
+
+    <div class="toolbar" id="toolbar">
+      <div class="tools">
+        <div class="search">
+          <span class="ico">⌕</span>
+          <input id="q" type="search" placeholder="搜索功能、快捷键或命令 ID，如「注释」「Ctrl+K」「comment」" autocomplete="off" spellcheck="false">
+          <button class="clear" id="clear" title="清空">×</button>
+        </div>
+        <button class="btn" id="themeBtn" title="切换深浅色">◐ 深色</button>
+        <button class="btn" id="starBtn" title="只看高频快捷键">★ 只看高频</button>
+      </div>
+      <p class="hint">按 <kbd>/</kbd> 快速聚焦搜索框，<kbd>Esc</kbd> 清空；点击行尾命令 ID 可复制。</p>
+    </div>
+
+    <div class="block" id="logic">
+      <h2>先记住 5 条设计逻辑</h2>
+      <p class="sub">HBuilderX 的原则是「不定义记不住的快捷键」，记住下面几条规律，大部分键位都能推出来。</p>
+      <div class="logic">
+        <div class="card"><h3><i>1</i>界面键都跟 Alt 走</h3><p>把键盘当屏幕：左上 <kbd>Q</kbd> 项目管理器、<kbd>W</kbd> 大纲、右上 <kbd>P</kbd> 预览、底部 <kbd>X</kbd>/<kbd>C</kbd> 控制台与终端，<kbd>N</kbd> 回编辑器。</p></div>
+        <div class="card"><h3><i>2</i>Ctrl 是操作，Ctrl+Shift 是反向</h3><p><kbd>Ctrl+W</kbd> 关闭当前 / <kbd>Ctrl+Shift+W</kbd> 全部关闭；<kbd>Ctrl+K</kbd> 格式化 / <kbd>Ctrl+Shift+K</kbd> 合并行。</p></div>
+        <div class="card"><h3><i>3</i>再进一步用 Ctrl+Alt</h3><p><kbd>Ctrl+F</kbd> 本文档查找 / <kbd>Ctrl+Alt+F</kbd> 目录内查找；<kbd>Ctrl+E</kbd> 选相同词 / <kbd>Ctrl+Alt+E</kbd> 选全部相同词。</p></div>
+        <div class="card"><h3><i>4</i>贴着系统和浏览器习惯</h3><p>标签卡管理跟浏览器一致：<kbd>Ctrl+T</kbd> 新建、<kbd>Ctrl+Shift+T</kbd> 恢复、<kbd>Ctrl+PgUp/PgDn</kbd> 切换，找文件是 <kbd>Ctrl+P</kbd> 而不是 Eclipse 的快捷键。</p></div>
+        <div class="card"><h3><i>5</i>符号优先于字母</h3><p><kbd>Ctrl+=</kbd> 放大选区、<kbd>Alt+=</kbd> 展开、<kbd>Alt+-</kbd> 折叠、<kbd>Alt+[</kbd> 跳括号、<kbd>Ctrl+↑/↓</kbd> 移动行。</p></div>
+      </div>
+    </div>
+
+    <div class="block" id="cheat">
+      <h2>最常用（先背这些）</h2>
+      <p class="sub">标 ★ 的也是键盘忘不掉的那一批，建议优先形成肌肉记忆。</p>
+      <div class="cheat-grid">
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>W</kbd></span></div><div class="cheat-desc">关闭所有标签卡</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>T</kbd></span></div><div class="cheat-desc">重开已关闭标签卡</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>S</kbd></span></div><div class="cheat-desc">保存</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>D</kbd></span><span class="or">/</span><span class="combo"><kbd>F12</kbd></span></div><div class="cheat-desc">转到定义</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>G</kbd></span></div><div class="cheat-desc">跳转到行</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd></span></div><div class="cheat-desc">光标后退</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>E</kbd></span></div><div class="cheat-desc">选择当前词或下一个相同词</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↑</kbd></span></div><div class="cheat-desc">向上列选择</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div><div class="cheat-desc">向下插入行</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>D</kbd></span></div><div class="cheat-desc">删除行</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Insert</kbd></span></div><div class="cheat-desc">重复插入选区或当前行</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd></span></div><div class="cheat-desc">撤销</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Y</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Z</kbd></span></div><div class="cheat-desc">重做</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>K</kbd></span></div><div class="cheat-desc">格式化</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>K</kbd></span></div><div class="cheat-desc">合并行（反格式化）</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>/</kbd></span></div><div class="cheat-desc">注释/反注释</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>/</kbd></span></div><div class="cheat-desc">激活代码助手</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>P</kbd></span></div><div class="cheat-desc">查找文件</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F</kbd></span></div><div class="cheat-desc">本文档内查找字符串</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>H</kbd></span></div><div class="cheat-desc">替换</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Q</kbd></span></div><div class="cheat-desc">显示/隐藏项目管理器</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>X</kbd></span></div><div class="cheat-desc">显示/隐藏控制台</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>C</kbd></span></div><div class="cheat-desc">显示/隐藏终端</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>W</kbd></span></div><div class="cheat-desc">显示/隐藏大纲</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>R</kbd></span></div><div class="cheat-desc">运行</div></div>
+<div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>U</kbd></span></div><div class="cheat-desc">快捷发行菜单</div></div>
+      </div>
+    </div>
+
+    <div class="empty" id="empty">没有匹配的快捷键，换个关键词试试。</div>
+
+    <div id="list">
+<section class="cat" id="cat-0" data-cat="项目管理器">
+    <h2><span class="dot"></span>项目管理器<span class="count">4</span></h2>
+    <div class="rows"><div class="row" data-search="重命名文件（焦点在项目管理器中） f2 renamefile" data-cat="项目管理器">
+      <div class="desc">重命名文件（焦点在项目管理器中）</div>
+      <div class="keys"><span class="combo"><kbd>F2</kbd></span></div>
+      <button class="cmd" data-cmd="renameFile" title="点击复制命令 ID">renameFile</button>
+    </div>
+<div class="row" data-search="剪切文件（焦点在项目管理器中） ctrl+x filesexplorer.cut" data-cat="项目管理器">
+      <div class="desc">剪切文件（焦点在项目管理器中）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>X</kbd></span></div>
+      <button class="cmd" data-cmd="filesExplorer.cut" title="点击复制命令 ID">filesExplorer.cut</button>
+    </div>
+<div class="row" data-search="复制文件（焦点在项目管理器中） ctrl+c filesexplorer.copy" data-cat="项目管理器">
+      <div class="desc">复制文件（焦点在项目管理器中）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+      <button class="cmd" data-cmd="filesExplorer.copy" title="点击复制命令 ID">filesExplorer.copy</button>
+    </div>
+<div class="row" data-search="粘贴文件（焦点在项目管理器中） ctrl+v filesexplorer.paste" data-cat="项目管理器">
+      <div class="desc">粘贴文件（焦点在项目管理器中）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+      <button class="cmd" data-cmd="filesExplorer.paste" title="点击复制命令 ID">filesExplorer.paste</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-1" data-cat="标签卡与窗口">
+    <h2><span class="dot"></span>标签卡与窗口<span class="count">19</span></h2>
+    <div class="rows"><div class="row" data-search="新建标签卡（默认md） ctrl+t workbench.action.files.newuntitledfile" data-cat="标签卡与窗口">
+      <div class="desc">新建标签卡（默认md）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.files.newUntitledFile" title="点击复制命令 ID">workbench.action.files.newUntitledFile</button>
+    </div>
+<div class="row" data-search="关闭当前标签卡 ctrl+w / ctrl+f4 workbench.action.closeactiveeditor" data-cat="标签卡与窗口">
+      <div class="desc">关闭当前标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>W</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F4</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.closeActiveEditor" title="点击复制命令 ID">workbench.action.closeActiveEditor</button>
+    </div>
+<div class="row" data-search="关闭所有标签卡 ctrl+shift+w workbench.action.closealleditors" data-cat="标签卡与窗口">
+      <div class="desc"><span class="star" title="高频">★</span>关闭所有标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>W</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.closeAllEditors" title="点击复制命令 ID">workbench.action.closeAllEditors</button>
+    </div>
+<div class="row" data-search="关闭其他文件 ctrl+q workbench.action.closeothereditors" data-cat="标签卡与窗口">
+      <div class="desc">关闭其他文件</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Q</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.closeOtherEditors" title="点击复制命令 ID">workbench.action.closeOtherEditors</button>
+    </div>
+<div class="row" data-search="显示左边的标签卡 ctrl+pgup workbench.action.lefttab" data-cat="标签卡与窗口">
+      <div class="desc">显示左边的标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgUp</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.leftTab" title="点击复制命令 ID">workbench.action.leftTab</button>
+    </div>
+<div class="row" data-search="显示右边的标签卡 ctrl+pgdown workbench.action.righttab" data-cat="标签卡与窗口">
+      <div class="desc">显示右边的标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgDown</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.rightTab" title="点击复制命令 ID">workbench.action.rightTab</button>
+    </div>
+<div class="row" data-search="重开已关闭标签卡 ctrl+shift+t workbench.action.reopenclosededitor" data-cat="标签卡与窗口">
+      <div class="desc"><span class="star" title="高频">★</span>重开已关闭标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.reopenClosedEditor" title="点击复制命令 ID">workbench.action.reopenClosedEditor</button>
+    </div>
+<div class="row" data-search="切换到第 1 个标签卡 alt+1 workbench.action.openeditoratindex1" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 1 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex1" title="点击复制命令 ID">workbench.action.openEditorAtIndex1</button>
+    </div>
+<div class="row" data-search="切换到第 2 个标签卡 alt+2 workbench.action.openeditoratindex2" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 2 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>2</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex2" title="点击复制命令 ID">workbench.action.openEditorAtIndex2</button>
+    </div>
+<div class="row" data-search="切换到第 3 个标签卡 alt+3 workbench.action.openeditoratindex3" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 3 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>3</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex3" title="点击复制命令 ID">workbench.action.openEditorAtIndex3</button>
+    </div>
+<div class="row" data-search="切换到第 4 个标签卡 alt+4 workbench.action.openeditoratindex4" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 4 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>4</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex4" title="点击复制命令 ID">workbench.action.openEditorAtIndex4</button>
+    </div>
+<div class="row" data-search="切换到第 5 个标签卡 alt+5 workbench.action.openeditoratindex5" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 5 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>5</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex5" title="点击复制命令 ID">workbench.action.openEditorAtIndex5</button>
+    </div>
+<div class="row" data-search="切换到第 6 个标签卡 alt+6 workbench.action.openeditoratindex6" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 6 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>6</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex6" title="点击复制命令 ID">workbench.action.openEditorAtIndex6</button>
+    </div>
+<div class="row" data-search="切换到第 7 个标签卡 alt+7 workbench.action.openeditoratindex7" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 7 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>7</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex7" title="点击复制命令 ID">workbench.action.openEditorAtIndex7</button>
+    </div>
+<div class="row" data-search="切换到第 8 个标签卡 alt+8 workbench.action.openeditoratindex8" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 8 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>8</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex8" title="点击复制命令 ID">workbench.action.openEditorAtIndex8</button>
+    </div>
+<div class="row" data-search="切换到第 9 个标签卡 alt+9 workbench.action.openeditoratindex9" data-cat="标签卡与窗口">
+      <div class="desc">切换到第 9 个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>9</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex9" title="点击复制命令 ID">workbench.action.openEditorAtIndex9</button>
+    </div>
+<div class="row" data-search="切换到最末尾的标签卡 alt+0 workbench.action.openeditoratindex0" data-cat="标签卡与窗口">
+      <div class="desc">切换到最末尾的标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>0</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openEditorAtIndex0" title="点击复制命令 ID">workbench.action.openEditorAtIndex0</button>
+    </div>
+<div class="row" data-search="往左移动一个标签卡 ctrl+shift+pgup workbench.action.moveeditorleftingroup" data-cat="标签卡与窗口">
+      <div class="desc">往左移动一个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>PgUp</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.moveEditorLeftInGroup" title="点击复制命令 ID">workbench.action.moveEditorLeftInGroup</button>
+    </div>
+<div class="row" data-search="往右移动一个标签卡 ctrl+shift+pgdown workbench.action.moveeditorrightingroup" data-cat="标签卡与窗口">
+      <div class="desc">往右移动一个标签卡</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>PgDown</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.moveEditorRightInGroup" title="点击复制命令 ID">workbench.action.moveEditorRightInGroup</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-2" data-cat="文件">
+    <h2><span class="dot"></span>文件<span class="count">6</span></h2>
+    <div class="rows"><div class="row" data-search="新建 ctrl+n workbench.action.menu.new" data-cat="文件">
+      <div class="desc">新建</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.menu.new" title="点击复制命令 ID">workbench.action.menu.new</button>
+    </div>
+<div class="row" data-search="打开外部文件 ctrl+o workbench.action.files.openfile" data-cat="文件">
+      <div class="desc">打开外部文件</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>O</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.files.openFile" title="点击复制命令 ID">workbench.action.files.openFile</button>
+    </div>
+<div class="row" data-search="打开收藏菜单 alt+shift+f workbench.action.fav.menu" data-cat="文件">
+      <div class="desc">打开收藏菜单</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.fav.menu" title="点击复制命令 ID">workbench.action.fav.menu</button>
+    </div>
+<div class="row" data-search="保存 ctrl+s workbench.action.files.save" data-cat="文件">
+      <div class="desc"><span class="star" title="高频">★</span>保存</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.files.save" title="点击复制命令 ID">workbench.action.files.save</button>
+    </div>
+<div class="row" data-search="另存为 ctrl+shift+s workbench.action.files.saveas" data-cat="文件">
+      <div class="desc">另存为</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.files.saveAs" title="点击复制命令 ID">workbench.action.files.saveAs</button>
+    </div>
+<div class="row" data-search="全部保存 ctrl+alt+s workbench.action.files.saveall" data-cat="文件">
+      <div class="desc">全部保存</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.files.saveAll" title="点击复制命令 ID">workbench.action.files.saveAll</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-3" data-cat="光标与跳转">
+    <h2><span class="dot"></span>光标与跳转<span class="count">22</span></h2>
+    <div class="rows"><div class="row" data-search="光标向左 alt+h / ← cursorleft" data-cat="光标与跳转">
+      <div class="desc">光标向左</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>H</kbd></span><span class="or">/</span><span class="combo"><kbd>←</kbd></span></div>
+      <button class="cmd" data-cmd="cursorLeft" title="点击复制命令 ID">cursorLeft</button>
+    </div>
+<div class="row" data-search="光标向下 alt+j / ↓ cursordown" data-cat="光标与跳转">
+      <div class="desc">光标向下</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>J</kbd></span><span class="or">/</span><span class="combo"><kbd>↓</kbd></span></div>
+      <button class="cmd" data-cmd="cursorDown" title="点击复制命令 ID">cursorDown</button>
+    </div>
+<div class="row" data-search="光标向上 alt+k / ↑ cursorup" data-cat="光标与跳转">
+      <div class="desc">光标向上</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>K</kbd></span><span class="or">/</span><span class="combo"><kbd>↑</kbd></span></div>
+      <button class="cmd" data-cmd="cursorUp" title="点击复制命令 ID">cursorUp</button>
+    </div>
+<div class="row" data-search="光标向右 alt+l / → cursorright" data-cat="光标与跳转">
+      <div class="desc">光标向右</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>L</kbd></span><span class="or">/</span><span class="combo"><kbd>→</kbd></span></div>
+      <button class="cmd" data-cmd="cursorRight" title="点击复制命令 ID">cursorRight</button>
+    </div>
+<div class="row" data-search="光标向左一词 ctrl+← cursorwordstartleft" data-cat="光标与跳转">
+      <div class="desc">光标向左一词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+      <button class="cmd" data-cmd="cursorWordStartLeft" title="点击复制命令 ID">cursorWordStartLeft</button>
+    </div>
+<div class="row" data-search="光标向右一词 ctrl+→ cursorwordendright" data-cat="光标与跳转">
+      <div class="desc">光标向右一词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+      <button class="cmd" data-cmd="cursorWordEndRight" title="点击复制命令 ID">cursorWordEndRight</button>
+    </div>
+<div class="row" data-search="光标向左一个驼峰单词 ctrl+alt+← cursorwordpartleft" data-cat="光标与跳转">
+      <div class="desc">光标向左一个驼峰单词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+      <button class="cmd" data-cmd="cursorWordPartLeft" title="点击复制命令 ID">cursorWordPartLeft</button>
+    </div>
+<div class="row" data-search="光标向右一个驼峰单词 ctrl+alt+→ cursorwordpartright" data-cat="光标与跳转">
+      <div class="desc">光标向右一个驼峰单词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+      <button class="cmd" data-cmd="cursorWordPartRight" title="点击复制命令 ID">cursorWordPartRight</button>
+    </div>
+<div class="row" data-search="光标到软行首（连续按依次切换自动换行的行首、缩进后的行首、真行首） home cursorhome" data-cat="光标与跳转">
+      <div class="desc">光标到软行首（连续按依次切换自动换行的行首、缩进后的行首、真行首）</div>
+      <div class="keys"><span class="combo"><kbd>Home</kbd></span></div>
+      <button class="cmd" data-cmd="cursorHome" title="点击复制命令 ID">cursorHome</button>
+    </div>
+<div class="row" data-search="光标到软行尾（连续按依次切换自动换行的行尾、真行尾） end cursorend" data-cat="光标与跳转">
+      <div class="desc">光标到软行尾（连续按依次切换自动换行的行尾、真行尾）</div>
+      <div class="keys"><span class="combo"><kbd>End</kbd></span></div>
+      <button class="cmd" data-cmd="cursorEnd" title="点击复制命令 ID">cursorEnd</button>
+    </div>
+<div class="row" data-search="光标到上个段落（空行为分割段落） ctrl+alt+pgup cursorparaup" data-cat="光标与跳转">
+      <div class="desc">光标到上个段落（空行为分割段落）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>PgUp</kbd></span></div>
+      <button class="cmd" data-cmd="cursorParaUp" title="点击复制命令 ID">cursorParaUp</button>
+    </div>
+<div class="row" data-search="光标到下个段落（空行为分割段落） ctrl+alt+pgdown cursorparadown" data-cat="光标与跳转">
+      <div class="desc">光标到下个段落（空行为分割段落）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>PgDown</kbd></span></div>
+      <button class="cmd" data-cmd="cursorParaDown" title="点击复制命令 ID">cursorParaDown</button>
+    </div>
+<div class="row" data-search="光标到上一页 pgup cursorpageup" data-cat="光标与跳转">
+      <div class="desc">光标到上一页</div>
+      <div class="keys"><span class="combo"><kbd>PgUp</kbd></span></div>
+      <button class="cmd" data-cmd="cursorPageUp" title="点击复制命令 ID">cursorPageUp</button>
+    </div>
+<div class="row" data-search="光标到下一页 pgdown cursorpagedown" data-cat="光标与跳转">
+      <div class="desc">光标到下一页</div>
+      <div class="keys"><span class="combo"><kbd>PgDown</kbd></span></div>
+      <button class="cmd" data-cmd="cursorPageDown" title="点击复制命令 ID">cursorPageDown</button>
+    </div>
+<div class="row" data-search="光标到页首 ctrl+home cursortop" data-cat="光标与跳转">
+      <div class="desc">光标到页首</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Home</kbd></span></div>
+      <button class="cmd" data-cmd="cursorTop" title="点击复制命令 ID">cursorTop</button>
+    </div>
+<div class="row" data-search="光标到页尾 ctrl+end cursorbottom" data-cat="光标与跳转">
+      <div class="desc">光标到页尾</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>End</kbd></span></div>
+      <button class="cmd" data-cmd="cursorBottom" title="点击复制命令 ID">cursorBottom</button>
+    </div>
+<div class="row" data-search="转到定义 alt+d / f12 workbench.action.gotodefinition" data-cat="光标与跳转">
+      <div class="desc"><span class="star" title="高频">★</span>转到定义</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>D</kbd></span><span class="or">/</span><span class="combo"><kbd>F12</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.gotoDefinition" title="点击复制命令 ID">workbench.action.gotoDefinition</button>
+    </div>
+<div class="row" data-search="分栏转到定义 alt+shift+d / shift+f12 workbench.action.gotodefinitionwithpane" data-cat="光标与跳转">
+      <div class="desc">分栏转到定义</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>D</kbd></span><span class="or">/</span><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>F12</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.gotoDefinitionWithPane" title="点击复制命令 ID">workbench.action.gotoDefinitionWithPane</button>
+    </div>
+<div class="row" data-search="跳转到行 ctrl+g workbench.action.gotoline" data-cat="光标与跳转">
+      <div class="desc"><span class="star" title="高频">★</span>跳转到行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>G</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.gotoLine" title="点击复制命令 ID">workbench.action.gotoLine</button>
+    </div>
+<div class="row" data-search="跳转到配对的括号 alt+[ editor.action.jumptobracket" data-cat="光标与跳转">
+      <div class="desc">跳转到配对的括号</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>[</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.jumpToBracket" title="点击复制命令 ID">editor.action.jumpToBracket</button>
+    </div>
+<div class="row" data-search="光标后退 alt+← workbench.action.navigateback" data-cat="光标与跳转">
+      <div class="desc"><span class="star" title="高频">★</span>光标后退</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.navigateBack" title="点击复制命令 ID">workbench.action.navigateBack</button>
+    </div>
+<div class="row" data-search="光标前进 alt+→ workbench.action.navigateforward" data-cat="光标与跳转">
+      <div class="desc">光标前进</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.navigateForward" title="点击复制命令 ID">workbench.action.navigateForward</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-4" data-cat="书签、折叠与错误">
+    <h2><span class="dot"></span>书签、折叠与错误<span class="count">13</span></h2>
+    <div class="rows"><div class="row" data-search="设置/取消书签 ctrl+f2 workbench.action.togglebookmark" data-cat="书签、折叠与错误">
+      <div class="desc">设置/取消书签</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F2</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.toggleBookmark" title="点击复制命令 ID">workbench.action.toggleBookmark</button>
+    </div>
+<div class="row" data-search="下一个书签（光标在编辑器区域） f2 workbench.action.nextbookmark" data-cat="书签、折叠与错误">
+      <div class="desc">下一个书签（光标在编辑器区域）</div>
+      <div class="keys"><span class="combo"><kbd>F2</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.nextBookmark" title="点击复制命令 ID">workbench.action.nextBookmark</button>
+    </div>
+<div class="row" data-search="上一个书签（光标在编辑器区域） shift+f2 workbench.action.prevbookmark" data-cat="书签、折叠与错误">
+      <div class="desc">上一个书签（光标在编辑器区域）</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>F2</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.prevBookmark" title="点击复制命令 ID">workbench.action.prevBookmark</button>
+    </div>
+<div class="row" data-search="清除所有书签 ctrl+shift+f2 workbench.action.clearbookmarks" data-cat="书签、折叠与错误">
+      <div class="desc">清除所有书签</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F2</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.clearBookmarks" title="点击复制命令 ID">workbench.action.clearBookmarks</button>
+    </div>
+<div class="row" data-search="下一个验证错误 f4 workbench.action.nexterror" data-cat="书签、折叠与错误">
+      <div class="desc">下一个验证错误</div>
+      <div class="keys"><span class="combo"><kbd>F4</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.nextError" title="点击复制命令 ID">workbench.action.nextError</button>
+    </div>
+<div class="row" data-search="上一个验证错误 shift+f4 workbench.action.preverror" data-cat="书签、折叠与错误">
+      <div class="desc">上一个验证错误</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>F4</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.prevError" title="点击复制命令 ID">workbench.action.prevError</button>
+    </div>
+<div class="row" data-search="折叠单行 alt+- workbench.action.foldlinecontract" data-cat="书签、折叠与错误">
+      <div class="desc">折叠单行</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>-</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.foldLineContract" title="点击复制命令 ID">workbench.action.foldLineContract</button>
+    </div>
+<div class="row" data-search="展开单行 alt+= workbench.action.foldlineexpand" data-cat="书签、折叠与错误">
+      <div class="desc">展开单行</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>=</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.foldLineExpand" title="点击复制命令 ID">workbench.action.foldLineExpand</button>
+    </div>
+<div class="row" data-search="折叠子行 alt+shift+- workbench.action.foldchildrencontract" data-cat="书签、折叠与错误">
+      <div class="desc">折叠子行</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>-</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.foldChildrenContract" title="点击复制命令 ID">workbench.action.foldChildrenContract</button>
+    </div>
+<div class="row" data-search="展开子行 alt+shift+= workbench.action.foldchildrenexpand" data-cat="书签、折叠与错误">
+      <div class="desc">展开子行</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>=</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.foldChildrenExpand" title="点击复制命令 ID">workbench.action.foldChildrenExpand</button>
+    </div>
+<div class="row" data-search="折叠所有行 alt+ctrl+shift+- workbench.action.foldallcontract" data-cat="书签、折叠与错误">
+      <div class="desc">折叠所有行</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>-</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.foldAllContract" title="点击复制命令 ID">workbench.action.foldAllContract</button>
+    </div>
+<div class="row" data-search="展开所有行 alt+ctrl+shift+= workbench.action.foldallexpand" data-cat="书签、折叠与错误">
+      <div class="desc">展开所有行</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>=</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.foldAllExpand" title="点击复制命令 ID">workbench.action.foldAllExpand</button>
+    </div>
+<div class="row" data-search="折叠其他区域 alt+shift+o workbench.action.foldcontractother" data-cat="书签、折叠与错误">
+      <div class="desc">折叠其他区域</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>O</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.foldContractOther" title="点击复制命令 ID">workbench.action.foldContractOther</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-5" data-cat="选择与多光标">
+    <h2><span class="dot"></span>选择与多光标<span class="count">27</span></h2>
+    <div class="rows"><div class="row" data-search="全选 ctrl+a editor.action.selectall" data-cat="选择与多光标">
+      <div class="desc">全选</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>A</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.selectAll" title="点击复制命令 ID">editor.action.selectAll</button>
+    </div>
+<div class="row" data-search="向左选字 shift+← cursorleftselect" data-cat="选择与多光标">
+      <div class="desc">向左选字</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+      <button class="cmd" data-cmd="cursorLeftSelect" title="点击复制命令 ID">cursorLeftSelect</button>
+    </div>
+<div class="row" data-search="向右选字 shift+→ cursorrightselect" data-cat="选择与多光标">
+      <div class="desc">向右选字</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+      <button class="cmd" data-cmd="cursorRightSelect" title="点击复制命令 ID">cursorRightSelect</button>
+    </div>
+<div class="row" data-search="向上选行 shift+↑ cursorupselect" data-cat="选择与多光标">
+      <div class="desc">向上选行</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>↑</kbd></span></div>
+      <button class="cmd" data-cmd="cursorUpSelect" title="点击复制命令 ID">cursorUpSelect</button>
+    </div>
+<div class="row" data-search="向下选行 shift+↓ cursordownselect" data-cat="选择与多光标">
+      <div class="desc">向下选行</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>↓</kbd></span></div>
+      <button class="cmd" data-cmd="cursorDownSelect" title="点击复制命令 ID">cursorDownSelect</button>
+    </div>
+<div class="row" data-search="向左选词 ctrl+shift+← cursorwordstartleftselect" data-cat="选择与多光标">
+      <div class="desc">向左选词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+      <button class="cmd" data-cmd="cursorWordStartLeftSelect" title="点击复制命令 ID">cursorWordStartLeftSelect</button>
+    </div>
+<div class="row" data-search="向右选词 ctrl+shift+→ cursorwordendrightselect" data-cat="选择与多光标">
+      <div class="desc">向右选词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+      <button class="cmd" data-cmd="cursorWordEndRightSelect" title="点击复制命令 ID">cursorWordEndRightSelect</button>
+    </div>
+<div class="row" data-search="选至软行首（连续按依次切换自动换行的行首、缩进后的行首、真行首） shift+home cursorhomeselect" data-cat="选择与多光标">
+      <div class="desc">选至软行首（连续按依次切换自动换行的行首、缩进后的行首、真行首）</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Home</kbd></span></div>
+      <button class="cmd" data-cmd="cursorHomeSelect" title="点击复制命令 ID">cursorHomeSelect</button>
+    </div>
+<div class="row" data-search="选至软行尾（连续按依次切换自动换行的行尾、真行尾） shift+end cursorendselect" data-cat="选择与多光标">
+      <div class="desc">选至软行尾（连续按依次切换自动换行的行尾、真行尾）</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>End</kbd></span></div>
+      <button class="cmd" data-cmd="cursorEndSelect" title="点击复制命令 ID">cursorEndSelect</button>
+    </div>
+<div class="row" data-search="选至上一页 shift+pgup cursorpageupselect" data-cat="选择与多光标">
+      <div class="desc">选至上一页</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>PgUp</kbd></span></div>
+      <button class="cmd" data-cmd="cursorPageUpSelect" title="点击复制命令 ID">cursorPageUpSelect</button>
+    </div>
+<div class="row" data-search="选至下一页 shift+pgdown cursorpagedownselect" data-cat="选择与多光标">
+      <div class="desc">选至下一页</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>PgDown</kbd></span></div>
+      <button class="cmd" data-cmd="cursorPageDownSelect" title="点击复制命令 ID">cursorPageDownSelect</button>
+    </div>
+<div class="row" data-search="选至文档首 ctrl+shift+home cursortopselect" data-cat="选择与多光标">
+      <div class="desc">选至文档首</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Home</kbd></span></div>
+      <button class="cmd" data-cmd="cursorTopSelect" title="点击复制命令 ID">cursorTopSelect</button>
+    </div>
+<div class="row" data-search="选至文档尾 ctrl+shift+end cursorbottomselect" data-cat="选择与多光标">
+      <div class="desc">选至文档尾</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>End</kbd></span></div>
+      <button class="cmd" data-cmd="cursorBottomSelect" title="点击复制命令 ID">cursorBottomSelect</button>
+    </div>
+<div class="row" data-search="选择当前词或下一个相同词 ctrl+e editor.action.addselectiontonextfindmatch" data-cat="选择与多光标">
+      <div class="desc"><span class="star" title="高频">★</span>选择当前词或下一个相同词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>E</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.addSelectionToNextFindMatch" title="点击复制命令 ID">editor.action.addSelectionToNextFindMatch</button>
+    </div>
+<div class="row" data-search="选择所有相同词 ctrl+alt+e / alt+f3 editor.action.selectallsameword" data-cat="选择与多光标">
+      <div class="desc">选择所有相同词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>E</kbd></span><span class="or">/</span><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>F3</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.selectAllSameWord" title="点击复制命令 ID">editor.action.selectAllSameWord</button>
+    </div>
+<div class="row" data-search="跳过当前选择，选中下一个相同词 alt+shift+e editor.action.skipselectionandselectnext" data-cat="选择与多光标">
+      <div class="desc">跳过当前选择，选中下一个相同词</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>E</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.skipSelectionAndSelectNext" title="点击复制命令 ID">editor.action.skipSelectionAndSelectNext</button>
+    </div>
+<div class="row" data-search="选择相同语法词（注意解除搜狗输入法全局占用） ctrl+shift+e editor.action.selectsamewordbylan" data-cat="选择与多光标">
+      <div class="desc">选择相同语法词（注意解除搜狗输入法全局占用）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>E</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.SelectSameWordByLan" title="点击复制命令 ID">editor.action.SelectSameWordByLan</button>
+    </div>
+<div class="row" data-search="选择括号内字符。可用双击括号替代 ctrl+[ editor.action.selectmatchbracket" data-cat="选择与多光标">
+      <div class="desc">选择括号内字符。可用双击括号替代</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>[</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.selectMatchBracket" title="点击复制命令 ID">editor.action.selectMatchBracket</button>
+    </div>
+<div class="row" data-search="选择行。也可单击行号或三击行 ctrl+l expandlineselection" data-cat="选择与多光标">
+      <div class="desc">选择行。也可单击行号或三击行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>L</kbd></span></div>
+      <button class="cmd" data-cmd="expandLineSelection" title="点击复制命令 ID">expandLineSelection</button>
+    </div>
+<div class="row" data-search="选择行(不含首尾空白字符)。也可双击行尾 ctrl+shift+l editor.action.selectlinenoblankstr" data-cat="选择与多光标">
+      <div class="desc">选择行(不含首尾空白字符)。也可双击行尾</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>L</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.selectLineNoBlankStr" title="点击复制命令 ID">editor.action.selectLineNoBlankStr</button>
+    </div>
+<div class="row" data-search="放大选区 ctrl+= editor.action.expandselection" data-cat="选择与多光标">
+      <div class="desc">放大选区</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>=</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.expandSelection" title="点击复制命令 ID">editor.action.expandSelection</button>
+    </div>
+<div class="row" data-search="向2侧扩大选择 alt+shift+→ editor.action.expandselectiontwosides" data-cat="选择与多光标">
+      <div class="desc">向2侧扩大选择</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.expandSelectionTwoSides" title="点击复制命令 ID">editor.action.expandSelectionTwoSides</button>
+    </div>
+<div class="row" data-search="由2侧向内减少选择 alt+shift+← editor.action.narrowselectiontwosides" data-cat="选择与多光标">
+      <div class="desc">由2侧向内减少选择</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.narrowSelectionTwoSides" title="点击复制命令 ID">editor.action.narrowSelectionTwoSides</button>
+    </div>
+<div class="row" data-search="向上列选择 ctrl+alt+↑ editor.action.insertcursorabove" data-cat="选择与多光标">
+      <div class="desc"><span class="star" title="高频">★</span>向上列选择</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↑</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.insertCursorAbove" title="点击复制命令 ID">editor.action.insertCursorAbove</button>
+    </div>
+<div class="row" data-search="向下列选择 ctrl+alt+↓ editor.action.insertcursorbelow" data-cat="选择与多光标">
+      <div class="desc">向下列选择</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↓</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.insertCursorBelow" title="点击复制命令 ID">editor.action.insertCursorBelow</button>
+    </div>
+<div class="row" data-search="每个选区前后设置光标 ctrl+\ editor.action.setcursorsurroundsel" data-cat="选择与多光标">
+      <div class="desc">每个选区前后设置光标</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>\</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.setCursorSurroundSel" title="点击复制命令 ID">editor.action.setCursorSurroundSel</button>
+    </div>
+<div class="row" data-search="每行行首设置光标 ctrl+shift+\ editor.action.setcursoreachline" data-cat="选择与多光标">
+      <div class="desc">每行行首设置光标</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>\</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.setCursorEachLine" title="点击复制命令 ID">editor.action.setCursorEachLine</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-6" data-cat="行操作">
+    <h2><span class="dot"></span>行操作<span class="count">5</span></h2>
+    <div class="rows"><div class="row" data-search="向下插入行 ctrl+enter editor.action.insertlineafter" data-cat="行操作">
+      <div class="desc"><span class="star" title="高频">★</span>向下插入行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.insertLineAfter" title="点击复制命令 ID">editor.action.insertLineAfter</button>
+    </div>
+<div class="row" data-search="向上插入行 ctrl+shift+enter editor.action.insertlinebefore" data-cat="行操作">
+      <div class="desc">向上插入行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.insertLineBefore" title="点击复制命令 ID">editor.action.insertLineBefore</button>
+    </div>
+<div class="row" data-search="反回车，即把光标前内容移到下一行 shift+enter editor.action.shiftenter" data-cat="行操作">
+      <div class="desc">反回车，即把光标前内容移到下一行</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.shiftEnter" title="点击复制命令 ID">editor.action.shiftEnter</button>
+    </div>
+<div class="row" data-search="上移一行 ctrl+↑ editor.action.movelinesupaction" data-cat="行操作">
+      <div class="desc">上移一行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>↑</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.moveLinesUpAction" title="点击复制命令 ID">editor.action.moveLinesUpAction</button>
+    </div>
+<div class="row" data-search="下移一行 ctrl+↓ editor.action.movelinesdownaction" data-cat="行操作">
+      <div class="desc">下移一行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>↓</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.moveLinesDownAction" title="点击复制命令 ID">editor.action.moveLinesDownAction</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-7" data-cat="删除">
+    <h2><span class="dot"></span>删除<span class="count">7</span></h2>
+    <div class="rows"><div class="row" data-search="向左删除 backspace deleteleft" data-cat="删除">
+      <div class="desc">向左删除</div>
+      <div class="keys"><span class="combo"><kbd>Backspace</kbd></span></div>
+      <button class="cmd" data-cmd="deleteLeft" title="点击复制命令 ID">deleteLeft</button>
+    </div>
+<div class="row" data-search="向右删除 delete deleteright" data-cat="删除">
+      <div class="desc">向右删除</div>
+      <div class="keys"><span class="combo"><kbd>Delete</kbd></span></div>
+      <button class="cmd" data-cmd="deleteRight" title="点击复制命令 ID">deleteRight</button>
+    </div>
+<div class="row" data-search="向左删除词 ctrl+backspace deletewordleft" data-cat="删除">
+      <div class="desc">向左删除词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Backspace</kbd></span></div>
+      <button class="cmd" data-cmd="deleteWordLeft" title="点击复制命令 ID">deleteWordLeft</button>
+    </div>
+<div class="row" data-search="向右删除词 ctrl+delete deletewordright" data-cat="删除">
+      <div class="desc">向右删除词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Delete</kbd></span></div>
+      <button class="cmd" data-cmd="deleteWordRight" title="点击复制命令 ID">deleteWordRight</button>
+    </div>
+<div class="row" data-search="删到行首 shift+backspace deletelineleft" data-cat="删除">
+      <div class="desc">删到行首</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Backspace</kbd></span></div>
+      <button class="cmd" data-cmd="deleteLineLeft" title="点击复制命令 ID">deleteLineLeft</button>
+    </div>
+<div class="row" data-search="删到行尾 shift+delete deletelineright" data-cat="删除">
+      <div class="desc">删到行尾</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Delete</kbd></span></div>
+      <button class="cmd" data-cmd="deleteLineRight" title="点击复制命令 ID">deleteLineRight</button>
+    </div>
+<div class="row" data-search="删除行 ctrl+d editor.action.deletelines" data-cat="删除">
+      <div class="desc"><span class="star" title="高频">★</span>删除行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>D</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.deleteLines" title="点击复制命令 ID">editor.action.deleteLines</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-8" data-cat="剪贴板">
+    <h2><span class="dot"></span>剪贴板<span class="count">9</span></h2>
+    <div class="rows"><div class="row" data-search="复制 ctrl+c editor.action.clipboardcopyaction" data-cat="剪贴板">
+      <div class="desc">复制</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.clipboardCopyAction" title="点击复制命令 ID">editor.action.clipboardCopyAction</button>
+    </div>
+<div class="row" data-search="复制文件路径 ctrl+shift+c editor.action.clipboardcopypathaction" data-cat="剪贴板">
+      <div class="desc">复制文件路径</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.clipboardCopyPathAction" title="点击复制命令 ID">editor.action.clipboardCopyPathAction</button>
+    </div>
+<div class="row" data-search="重复插入选区或当前行 ctrl+insert editor.action.duplicate" data-cat="剪贴板">
+      <div class="desc"><span class="star" title="高频">★</span>重复插入选区或当前行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Insert</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.duplicate" title="点击复制命令 ID">editor.action.duplicate</button>
+    </div>
+<div class="row" data-search="重复插入选区或当前行（备份用于没有insert键的键盘） ctrl+shift+r editor.action.duplicate" data-cat="剪贴板">
+      <div class="desc">重复插入选区或当前行（备份用于没有insert键的键盘）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>R</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.duplicate" title="点击复制命令 ID">editor.action.duplicate</button>
+    </div>
+<div class="row" data-search="剪切 ctrl+x editor.action.clipboardcutaction" data-cat="剪贴板">
+      <div class="desc">剪切</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>X</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.clipboardCutAction" title="点击复制命令 ID">editor.action.clipboardCutAction</button>
+    </div>
+<div class="row" data-search="粘贴 ctrl+v editor.action.clipboardpasteaction" data-cat="剪贴板">
+      <div class="desc">粘贴</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.clipboardPasteAction" title="点击复制命令 ID">editor.action.clipboardPasteAction</button>
+    </div>
+<div class="row" data-search="粘贴为html ctrl+shift+v editor.action.clipboardpasteashtml" data-cat="剪贴板">
+      <div class="desc">粘贴为HTML</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.clipboardPasteAsHTML" title="点击复制命令 ID">editor.action.clipboardPasteAsHTML</button>
+    </div>
+<div class="row" data-search="从历史粘贴板粘贴（注意解除evernote的快捷键占用） ctrl+alt+v editor.action.clipboardpastefromhistory" data-cat="剪贴板">
+      <div class="desc">从历史粘贴板粘贴（注意解除evernote的快捷键占用）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.clipboardPasteFromHistory" title="点击复制命令 ID">editor.action.clipboardPasteFromHistory</button>
+    </div>
+<div class="row" data-search="交换字符、选区或行。2个选区或2行是彼此交换；不是2个选区时是交换光标前后的字母 ctrl+shift+x editor.action.swichselectionorline" data-cat="剪贴板">
+      <div class="desc">交换字符、选区或行。2个选区或2行是彼此交换；不是2个选区时是交换光标前后的字母</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>X</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.swichSelectionOrLine" title="点击复制命令 ID">editor.action.swichSelectionOrLine</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-9" data-cat="撤销与重做">
+    <h2><span class="dot"></span>撤销与重做<span class="count">3</span></h2>
+    <div class="rows"><div class="row" data-search="撤销 ctrl+z undo" data-cat="撤销与重做">
+      <div class="desc"><span class="star" title="高频">★</span>撤销</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd></span></div>
+      <button class="cmd" data-cmd="undo" title="点击复制命令 ID">undo</button>
+    </div>
+<div class="row" data-search="重做 ctrl+y / ctrl+shift+z redo" data-cat="撤销与重做">
+      <div class="desc"><span class="star" title="高频">★</span>重做</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Y</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Z</kbd></span></div>
+      <button class="cmd" data-cmd="redo" title="点击复制命令 ID">redo</button>
+    </div>
+<div class="row" data-search="撤销一个新光标或选区 alt+shift+z editor.action.undoselection" data-cat="撤销与重做">
+      <div class="desc">撤销一个新光标或选区</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Z</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.undoSelection" title="点击复制命令 ID">editor.action.undoSelection</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-10" data-cat="编辑：格式化与注释">
+    <h2><span class="dot"></span>编辑：格式化与注释<span class="count">6</span></h2>
+    <div class="rows"><div class="row" data-search="格式化 ctrl+k editor.action.format" data-cat="编辑：格式化与注释">
+      <div class="desc"><span class="star" title="高频">★</span>格式化</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>K</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.format" title="点击复制命令 ID">editor.action.format</button>
+    </div>
+<div class="row" data-search="合并行（反格式化） ctrl+shift+k editor.action.joinlines" data-cat="编辑：格式化与注释">
+      <div class="desc"><span class="star" title="高频">★</span>合并行（反格式化）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>K</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.joinLines" title="点击复制命令 ID">editor.action.joinLines</button>
+    </div>
+<div class="row" data-search="合并行（兼容老版hbuilder快捷键） ctrl+alt+j editor.action.joinlines" data-cat="编辑：格式化与注释">
+      <div class="desc">合并行（兼容老版HBuilder快捷键）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>J</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.joinLines" title="点击复制命令 ID">editor.action.joinLines</button>
+    </div>
+<div class="row" data-search="注释/反注释 ctrl+/ editor.action.commentline" data-cat="编辑：格式化与注释">
+      <div class="desc"><span class="star" title="高频">★</span>注释/反注释</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>/</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.commentLine" title="点击复制命令 ID">editor.action.commentLine</button>
+    </div>
+<div class="row" data-search="块注释 ctrl+shift+/ editor.action.blockcommentline" data-cat="编辑：格式化与注释">
+      <div class="desc">块注释</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>/</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.blockCommentLine" title="点击复制命令 ID">editor.action.blockCommentLine</button>
+    </div>
+<div class="row" data-search="注释菜单(含条件编译注释) ctrl+alt+/ editor.action.showcommentmenu" data-cat="编辑：格式化与注释">
+      <div class="desc">注释菜单(含条件编译注释)</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>/</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.showCommentMenu" title="点击复制命令 ID">editor.action.showCommentMenu</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-11" data-cat="编辑：包围 / 大小写 / 代码助手">
+    <h2><span class="dot"></span>编辑：包围 / 大小写 / 代码助手<span class="count">10</span></h2>
+    <div class="rows"><div class="row" data-search="包围 ctrl+] editor.action.surroundbylanguage" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">包围</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>]</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.SurroundBylanguage" title="点击复制命令 ID">editor.action.SurroundBylanguage</button>
+    </div>
+<div class="row" data-search="反包围 ctrl+shift+] editor.action.unsurroundbylanguage" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">反包围</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>]</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.UnSurroundBylanguage" title="点击复制命令 ID">editor.action.UnSurroundBylanguage</button>
+    </div>
+<div class="row" data-search="加粗（html、md生效） ctrl+b editor.action.bold" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">加粗（html、md生效）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>B</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.bold" title="点击复制命令 ID">editor.action.bold</button>
+    </div>
+<div class="row" data-search="全部字母大写 alt+shift+u editor.action.transformtouppercase" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">全部字母大写</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>U</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.transformToUppercase" title="点击复制命令 ID">editor.action.transformToUppercase</button>
+    </div>
+<div class="row" data-search="全部字母小写 alt+shift+l editor.action.transformtolowercase" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">全部字母小写</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>L</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.transformToLowercase" title="点击复制命令 ID">editor.action.transformToLowercase</button>
+    </div>
+<div class="row" data-search="首字母大写 alt+shift+t editor.action.transformtotitlecase" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">首字母大写</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.transformToTitlecase" title="点击复制命令 ID">editor.action.transformToTitlecase</button>
+    </div>
+<div class="row" data-search="激活代码助手 alt+/ editor.action.triggersuggest" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc"><span class="star" title="高频">★</span>激活代码助手</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>/</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.triggerSuggest" title="点击复制命令 ID">editor.action.triggerSuggest</button>
+    </div>
+<div class="row" data-search="激活方法参数提示 alt+shift+/ trigger parameter hints" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">激活方法参数提示</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>/</kbd></span></div>
+      <button class="cmd" data-cmd="Trigger Parameter Hints" title="点击复制命令 ID">Trigger Parameter Hints</button>
+    </div>
+<div class="row" data-search="缩进 tab tab" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">缩进</div>
+      <div class="keys"><span class="combo"><kbd>Tab</kbd></span></div>
+      <button class="cmd" data-cmd="tab" title="点击复制命令 ID">tab</button>
+    </div>
+<div class="row" data-search="反缩进 shift+tab outdent" data-cat="编辑：包围 / 大小写 / 代码助手">
+      <div class="desc">反缩进</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+      <button class="cmd" data-cmd="outdent" title="点击复制命令 ID">outdent</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-12" data-cat="列表符">
+    <h2><span class="dot"></span>列表符<span class="count">7</span></h2>
+    <div class="rows"><div class="row" data-search="插入-无序列表符 ctrl+alt+- editor.action.unorderlistsymbolsbyminus" data-cat="列表符">
+      <div class="desc">插入-无序列表符</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>-</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.unOrderListSymbolsByMinus" title="点击复制命令 ID">editor.action.unOrderListSymbolsByMinus</button>
+    </div>
+<div class="row" data-search="插入*无序列表符 ctrl+alt+8 editor.action.unorderlistsymbolsbymultiply" data-cat="列表符">
+      <div class="desc">插入*无序列表符</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>8</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.unOrderListSymbolsByMultiply" title="点击复制命令 ID">editor.action.unOrderListSymbolsByMultiply</button>
+    </div>
+<div class="row" data-search="插入+无序列表符 ctrl+alt+= editor.action.unorderlistsymbolsbyplus" data-cat="列表符">
+      <div class="desc">插入+无序列表符</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>=</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.unOrderListSymbolsByPlus" title="点击复制命令 ID">editor.action.unOrderListSymbolsByPlus</button>
+    </div>
+<div class="row" data-search="插入&gt;引用列表符 ctrl+alt+shift+. editor.action.quotelistsymbols" data-cat="列表符">
+      <div class="desc">插入&gt;引用列表符</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>.</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.quoteListSymbols" title="点击复制命令 ID">editor.action.quoteListSymbols</button>
+    </div>
+<div class="row" data-search="插入有序列表符 ctrl+alt+1 editor.action.orderlistsymbols" data-cat="列表符">
+      <div class="desc">插入有序列表符</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>1</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.orderListSymbols" title="点击复制命令 ID">editor.action.orderListSymbols</button>
+    </div>
+<div class="row" data-search="插入任务列表符 ctrl+alt+[ editor.action.tasklistsymbols" data-cat="列表符">
+      <div class="desc">插入任务列表符</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>[</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.taskListSymbols" title="点击复制命令 ID">editor.action.taskListSymbols</button>
+    </div>
+<div class="row" data-search="插入已完成任务列表符 ctrl+alt+] editor.action.taskfinishlistsymbols" data-cat="列表符">
+      <div class="desc">插入已完成任务列表符</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>]</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.taskFinishListSymbols" title="点击复制命令 ID">editor.action.taskFinishListSymbols</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-13" data-cat="查找与替换">
+    <h2><span class="dot"></span>查找与替换<span class="count">8</span></h2>
+    <div class="rows"><div class="row" data-search="查找文件 ctrl+p workbench.action.quickopen" data-cat="查找与替换">
+      <div class="desc"><span class="star" title="高频">★</span>查找文件</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>P</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.quickOpen" title="点击复制命令 ID">workbench.action.quickOpen</button>
+    </div>
+<div class="row" data-search="查找索引符号 ctrl+shift+o actions.quickfind" data-cat="查找与替换">
+      <div class="desc">查找索引符号</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>O</kbd></span></div>
+      <button class="cmd" data-cmd="actions.quickFind" title="点击复制命令 ID">actions.quickFind</button>
+    </div>
+<div class="row" data-search="本文档内查找字符串 ctrl+f actions.find" data-cat="查找与替换">
+      <div class="desc"><span class="star" title="高频">★</span>本文档内查找字符串</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F</kbd></span></div>
+      <button class="cmd" data-cmd="actions.find" title="点击复制命令 ID">actions.find</button>
+    </div>
+<div class="row" data-search="本文档的区域内查找字符串 ctrl+shift+f actions.findinregion" data-cat="查找与替换">
+      <div class="desc">本文档的区域内查找字符串</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F</kbd></span></div>
+      <button class="cmd" data-cmd="actions.findinRegion" title="点击复制命令 ID">actions.findinRegion</button>
+    </div>
+<div class="row" data-search="目录内查找字符串 ctrl+alt+f workbench.action.findinfiles" data-cat="查找与替换">
+      <div class="desc">目录内查找字符串</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>F</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.findInFiles" title="点击复制命令 ID">workbench.action.findInFiles</button>
+    </div>
+<div class="row" data-search="替换 ctrl+h editor.action.startfindreplaceaction" data-cat="查找与替换">
+      <div class="desc"><span class="star" title="高频">★</span>替换</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>H</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.startFindReplaceAction" title="点击复制命令 ID">editor.action.startFindReplaceAction</button>
+    </div>
+<div class="row" data-search="查找下一个字符串 f3 editor.action.nextselectionmatchfindaction" data-cat="查找与替换">
+      <div class="desc">查找下一个字符串</div>
+      <div class="keys"><span class="combo"><kbd>F3</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.nextSelectionMatchFindAction" title="点击复制命令 ID">editor.action.nextSelectionMatchFindAction</button>
+    </div>
+<div class="row" data-search="查找上一个字符串 shift+f3 editor.action.previousselectionmatchfindaction" data-cat="查找与替换">
+      <div class="desc">查找上一个字符串</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>F3</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.previousSelectionMatchFindAction" title="点击复制命令 ID">editor.action.previousSelectionMatchFindAction</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-14" data-cat="视图与分栏">
+    <h2><span class="dot"></span>视图与分栏<span class="count">18</span></h2>
+    <div class="rows"><div class="row" data-search="置焦到编辑器区域 alt+n workbench.action.focuseditor" data-cat="视图与分栏">
+      <div class="desc">置焦到编辑器区域</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.focusEditor" title="点击复制命令 ID">workbench.action.focusEditor</button>
+    </div>
+<div class="row" data-search="置焦到项目管理器 alt+shift+q workbench.view.explorer" data-cat="视图与分栏">
+      <div class="desc">置焦到项目管理器</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Q</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.view.explorer" title="点击复制命令 ID">workbench.view.explorer</button>
+    </div>
+<div class="row" data-search="显示/隐藏项目管理器 alt+q workbench.action.togglesidebarvisibility" data-cat="视图与分栏">
+      <div class="desc"><span class="star" title="高频">★</span>显示/隐藏项目管理器</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Q</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.toggleSidebarVisibility" title="点击复制命令 ID">workbench.action.toggleSidebarVisibility</button>
+    </div>
+<div class="row" data-search="显示/隐藏控制台 alt+x workbench.debug.action.togglerepl" data-cat="视图与分栏">
+      <div class="desc"><span class="star" title="高频">★</span>显示/隐藏控制台</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>X</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.debug.action.toggleRepl" title="点击复制命令 ID">workbench.debug.action.toggleRepl</button>
+    </div>
+<div class="row" data-search="显示/隐藏终端 alt+c workbench.action.tiggleterminal" data-cat="视图与分栏">
+      <div class="desc"><span class="star" title="高频">★</span>显示/隐藏终端</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.tiggleTerminal" title="点击复制命令 ID">workbench.action.tiggleTerminal</button>
+    </div>
+<div class="row" data-search="显示/隐藏内置浏览器 alt+p workbench.action.togglepreviewbrowservisibility" data-cat="视图与分栏">
+      <div class="desc">显示/隐藏内置浏览器</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>P</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.togglePreviewBrowserVisibility" title="点击复制命令 ID">workbench.action.togglePreviewBrowserVisibility</button>
+    </div>
+<div class="row" data-search="显示/隐藏迷你地图 alt+o editor.action.toggleminimap" data-cat="视图与分栏">
+      <div class="desc">显示/隐藏迷你地图</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>O</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.toggleMinimap" title="点击复制命令 ID">editor.action.toggleMinimap</button>
+    </div>
+<div class="row" data-search="显示/隐藏大纲 alt+w editor.action.triggeroutline" data-cat="视图与分栏">
+      <div class="desc"><span class="star" title="高频">★</span>显示/隐藏大纲</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>W</kbd></span></div>
+      <button class="cmd" data-cmd="editor.action.triggerOutline" title="点击复制命令 ID">editor.action.triggerOutline</button>
+    </div>
+<div class="row" data-search="增大字体【ctrl+鼠标滚动向上】 ctrl+shift+= workbench.action.zoomin" data-cat="视图与分栏">
+      <div class="desc">增大字体【ctrl+鼠标滚动向上】</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>=</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.zoomIn" title="点击复制命令 ID">workbench.action.zoomIn</button>
+    </div>
+<div class="row" data-search="减小字体【ctrl+鼠标滚动向下】 ctrl+shift+- workbench.action.zoomout" data-cat="视图与分栏">
+      <div class="desc">减小字体【ctrl+鼠标滚动向下】</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>-</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.zoomOut" title="点击复制命令 ID">workbench.action.zoomOut</button>
+    </div>
+<div class="row" data-search="单栏 alt+shift+1 workbench.action.split1e" data-cat="视图与分栏">
+      <div class="desc">单栏</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>1</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.split1e" title="点击复制命令 ID">workbench.action.split1e</button>
+    </div>
+<div class="row" data-search="左右2栏 alt+shift+2 workbench.action.split2e" data-cat="视图与分栏">
+      <div class="desc">左右2栏</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>2</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.split2e" title="点击复制命令 ID">workbench.action.split2e</button>
+    </div>
+<div class="row" data-search="左右3栏 alt+shift+3 workbench.action.split3e" data-cat="视图与分栏">
+      <div class="desc">左右3栏</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>3</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.split3e" title="点击复制命令 ID">workbench.action.split3e</button>
+    </div>
+<div class="row" data-search="置焦到下一个分栏 alt+. workbench.action.nextpane" data-cat="视图与分栏">
+      <div class="desc">置焦到下一个分栏</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>.</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.nextpane" title="点击复制命令 ID">workbench.action.nextpane</button>
+    </div>
+<div class="row" data-search="置焦到上一个分栏 alt+, workbench.action.prevpane" data-cat="视图与分栏">
+      <div class="desc">置焦到上一个分栏</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>,</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.prevpane" title="点击复制命令 ID">workbench.action.prevpane</button>
+    </div>
+<div class="row" data-search="新建hbuilder窗体 ctrl+shift+n workbench.action.newwindow" data-cat="视图与分栏">
+      <div class="desc">新建HBuilder窗体</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.newWindow" title="点击复制命令 ID">workbench.action.newWindow</button>
+    </div>
+<div class="row" data-search="多窗口切换快捷键1 ctrl+f6 workbench.action.switchwindow" data-cat="视图与分栏">
+      <div class="desc">多窗口切换快捷键1</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F6</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.switchWindow" title="点击复制命令 ID">workbench.action.switchWindow</button>
+    </div>
+<div class="row" data-search="多窗口切换快捷键2 alt+` workbench.action.switchwindow" data-cat="视图与分栏">
+      <div class="desc">多窗口切换快捷键2</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>`</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.switchWindow" title="点击复制命令 ID">workbench.action.switchWindow</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-15" data-cat="运行与调试">
+    <h2><span class="dot"></span>运行与调试<span class="count">3</span></h2>
+    <div class="rows"><div class="row" data-search="运行 ctrl+r app.action.rundevice" data-cat="运行与调试">
+      <div class="desc"><span class="star" title="高频">★</span>运行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>R</kbd></span></div>
+      <button class="cmd" data-cmd="app.action.rundevice" title="点击复制命令 ID">app.action.rundevice</button>
+    </div>
+<div class="row" data-search="重新运行 ctrl+f5 workbench.action.debug.restart" data-cat="运行与调试">
+      <div class="desc">重新运行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F5</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.debug.restart" title="点击复制命令 ID">workbench.action.debug.restart</button>
+    </div>
+<div class="row" data-search="停止运行 ctrl+shift+f5 workbench.action.debug.stop" data-cat="运行与调试">
+      <div class="desc">停止运行</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F5</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.debug.stop" title="点击复制命令 ID">workbench.action.debug.stop</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-16" data-cat="发行">
+    <h2><span class="dot"></span>发行<span class="count">1</span></h2>
+    <div class="rows"><div class="row" data-search="快捷发行菜单 ctrl+u workbench.action.showpubmenu" data-cat="发行">
+      <div class="desc"><span class="star" title="高频">★</span>快捷发行菜单</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>U</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.showPubMenu" title="点击复制命令 ID">workbench.action.showPubMenu</button>
+    </div></div>
+  </section>
+<section class="cat" id="cat-17" data-cat="工具与设置">
+    <h2><span class="dot"></span>工具与设置<span class="count">2</span></h2>
+    <div class="rows"><div class="row" data-search="本地历史记录 ctrl+shift+h workbench.action.files.localhistory" data-cat="工具与设置">
+      <div class="desc">本地历史记录</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>H</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.files.localHistory" title="点击复制命令 ID">workbench.action.files.localHistory</button>
+    </div>
+<div class="row" data-search="打开设置 ctrl+alt+, workbench.action.openglobalsettings" data-cat="工具与设置">
+      <div class="desc">打开设置</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>,</kbd></span></div>
+      <button class="cmd" data-cmd="workbench.action.openGlobalSettings" title="点击复制命令 ID">workbench.action.openGlobalSettings</button>
+    </div></div>
+  </section>
+    </div>
+
+    <div class="block">
+      <h2>容易和 VS Code 记混</h2>
+      <p class="sub">网上很多教程按 VS Code 讲，照搬到 HBuilderX 会按错键。</p>
+      <div class="tablewrap"><table class="tbl">
+        <thead><tr><th>需求</th><th>HBuilderX 3.1.22</th><th>VS Code</th></tr></thead>
+        <tbody>
+          <tr><td>删除当前行</td><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>K</kbd></td></tr>
+          <tr><td>上/下移动行</td><td><kbd>Ctrl</kbd>+<kbd>↑</kbd> / <kbd>Ctrl</kbd>+<kbd>↓</kbd></td><td><kbd>Alt</kbd>+<kbd>↑</kbd> / <kbd>Alt</kbd>+<kbd>↓</kbd></td></tr>
+          <tr><td>复制当前行</td><td><kbd>Ctrl</kbd>+<kbd>Insert</kbd>（或 <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>）</td><td><kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>↑</kbd></td></tr>
+          <tr><td>格式化文档</td><td><kbd>Ctrl</kbd>+<kbd>K</kbd></td><td><kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>F</kbd></td></tr>
+          <tr><td>快速打开文件</td><td><kbd>Ctrl</kbd>+<kbd>P</kbd></td><td><kbd>Ctrl</kbd>+<kbd>P</kbd></td></tr>
+          <tr><td>转到定义</td><td><kbd>Alt</kbd>+<kbd>D</kbd> / <kbd>F12</kbd></td><td><kbd>F12</kbd></td></tr>
+          <tr><td>转到符号</td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>O</kbd></td><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>O</kbd></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="block">
+      <h2>内置但默认关闭的两条</h2>
+      <p class="sub">键位表里被注释掉的默认项，需要时可在快捷键设置中自己开启。</p>
+      <div class="tablewrap"><table class="tbl">
+        <thead><tr><th>快捷键</th><th>功能</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><kbd>Delete</kbd></td><td>删除文件到回收站</td><td>项目管理器中按 Delete 默认不会进回收站</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>格式化（兼容老版 HBuilder）</td><td>默认该组合被「本文档的区域内查找」占用</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="block">
+      <h2>常见冲突与自定义</h2>
+      <p class="sub">装完 HBuilderX 键位不生效，八成是被输入法或常驻软件抢了。</p>
+      <div class="tablewrap"><table class="tbl">
+        <thead><tr><th>快捷键</th><th>冲突方</th><th>处理</th></tr></thead>
+        <tbody>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd></td><td>搜狗输入法全局占用</td><td>在输入法设置里取消该全局快捷键</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd></td><td>搜狗输入法（简繁切换）</td><td>同上；本版该键默认是「区域内查找」</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>V</kbd></td><td>印象笔记 Evernote</td><td>取消印象笔记的全局粘贴</td></tr>
+          <tr><td><kbd>F12</kbd></td><td>部分笔记本 / 浏览器</td><td><kbd>Alt</kbd>+<kbd>D</kbd> 与它等价，冲突时用 <kbd>Alt</kbd>+<kbd>D</kbd></td></tr>
+        </tbody>
+      </table></div>
+      <p class="sub" style="margin-top:16px">自定义位置：<code>%APPDATA%\HBuilder X\user\keybindings.json</code>，左侧默认、右侧自定义，右侧覆盖左侧；冲突时弹菜单，加 <code>"override": true</code> 可强制覆盖；支持连续快捷键，如 <code>"key": "ctrl+1 2"</code>。也可以直接用 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>,</kbd> 打开设置。</p>
+    </div>
+
+    <div class="block">
+      <h2>没绑快捷键的 66 条命令</h2>
+      <p class="sub">想给它们配键，去快捷键设置里加一条即可。</p>
+      <details>
+        <summary>展开全部 66 条（按分类）</summary>
+        <div class="nk-grid">
+<div class="nk-group"><h4>标签卡与窗口</h4><ul><li>关闭右侧标签卡</li><li>关闭所有已保存标签卡</li></ul></div>
+<div class="nk-group"><h4>文件</h4><ul><li>打开文件所在目录</li><li>在命令行打开文件所在目录</li><li>打开文件夹导入项目</li><li>退出（Windows 建议用系统快捷键 Alt+Space C）</li></ul></div>
+<div class="nk-group"><h4>光标与跳转</h4><ul><li>光标到行首</li><li>光标到行尾</li><li>光标历史清空</li></ul></div>
+<div class="nk-group"><h4>书签、折叠与错误</h4><ul><li>转到Page.json（在uni-app的page页面可快速转到Page.json里对应的节点）</li></ul></div>
+<div class="nk-group"><h4>选择与多光标</h4><ul><li>向左选一个驼峰单词</li><li>向右选一个驼峰单词</li><li>选至行首</li><li>选至行尾</li><li>选至段落开头</li><li>选至段落结尾</li><li>选择引号内字符串。可用双击引号来替代</li><li>选择相同缩进的行。可用双击行首tab来替代</li></ul></div>
+<div class="nk-group"><h4>删除</h4><ul><li>向左删除驼峰词</li><li>向右删除驼峰词</li><li>删除行尾空白字符</li></ul></div>
+<div class="nk-group"><h4>编辑：格式化与注释</h4><ul><li>条件编译ifdef</li><li>条件编译ifndef</li><li>验证本文档语法</li></ul></div>
+<div class="nk-group"><h4>视图与分栏</h4><ul><li>显示/隐藏工具栏</li><li>显示/隐藏状态栏</li><li>切换是否自动换行</li><li>显示/隐藏行号</li><li>显示/隐藏缩进线</li><li>显示/隐藏空白字符</li><li>在项目管理器中追踪/不追踪当前文件位置</li><li>最小化</li></ul></div>
+<div class="nk-group"><h4>发行</h4><ul><li>App云打包</li><li>uni-app 生成 H5 网站</li><li>uni-app 发布到 微信 小程序</li><li>uni-app 发布到 百度 小程序</li><li>uni-app 发布到 支付宝 小程序</li><li>uni-app 发布到 字节跳动 小程序</li><li>uni-app 发布到 QQ 小程序</li></ul></div>
+<div class="nk-group"><h4>工具与设置</h4><ul><li>重新加载代码块</li><li>打开快捷键设置</li><li>打开外部命令设置</li><li>显示日志文件</li><li>反馈</li><li>显示更新日志</li><li>检查更新</li></ul></div>
+<div class="nk-group"><h4>控制台</h4><ul><li>清空控制台</li><li>锁定滚动条</li><li>全选</li><li>复制</li></ul></div>
+<div class="nk-group"><h4>外部命令 / 插件（需安装插件）</h4><ul><li>文件对比，与最近一次提交比较</li><li>svn更新</li><li>svn提交</li><li>svn检查修改内容</li><li>svn查看日志</li><li>svn删除当前文件(单个文件)</li><li>svn增加文件(单个文件)</li><li>svn还原(revert)</li><li>git同步</li><li>git提交</li><li>git比较差异</li><li>git检查修改内容</li><li>git查看日志</li><li>git删除当前文件(单个文件)</li><li>git增加文件(单个文件)</li><li>git还原(revert)</li></ul></div>
+        </div>
+      </details>
+    </div>
+
+    <footer>
+      <p>数据来源：HBuilderX 3.1.22.20210709 安装包内置键位表（<code>HBuilderX.dll</code> → <code>/conf/resources/conf/keybindings.json</code>），功能描述取自原文，仅统一标点与个别错别字。</p>
+      <p>单文件离线可用 · 生成于 2026-10-26</p>
+    </footer>
+  </main>
+</div>
+<div class="toast" id="toast">已复制</div>
+
+<script>
+const DATA = {"active":[{"cat":"项目管理器","desc":"重命名文件（焦点在项目管理器中）","keys":"F2","cmd":"renameFile","when":""},{"cat":"项目管理器","desc":"剪切文件（焦点在项目管理器中）","keys":"Ctrl+X","cmd":"filesExplorer.cut","when":""},{"cat":"项目管理器","desc":"复制文件（焦点在项目管理器中）","keys":"Ctrl+C","cmd":"filesExplorer.copy","when":""},{"cat":"项目管理器","desc":"粘贴文件（焦点在项目管理器中）","keys":"Ctrl+V","cmd":"filesExplorer.paste","when":""},{"cat":"标签卡与窗口","desc":"新建标签卡（默认md）","keys":"Ctrl+T","cmd":"workbench.action.files.newUntitledFile","when":""},{"cat":"标签卡与窗口","desc":"关闭当前标签卡","keys":"Ctrl+W / Ctrl+F4","cmd":"workbench.action.closeActiveEditor","when":""},{"cat":"标签卡与窗口","desc":"关闭所有标签卡","keys":"Ctrl+Shift+W","cmd":"workbench.action.closeAllEditors","when":""},{"cat":"标签卡与窗口","desc":"关闭其他文件","keys":"Ctrl+Q","cmd":"workbench.action.closeOtherEditors","when":""},{"cat":"标签卡与窗口","desc":"显示左边的标签卡","keys":"Ctrl+PgUp","cmd":"workbench.action.leftTab","when":""},{"cat":"标签卡与窗口","desc":"显示右边的标签卡","keys":"Ctrl+PgDown","cmd":"workbench.action.rightTab","when":""},{"cat":"标签卡与窗口","desc":"重开已关闭标签卡","keys":"Ctrl+Shift+T","cmd":"workbench.action.reopenClosedEditor","when":""},{"cat":"标签卡与窗口","desc":"切换到第 1 个标签卡","keys":"Alt+1","cmd":"workbench.action.openEditorAtIndex1","when":""},{"cat":"标签卡与窗口","desc":"切换到第 2 个标签卡","keys":"Alt+2","cmd":"workbench.action.openEditorAtIndex2","when":""},{"cat":"标签卡与窗口","desc":"切换到第 3 个标签卡","keys":"Alt+3","cmd":"workbench.action.openEditorAtIndex3","when":""},{"cat":"标签卡与窗口","desc":"切换到第 4 个标签卡","keys":"Alt+4","cmd":"workbench.action.openEditorAtIndex4","when":""},{"cat":"标签卡与窗口","desc":"切换到第 5 个标签卡","keys":"Alt+5","cmd":"workbench.action.openEditorAtIndex5","when":""},{"cat":"标签卡与窗口","desc":"切换到第 6 个标签卡","keys":"Alt+6","cmd":"workbench.action.openEditorAtIndex6","when":""},{"cat":"标签卡与窗口","desc":"切换到第 7 个标签卡","keys":"Alt+7","cmd":"workbench.action.openEditorAtIndex7","when":""},{"cat":"标签卡与窗口","desc":"切换到第 8 个标签卡","keys":"Alt+8","cmd":"workbench.action.openEditorAtIndex8","when":""},{"cat":"标签卡与窗口","desc":"切换到第 9 个标签卡","keys":"Alt+9","cmd":"workbench.action.openEditorAtIndex9","when":""},{"cat":"标签卡与窗口","desc":"切换到最末尾的标签卡","keys":"Alt+0","cmd":"workbench.action.openEditorAtIndex0","when":""},{"cat":"标签卡与窗口","desc":"往左移动一个标签卡","keys":"Ctrl+Shift+PgUp","cmd":"workbench.action.moveEditorLeftInGroup","when":""},{"cat":"标签卡与窗口","desc":"往右移动一个标签卡","keys":"Ctrl+Shift+PgDown","cmd":"workbench.action.moveEditorRightInGroup","when":""},{"cat":"文件","desc":"新建","keys":"Ctrl+N","cmd":"workbench.action.menu.new","when":""},{"cat":"文件","desc":"打开外部文件","keys":"Ctrl+O","cmd":"workbench.action.files.openFile","when":""},{"cat":"文件","desc":"打开收藏菜单","keys":"Alt+Shift+F","cmd":"workbench.action.fav.menu","when":""},{"cat":"文件","desc":"保存","keys":"Ctrl+S","cmd":"workbench.action.files.save","when":""},{"cat":"文件","desc":"另存为","keys":"Ctrl+Shift+S","cmd":"workbench.action.files.saveAs","when":""},{"cat":"文件","desc":"全部保存","keys":"Ctrl+Alt+S","cmd":"workbench.action.files.saveAll","when":""},{"cat":"光标与跳转","desc":"光标向左","keys":"Alt+H / ←","cmd":"cursorLeft","when":""},{"cat":"光标与跳转","desc":"光标向下","keys":"Alt+J / ↓","cmd":"cursorDown","when":""},{"cat":"光标与跳转","desc":"光标向上","keys":"Alt+K / ↑","cmd":"cursorUp","when":""},{"cat":"光标与跳转","desc":"光标向右","keys":"Alt+L / →","cmd":"cursorRight","when":""},{"cat":"光标与跳转","desc":"光标向左一词","keys":"Ctrl+←","cmd":"cursorWordStartLeft","when":""},{"cat":"光标与跳转","desc":"光标向右一词","keys":"Ctrl+→","cmd":"cursorWordEndRight","when":""},{"cat":"光标与跳转","desc":"光标向左一个驼峰单词","keys":"Ctrl+Alt+←","cmd":"cursorWordPartLeft","when":""},{"cat":"光标与跳转","desc":"光标向右一个驼峰单词","keys":"Ctrl+Alt+→","cmd":"cursorWordPartRight","when":""},{"cat":"光标与跳转","desc":"光标到软行首（连续按依次切换自动换行的行首、缩进后的行首、真行首）","keys":"Home","cmd":"cursorHome","when":""},{"cat":"光标与跳转","desc":"光标到软行尾（连续按依次切换自动换行的行尾、真行尾）","keys":"End","cmd":"cursorEnd","when":""},{"cat":"光标与跳转","desc":"光标到上个段落（空行为分割段落）","keys":"Ctrl+Alt+PgUp","cmd":"cursorParaUp","when":""},{"cat":"光标与跳转","desc":"光标到下个段落（空行为分割段落）","keys":"Ctrl+Alt+PgDown","cmd":"cursorParaDown","when":""},{"cat":"光标与跳转","desc":"光标到上一页","keys":"PgUp","cmd":"cursorPageUp","when":""},{"cat":"光标与跳转","desc":"光标到下一页","keys":"PgDown","cmd":"cursorPageDown","when":""},{"cat":"光标与跳转","desc":"光标到页首","keys":"Ctrl+Home","cmd":"cursorTop","when":""},{"cat":"光标与跳转","desc":"光标到页尾","keys":"Ctrl+End","cmd":"cursorBottom","when":""},{"cat":"光标与跳转","desc":"转到定义","keys":"Alt+D / F12","cmd":"workbench.action.gotoDefinition","when":""},{"cat":"光标与跳转","desc":"分栏转到定义","keys":"Alt+Shift+D / Shift+F12","cmd":"workbench.action.gotoDefinitionWithPane","when":""},{"cat":"光标与跳转","desc":"跳转到行","keys":"Ctrl+G","cmd":"workbench.action.gotoLine","when":""},{"cat":"光标与跳转","desc":"跳转到配对的括号","keys":"Alt+[","cmd":"editor.action.jumpToBracket","when":""},{"cat":"光标与跳转","desc":"光标后退","keys":"Alt+←","cmd":"workbench.action.navigateBack","when":""},{"cat":"光标与跳转","desc":"光标前进","keys":"Alt+→","cmd":"workbench.action.navigateForward","when":""},{"cat":"书签、折叠与错误","desc":"设置/取消书签","keys":"Ctrl+F2","cmd":"workbench.action.toggleBookmark","when":""},{"cat":"书签、折叠与错误","desc":"下一个书签（光标在编辑器区域）","keys":"F2","cmd":"workbench.action.nextBookmark","when":""},{"cat":"书签、折叠与错误","desc":"上一个书签（光标在编辑器区域）","keys":"Shift+F2","cmd":"workbench.action.prevBookmark","when":""},{"cat":"书签、折叠与错误","desc":"清除所有书签","keys":"Ctrl+Shift+F2","cmd":"workbench.action.clearBookmarks","when":""},{"cat":"书签、折叠与错误","desc":"下一个验证错误","keys":"F4","cmd":"workbench.action.nextError","when":""},{"cat":"书签、折叠与错误","desc":"上一个验证错误","keys":"Shift+F4","cmd":"workbench.action.prevError","when":""},{"cat":"书签、折叠与错误","desc":"折叠单行","keys":"Alt+-","cmd":"workbench.action.foldLineContract","when":""},{"cat":"书签、折叠与错误","desc":"展开单行","keys":"Alt+=","cmd":"workbench.action.foldLineExpand","when":""},{"cat":"书签、折叠与错误","desc":"折叠子行","keys":"Alt+Shift+-","cmd":"workbench.action.foldChildrenContract","when":""},{"cat":"书签、折叠与错误","desc":"展开子行","keys":"Alt+Shift+=","cmd":"workbench.action.foldChildrenExpand","when":""},{"cat":"书签、折叠与错误","desc":"折叠所有行","keys":"Alt+Ctrl+Shift+-","cmd":"workbench.action.foldAllContract","when":""},{"cat":"书签、折叠与错误","desc":"展开所有行","keys":"Alt+Ctrl+Shift+=","cmd":"workbench.action.foldAllExpand","when":""},{"cat":"书签、折叠与错误","desc":"折叠其他区域","keys":"Alt+Shift+O","cmd":"workbench.action.foldContractOther","when":""},{"cat":"选择与多光标","desc":"全选","keys":"Ctrl+A","cmd":"editor.action.selectAll","when":""},{"cat":"选择与多光标","desc":"向左选字","keys":"Shift+←","cmd":"cursorLeftSelect","when":""},{"cat":"选择与多光标","desc":"向右选字","keys":"Shift+→","cmd":"cursorRightSelect","when":""},{"cat":"选择与多光标","desc":"向上选行","keys":"Shift+↑","cmd":"cursorUpSelect","when":""},{"cat":"选择与多光标","desc":"向下选行","keys":"Shift+↓","cmd":"cursorDownSelect","when":""},{"cat":"选择与多光标","desc":"向左选词","keys":"Ctrl+Shift+←","cmd":"cursorWordStartLeftSelect","when":""},{"cat":"选择与多光标","desc":"向右选词","keys":"Ctrl+Shift+→","cmd":"cursorWordEndRightSelect","when":""},{"cat":"选择与多光标","desc":"选至软行首（连续按依次切换自动换行的行首、缩进后的行首、真行首）","keys":"Shift+Home","cmd":"cursorHomeSelect","when":""},{"cat":"选择与多光标","desc":"选至软行尾（连续按依次切换自动换行的行尾、真行尾）","keys":"Shift+End","cmd":"cursorEndSelect","when":""},{"cat":"选择与多光标","desc":"选至上一页","keys":"Shift+PgUp","cmd":"cursorPageUpSelect","when":""},{"cat":"选择与多光标","desc":"选至下一页","keys":"Shift+PgDown","cmd":"cursorPageDownSelect","when":""},{"cat":"选择与多光标","desc":"选至文档首","keys":"Ctrl+Shift+Home","cmd":"cursorTopSelect","when":""},{"cat":"选择与多光标","desc":"选至文档尾","keys":"Ctrl+Shift+End","cmd":"cursorBottomSelect","when":""},{"cat":"选择与多光标","desc":"选择当前词或下一个相同词","keys":"Ctrl+E","cmd":"editor.action.addSelectionToNextFindMatch","when":""},{"cat":"选择与多光标","desc":"选择所有相同词","keys":"Ctrl+Alt+E / Alt+F3","cmd":"editor.action.selectAllSameWord","when":""},{"cat":"选择与多光标","desc":"跳过当前选择，选中下一个相同词","keys":"Alt+Shift+E","cmd":"editor.action.skipSelectionAndSelectNext","when":""},{"cat":"选择与多光标","desc":"选择相同语法词（注意解除搜狗输入法全局占用）","keys":"Ctrl+Shift+E","cmd":"editor.action.SelectSameWordByLan","when":""},{"cat":"选择与多光标","desc":"选择括号内字符。可用双击括号替代","keys":"Ctrl+[","cmd":"editor.action.selectMatchBracket","when":""},{"cat":"选择与多光标","desc":"选择行。也可单击行号或三击行","keys":"Ctrl+L","cmd":"expandLineSelection","when":""},{"cat":"选择与多光标","desc":"选择行(不含首尾空白字符)。也可双击行尾","keys":"Ctrl+Shift+L","cmd":"editor.action.selectLineNoBlankStr","when":""},{"cat":"选择与多光标","desc":"放大选区","keys":"Ctrl+=","cmd":"editor.action.expandSelection","when":""},{"cat":"选择与多光标","desc":"向2侧扩大选择","keys":"Alt+Shift+→","cmd":"editor.action.expandSelectionTwoSides","when":""},{"cat":"选择与多光标","desc":"由2侧向内减少选择","keys":"Alt+Shift+←","cmd":"editor.action.narrowSelectionTwoSides","when":""},{"cat":"选择与多光标","desc":"向上列选择","keys":"Ctrl+Alt+↑","cmd":"editor.action.insertCursorAbove","when":""},{"cat":"选择与多光标","desc":"向下列选择","keys":"Ctrl+Alt+↓","cmd":"editor.action.insertCursorBelow","when":""},{"cat":"选择与多光标","desc":"每个选区前后设置光标","keys":"Ctrl+\\","cmd":"editor.action.setCursorSurroundSel","when":""},{"cat":"选择与多光标","desc":"每行行首设置光标","keys":"Ctrl+Shift+\\","cmd":"editor.action.setCursorEachLine","when":""},{"cat":"行操作","desc":"向下插入行","keys":"Ctrl+Enter","cmd":"editor.action.insertLineAfter","when":""},{"cat":"行操作","desc":"向上插入行","keys":"Ctrl+Shift+Enter","cmd":"editor.action.insertLineBefore","when":""},{"cat":"行操作","desc":"反回车，即把光标前内容移到下一行","keys":"Shift+Enter","cmd":"editor.action.shiftEnter","when":""},{"cat":"行操作","desc":"上移一行","keys":"Ctrl+↑","cmd":"editor.action.moveLinesUpAction","when":""},{"cat":"行操作","desc":"下移一行","keys":"Ctrl+↓","cmd":"editor.action.moveLinesDownAction","when":""},{"cat":"删除","desc":"向左删除","keys":"Backspace","cmd":"deleteLeft","when":""},{"cat":"删除","desc":"向右删除","keys":"Delete","cmd":"deleteRight","when":""},{"cat":"删除","desc":"向左删除词","keys":"Ctrl+Backspace","cmd":"deleteWordLeft","when":""},{"cat":"删除","desc":"向右删除词","keys":"Ctrl+Delete","cmd":"deleteWordRight","when":""},{"cat":"删除","desc":"删到行首","keys":"Shift+Backspace","cmd":"deleteLineLeft","when":""},{"cat":"删除","desc":"删到行尾","keys":"Shift+Delete","cmd":"deleteLineRight","when":""},{"cat":"删除","desc":"删除行","keys":"Ctrl+D","cmd":"editor.action.deleteLines","when":""},{"cat":"剪贴板","desc":"复制","keys":"Ctrl+C","cmd":"editor.action.clipboardCopyAction","when":""},{"cat":"剪贴板","desc":"复制文件路径","keys":"Ctrl+Shift+C","cmd":"editor.action.clipboardCopyPathAction","when":""},{"cat":"剪贴板","desc":"重复插入选区或当前行","keys":"Ctrl+Insert","cmd":"editor.action.duplicate","when":""},{"cat":"剪贴板","desc":"重复插入选区或当前行（备份用于没有insert键的键盘）","keys":"Ctrl+Shift+R","cmd":"editor.action.duplicate","when":""},{"cat":"剪贴板","desc":"剪切","keys":"Ctrl+X","cmd":"editor.action.clipboardCutAction","when":""},{"cat":"剪贴板","desc":"粘贴","keys":"Ctrl+V","cmd":"editor.action.clipboardPasteAction","when":""},{"cat":"剪贴板","desc":"粘贴为HTML","keys":"Ctrl+Shift+V","cmd":"editor.action.clipboardPasteAsHTML","when":""},{"cat":"剪贴板","desc":"从历史粘贴板粘贴（注意解除evernote的快捷键占用）","keys":"Ctrl+Alt+V","cmd":"editor.action.clipboardPasteFromHistory","when":""},{"cat":"剪贴板","desc":"交换字符、选区或行。2个选区或2行是彼此交换；不是2个选区时是交换光标前后的字母","keys":"Ctrl+Shift+X","cmd":"editor.action.swichSelectionOrLine","when":""},{"cat":"撤销与重做","desc":"撤销","keys":"Ctrl+Z","cmd":"undo","when":""},{"cat":"撤销与重做","desc":"重做","keys":"Ctrl+Y / Ctrl+Shift+Z","cmd":"redo","when":""},{"cat":"撤销与重做","desc":"撤销一个新光标或选区","keys":"Alt+Shift+Z","cmd":"editor.action.undoSelection","when":""},{"cat":"编辑：格式化与注释","desc":"格式化","keys":"Ctrl+K","cmd":"editor.action.format","when":""},{"cat":"编辑：格式化与注释","desc":"合并行（反格式化）","keys":"Ctrl+Shift+K","cmd":"editor.action.joinLines","when":""},{"cat":"编辑：格式化与注释","desc":"合并行（兼容老版HBuilder快捷键）","keys":"Ctrl+Alt+J","cmd":"editor.action.joinLines","when":""},{"cat":"编辑：格式化与注释","desc":"注释/反注释","keys":"Ctrl+/","cmd":"editor.action.commentLine","when":""},{"cat":"编辑：格式化与注释","desc":"块注释","keys":"Ctrl+Shift+/","cmd":"editor.action.blockCommentLine","when":""},{"cat":"编辑：格式化与注释","desc":"注释菜单(含条件编译注释)","keys":"Ctrl+Alt+/","cmd":"editor.action.showCommentMenu","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"包围","keys":"Ctrl+]","cmd":"editor.action.SurroundBylanguage","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"反包围","keys":"Ctrl+Shift+]","cmd":"editor.action.UnSurroundBylanguage","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"加粗（html、md生效）","keys":"Ctrl+B","cmd":"editor.action.bold","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"全部字母大写","keys":"Alt+Shift+U","cmd":"editor.action.transformToUppercase","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"全部字母小写","keys":"Alt+Shift+L","cmd":"editor.action.transformToLowercase","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"首字母大写","keys":"Alt+Shift+T","cmd":"editor.action.transformToTitlecase","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"激活代码助手","keys":"Alt+/","cmd":"editor.action.triggerSuggest","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"激活方法参数提示","keys":"Alt+Shift+/","cmd":"Trigger Parameter Hints","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"缩进","keys":"Tab","cmd":"tab","when":""},{"cat":"编辑：包围 / 大小写 / 代码助手","desc":"反缩进","keys":"Shift+Tab","cmd":"outdent","when":""},{"cat":"列表符","desc":"插入-无序列表符","keys":"Ctrl+Alt+-","cmd":"editor.action.unOrderListSymbolsByMinus","when":""},{"cat":"列表符","desc":"插入*无序列表符","keys":"Ctrl+Alt+8","cmd":"editor.action.unOrderListSymbolsByMultiply","when":""},{"cat":"列表符","desc":"插入+无序列表符","keys":"Ctrl+Alt+=","cmd":"editor.action.unOrderListSymbolsByPlus","when":""},{"cat":"列表符","desc":"插入>引用列表符","keys":"Ctrl+Alt+Shift+.","cmd":"editor.action.quoteListSymbols","when":""},{"cat":"列表符","desc":"插入有序列表符","keys":"Ctrl+Alt+1","cmd":"editor.action.orderListSymbols","when":""},{"cat":"列表符","desc":"插入任务列表符","keys":"Ctrl+Alt+[","cmd":"editor.action.taskListSymbols","when":""},{"cat":"列表符","desc":"插入已完成任务列表符","keys":"Ctrl+Alt+]","cmd":"editor.action.taskFinishListSymbols","when":""},{"cat":"查找与替换","desc":"查找文件","keys":"Ctrl+P","cmd":"workbench.action.quickOpen","when":""},{"cat":"查找与替换","desc":"查找索引符号","keys":"Ctrl+Shift+O","cmd":"actions.quickFind","when":""},{"cat":"查找与替换","desc":"本文档内查找字符串","keys":"Ctrl+F","cmd":"actions.find","when":""},{"cat":"查找与替换","desc":"本文档的区域内查找字符串","keys":"Ctrl+Shift+F","cmd":"actions.findinRegion","when":""},{"cat":"查找与替换","desc":"目录内查找字符串","keys":"Ctrl+Alt+F","cmd":"workbench.action.findInFiles","when":""},{"cat":"查找与替换","desc":"替换","keys":"Ctrl+H","cmd":"editor.action.startFindReplaceAction","when":""},{"cat":"查找与替换","desc":"查找下一个字符串","keys":"F3","cmd":"editor.action.nextSelectionMatchFindAction","when":""},{"cat":"查找与替换","desc":"查找上一个字符串","keys":"Shift+F3","cmd":"editor.action.previousSelectionMatchFindAction","when":""},{"cat":"视图与分栏","desc":"置焦到编辑器区域","keys":"Alt+N","cmd":"workbench.action.focusEditor","when":""},{"cat":"视图与分栏","desc":"置焦到项目管理器","keys":"Alt+Shift+Q","cmd":"workbench.view.explorer","when":""},{"cat":"视图与分栏","desc":"显示/隐藏项目管理器","keys":"Alt+Q","cmd":"workbench.action.toggleSidebarVisibility","when":""},{"cat":"视图与分栏","desc":"显示/隐藏控制台","keys":"Alt+X","cmd":"workbench.debug.action.toggleRepl","when":""},{"cat":"视图与分栏","desc":"显示/隐藏终端","keys":"Alt+C","cmd":"workbench.action.tiggleTerminal","when":""},{"cat":"视图与分栏","desc":"显示/隐藏内置浏览器","keys":"Alt+P","cmd":"workbench.action.togglePreviewBrowserVisibility","when":""},{"cat":"视图与分栏","desc":"显示/隐藏迷你地图","keys":"Alt+O","cmd":"editor.action.toggleMinimap","when":""},{"cat":"视图与分栏","desc":"显示/隐藏大纲","keys":"Alt+W","cmd":"editor.action.triggerOutline","when":""},{"cat":"视图与分栏","desc":"增大字体【ctrl+鼠标滚动向上】","keys":"Ctrl+Shift+=","cmd":"workbench.action.zoomIn","when":""},{"cat":"视图与分栏","desc":"减小字体【ctrl+鼠标滚动向下】","keys":"Ctrl+Shift+-","cmd":"workbench.action.zoomOut","when":""},{"cat":"视图与分栏","desc":"单栏","keys":"Alt+Shift+1","cmd":"workbench.action.split1e","when":""},{"cat":"视图与分栏","desc":"左右2栏","keys":"Alt+Shift+2","cmd":"workbench.action.split2e","when":""},{"cat":"视图与分栏","desc":"左右3栏","keys":"Alt+Shift+3","cmd":"workbench.action.split3e","when":""},{"cat":"视图与分栏","desc":"置焦到下一个分栏","keys":"Alt+.","cmd":"workbench.action.nextpane","when":""},{"cat":"视图与分栏","desc":"置焦到上一个分栏","keys":"Alt+,","cmd":"workbench.action.prevpane","when":""},{"cat":"视图与分栏","desc":"新建HBuilder窗体","keys":"Ctrl+Shift+N","cmd":"workbench.action.newWindow","when":""},{"cat":"视图与分栏","desc":"多窗口切换快捷键1","keys":"Ctrl+F6","cmd":"workbench.action.switchWindow","when":""},{"cat":"视图与分栏","desc":"多窗口切换快捷键2","keys":"Alt+`","cmd":"workbench.action.switchWindow","when":""},{"cat":"运行与调试","desc":"运行","keys":"Ctrl+R","cmd":"app.action.rundevice","when":""},{"cat":"运行与调试","desc":"重新运行","keys":"Ctrl+F5","cmd":"workbench.action.debug.restart","when":"isDebugConsoleViewVisible"},{"cat":"运行与调试","desc":"停止运行","keys":"Ctrl+Shift+F5","cmd":"workbench.action.debug.stop","when":"isRunning"},{"cat":"发行","desc":"快捷发行菜单","keys":"Ctrl+U","cmd":"workbench.action.showPubMenu","when":""},{"cat":"工具与设置","desc":"本地历史记录","keys":"Ctrl+Shift+H","cmd":"workbench.action.files.localHistory","when":""},{"cat":"工具与设置","desc":"打开设置","keys":"Ctrl+Alt+,","cmd":"workbench.action.openGlobalSettings","when":""}],"noKey":[{"cat":"标签卡与窗口","desc":"关闭右侧标签卡","cmd":"workbench.action.closeRightEditor"},{"cat":"标签卡与窗口","desc":"关闭所有已保存标签卡","cmd":"workbench.action.closeAllSavedEditors"},{"cat":"文件","desc":"打开文件所在目录","cmd":"revealFileInOS"},{"cat":"文件","desc":"在命令行打开文件所在目录","cmd":"revealFileInTerminal"},{"cat":"文件","desc":"打开文件夹导入项目","cmd":"workbench.action.files.openFolder"},{"cat":"文件","desc":"退出（Windows 建议用系统快捷键 Alt+Space C）","cmd":"app.action.quit"},{"cat":"光标与跳转","desc":"光标到行首","cmd":"cursorLineStart"},{"cat":"光标与跳转","desc":"光标到行尾","cmd":"cursorLineEnd"},{"cat":"光标与跳转","desc":"光标历史清空","cmd":"workbench.action.clearPosHistory"},{"cat":"书签、折叠与错误","desc":"转到Page.json（在uni-app的page页面可快速转到Page.json里对应的节点）","cmd":"workbench.action.openPageJsonFile"},{"cat":"选择与多光标","desc":"向左选一个驼峰单词","cmd":"cursorWordPartLeftSelect"},{"cat":"选择与多光标","desc":"向右选一个驼峰单词","cmd":"cursorWordPartRightSelect"},{"cat":"选择与多光标","desc":"选至行首","cmd":"cursorHomeDirectSelect"},{"cat":"选择与多光标","desc":"选至行尾","cmd":"cursorEndDirectSelect"},{"cat":"选择与多光标","desc":"选至段落开头","cmd":"cursorLineStartSelect"},{"cat":"选择与多光标","desc":"选至段落结尾","cmd":"cursorLineEndSelect"},{"cat":"选择与多光标","desc":"选择引号内字符串。可用双击引号来替代","cmd":"editor.action.selectMatchQuote"},{"cat":"选择与多光标","desc":"选择相同缩进的行。可用双击行首tab来替代","cmd":"editor.action.selectSameIndentationLine"},{"cat":"删除","desc":"向左删除驼峰词","cmd":"deleteWordPartLeft"},{"cat":"删除","desc":"向右删除驼峰词","cmd":"deleteWordPartRight"},{"cat":"删除","desc":"删除行尾空白字符","cmd":"editor.action.triggerDeleteLineEndSpace"},{"cat":"编辑：格式化与注释","desc":"条件编译ifdef","cmd":"editor.action.CommentIfdef"},{"cat":"编辑：格式化与注释","desc":"条件编译ifndef","cmd":"editor.action.CommentIfndef"},{"cat":"编辑：格式化与注释","desc":"验证本文档语法","cmd":"editor.action.validation"},{"cat":"视图与分栏","desc":"显示/隐藏工具栏","cmd":"workbench.action.toggleToolbarVisibility"},{"cat":"视图与分栏","desc":"显示/隐藏状态栏","cmd":"workbench.action.toggleStatusbarVisibility"},{"cat":"视图与分栏","desc":"切换是否自动换行","cmd":"editor.action.toggleWordWrap"},{"cat":"视图与分栏","desc":"显示/隐藏行号","cmd":"editor.action.toggleRenderLineNumber"},{"cat":"视图与分栏","desc":"显示/隐藏缩进线","cmd":"editor.action.toggleRenderIndentReference"},{"cat":"视图与分栏","desc":"显示/隐藏空白字符","cmd":"editor.action.toggleRenderWhitespace"},{"cat":"视图与分栏","desc":"在项目管理器中追踪/不追踪当前文件位置","cmd":"editor.action.revealInProjectExplorer"},{"cat":"视图与分栏","desc":"最小化","cmd":"workbench.action.minimize"},{"cat":"发行","desc":"App云打包","cmd":"project.action.app.pack"},{"cat":"发行","desc":"uni-app 生成 H5 网站","cmd":"project.action.app.publish.html5"},{"cat":"发行","desc":"uni-app 发布到 微信 小程序","cmd":"project.action.app.publish.weapp"},{"cat":"发行","desc":"uni-app 发布到 百度 小程序","cmd":"project.action.app.publish.baiduapp"},{"cat":"发行","desc":"uni-app 发布到 支付宝 小程序","cmd":"project.action.app.publish.alipayapp"},{"cat":"发行","desc":"uni-app 发布到 字节跳动 小程序","cmd":"project.action.app.publish.bytedanceapp"},{"cat":"发行","desc":"uni-app 发布到 QQ 小程序","cmd":"project.action.app.publish.qqapp"},{"cat":"工具与设置","desc":"重新加载代码块","cmd":"workbench.action.reloadSnippets"},{"cat":"工具与设置","desc":"打开快捷键设置","cmd":"workbench.action.openGlobalKeybindings"},{"cat":"工具与设置","desc":"打开外部命令设置","cmd":"workbench.action.openGlobalExternalcommands"},{"cat":"工具与设置","desc":"显示日志文件","cmd":"workbench.action.openlog"},{"cat":"工具与设置","desc":"反馈","cmd":"workbench.action.feedback"},{"cat":"工具与设置","desc":"显示更新日志","cmd":"update.showCurrentReleaseNotes"},{"cat":"工具与设置","desc":"检查更新","cmd":"update.checkForUpdate"},{"cat":"控制台","desc":"清空控制台","cmd":"workbench.console.action.clearLog"},{"cat":"控制台","desc":"锁定滚动条","cmd":"workbench.console.action.lock"},{"cat":"控制台","desc":"全选","cmd":"workbench.console.action.selectAll"},{"cat":"控制台","desc":"复制","cmd":"workbench.console.action.copy"},{"cat":"外部命令 / 插件（需安装插件）","desc":"文件对比，与最近一次提交比较","cmd":"file.compareWithLastVersion"},{"cat":"外部命令 / 插件（需安装插件）","desc":"svn更新","cmd":"ExternalCommand:SVN_UPDATE"},{"cat":"外部命令 / 插件（需安装插件）","desc":"svn提交","cmd":"ExternalCommand:SVN_COMMIT"},{"cat":"外部命令 / 插件（需安装插件）","desc":"svn检查修改内容","cmd":"ExternalCommand:SVN_REPOSTATUS"},{"cat":"外部命令 / 插件（需安装插件）","desc":"svn查看日志","cmd":"ExternalCommand:SVN_LOG"},{"cat":"外部命令 / 插件（需安装插件）","desc":"svn删除当前文件(单个文件)","cmd":"ExternalCommand:SVN_REMOVE"},{"cat":"外部命令 / 插件（需安装插件）","desc":"svn增加文件(单个文件)","cmd":"ExternalCommand:SVN_ADD"},{"cat":"外部命令 / 插件（需安装插件）","desc":"svn还原(revert)","cmd":"ExternalCommand:SVN_REVERT"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git同步","cmd":"ExternalCommand:GIT_SYNC"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git提交","cmd":"ExternalCommand:GIT_COMMIT"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git比较差异","cmd":"ExternalCommand:GIT_DIFF"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git检查修改内容","cmd":"ExternalCommand:GIT_REPOSTATUS"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git查看日志","cmd":"ExternalCommand:GIT_LOG"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git删除当前文件(单个文件)","cmd":"ExternalCommand:GIT_REMOVE"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git增加文件(单个文件)","cmd":"ExternalCommand:GIT_ADD"},{"cat":"外部命令 / 插件（需安装插件）","desc":"git还原(revert)","cmd":"ExternalCommand:GIT_REVERT"}]};
+(function(){
+  const q = document.getElementById('q');
+  const clearBtn = document.getElementById('clear');
+  const empty = document.getElementById('empty');
+  const list = document.getElementById('list');
+  const navLinks = [...document.querySelectorAll('#nav a')];
+  const rows = [...document.querySelectorAll('.row')];
+  const sections = [...document.querySelectorAll('.cat')];
+  const cheatBlock = document.getElementById('cheat');
+  const logicBlock = document.getElementById('logic');
+  const starBtn = document.getElementById('starBtn');
+  let starOnly = false;
+
+  const orig = new Map();
+  rows.forEach(r => orig.set(r, r.querySelector('.desc').innerHTML));
+
+  function highlight(el, html, term){
+    if(!term) { el.innerHTML = html; return; }
+    const tmp = document.createElement('div'); tmp.innerHTML = html;
+    const walk = document.createTreeWalker(tmp, NodeFilter.SHOW_TEXT);
+    const nodes = []; let n;
+    while((n = walk.nextNode())) nodes.push(n);
+    const lower = term.toLowerCase();
+    nodes.forEach(node => {
+      const text = node.nodeValue; const idx = text.toLowerCase().indexOf(lower);
+      if(idx < 0) return;
+      const frag = document.createDocumentFragment();
+      let last = 0, i = idx;
+      while(i >= 0){
+        frag.appendChild(document.createTextNode(text.slice(last, i)));
+        const m = document.createElement('mark'); m.textContent = text.slice(i, i + term.length);
+        frag.appendChild(m); last = i + term.length; i = text.toLowerCase().indexOf(lower, last);
+      }
+      frag.appendChild(document.createTextNode(text.slice(last)));
+      node.parentNode.replaceChild(frag, node);
+    });
+    el.innerHTML = tmp.innerHTML;
+  }
+
+  function apply(){
+    const term = q.value.trim().toLowerCase();
+    clearBtn.style.display = term ? 'block' : 'none';
+    let total = 0;
+    sections.forEach(sec => {
+      let visible = 0;
+      const cnt = sec.querySelector('h2 .count');
+      if(!sec.dataset.total) sec.dataset.total = cnt.textContent;
+      sec.querySelectorAll('.row').forEach(row => {
+        const hay = row.dataset.search;
+        const star = row.querySelector('.star');
+        const okTerm = !term || hay.includes(term);
+        const okStar = !starOnly || !!star;
+        const show = okTerm && okStar;
+        row.classList.toggle('hidden', !show);
+        if(show) visible++;
+        highlight(row.querySelector('.desc'), orig.get(row), term);
+      });
+      cnt.textContent = (term || starOnly) ? visible : sec.dataset.total;
+      sec.classList.toggle('hidden', visible === 0);
+      total += visible;
+    });
+    empty.style.display = total === 0 ? 'block' : 'none';
+    if(term) { logicBlock.classList.add('hidden'); cheatBlock.classList.add('hidden'); }
+    else { logicBlock.classList.remove('hidden'); cheatBlock.classList.remove('hidden'); }
+  }
+
+  q.addEventListener('input', apply);
+  clearBtn.addEventListener('click', () => { q.value = ''; apply(); q.focus(); });
+  document.addEventListener('keydown', e => {
+    if(e.key === '/' && document.activeElement !== q){ e.preventDefault(); q.focus(); }
+    if(e.key === 'Escape' && document.activeElement === q){ q.value = ''; apply(); q.blur(); }
+  });
+
+  starBtn.addEventListener('click', () => {
+    starOnly = !starOnly;
+    starBtn.classList.toggle('on', starOnly);
+    starBtn.textContent = starOnly ? '★ 高频中' : '★ 只看高频';
+    apply();
+  });
+
+  // theme
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('themeBtn');
+  const syncBtn = () => { themeBtn.textContent = root.dataset.theme === 'dark' ? '☀ 浅色' : '◐ 深色'; };
+  syncBtn();
+  themeBtn.addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('hbx-theme', root.dataset.theme); syncBtn();
+  });
+
+  // copy command id
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.cmd'); if(!btn) return;
+    const text = btn.dataset.cmd;
+    const done = () => { toast.textContent = '已复制 ' + text; toast.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1600); };
+    function legacyCopy(t){
+      var ta = document.createElement('textarea');
+      ta.value = t; ta.setAttribute('readonly','');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch(e) {}
+      document.body.removeChild(ta);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(done, function(){ legacyCopy(text); done(); });
+    } else { legacyCopy(text); done(); }
+  });
+
+  // scrollspy + sticky toolbar
+  const toolbar = document.getElementById('toolbar');
+  const setActive = id => navLinks.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if(en.isIntersecting) setActive(en.target.id); });
+  }, { rootMargin: '-90px 0px -70% 0px', threshold: 0 });
+  document.querySelectorAll('.cat').forEach(s => io.observe(s));
+  navLinks.forEach(a => a.addEventListener('click', () => setActive(a.dataset.target)));
+  window.addEventListener('scroll', () => toolbar.classList.toggle('stuck', window.scrollY > 40), { passive: true });
+})();
+</script>
+</body>
+</html>
