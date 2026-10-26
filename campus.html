@@ -1,157 +1,466 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>阜阳职业技术学校 - 校园风采</title>
-		<link rel="stylesheet" href="css/style.css">
-	</head>
-	<body>
-		<!-- 导航栏 -->
-		<header class="header">
-			<div class="container">
-				<nav class="nav">
-					<div class="logo">
-						<img src="images/logo.png" alt="阜阳职业技术学校logo">
-					</div>
-					<div class="menu-toggle">☰</div>
-					<ul class="nav-menu">
-						<li><a href="index.html">首页</a></li>
-						<li><a href="about.html">学校简介</a></li>
-						<li><a href="majors.html">专业设置</a></li>
-						<li><a href="admission.html">招生就业</a></li>
-						<li><a href="campus.html">校园风采</a></li>
-						<li><a href="contact.html">联系我们</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6FAFE">
+<title>校园风采 · 阜阳职业技术学校</title>
+<meta name="description" content="阜阳职业技术学校校园风光、实训掠影、技能大赛与学生活动实拍影像，含校园航拍与元旦汇演视频。">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}.odo__d{height:auto !important;overflow:visible !important}</style></noscript>
+</head>
+<body>
 
-		<!-- 页面标题 -->
-		<section class="banner" style="height: 40vh; margin-top: 80px; background: #2c5282;">
-			<div class="banner-content">
-				<h1>校园风采</h1>
-				<p>领略校园风光，感受校园文化</p>
-			</div>
-		</section>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
-		<!-- 校园环境 -->
-		<section class="section">
-			<div class="container">
-				<h2 class="section-title animate">校园环境</h2>
-				<div class="campus-grid">
-					<div class="campus-item animate-left">
-						<img src="images/campus1.jpg" alt="教学楼">
-					</div>
-					<div class="campus-item animate">
-						<img src="images/campus2.jpg" alt="实训楼">
-					</div>
-					<div class="campus-item animate-right">
-						<img src="images/campus3.jpg" alt="学生公寓">
-					</div>
-					<div class="campus-item animate-left">
-						<img src="images/campus4.jpg" alt="食堂">
-					</div>
-					<div class="campus-item animate">
-						<img src="images/campus5.jpg" alt="操场">
-					</div>
-					<div class="campus-item animate-right">
-						<img src="images/campus6.jpg" alt="校园绿化">
-					</div>
-				</div>
-			</div>
-		</section>
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="index.html" aria-label="阜阳职业技术学校 首页">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <span class="nav__ind" aria-hidden="true"></span>
+      <a href="index.html">首页</a>
+      <a href="about.html">学校概况</a>
+      <a href="news.html">新闻动态</a>
+      <a href="majors.html">专业设置</a>
+      <a href="teachers.html">师资队伍</a>
+      <a href="campus.html" class="is-active" aria-current="page">校园风采</a>
+      <a href="admission.html">招生就业</a>
+      <a href="contact.html">联系我们</a>
+    </nav>
+    <div class="hdr__cta">
+      <button class="hdr__search" type="button" data-search-open aria-label="站内搜索" title="站内搜索（/）">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      </button>
+      <a class="hdr__tel" href="tel:0558-2315697">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>0558-2315697</span>
+      </a>
+      <a class="btn btn--primary" href="admission.html">招生咨询
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <button class="burger" id="burger" aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"><span></span></button>
+  </div>
+</header>
 
-		<!-- 校园活动 -->
-		<section class="section" style="background: #f8f9fa;">
-			<div class="container">
-				<h2 class="section-title animate">校园活动</h2>
-				<div class="campus-grid">
-					<div class="campus-item animate-left">
-						<img src="images/activity1.jpg" alt="技能竞赛">
-					</div>
-					<div class="campus-item animate">
-						<img src="images/activity2.jpg" alt="文艺汇演">
-					</div>
-					<div class="campus-item animate-right">
-						<img src="images/activity3.jpg" alt="运动会">
-					</div>
-					<div class="campus-item animate-left">
-						<img src="images/activity4.jpg" alt="志愿服务">
-					</div>
-					<div class="campus-item animate">
-						<img src="images/activity5.jpg" alt="社团活动">
-					</div>
-					<div class="campus-item animate-right">
-						<img src="images/activity6.jpg" alt="毕业典礼">
-					</div>
-				</div>
-			</div>
-		</section>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="移动端菜单">
+  <div class="drawer__top">
+    <a class="brand" href="index.html">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <button class="drawer__close" id="drawerClose" aria-label="关闭菜单">✕</button>
+  </div>
+  <button class="drawer__search" type="button" data-search-open>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <span>搜索页面、专业、资讯</span>
+    <kbd>/</kbd>
+  </button>
+  <nav class="drawer__nav" aria-label="移动端导航">
+    <a href="index.html"><i>01</i>首页</a>
+    <a href="about.html"><i>02</i>学校概况</a>
+    <a href="news.html"><i>03</i>新闻动态</a>
+    <a href="majors.html"><i>04</i>专业设置</a>
+    <a href="teachers.html"><i>05</i>师资队伍</a>
+    <a href="campus.html"><i>06</i>校园风采</a>
+    <a href="admission.html"><i>07</i>招生就业</a>
+    <a href="contact.html"><i>08</i>联系我们</a>
+    <a href="faq.html"><i>09</i>常见问题</a>
+    <a href="downloads.html"><i>10</i>资料下载</a>
+  </nav>
+  <div class="drawer__foot">
+    <div>招生咨询</div>
+    <strong>0558-2315697</strong>
+    <div>阜阳市颍东区富强路与众兴路交汇处</div>
+    <a class="btn btn--primary" href="admission.html">查看招生指南</a>
+  </div>
+</aside>
 
-		<!-- 实训教学 -->
-		<section class="section">
-			<div class="container">
-				<h2 class="section-title animate">实训教学</h2>
-				<div class="campus-grid">
-					<div class="campus-item animate-left">
-						<img src="images/training1.jpg" alt="计算机实训室">
-					</div>
-					<div class="campus-item animate">
-						<img src="images/training2.jpg" alt="机电实训室">
-					</div>
-					<div class="campus-item animate-right">
-						<img src="images/training3.jpg" alt="汽车维修车间">
-					</div>
-					<div class="campus-item animate-left">
-						<img src="images/training4.jpg" alt="幼儿保育实训室">
-					</div>
-					<div class="campus-item animate">
-						<img src="images/training5.jpg" alt="会计电算化实训室">
-					</div>
-					<div class="campus-item animate-right">
-						<img src="images/training6.jpg" alt="校企合作实训">
-					</div>
-				</div>
-			</div>
-		</section>
+<main>
 
-		<!-- 页脚 -->
-		<footer class="footer">
-			<div class="container">
-				<div class="footer-content">
-					<div class="footer-col">
-						<h3>学校导航</h3>
-						<ul>
-							<li><a href="index.html">首页</a></li>
-							<li><a href="about.html">学校简介</a></li>
-							<li><a href="majors.html">专业设置</a></li>
-							<li><a href="admission.html">招生就业</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>联系我们</h3>
-						<ul>
-							<li><a href="contact.html">联系方式</a></li>
-							<li><a href="contact.html#map">学校地址</a></li>
-							<li><a href="admission.html#consult">招生咨询</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>关注我们</h3>
-						<ul>
-							<li>微信公众号：阜阳职业技术学校</li>
-							<li>抖音号：fyzjjsxx</li>
-							<li>官方QQ群：123456789</li>
-						</ul>
-					</div>
-				</div>
-				<div class="copyright">
-					<p>© 2026 阜阳职业技术学校 版权所有 | 皖ICP备XXXXXXX号</p>
-				</div>
-			</div>
-		</footer>
+  <section class="phead">
+    <div class="wrap phead__in">
+      <div class="phead__main">
+        <p class="crumb"><a href="index.html">首页</a><i>/</i>校园风采</p>
+        <h1 class="phead__h1">校园风采</h1>
+        <p class="phead__d">300 亩校园，红砖白线，湖光与操场都在这里</p>
+      </div>
+      <div class="phead__stats">
+        <div>
+          <div class="pstat__n">300<em>亩</em></div>
+          <div class="pstat__l">校园占地面积</div>
+        </div>
+        <div>
+          <div class="pstat__n">4<em>部</em></div>
+          <div class="pstat__l">校园影像</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-		<script src="js/script.js"></script>
-	</body>
+  <!-- 视频 -->
+  <section class="sec" id="video">
+    <div class="wrap">
+      <div class="shead-row">
+        <div class="shead">
+          <p class="eyebrow reveal">VIDEO</p>
+          <h2 class="h2 reveal">先看片子，再看校园</h2>
+        </div>
+        <p class="reveal" style="font-size:13px;color:var(--ink-3);max-width:300px;margin:0">视频按需加载，点击封面播放，不会自动占用流量。</p>
+      </div>
+
+      <button class="vcard vcard--hero reveal" type="button" data-video="videos/campus-aerial.mp4" data-title="无人机航拍 · 300 亩校园">
+        <img src="images/aerial-panorama.jpg" alt="校园航拍视频封面" loading="lazy">
+        <span class="vcard__play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+        <span class="vcard__body">
+          <h4>无人机航拍 · 300 亩校园</h4>
+          <span>校园全景 · 航拍</span>
+        </span>
+      </button>
+
+      <div class="grid g-3" style="gap:clamp(12px,1.6vw,20px);margin-top:clamp(12px,1.6vw,20px)">
+        <button class="vcard vcard--sub reveal" type="button" data-video="videos/school-intro.mp4" data-title="学校介绍 · 开学季">
+          <img src="images/gate-front.jpg" alt="学校介绍视频封面" loading="lazy">
+          <span class="vcard__play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="vcard__body">
+            <h4>学校介绍 · 开学季</h4>
+            <span>办学情况介绍</span>
+          </span>
+        </button>
+        <button class="vcard vcard--sub reveal" type="button" data-video="videos/campus-explore.mp4" data-title="探校 · 操场、教室、宿舍、食堂">
+          <img src="images/field.jpg" alt="探校视频封面" loading="lazy">
+          <span class="vcard__play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="vcard__body">
+            <h4>探校 · 操场 / 教室 / 宿舍 / 食堂</h4>
+            <span>实景带看</span>
+          </span>
+        </button>
+        <button class="vcard vcard--sub reveal" type="button" data-video="videos/apply-guide.mp4" data-title="报名方式讲解">
+          <img src="images/visit.jpg" alt="报名方式讲解视频封面" loading="lazy">
+          <span class="vcard__play"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="vcard__body">
+            <h4>报名方式讲解</h4>
+            <span>招生办逐条说明</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 图集 -->
+  <section class="sec sec--tint">
+    <div class="wrap">
+      <div class="shead-row">
+        <div class="shead">
+          <p class="eyebrow reveal">GALLERY</p>
+          <h2 class="h2 reveal">影像里的日常</h2>
+          <p class="reveal" style="margin-top:12px">全部为校内实拍。点击任意图片可放大查看，支持键盘左右键翻页。</p>
+        </div>
+      </div>
+
+      <div class="filters-bar">
+        <div class="filters" data-filter-group="#gallery" role="group" aria-label="按类别筛选影像">
+          <span class="filters__ind" aria-hidden="true"></span>
+          <button class="fbtn is-active" type="button" data-filter="all">全部</button>
+          <button class="fbtn" type="button" data-filter="校园风光">校园风光</button>
+          <button class="fbtn" type="button" data-filter="实训掠影">实训掠影</button>
+          <button class="fbtn" type="button" data-filter="技能大赛">技能大赛</button>
+          <button class="fbtn" type="button" data-filter="学生活动">学生活动</button>
+          <button class="fbtn" type="button" data-filter="文艺汇演">文艺汇演</button>
+        </div>
+      </div>
+
+      <div class="mosaic" id="gallery" data-gallery>
+
+        <button class="mosaic__item is-wide fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/aerial-panorama.jpg" data-cap="校园全景航拍">
+          <img src="images/aerial-panorama.jpg" alt="校园全景航拍" loading="lazy"><span>校园全景</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/gate-arch.jpg" data-cap="新校区拱形校门">
+          <img src="images/gate-arch.jpg" alt="新校区拱形校门" loading="lazy"><span>新校区校门</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/lake.jpg" data-cap="校园湖景与凉亭">
+          <img src="images/lake.jpg" alt="校园湖景与凉亭" loading="lazy"><span>湖景凉亭</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/plaza.jpg" data-cap="教学楼广场">
+          <img src="images/plaza.jpg" alt="教学楼广场" loading="lazy"><span>教学楼广场</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/water.jpg" data-cap="校园水景倒影">
+          <img src="images/water.jpg" alt="校园水景倒影" loading="lazy"><span>水景倒影</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/road.jpg" data-cap="校园道路与绿化">
+          <img src="images/road.jpg" alt="校园道路与绿化" loading="lazy"><span>校园道路</span>
+        </button>
+        <button class="mosaic__item is-wide fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/aerial-cluster.jpg" data-cap="校园建筑群航拍">
+          <img src="images/aerial-cluster.jpg" alt="校园建筑群航拍" loading="lazy"><span>建筑群航拍</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/field.jpg" data-cap="标准田径场">
+          <img src="images/field.jpg" alt="标准田径场" loading="lazy"><span>田径场</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/building.jpg" data-cap="教学楼近景">
+          <img src="images/building.jpg" alt="教学楼近景" loading="lazy"><span>教学楼</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/dorm.jpg" data-cap="学生宿舍内景">
+          <img src="images/dorm.jpg" alt="学生宿舍内景" loading="lazy"><span>学生宿舍</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/culture-wall.jpg" data-cap="校园文化墙">
+          <img src="images/culture-wall.jpg" alt="校园文化墙" loading="lazy"><span>文化墙</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="校园风光" data-lightbox="images/gate-aerial.jpg" data-cap="新大门航拍">
+          <img src="images/gate-aerial.jpg" alt="新大门航拍" loading="lazy"><span>校门航拍</span>
+        </button>
+
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/robot.jpg" data-cap="工业机器人实训">
+          <img src="images/robot.jpg" alt="工业机器人实训" loading="lazy"><span>工业机器人</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/cnc-shop.jpg" data-cap="数控实训车间">
+          <img src="images/cnc-shop.jpg" alt="数控实训车间" loading="lazy"><span>数控车间</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/cnc-center.jpg" data-cap="数控加工中心实训">
+          <img src="images/cnc-center.jpg" alt="数控加工中心实训" loading="lazy"><span>加工中心</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/auto-shop.jpg" data-cap="汽车实训车间">
+          <img src="images/auto-shop.jpg" alt="汽车实训车间" loading="lazy"><span>汽车实训</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/tv-studio.jpg" data-cap="影视演播厅实训">
+          <img src="images/tv-studio.jpg" alt="影视演播厅实训" loading="lazy"><span>影视演播厅</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/food.jpg" data-cap="食品加工实训">
+          <img src="images/food.jpg" alt="食品加工实训" loading="lazy"><span>食品加工</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/fashion.jpg" data-cap="服装设计缝纫实训">
+          <img src="images/fashion.jpg" alt="服装设计缝纫实训" loading="lazy"><span>服装实训</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/network-security.jpg" data-cap="网络安防实训室">
+          <img src="images/network-security.jpg" alt="网络安防实训室" loading="lazy"><span>网络安防</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/preschool-dance.jpg" data-cap="幼儿保育专业舞蹈房">
+          <img src="images/preschool-dance.jpg" alt="幼儿保育专业舞蹈房" loading="lazy"><span>舞蹈房</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/soldering.jpg" data-cap="电子焊接实训">
+          <img src="images/soldering.jpg" alt="电子焊接实训" loading="lazy"><span>电子焊接</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/lathe.jpg" data-cap="车床实训">
+          <img src="images/lathe.jpg" alt="车床实训" loading="lazy"><span>车床实训</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/accounting-room.jpg" data-cap="会计电算化教室">
+          <img src="images/accounting-room.jpg" alt="会计电算化教室" loading="lazy"><span>会计电算化</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/smart-home.jpg" data-cap="智能家居实训赛场">
+          <img src="images/smart-home.jpg" alt="智能家居实训赛场" loading="lazy"><span>智能家居</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="实训掠影" data-lightbox="images/enterprise-visit.jpg" data-cap="企业参观实习">
+          <img src="images/enterprise-visit.jpg" alt="企业参观实习" loading="lazy"><span>企业参观</span>
+        </button>
+
+        <button class="mosaic__item is-wide fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/contest-hall.jpg" data-cap="技能大赛赛场全景">
+          <img src="images/contest-hall.jpg" alt="技能大赛赛场全景" loading="lazy"><span>赛场全景</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/mech-assembly.jpg" data-cap="机电装配赛项">
+          <img src="images/mech-assembly.jpg" alt="机电装配赛项" loading="lazy"><span>机电装配</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/mcu-contest.jpg" data-cap="单片机赛场">
+          <img src="images/mcu-contest.jpg" alt="单片机赛场" loading="lazy"><span>单片机</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/equipment-debug.jpg" data-cap="设备调试">
+          <img src="images/equipment-debug.jpg" alt="设备调试" loading="lazy"><span>设备调试</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/cnc-contest.jpg" data-cap="数控技能比赛">
+          <img src="images/cnc-contest.jpg" alt="数控技能比赛" loading="lazy"><span>数控赛项</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/accounting-contest.jpg" data-cap="会计技能比赛">
+          <img src="images/accounting-contest.jpg" alt="会计技能比赛" loading="lazy"><span>会计赛项</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/award-ceremony.jpg" data-cap="国赛一等奖颁奖">
+          <img src="images/award-ceremony.jpg" alt="国赛一等奖颁奖" loading="lazy"><span>国赛颁奖</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/award-video.jpg" data-cap="短视频制作赛项国赛一等奖">
+          <img src="images/award-video.jpg" alt="短视频制作赛项国赛一等奖" loading="lazy"><span>短视频国赛</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/award-cert.jpg" data-cap="国赛一等奖获奖证书">
+          <img src="images/award-cert.jpg" alt="国赛一等奖获奖证书" loading="lazy"><span>获奖证书</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="技能大赛" data-lightbox="images/award-training.jpg" data-cap="国赛选手训练">
+          <img src="images/award-training.jpg" alt="国赛选手训练" loading="lazy"><span>选手训练</span>
+        </button>
+
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-10.jpg" data-cap="趣味运动会 · 拔河">
+          <img src="images/act-10.jpg" alt="趣味运动会拔河" loading="lazy"><span>拔河</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-8.jpg" data-cap="军训敬礼方阵">
+          <img src="images/act-8.jpg" alt="军训敬礼方阵" loading="lazy"><span>军训方阵</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-4.jpg" data-cap="军训学生合影">
+          <img src="images/act-4.jpg" alt="军训学生合影" loading="lazy"><span>军训合影</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-1.jpg" data-cap="趣味活动 · 珠行万里">
+          <img src="images/act-1.jpg" alt="趣味活动珠行万里" loading="lazy"><span>珠行万里</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-6.jpg" data-cap="趣味活动 · 斗笠游戏">
+          <img src="images/act-6.jpg" alt="趣味活动斗笠游戏" loading="lazy"><span>斗笠游戏</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-11.jpg" data-cap="军训方阵 · 校门背景">
+          <img src="images/act-11.jpg" alt="军训方阵校门背景" loading="lazy"><span>校门前</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-7.jpg" data-cap="趣味活动 · 集体活动">
+          <img src="images/act-7.jpg" alt="趣味活动集体活动" loading="lazy"><span>集体活动</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="学生活动" data-lightbox="images/act-12.jpg" data-cap="军训跑步方阵">
+          <img src="images/act-12.jpg" alt="军训跑步方阵" loading="lazy"><span>跑操</span>
+        </button>
+
+        <button class="mosaic__item is-wide fade-item reveal" type="button" data-cat="文艺汇演" data-lightbox="images/show-1.jpg" data-cap="文艺汇演 · 红色主题舞蹈">
+          <img src="images/show-1.jpg" alt="文艺汇演红色主题舞蹈" loading="lazy"><span>红色主题舞蹈</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="文艺汇演" data-lightbox="images/show-2.jpg" data-cap="元旦文艺汇演 · 合唱">
+          <img src="images/show-2.jpg" alt="元旦文艺汇演合唱" loading="lazy"><span>元旦合唱</span>
+        </button>
+        <button class="mosaic__item fade-item reveal" type="button" data-cat="文艺汇演" data-lightbox="images/act-2.jpg" data-cap="军训会操 · 教官">
+          <img src="images/act-2.jpg" alt="军训会操教官" loading="lazy"><span>会操</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 文化 -->
+  <section class="sec">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow reveal">CULTURE</p>
+        <h2 class="h2 reveal" style="margin-bottom:20px">可观赏、可品尝、可教学</h2>
+        <p class="reveal" style="color:var(--ink-2)">学校把校园文化做成可以参与的东西：剪纸是阜阳非遗，茶艺、舞龙舞狮、古筝、书法、泥塑、戏曲都进了社团课；红色教育走进四九起义纪念馆、魏沟烈士陵园。</p>
+        <p class="reveal" style="--d:.06s;color:var(--ink-2);margin-top:14px">“一班一策，一室一品”，每个班有自己的文化主张，每间教室有自己的样子。学生在校满意度 94.02%，专业课教学满意度 95.07%。</p>
+        <div class="ministat reveal" style="--d:.12s">
+          <div><b>94.02%</b><span>学生在校满意度</span></div>
+          <div><b>95.07%</b><span>专业课教学满意度</span></div>
+        </div>
+      </div>
+      <figure class="figure-frame reveal" style="--d:.1s">
+        <img src="images/culture-wall.jpg" alt="校园文化墙" style="aspect-ratio:4/3.4">
+        <figcaption>校园文化墙 · 学生自主创作</figcaption>
+      </figure>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <div class="ftr__top">
+      <div>
+        <div class="ftr__brand">
+          <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+          <strong>阜阳职业技术学校<small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small></strong>
+        </div>
+        <p class="ftr__desc">颍东区属公办中等职业学校，安徽省优秀中等职业学校、全省首批 A 类中职学校。一校两牌：阜阳职业技术学校 / 颍东技工学校。</p>
+      </div>
+      <div>
+        <h5>网站导航</h5>
+        <div class="ftr__links">
+          <a href="index.html">首页</a>
+          <a href="about.html">学校概况</a>
+          <a href="news.html">新闻动态</a>
+          <a href="majors.html">专业设置</a>
+          <a href="teachers.html">师资队伍</a>
+          <a href="campus.html">校园风采</a>
+          <a href="admission.html">招生就业</a>
+          <a href="contact.html">联系我们</a>
+        </div>
+      </div>
+      <div>
+        <h5>常用入口</h5>
+        <div class="ftr__links">
+          <a href="admission.html#guide">报名指南</a>
+          <a href="admission.html#coop">校企合作</a>
+          <a href="about.html#honor">荣誉资质</a>
+          <a href="campus.html#video">校园视频</a>
+          <a href="faq.html">常见问题</a>
+          <a href="downloads.html">资料下载</a>
+        </div>
+      </div>
+      <div>
+        <h5>联系我们</h5>
+        <div class="ftr__contact">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>阜阳市颍东区富强路与众兴路交汇处<br>（颍东经济开发区）</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <a class="ftr__tel" href="tel:0558-2315697">0558-2315697</a>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>微信公众号：阜阳职业技术学校</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <span>© <span data-year>2026</span> 阜阳职业技术学校 · 版权所有</span>
+      <span>数据来源：《阜阳职业技术学校中等职业教育质量年度报告（2024 年）》，统计周期 2023.9—2024.8</span>
+    </div>
+  </div>
+</footer>
+
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="图片查看">
+  <button class="lb__close" aria-label="关闭">✕</button>
+  <button class="lb__nav lb__prev" id="lbPrev" aria-label="上一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="lb__nav lb__next" id="lbNext" aria-label="下一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+  <div class="lb__stage">
+    <img class="lb__img" id="lbImgA" alt="">
+    <img class="lb__img is-out" id="lbImgB" alt="">
+    <div class="lb__cap" id="lbCap"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+  <span class="toast__t">已提交</span>
+</div>
+
+<button class="to-top" id="toTop" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<!-- 站内搜索 -->
+<div class="search" id="search" role="dialog" aria-modal="true" aria-label="站内搜索">
+  <div class="search__bd" data-search-close></div>
+  <div class="search__panel" role="document">
+    <div class="search__top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <input id="searchInput" type="search" placeholder="搜索页面、专业或资讯…" autocomplete="off" spellcheck="false" aria-label="输入关键词">
+      <button class="search__close" type="button" data-search-close aria-label="关闭搜索">✕</button>
+    </div>
+    <p class="search__hint">输入关键词即时检索 · <kbd>/</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+    <div class="search__res" id="searchRes" aria-live="polite"></div>
+    <div class="search__hot" id="searchHot">
+      <span>热门：</span>
+      <button type="button" data-search-q="招生">招生</button>
+      <button type="button" data-search-q="专业">专业</button>
+      <button type="button" data-search-q="升学">升学</button>
+      <button type="button" data-search-q="数控">数控</button>
+      <button type="button" data-search-q="学费">学费</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
 </html>

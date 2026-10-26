@@ -1,120 +1,473 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>阜阳职业技术学校 - 学校简介</title>
-		<link rel="stylesheet" href="css/style.css">
-	</head>
-	<body>
-		<!-- 导航栏 -->
-		<header class="header">
-			<div class="container">
-				<nav class="nav">
-					<div class="logo">
-						<img src="images/logo.png" alt="阜阳职业技术学校logo">
-					</div>
-					<div class="menu-toggle">☰</div>
-					<ul class="nav-menu">
-						<li><a href="index.html">首页</a></li>
-						<li><a href="about.html">学校简介</a></li>
-						<li><a href="majors.html">专业设置</a></li>
-						<li><a href="admission.html">招生就业</a></li>
-						<li><a href="campus.html">校园风采</a></li>
-						<li><a href="contact.html">联系我们</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6FAFE">
+<title>学校概况 · 阜阳职业技术学校</title>
+<meta name="description" content="阜阳职业技术学校始建于 1958 年，颍东区属公办中职，安徽省优秀中等职业学校、全省首批 A 类中职学校。占地 300 亩，建筑面积 16 万平方米。">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}.odo__d{height:auto !important;overflow:visible !important}</style></noscript>
+</head>
+<body>
 
-		<!-- 页面标题 -->
-		<section class="banner" style="height: 40vh; margin-top: 80px; background: #2c5282;">
-			<div class="banner-content">
-				<h1>学校简介</h1>
-				<p>了解阜阳职业技术学校的发展历程与办学理念</p>
-			</div>
-		</section>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
-		<!-- 学校简介内容 -->
-		<section class="section">
-			<div class="container">
-				<div class="about-content">
-					<div class="about-img animate-left">
-						<img src="images/about1.jpg" alt="阜阳职业技术学校校园环境">
-					</div>
-					<div class="about-text animate-right">
-						<h3>学校概况</h3>
-						<p>阜阳职业技术学校是阜阳市教育局直属的公办中等职业学校，坐落于阜阳市颍州区，交通便利，校园环境优美。学校创办于1998年，经过二十余年的发展，已成为阜阳地区规模较大、专业齐全、办学特色鲜明的中等职业教育基地。
-						</p>
-						<p>学校占地面积80余亩，建筑面积3万余平方米，拥有标准化教学楼、实训楼、学生公寓、食堂等基础设施，配备计算机实训室、机电一体化实训室、幼儿保育实训室、汽车维修车间等多个专业实训场地，实训设备总值超1000万元。
-						</p>
-						<p>学校坚持“以服务为宗旨，以就业为导向”的办学方针，秉承“厚德强技，笃学笃行”的校训，致力于培养适应地方经济社会发展需要的高素质技能型人才。</p>
-						<h3 style="margin-top: 20px;">办学特色</h3>
-						<p>1. 校企合作：与阜阳金种子集团、阜阳奇瑞4S店、本地幼儿园等多家企业建立深度合作，实现“订单式”培养；</p>
-						<p>2. 升学就业双通道：学生可通过职教高考升入高职院校继续深造，也可直接推荐就业；</p>
-						<p>3. 技能竞赛：积极组织学生参加各级职业技能竞赛，近三年获省级奖项15项，市级奖项30余项。</p>
-					</div>
-				</div>
-			</div>
-		</section>
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="index.html" aria-label="阜阳职业技术学校 首页">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <span class="nav__ind" aria-hidden="true"></span>
+      <a href="index.html">首页</a>
+      <a href="about.html" class="is-active" aria-current="page">学校概况</a>
+      <a href="news.html">新闻动态</a>
+      <a href="majors.html">专业设置</a>
+      <a href="teachers.html">师资队伍</a>
+      <a href="campus.html">校园风采</a>
+      <a href="admission.html">招生就业</a>
+      <a href="contact.html">联系我们</a>
+    </nav>
+    <div class="hdr__cta">
+      <button class="hdr__search" type="button" data-search-open aria-label="站内搜索" title="站内搜索（/）">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      </button>
+      <a class="hdr__tel" href="tel:0558-2315697">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>0558-2315697</span>
+      </a>
+      <a class="btn btn--primary" href="admission.html">招生咨询
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <button class="burger" id="burger" aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"><span></span></button>
+  </div>
+</header>
 
-		<!-- 办学成果 -->
-		<section class="section" style="background: #f8f9fa;">
-			<div class="container">
-				<h2 class="section-title animate">办学成果</h2>
-				<div class="features">
-					<div class="feature-card animate-left">
-						<h3>师资队伍</h3>
-						<p>现有教职工120余人，其中高级教师35人，中级教师60人，双师型教师72人，省级骨干教师8人，市级学科带头人12人。</p>
-					</div>
-					<div class="feature-card animate">
-						<h3>学生规模</h3>
-						<p>在校学生2000余人，开设10余个中职专业，每年为社会输送技能人才600余人。</p>
-					</div>
-					<div class="feature-card animate-right">
-						<h3>荣誉资质</h3>
-						<p>先后荣获“阜阳市职业教育先进单位”、“安徽省中等职业学校德育工作先进集体”、“阜阳市文明校园”等多项荣誉。</p>
-					</div>
-				</div>
-			</div>
-		</section>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="移动端菜单">
+  <div class="drawer__top">
+    <a class="brand" href="index.html">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <button class="drawer__close" id="drawerClose" aria-label="关闭菜单">✕</button>
+  </div>
+  <button class="drawer__search" type="button" data-search-open>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <span>搜索页面、专业、资讯</span>
+    <kbd>/</kbd>
+  </button>
+  <nav class="drawer__nav" aria-label="移动端导航">
+    <a href="index.html"><i>01</i>首页</a>
+    <a href="about.html"><i>02</i>学校概况</a>
+    <a href="news.html"><i>03</i>新闻动态</a>
+    <a href="majors.html"><i>04</i>专业设置</a>
+    <a href="teachers.html"><i>05</i>师资队伍</a>
+    <a href="campus.html"><i>06</i>校园风采</a>
+    <a href="admission.html"><i>07</i>招生就业</a>
+    <a href="contact.html"><i>08</i>联系我们</a>
+    <a href="faq.html"><i>09</i>常见问题</a>
+    <a href="downloads.html"><i>10</i>资料下载</a>
+  </nav>
+  <div class="drawer__foot">
+    <div>招生咨询</div>
+    <strong>0558-2315697</strong>
+    <div>阜阳市颍东区富强路与众兴路交汇处</div>
+    <a class="btn btn--primary" href="admission.html">查看招生指南</a>
+  </div>
+</aside>
 
-		<!-- 页脚 -->
-		<footer class="footer">
-			<div class="container">
-				<div class="footer-content">
-					<div class="footer-col">
-						<h3>学校导航</h3>
-						<ul>
-							<li><a href="index.html">首页</a></li>
-							<li><a href="about.html">学校简介</a></li>
-							<li><a href="majors.html">专业设置</a></li>
-							<li><a href="admission.html">招生就业</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>联系我们</h3>
-						<ul>
-							<li><a href="contact.html">联系方式</a></li>
-							<li><a href="contact.html#map">学校地址</a></li>
-							<li><a href="admission.html#consult">招生咨询</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>关注我们</h3>
-						<ul>
-							<li>微信公众号：阜阳职业技术学校</li>
-							<li>抖音号：fyzjjsxx</li>
-							<li>官方QQ群：123456789</li>
-						</ul>
-					</div>
-				</div>
-				<div class="copyright">
-					<p>© 2026 阜阳职业技术学校 版权所有 | 皖ICP备XXXXXXX号</p>
-				</div>
-			</div>
-		</footer>
+<main>
 
-		<script src="js/script.js"></script>
-	</body>
+  <!-- 内页页头 -->
+  <section class="phead">
+    <div class="wrap phead__in">
+      <div class="phead__main">
+        <p class="crumb"><a href="index.html">首页</a><i>/</i>学校概况</p>
+        <h1 class="phead__h1">学校概况</h1>
+        <p class="phead__d">从 1958 年走来，一所县域中职的向上生长</p>
+      </div>
+      <div class="phead__stats">
+        <div>
+          <div class="pstat__n">1958</div>
+          <div class="pstat__l">建校年份</div>
+        </div>
+        <div>
+          <div class="pstat__n">25<em>个</em></div>
+          <div class="pstat__l">开设专业</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 简介 -->
+  <section class="sec">
+    <div class="wrap two-col">
+      <div class="prose">
+        <p class="eyebrow reveal">INTRODUCTION</p>
+        <h2 class="h2 reveal" style="margin-bottom:24px">颍东区属公办中职<br>一校两牌，一套人马</h2>
+        <p class="lead reveal" style="--d:.06s">阜阳职业技术学校是颍东区属公办中等职业学校，与颍东技工学校一校两牌。学校始建于 1958 年，2017 年 8 月新校区一期投入使用并更为现名，2021 年 8 月二期建成，形成今天占地 300 亩、建筑面积 16 万平方米的校园格局。</p>
+        <p class="reveal" style="--d:.12s">学校是安徽省优秀中等职业学校、全省首批六所 A 类中职学校之一，先后获评全国教育系统先进集体、全国青少年校园篮球特色学校、全国信息化标杆校、国家智慧教育平台试点校、安徽省高技能人才培训基地、安徽省技能大赛冠军选手单位。</p>
+        <p class="reveal" style="--d:.18s">现开设 25 个专业，其中影像与影视技术、物联网技术应用、电子商务、网络信息安全、计算机应用技术、机械加工技术、智能化生产线安装与运维、汽车美容与装潢、汽车运用与维修、新能源汽车制造与检测、会计、幼儿保育、护理、食品加工工艺、导游服务等 15 个为品牌专业方向。</p>
+      </div>
+      <figure class="figure-frame reveal" style="--d:.1s">
+        <img src="images/aerial-cluster.jpg" alt="校园建筑群航拍" style="aspect-ratio:4/4.6">
+        <figcaption>校园建筑群航拍 · 颍东经济开发区</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 数字 -->
+  <section class="sec sec--tight sec--tint">
+    <div class="wrap">
+      <div class="stat-grid">
+        <div class="stat reveal">
+          <div class="stat__n"><span class="odo" data-value="300">300</span><span class="stat__u">亩</span></div>
+          <div class="stat__l">校园占地面积</div>
+        </div>
+        <div class="stat reveal" style="--d:.06s">
+          <div class="stat__n"><span class="odo" data-value="7.2">7.2</span><span class="stat__u">亿元</span></div>
+          <div class="stat__l">校园总投资</div>
+        </div>
+        <div class="stat reveal" style="--d:.12s">
+          <div class="stat__n"><span class="odo" data-value="16">16</span><span class="stat__u">万㎡</span></div>
+          <div class="stat__l">校舍建筑面积</div>
+        </div>
+        <div class="stat reveal" style="--d:.18s">
+          <div class="stat__n"><span class="odo" data-value="9061">9061</span><span class="stat__u">人</span></div>
+          <div class="stat__l">在校学生</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 沿革 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="shead" style="margin-bottom:clamp(32px,4vw,52px)">
+        <p class="eyebrow reveal">HISTORY</p>
+        <h2 class="h2 reveal">六十八年，一条向前的线</h2>
+        <p class="reveal" style="margin-top:14px">从完全中学到职业高中，从职教中心到 A 类中职学校，每一次转身都对应着一次产业与人才需求的变化。</p>
+      </div>
+      <div class="tl">
+        <div class="tl__i reveal">
+          <div class="tl__y">1958</div>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <div class="tl__b">
+            <h4>阜阳县口孜完全中学</h4>
+            <p>学校前身创建，开启办学历史。</p>
+          </div>
+        </div>
+        <div class="tl__i reveal">
+          <div class="tl__y">1984</div>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <div class="tl__b">
+            <h4>口孜高级职业中学</h4>
+            <p>改制为职业高中，正式开始中等职业教育办学。</p>
+          </div>
+        </div>
+        <div class="tl__i reveal">
+          <div class="tl__y">2008</div>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <div class="tl__b">
+            <h4>颍东区职业教育中心</h4>
+            <p>以口孜职高为基础成立，形成“一校两牌”办学格局。</p>
+          </div>
+        </div>
+        <div class="tl__i reveal">
+          <div class="tl__y">2012</div>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <div class="tl__b">
+            <h4>省级示范职业高中</h4>
+            <p>通过安徽省县（区）合格职教中心暨省级示范职业高中评估验收。</p>
+          </div>
+        </div>
+        <div class="tl__i reveal">
+          <div class="tl__y">2015</div>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <div class="tl__b">
+            <h4>三校并入</h4>
+            <p>阜阳市第三高级职业中学、第四高级职业中学及颍东教育农场并入，办学规模显著扩大。</p>
+          </div>
+        </div>
+        <div class="tl__i reveal">
+          <div class="tl__y">2017</div>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <div class="tl__b">
+            <h4>新校区启用 · 更名</h4>
+            <p>8 月新校区一期投入使用；12 月经阜阳市政府批准，更名为“阜阳职业技术学校”。</p>
+          </div>
+        </div>
+        <div class="tl__i reveal">
+          <div class="tl__y">2021</div>
+          <span class="tl__dot" aria-hidden="true"></span>
+          <div class="tl__b">
+            <h4>二期建成</h4>
+            <p>8 月二期项目投入使用，校舍建筑面积达 16 万平方米，办学条件全面达标。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 荣誉 -->
+  <section class="sec sec--tint" id="honor">
+    <div class="wrap">
+      <div class="shead" style="margin-bottom:clamp(28px,3.6vw,40px)">
+        <p class="eyebrow reveal">HONORS</p>
+        <h2 class="h2 reveal">荣誉资质</h2>
+        <p class="reveal" style="margin-top:14px">国家级 4 项、省级 4 项、市级 2 项，另有连续多年获评颍东区招商引资先进单位。</p>
+      </div>
+      <div class="honor-grid">
+        <div class="honor-item reveal"><i>01</i><span>全国教育系统先进集体</span></div>
+        <div class="honor-item reveal"><i>02</i><span>全国青少年校园篮球特色学校</span></div>
+        <div class="honor-item reveal"><i>03</i><span>全国信息化标杆校</span></div>
+        <div class="honor-item reveal"><i>04</i><span>国家智慧教育平台试点校</span></div>
+        <div class="honor-item reveal"><i>05</i><span>安徽省优秀中等职业学校</span></div>
+        <div class="honor-item reveal"><i>06</i><span>安徽省高技能人才培训基地</span></div>
+        <div class="honor-item reveal"><i>07</i><span>安徽省技能大赛冠军选手单位</span></div>
+        <div class="honor-item reveal"><i>08</i><span>安徽省“三全育人”典型学校</span></div>
+        <div class="honor-item reveal"><i>09</i><span>阜阳市五星级先进基层党组织</span></div>
+        <div class="honor-item reveal"><i>10</i><span>阜阳市文明单位</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 师资 -->
+  <section class="sec">
+    <div class="wrap two-col">
+      <figure class="figure-frame reveal">
+        <img src="images/teacher-guide.jpg" alt="教师指导学生实训" style="aspect-ratio:4/3.4">
+        <figcaption>实训课堂 · 教师随堂指导</figcaption>
+      </figure>
+      <div>
+        <p class="eyebrow reveal">FACULTY</p>
+        <h2 class="h2 reveal" style="margin-bottom:18px">442 名教职工<br>把课堂搬到设备旁</h2>
+        <p class="reveal" style="color:var(--ink-2);margin-bottom:32px">教职工 442 人，专任教师 410 人，师生比 1:19.6。公共基础课教师 115 人，专业教师 295 人，占专任教师 72%。另有兼职教师 131 人，均为企业技术骨干。</p>
+
+        <div class="bar reveal">
+          <div class="bar__t"><span>专任教师本科以上学历</span><b>100%</b></div>
+          <div class="bar__tr"><div class="bar__f" data-fill="100"></div></div>
+        </div>
+        <div class="bar reveal" style="--d:.08s">
+          <div class="bar__t"><span>双师型教师占专业课及实习指导教师</span><b>76%</b></div>
+          <div class="bar__tr"><div class="bar__f" data-fill="76"></div></div>
+        </div>
+        <div class="bar reveal" style="--d:.16s">
+          <div class="bar__t"><span>专业教师占专任教师比例</span><b>72%</b></div>
+          <div class="bar__tr"><div class="bar__f" data-fill="72"></div></div>
+        </div>
+
+        <div class="ministat reveal" style="--d:.22s">
+          <div><b>84 人</b><span>高级讲师</span></div>
+          <div><b>131 人</b><span>企业兼职教师</span></div>
+        </div>
+        <p class="note reveal" style="--d:.28s;margin-top:20px">
+          江淮名师 1 名、市教坛新星 6 名、市学科带头人 3 名、市骨干教师 4 名；2024 年 18 位教师获省级比赛奖项，42 位教师获市级奖项。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 办学条件 -->
+  <section class="sec sec--tint">
+    <div class="wrap">
+      <div class="shead" style="margin-bottom:clamp(28px,3.6vw,40px)">
+        <p class="eyebrow reveal">FACILITIES</p>
+        <h2 class="h2 reveal">办学条件</h2>
+        <p class="reveal" style="margin-top:14px">实习实训设备总值 1.2 亿元，本年度新增投入约 500 万元；固定资产总值 2.06 亿元。</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat reveal">
+          <div class="stat__n"><span class="odo" data-value="114">114</span><span class="stat__u">个</span></div>
+          <div class="stat__l">理实一体化实训室</div>
+        </div>
+        <div class="stat reveal" style="--d:.06s">
+          <div class="stat__n"><span class="odo" data-value="183">183</span><span class="stat__u">个</span></div>
+          <div class="stat__l">信息化教室</div>
+        </div>
+        <div class="stat reveal" style="--d:.12s">
+          <div class="stat__n"><span class="odo" data-value="2000">2000</span><span class="stat__u">Mbps</span></div>
+          <div class="stat__l">校园网带宽</div>
+        </div>
+        <div class="stat reveal" style="--d:.18s">
+          <div class="stat__n"><span class="odo" data-value="25.9">25.9</span><span class="stat__u">万册</span></div>
+          <div class="stat__l">纸质图书</div>
+        </div>
+      </div>
+      <div class="info3 info3--line" style="margin-top:clamp(32px,4vw,48px)">
+        <div class="reveal">
+          <h4>实训条件</h4>
+          <p>标准专业实训室 114 个，虚拟仿真系统 8 套，智能教室 3 个，实训年耗材约 180 万元。</p>
+        </div>
+        <div class="reveal" style="--d:.08s">
+          <h4>数字校园</h4>
+          <p>校园网 2000Mbps，网络信息点 980 个全覆盖；全国信息化标杆校、国家智慧教育平台试点校。</p>
+        </div>
+        <div class="reveal" style="--d:.16s">
+          <h4>图书与人文</h4>
+          <p>纸质图书 25.896 万册，专业期刊 122 种，电子图书 24944 册；绿化总投入 800 多万元。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 校园 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="shead-row">
+        <div class="shead">
+          <p class="eyebrow reveal">CAMPUS</p>
+          <h2 class="h2 reveal">校园一角</h2>
+        </div>
+        <a class="link-arrow reveal" href="campus.html">更多校园影像
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="mosaic" data-gallery>
+        <button class="mosaic__item is-wide reveal" type="button" data-lightbox="images/lake.jpg" data-cap="校园湖景与凉亭">
+          <img src="images/lake.jpg" alt="校园湖景与凉亭" loading="lazy"><span>校园湖景</span>
+        </button>
+        <button class="mosaic__item reveal" type="button" data-lightbox="images/road.jpg" data-cap="校园道路与绿化">
+          <img src="images/road.jpg" alt="校园道路与绿化" loading="lazy"><span>校园道路</span>
+        </button>
+        <button class="mosaic__item reveal" type="button" data-lightbox="images/field.jpg" data-cap="标准田径场">
+          <img src="images/field.jpg" alt="标准田径场" loading="lazy"><span>田径场</span>
+        </button>
+        <button class="mosaic__item reveal" type="button" data-lightbox="images/gate-arch.jpg" data-cap="新校区拱形校门">
+          <img src="images/gate-arch.jpg" alt="新校区拱形校门" loading="lazy"><span>新校区校门</span>
+        </button>
+        <button class="mosaic__item reveal" type="button" data-lightbox="images/building.jpg" data-cap="教学楼近景">
+          <img src="images/building.jpg" alt="教学楼近景" loading="lazy"><span>教学楼</span>
+        </button>
+        <button class="mosaic__item reveal" type="button" data-lightbox="images/water.jpg" data-cap="校园水景倒影">
+          <img src="images/water.jpg" alt="校园水景倒影" loading="lazy"><span>水景倒影</span>
+        </button>
+        <button class="mosaic__item reveal" type="button" data-lightbox="images/gate-aerial.jpg" data-cap="新大门航拍">
+          <img src="images/gate-aerial.jpg" alt="新大门航拍" loading="lazy"><span>校门航拍</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <div class="ftr__top">
+      <div>
+        <div class="ftr__brand">
+          <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+          <strong>阜阳职业技术学校<small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small></strong>
+        </div>
+        <p class="ftr__desc">颍东区属公办中等职业学校，安徽省优秀中等职业学校、全省首批 A 类中职学校。一校两牌：阜阳职业技术学校 / 颍东技工学校。</p>
+      </div>
+      <div>
+        <h5>网站导航</h5>
+        <div class="ftr__links">
+          <a href="index.html">首页</a>
+          <a href="about.html">学校概况</a>
+          <a href="news.html">新闻动态</a>
+          <a href="majors.html">专业设置</a>
+          <a href="teachers.html">师资队伍</a>
+          <a href="campus.html">校园风采</a>
+          <a href="admission.html">招生就业</a>
+          <a href="contact.html">联系我们</a>
+        </div>
+      </div>
+      <div>
+        <h5>常用入口</h5>
+        <div class="ftr__links">
+          <a href="admission.html#guide">报名指南</a>
+          <a href="admission.html#coop">校企合作</a>
+          <a href="about.html#honor">荣誉资质</a>
+          <a href="campus.html#video">校园视频</a>
+          <a href="faq.html">常见问题</a>
+          <a href="downloads.html">资料下载</a>
+        </div>
+      </div>
+      <div>
+        <h5>联系我们</h5>
+        <div class="ftr__contact">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>阜阳市颍东区富强路与众兴路交汇处<br>（颍东经济开发区）</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <a class="ftr__tel" href="tel:0558-2315697">0558-2315697</a>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>微信公众号：阜阳职业技术学校</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <span>© <span data-year>2026</span> 阜阳职业技术学校 · 版权所有</span>
+      <span>数据来源：《阜阳职业技术学校中等职业教育质量年度报告（2024 年）》，统计周期 2023.9—2024.8</span>
+    </div>
+  </div>
+</footer>
+
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="图片查看">
+  <button class="lb__close" aria-label="关闭">✕</button>
+  <button class="lb__nav lb__prev" id="lbPrev" aria-label="上一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="lb__nav lb__next" id="lbNext" aria-label="下一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+  <div class="lb__stage">
+    <img class="lb__img" id="lbImgA" alt="">
+    <img class="lb__img is-out" id="lbImgB" alt="">
+    <div class="lb__cap" id="lbCap"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+  <span class="toast__t">已提交</span>
+</div>
+
+<button class="to-top" id="toTop" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<!-- 站内搜索 -->
+<div class="search" id="search" role="dialog" aria-modal="true" aria-label="站内搜索">
+  <div class="search__bd" data-search-close></div>
+  <div class="search__panel" role="document">
+    <div class="search__top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <input id="searchInput" type="search" placeholder="搜索页面、专业或资讯…" autocomplete="off" spellcheck="false" aria-label="输入关键词">
+      <button class="search__close" type="button" data-search-close aria-label="关闭搜索">✕</button>
+    </div>
+    <p class="search__hint">输入关键词即时检索 · <kbd>/</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+    <div class="search__res" id="searchRes" aria-live="polite"></div>
+    <div class="search__hot" id="searchHot">
+      <span>热门：</span>
+      <button type="button" data-search-q="招生">招生</button>
+      <button type="button" data-search-q="专业">专业</button>
+      <button type="button" data-search-q="升学">升学</button>
+      <button type="button" data-search-q="数控">数控</button>
+      <button type="button" data-search-q="学费">学费</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
 </html>

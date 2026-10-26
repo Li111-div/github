@@ -1,134 +1,436 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>阜阳职业技术学校 - 联系我们</title>
-		<link rel="stylesheet" href="css/style.css">
-	</head>
-	<body>
-		<!-- 导航栏 -->
-		<header class="header">
-			<div class="container">
-				<nav class="nav">
-					<div class="logo">
-						<img src="images/logo.png" alt="阜阳职业技术学校logo">
-					</div>
-					<div class="menu-toggle">☰</div>
-					<ul class="nav-menu">
-						<li><a href="index.html">首页</a></li>
-						<li><a href="about.html">学校简介</a></li>
-						<li><a href="majors.html">专业设置</a></li>
-						<li><a href="admission.html">招生就业</a></li>
-						<li><a href="campus.html">校园风采</a></li>
-						<li><a href="contact.html">联系我们</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6FAFE">
+<title>联系我们 · 阜阳职业技术学校</title>
+<meta name="description" content="阜阳职业技术学校地址：阜阳市颍东区富强路与众兴路交汇处，招生咨询电话 0558-2315697，乘 66 路公交直达。">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}.odo__d{height:auto !important;overflow:visible !important}</style></noscript>
+</head>
+<body>
 
-		<!-- 页面标题 -->
-		<section class="banner" style="height: 40vh; margin-top: 80px; background: #2c5282;">
-			<div class="banner-content">
-				<h1>联系我们</h1>
-				<p>欢迎咨询，我们将竭诚为您服务</p>
-			</div>
-		</section>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
-		<!-- 联系信息 -->
-		<section class="section">
-			<div class="container">
-				<div class="contact-content">
-					<div class="contact-info animate-left">
-						<h3>联系方式</h3>
-						<p>📞 招生办电话：0558-1234567</p>
-						<p>📱 王老师：13800138000</p>
-						<p>📱 李老师：13900139000</p>
-						<p>📧 邮箱：fyzjjsxx@163.com</p>
-						<p>🏠 学校地址：阜阳市颍州区XX路XX号</p>
-						<p>🚌 公交路线：乘坐12路、23路、35路到职业技术学校站下车</p>
-						<p>🕒 工作时间：周一至周五 8:00-17:00（节假日除外）</p>
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="index.html" aria-label="阜阳职业技术学校 首页">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <span class="nav__ind" aria-hidden="true"></span>
+      <a href="index.html">首页</a>
+      <a href="about.html">学校概况</a>
+      <a href="news.html">新闻动态</a>
+      <a href="majors.html">专业设置</a>
+      <a href="teachers.html">师资队伍</a>
+      <a href="campus.html">校园风采</a>
+      <a href="admission.html">招生就业</a>
+      <a href="contact.html" class="is-active" aria-current="page">联系我们</a>
+    </nav>
+    <div class="hdr__cta">
+      <button class="hdr__search" type="button" data-search-open aria-label="站内搜索" title="站内搜索（/）">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      </button>
+      <a class="hdr__tel" href="tel:0558-2315697">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>0558-2315697</span>
+      </a>
+      <a class="btn btn--primary" href="admission.html">招生咨询
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <button class="burger" id="burger" aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"><span></span></button>
+  </div>
+</header>
 
-						<h3 style="margin-top: 30px;" id="map">学校位置</h3>
-						<p>（此处可嵌入百度/高德地图iframe，示例如下）</p>
-						<div
-							style="width: 100%; height: 300px; background: #eee; margin-top: 15px; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
-							<p>地图嵌入区域（替换为实际地图代码）</p>
-						</div>
-					</div>
-					<div class="contact-img animate-right">
-						<img src="images/contact.jpg" alt="学校联系方式">
-					</div>
-				</div>
-			</div>
-		</section>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="移动端菜单">
+  <div class="drawer__top">
+    <a class="brand" href="index.html">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <button class="drawer__close" id="drawerClose" aria-label="关闭菜单">✕</button>
+  </div>
+  <button class="drawer__search" type="button" data-search-open>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <span>搜索页面、专业、资讯</span>
+    <kbd>/</kbd>
+  </button>
+  <nav class="drawer__nav" aria-label="移动端导航">
+    <a href="index.html"><i>01</i>首页</a>
+    <a href="about.html"><i>02</i>学校概况</a>
+    <a href="news.html"><i>03</i>新闻动态</a>
+    <a href="majors.html"><i>04</i>专业设置</a>
+    <a href="teachers.html"><i>05</i>师资队伍</a>
+    <a href="campus.html"><i>06</i>校园风采</a>
+    <a href="admission.html"><i>07</i>招生就业</a>
+    <a href="contact.html"><i>08</i>联系我们</a>
+    <a href="faq.html"><i>09</i>常见问题</a>
+    <a href="downloads.html"><i>10</i>资料下载</a>
+  </nav>
+  <div class="drawer__foot">
+    <div>招生咨询</div>
+    <strong>0558-2315697</strong>
+    <div>阜阳市颍东区富强路与众兴路交汇处</div>
+    <a class="btn btn--primary" href="admission.html">查看招生指南</a>
+  </div>
+</aside>
 
-		<!-- 留言咨询（可选） -->
-		<section class="section" style="background: #f8f9fa;">
-			<div class="container">
-				<h2 class="section-title animate">留言咨询</h2>
-				<div class="feature-card animate" style="max-width: 800px; margin: 0 auto;">
-					<form>
-						<div style="margin-bottom: 15px;">
-							<label style="display: block; margin-bottom: 5px; font-weight: 500;">姓名：</label>
-							<input type="text"
-								style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"
-								placeholder="请输入您的姓名">
-						</div>
-						<div style="margin-bottom: 15px;">
-							<label style="display: block; margin-bottom: 5px; font-weight: 500;">电话：</label>
-							<input type="tel"
-								style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;"
-								placeholder="请输入您的联系电话">
-						</div>
-						<div style="margin-bottom: 15px;">
-							<label style="display: block; margin-bottom: 5px; font-weight: 500;">咨询内容：</label>
-							<textarea
-								style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 150px;"
-								placeholder="请输入您想咨询的问题"></textarea>
-						</div>
-						<button type="submit" class="btn">提交留言</button>
-					</form>
-				</div>
-			</div>
-		</section>
+<main>
 
-		<!-- 页脚 -->
-		<footer class="footer">
-			<div class="container">
-				<div class="footer-content">
-					<div class="footer-col">
-						<h3>学校导航</h3>
-						<ul>
-							<li><a href="index.html">首页</a></li>
-							<li><a href="about.html">学校简介</a></li>
-							<li><a href="majors.html">专业设置</a></li>
-							<li><a href="admission.html">招生就业</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>联系我们</h3>
-						<ul>
-							<li><a href="contact.html">联系方式</a></li>
-							<li><a href="contact.html#map">学校地址</a></li>
-							<li><a href="admission.html#consult">招生咨询</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>关注我们</h3>
-						<ul>
-							<li>微信公众号：阜阳职业技术学校</li>
-							<li>抖音号：fyzjjsxx</li>
-							<li>官方QQ群：123456789</li>
-						</ul>
-					</div>
-				</div>
-				<div class="copyright">
-					<p>© 2026 阜阳职业技术学校 版权所有 | 皖ICP备XXXXXXX号</p>
-				</div>
-			</div>
-		</footer>
+  <section class="phead">
+    <div class="wrap phead__in">
+      <div class="phead__main">
+        <p class="crumb"><a href="index.html">首页</a><i>/</i>联系我们</p>
+        <h1 class="phead__h1">联系我们</h1>
+        <p class="phead__d">颍东区富强路与众兴路交汇处 · 乘 66 路公交直达</p>
+      </div>
+      <div class="phead__stats">
+        <div>
+          <div class="pstat__n">66<em>路</em></div>
+          <div class="pstat__l">公交直达校门</div>
+        </div>
+        <div>
+          <div class="pstat__n">150<em>米</em></div>
+          <div class="pstat__l">路口向南</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-		<script src="js/script.js"></script>
-	</body>
+  <!-- 联系卡 -->
+  <section class="sec sec--tight">
+    <div class="wrap">
+      <div class="grid g-4" style="gap:clamp(12px,1.6vw,20px)">
+        <div class="ccard reveal">
+          <div class="ccard__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h4>学校地址</h4>
+          <p>阜阳市颍东区<br>富强路与众兴路交汇处</p>
+          <small>颍东经济开发区 · 众兴路与富强路交叉口南 150 米</small>
+        </div>
+        <div class="ccard reveal" style="--d:.06s">
+          <div class="ccard__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <h4>招生咨询</h4>
+          <p><a href="tel:0558-2315697">0558-2315697</a></p>
+          <small>招生办 · 工作日上午 8:30—11:30，下午 14:30—17:30</small>
+        </div>
+        <div class="ccard reveal" style="--d:.12s">
+          <div class="ccard__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          </div>
+          <h4>微信公众号</h4>
+          <p>阜阳职业技术学校</p>
+          <small>招生简章、录取通知与校园动态均在此发布</small>
+        </div>
+        <div class="ccard reveal" style="--d:.18s">
+          <div class="ccard__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M3 11h18M7 17v3M17 17v3"/></svg>
+          </div>
+          <h4>公共交通</h4>
+          <p>乘 66 路公交直达</p>
+          <small>校门口设站；自驾可导航“阜阳职业技术学校”</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 地图 -->
+  <section class="sec sec--flush-top">
+    <div class="wrap">
+      <div class="map-card reveal">
+        <div class="map-card__head">
+          <h4>学校位置示意图</h4>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <span style="font-size:12px;color:var(--ink-3)">示意图，非精确比例</span>
+            <a class="btn btn--primary btn--sm" href="https://uri.amap.com/search?keyword=%E9%98%9C%E9%98%B3%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E6%A0%A1" target="_blank" rel="noopener">在高德地图中查看
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 900 520" role="img" aria-label="阜阳职业技术学校位置示意图：学校位于富强路与众兴路交汇处东北角，门口设 66 路公交站">
+          <rect width="900" height="520" fill="#E4EDF5"/>
+
+          <!-- 街区底块 -->
+          <g fill="#D8E4EE">
+            <rect x="40" y="50" width="210" height="120"/>
+            <rect x="40" y="196" width="210" height="104"/>
+            <rect x="40" y="386" width="210" height="100"/>
+            <rect x="356" y="392" width="250" height="94"/>
+            <rect x="700" y="50" width="170" height="150"/>
+            <rect x="700" y="386" width="170" height="100"/>
+          </g>
+          <!-- 绿地 -->
+          <g fill="#D8E7DE">
+            <rect x="700" y="226" width="170" height="74"/>
+            <circle cx="120" cy="300" r="30"/>
+            <circle cx="184" cy="332" r="16"/>
+            <circle cx="762" cy="424" r="34"/>
+            <circle cx="392" cy="424" r="15"/>
+          </g>
+
+          <!-- 道路 -->
+          <g fill="#FDFEFF">
+            <rect x="0" y="326" width="900" height="34"/>
+            <rect x="286" y="0" width="34" height="520"/>
+            <rect x="646" y="0" width="24" height="520"/>
+          </g>
+          <!-- 中心虚线 -->
+          <g stroke="#BED2E2" stroke-width="1" stroke-dasharray="10 9">
+            <path d="M0 343 H900"/>
+            <path d="M303 0 V520"/>
+            <path d="M658 0 V520"/>
+          </g>
+
+          <!-- 学校 -->
+          <rect x="336" y="76" width="294" height="228" fill="#2378B6"/>
+          <rect x="350" y="90" width="266" height="200" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="1"/>
+          <text x="483" y="182" text-anchor="middle" fill="#FFFFFF" font-size="20" font-family="Noto Serif SC, SimSun, serif" letter-spacing="2">阜阳职业技术学校</text>
+          <text x="483" y="208" text-anchor="middle" fill="rgba(255,255,255,.72)" font-size="9" font-family="PingFang SC, Microsoft YaHei, sans-serif" letter-spacing="1.2">FUYANG VOCATIONAL TECHNICAL SCHOOL</text>
+          <text x="483" y="240" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="10.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" letter-spacing="1.5">颍东技工学校 · 同址</text>
+
+          <!-- 定位 -->
+          <circle cx="483" cy="312" r="26" fill="rgba(35,120,182,.14)"/>
+          <circle cx="483" cy="312" r="9" fill="#2378B6" stroke="#FFFFFF" stroke-width="3"/>
+
+          <!-- 公交站 -->
+          <rect x="360" y="371" width="26" height="26" fill="#FFFFFF" stroke="#2378B6" stroke-width="1"/>
+          <text x="373" y="389" text-anchor="middle" fill="#2378B6" font-size="13" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="600">66</text>
+          <text x="394" y="389" fill="#6E8396" font-size="12" font-family="PingFang SC, Microsoft YaHei, sans-serif">公交站 · 校门口</text>
+
+          <!-- 路名（压白底以避让虚线） -->
+          <rect x="52" y="331" width="92" height="24" fill="#FDFEFF"/>
+          <text x="60" y="349" fill="#7B90A3" font-size="14" font-family="PingFang SC, Microsoft YaHei, sans-serif" letter-spacing="4">富 强 路</text>
+          <text x="166" y="349" fill="#A3B4C4" font-size="10" font-family="PingFang SC, Microsoft YaHei, sans-serif" letter-spacing="1">FUQIANG RD.</text>
+
+          <rect x="291" y="406" width="24" height="64" fill="#FDFEFF"/>
+          <g fill="#7B90A3" font-size="14" font-family="PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">
+            <text x="303" y="424">众</text>
+            <text x="303" y="443">兴</text>
+            <text x="303" y="462">路</text>
+          </g>
+
+          <rect x="646" y="114" width="24" height="82" fill="#FDFEFF"/>
+          <g fill="#7B90A3" font-size="12.5" font-family="PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">
+            <text x="658" y="132">众</text>
+            <text x="658" y="149">兴</text>
+            <text x="658" y="166">二</text>
+            <text x="658" y="183">路</text>
+          </g>
+
+          <!-- 区域标注 -->
+          <text x="700" y="322" fill="#A3B4C4" font-size="11" font-family="PingFang SC, Microsoft YaHei, sans-serif" letter-spacing="1">颍东经济开发区</text>
+
+          <!-- 指北针 -->
+          <g transform="translate(838 62)">
+            <circle r="20" fill="none" stroke="rgba(16,42,67,.18)"/>
+            <path d="M0 -13 L5 4 L0 1 L-5 4 Z" fill="#2378B6"/>
+            <text x="0" y="33" text-anchor="middle" fill="#7B90A3" font-size="10" font-family="PingFang SC, Microsoft YaHei, sans-serif">N</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="info3" style="margin-top:clamp(28px,3.6vw,40px)">
+        <div class="reveal">
+          <h4>公交</h4>
+          <p>乘 66 路公交车直达校门口，下车即到。从阜阳火车站方向可换乘至 66 路。</p>
+        </div>
+        <div class="reveal" style="--d:.06s">
+          <h4>自驾</h4>
+          <p>导航搜索“阜阳职业技术学校”，沿富强路行驶至与众兴路交叉口，校门位于路口东北侧。</p>
+        </div>
+        <div class="reveal" style="--d:.12s">
+          <h4>来访提示</h4>
+          <p>招生季校园开放，建议提前电话预约，由招生办安排参观实训室、宿舍与食堂。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 留言 -->
+  <section class="sec sec--tint">
+    <div class="wrap two-col" style="align-items:start">
+      <div>
+        <p class="eyebrow reveal">MESSAGE</p>
+        <h2 class="h2 reveal" style="margin-bottom:18px">留下联系方式<br>我们回电给你</h2>
+        <p class="reveal" style="color:var(--ink-2);margin-bottom:26px">填写下方信息，招生办会在工作时间内与你联系。急事请直接致电 0558-2315697。</p>
+        <div class="quote reveal">
+          本表单为演示用途，提交后不会发送到服务器。正式上线时需接入学校邮箱或表单服务。
+        </div>
+      </div>
+
+      <form class="form panel reveal" id="contactForm" style="--d:.08s" novalidate>
+        <div class="form__row">
+          <div class="field">
+            <label for="fname">姓名 <span class="req" aria-hidden="true">*</span></label>
+            <input id="fname" name="name" type="text" placeholder="学生或家长姓名" autocomplete="name" required>
+            <span class="field__err" aria-live="polite">请填写姓名</span>
+          </div>
+          <div class="field">
+            <label for="fphone">联系电话 <span class="req" aria-hidden="true">*</span></label>
+            <input id="fphone" name="phone" type="tel" inputmode="numeric" placeholder="手机号码" autocomplete="tel" required>
+            <span class="field__err" aria-live="polite">请填写 11 位手机号码</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="fmajor">意向专业</label>
+          <select id="fmajor" name="major">
+            <option value="">请选择（可不选）</option>
+            <option>计算机应用技术</option>
+            <option>网络信息安全</option>
+            <option>物联网技术应用</option>
+            <option>影像与影视技术</option>
+            <option>机电技术应用</option>
+            <option>智能化生产线安装与运维</option>
+            <option>机械加工技术</option>
+            <option>数控技术应用</option>
+            <option>汽车运用与维修</option>
+            <option>汽车美容与装潢</option>
+            <option>新能源汽车制造与检测</option>
+            <option>会计</option>
+            <option>电子商务</option>
+            <option>幼儿保育</option>
+            <option>食品加工工艺</option>
+            <option>服装设计与工艺</option>
+            <option>护理</option>
+            <option>导游服务</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fmsg">想了解的问题</label>
+          <textarea id="fmsg" name="message" placeholder="例如：分数线、住宿条件、报名时间、专业课程安排……"></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit">提交留言
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="form__note" id="formTip">提交即表示同意学校就招生事宜与你联系，信息不用于其他用途。</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <div class="ftr__top">
+      <div>
+        <div class="ftr__brand">
+          <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+          <strong>阜阳职业技术学校<small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small></strong>
+        </div>
+        <p class="ftr__desc">颍东区属公办中等职业学校，安徽省优秀中等职业学校、全省首批 A 类中职学校。一校两牌：阜阳职业技术学校 / 颍东技工学校。</p>
+      </div>
+      <div>
+        <h5>网站导航</h5>
+        <div class="ftr__links">
+          <a href="index.html">首页</a>
+          <a href="about.html">学校概况</a>
+          <a href="news.html">新闻动态</a>
+          <a href="majors.html">专业设置</a>
+          <a href="teachers.html">师资队伍</a>
+          <a href="campus.html">校园风采</a>
+          <a href="admission.html">招生就业</a>
+          <a href="contact.html">联系我们</a>
+        </div>
+      </div>
+      <div>
+        <h5>常用入口</h5>
+        <div class="ftr__links">
+          <a href="admission.html#guide">报名指南</a>
+          <a href="admission.html#coop">校企合作</a>
+          <a href="about.html#honor">荣誉资质</a>
+          <a href="campus.html#video">校园视频</a>
+          <a href="faq.html">常见问题</a>
+          <a href="downloads.html">资料下载</a>
+        </div>
+      </div>
+      <div>
+        <h5>联系我们</h5>
+        <div class="ftr__contact">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>阜阳市颍东区富强路与众兴路交汇处<br>（颍东经济开发区）</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <a class="ftr__tel" href="tel:0558-2315697">0558-2315697</a>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>微信公众号：阜阳职业技术学校</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <span>© <span data-year>2026</span> 阜阳职业技术学校 · 版权所有</span>
+      <span>数据来源：《阜阳职业技术学校中等职业教育质量年度报告（2024 年）》，统计周期 2023.9—2024.8</span>
+    </div>
+  </div>
+</footer>
+
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="图片查看">
+  <button class="lb__close" aria-label="关闭">✕</button>
+  <button class="lb__nav lb__prev" id="lbPrev" aria-label="上一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="lb__nav lb__next" id="lbNext" aria-label="下一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+  <div class="lb__stage">
+    <img class="lb__img" id="lbImgA" alt="">
+    <img class="lb__img is-out" id="lbImgB" alt="">
+    <div class="lb__cap" id="lbCap"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+  <span class="toast__t">已提交</span>
+</div>
+
+<button class="to-top" id="toTop" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<!-- 站内搜索 -->
+<div class="search" id="search" role="dialog" aria-modal="true" aria-label="站内搜索">
+  <div class="search__bd" data-search-close></div>
+  <div class="search__panel" role="document">
+    <div class="search__top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <input id="searchInput" type="search" placeholder="搜索页面、专业或资讯…" autocomplete="off" spellcheck="false" aria-label="输入关键词">
+      <button class="search__close" type="button" data-search-close aria-label="关闭搜索">✕</button>
+    </div>
+    <p class="search__hint">输入关键词即时检索 · <kbd>/</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+    <div class="search__res" id="searchRes" aria-live="polite"></div>
+    <div class="search__hot" id="searchHot">
+      <span>热门：</span>
+      <button type="button" data-search-q="招生">招生</button>
+      <button type="button" data-search-q="专业">专业</button>
+      <button type="button" data-search-q="升学">升学</button>
+      <button type="button" data-search-q="数控">数控</button>
+      <button type="button" data-search-q="学费">学费</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
 </html>

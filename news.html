@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6FAFE">
+<title>新闻动态 · 阜阳职业技术学校</title>
+<meta name="description" content="阜阳职业技术学校新闻动态：校园要闻、教学教研、德育天地、招生就业与通知公告。">
+<meta name="keywords" content="阜阳职业技术学校,校园新闻,通知公告,职业教育">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}.odo__d{height:auto !important;overflow:visible !important}</style></noscript>
+</head>
+<body>
+
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<!-- 页头 -->
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="index.html" aria-label="阜阳职业技术学校 首页">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <span class="nav__ind" aria-hidden="true"></span>
+      <a href="index.html">首页</a>
+      <a href="about.html">学校概况</a>
+      <a href="news.html" class="is-active" aria-current="page">新闻动态</a>
+      <a href="majors.html">专业设置</a>
+      <a href="teachers.html">师资队伍</a>
+      <a href="campus.html">校园风采</a>
+      <a href="admission.html">招生就业</a>
+      <a href="contact.html">联系我们</a>
+    </nav>
+    <div class="hdr__cta">
+      <button class="hdr__search" type="button" data-search-open aria-label="站内搜索" title="站内搜索（/）">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      </button>
+      <a class="hdr__tel" href="tel:0558-2315697">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>0558-2315697</span>
+      </a>
+      <a class="btn btn--primary" href="admission.html">招生咨询
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <button class="burger" id="burger" aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"><span></span></button>
+  </div>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="移动端菜单">
+  <div class="drawer__top">
+    <a class="brand" href="index.html">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <button class="drawer__close" id="drawerClose" aria-label="关闭菜单">✕</button>
+  </div>
+  <button class="drawer__search" type="button" data-search-open>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <span>搜索页面、专业、资讯</span>
+    <kbd>/</kbd>
+  </button>
+  <nav class="drawer__nav" aria-label="移动端导航">
+    <a href="index.html"><i>01</i>首页</a>
+    <a href="about.html"><i>02</i>学校概况</a>
+    <a href="news.html"><i>03</i>新闻动态</a>
+    <a href="majors.html"><i>04</i>专业设置</a>
+    <a href="teachers.html"><i>05</i>师资队伍</a>
+    <a href="campus.html"><i>06</i>校园风采</a>
+    <a href="admission.html"><i>07</i>招生就业</a>
+    <a href="contact.html"><i>08</i>联系我们</a>
+    <a href="faq.html"><i>09</i>常见问题</a>
+    <a href="downloads.html"><i>10</i>资料下载</a>
+  </nav>
+  <div class="drawer__foot">
+    <div>招生咨询</div>
+    <strong>0558-2315697</strong>
+    <div>阜阳市颍东区富强路与众兴路交汇处</div>
+    <a class="btn btn--primary" href="admission.html">查看招生指南</a>
+  </div>
+</aside>
+
+<main>
+<section class="phead">
+  <div class="wrap phead__in">
+    <div class="phead__main">
+      <div class="crumb reveal"><a href="index.html">首页</a><i>/</i><span>新闻动态</span></div>
+      <h1 class="phead__h1 reveal">新闻动态</h1>
+      <p class="phead__d reveal" style="--d:.06s">校园要闻、教学教研、德育天地、招生就业与通知公告。本页为网站演示用示例稿件，具体信息以学校官方发布为准。</p>
+    </div>
+    <div class="phead__stats reveal" style="--d:.1s">
+      <div><div class="pstat__n">9<em>条</em></div><div class="pstat__l">近期动态</div></div>
+<div><div class="pstat__n">5<em>个</em></div><div class="pstat__l">资讯栏目</div></div>
+<div><div class="pstat__n">2026<em>年</em></div><div class="pstat__l">当前学年</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tight">
+  <div class="wrap">
+    <div class="news-toolbar reveal">
+      <div class="filters" data-filter-group="#newsGrid" role="group" aria-label="新闻分类筛选">
+        <span class="filters__ind" aria-hidden="true"></span>
+        <button class="fbtn is-active" type="button" data-filter="all" aria-pressed="true">全部</button>
+        <button class="fbtn" type="button" data-filter="校园要闻" aria-pressed="false">校园要闻</button>
+        <button class="fbtn" type="button" data-filter="教学教研" aria-pressed="false">教学教研</button>
+        <button class="fbtn" type="button" data-filter="德育天地" aria-pressed="false">德育天地</button>
+        <button class="fbtn" type="button" data-filter="招生就业" aria-pressed="false">招生就业</button>
+        <button class="fbtn" type="button" data-filter="通知公告" aria-pressed="false">通知公告</button>
+      </div>
+      <div class="news-count" id="newsCount">共 <b>9</b> 条</div>
+    </div>
+
+    <div class="page-note reveal" style="margin-bottom:24px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+      <span>本页为网站演示用示例稿件，用于展示新闻列表与详情交互；具体信息请以学校官方发布为准。</span>
+    </div>
+
+    <div class="news-grid" id="newsGrid">
+      <a class="ncard fade-item reveal ncard--feat" href="news.html#n1" data-cat="校园要闻" data-news="n1">
+      <div class="ncard__media">
+        <img src="images/gate-aerial.jpg" alt="学校召开 2026 年春季学期开学工作会议" loading="lazy">
+        <span class="ncard__badge">校园要闻</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2026-02-24</span><span class="dot"></span><span>办公室</span></div>
+        <h3 class="ncard__t">学校召开 2026 年春季学期开学工作会议</h3>
+        <p class="ncard__p">会议围绕教学安排、学生管理、校园安全与服务保障作出部署，明确新学期各项重点工作。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n2" data-cat="招生就业" data-news="n2">
+      <div class="ncard__media">
+        <img src="images/visit.jpg" alt="2026 年招生咨询工作全面启动" loading="lazy">
+        <span class="ncard__badge">招生就业</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2026-02-20</span><span class="dot"></span><span>招生办</span></div>
+        <h3 class="ncard__t">2026 年招生咨询工作全面启动</h3>
+        <p class="ncard__p">学校开通招生咨询电话 0558-2315697，面向应往届初中毕业生提供专业选择、报名流程和资助政策咨询。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n3" data-cat="教学教研" data-news="n3">
+      <div class="ncard__media">
+        <img src="images/contest-hall.jpg" alt="学校在省职业院校技能大赛再获佳绩" loading="lazy">
+        <span class="ncard__badge">教学教研</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2026-01-16</span><span class="dot"></span><span>教务处</span></div>
+        <h3 class="ncard__t">学校在省职业院校技能大赛再获佳绩</h3>
+        <p class="ncard__p">参赛师生在多个赛项中取得优异成绩，展现了学校理实一体化教学和技能训练的阶段性成果。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n4" data-cat="教学教研" data-news="n4">
+      <div class="ncard__media">
+        <img src="images/cnc-shop.jpg" alt="装备制造专业部开展企业实践教学活动" loading="lazy">
+        <span class="ncard__badge">教学教研</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2026-01-08</span><span class="dot"></span><span>装备制造专业部</span></div>
+        <h3 class="ncard__t">装备制造专业部开展企业实践教学活动</h3>
+        <p class="ncard__p">师生走进合作企业，了解智能制造产线运行、岗位技能要求和企业质量管理流程。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n5" data-cat="德育天地" data-news="n5">
+      <div class="ncard__media">
+        <img src="images/show-1.jpg" alt="学校举行“技能成才 强国有我”主题教育活动" loading="lazy">
+        <span class="ncard__badge">德育天地</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2025-12-30</span><span class="dot"></span><span>政教处</span></div>
+        <h3 class="ncard__t">学校举行“技能成才 强国有我”主题教育活动</h3>
+        <p class="ncard__p">通过主题班会、技能展示和榜样分享，引导学生树立技能报国的理想信念。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n6" data-cat="通知公告" data-news="n6">
+      <div class="ncard__media">
+        <img src="images/plaza.jpg" alt="2026 年校园开放日暨职业教育活动周安排" loading="lazy">
+        <span class="ncard__badge">通知公告</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2025-12-22</span><span class="dot"></span><span>办公室</span></div>
+        <h3 class="ncard__t">2026 年校园开放日暨职业教育活动周安排</h3>
+        <p class="ncard__p">学校将开展校园开放、专业体验和招生咨询活动，具体时间与预约方式另行通知。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n7" data-cat="校园要闻" data-news="n7">
+      <div class="ncard__media">
+        <img src="images/building.jpg" alt="学校开展春季校园安全隐患排查" loading="lazy">
+        <span class="ncard__badge">校园要闻</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2025-12-15</span><span class="dot"></span><span>保卫科</span></div>
+        <h3 class="ncard__t">学校开展春季校园安全隐患排查</h3>
+        <p class="ncard__p">重点检查消防设施、实训室用电、食堂食品安全和学生宿舍，发现问题立即整改。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n8" data-cat="德育天地" data-news="n8">
+      <div class="ncard__media">
+        <img src="images/preschool-dance.jpg" alt="幼儿保育专业举办毕业汇报演出" loading="lazy">
+        <span class="ncard__badge">德育天地</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2025-12-08</span><span class="dot"></span><span>教育与体育专业部</span></div>
+        <h3 class="ncard__t">幼儿保育专业举办毕业汇报演出</h3>
+        <p class="ncard__p">学生通过舞蹈、声乐、手工和情景剧等形式，展示在校期间的专业学习成果。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+      <a class="ncard fade-item reveal" href="news.html#n9" data-cat="通知公告" data-news="n9">
+      <div class="ncard__media">
+        <img src="images/building.jpg" alt="关于 2026 年端午节放假安排的通知" loading="lazy">
+        <span class="ncard__badge">通知公告</span>
+      </div>
+      <div class="ncard__body">
+        <div class="ncard__meta"><span>2025-12-01</span><span class="dot"></span><span>办公室</span></div>
+        <h3 class="ncard__t">关于 2026 年端午节放假安排的通知</h3>
+        <p class="ncard__p">放假时间按国家法定节假日安排执行，各科室做好值班和安全保障工作。</p>
+        <span class="ncard__more">阅读全文 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+    </div>
+
+    <div class="news-empty" id="newsEmpty"><b>该栏目暂无内容</b>切换其他分类，或拨打 0558-2315697 咨询。</div>
+
+    <p class="note note--center">新闻内容持续更新中 · 投稿与信息核实请联系学校办公室</p>
+  </div>
+</section>
+
+<section class="sec sec--tint sec--tight">
+  <div class="wrap">
+    <div class="shead-row">
+      <div class="shead">
+        <p class="eyebrow reveal">MEDIA</p>
+        <h2 class="h2 reveal">想了解学校更多<em>真实影像</em></h2>
+      </div>
+      <a class="link-arrow reveal" href="campus.html">进入校园风采 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="grid g-3">
+      <a class="card-img hl reveal" href="campus.html">
+        <div class="card-img__media"><img src="images/aerial-panorama.jpg" alt="校园全景航拍" loading="lazy"><span class="card-img__no">01</span></div>
+        <div class="card-img__body"><span class="card-img__tag">校园风光</span><h3>300 亩校园航拍</h3><p>教学楼、实训楼、运动场、宿舍区与学生活动空间实拍。</p></div>
+      </a>
+      <a class="card-img hl reveal" style="--d:.08s" href="campus.html">
+        <div class="card-img__media"><img src="images/contest-hall.jpg" alt="技能大赛赛场" loading="lazy"><span class="card-img__no">02</span></div>
+        <div class="card-img__body"><span class="card-img__tag">技能大赛</span><h3>赛场内外</h3><p>从日常实训到省赛国赛，记录师生备赛与比赛现场。</p></div>
+      </a>
+      <a class="card-img hl reveal" style="--d:.16s" href="campus.html">
+        <div class="card-img__media"><img src="images/show-2.jpg" alt="校园文艺汇演" loading="lazy"><span class="card-img__no">03</span></div>
+        <div class="card-img__body"><span class="card-img__tag">校园生活</span><h3>社团与文艺汇演</h3><p>军训、运动会、文艺汇演和社团活动，构成完整的校园生活。</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 新闻详情弹窗 -->
+<div class="nmodal" id="newsModal" role="dialog" aria-modal="true" aria-labelledby="nmTitle">
+  <div class="nmodal__bd" data-news-close></div>
+  <div class="nmodal__panel" role="document">
+    <button class="nmodal__close" type="button" data-news-close aria-label="关闭文章">✕</button>
+    <div class="nmodal__media"><img id="nmImg" alt=""></div>
+    <div class="nmodal__head">
+      <div class="nmodal__meta"><span class="nmodal__tag" id="nmCat"></span><span id="nmDate"></span><span class="dot"></span><span>阜阳职业技术学校</span></div>
+      <h2 id="nmTitle"></h2>
+    </div>
+    <div class="nmodal__body" id="nmBody"></div>
+  </div>
+</div>
+<script type="application/json" id="newsData">{"n1":{"cat":"校园要闻","date":"2026-02-24","dept":"办公室","img":"images/gate-aerial.jpg","title":"学校召开 2026 年春季学期开学工作会议","lead":"会议围绕教学安排、学生管理、校园安全与服务保障作出部署，明确新学期各项重点工作。","body":["2 月 24 日，学校召开 2026 年春季学期开学工作会议，全体教职工参加。会议总结了寒假期间校园维护、实训设备检修和开学准备工作情况，并对新学期教育教学、学生管理、安全稳定和后勤服务作出安排。","会议指出，新学期要继续把课堂教学和实训教学放在首位，严格落实教学常规，做好开学第一课、教材发放和课表运行检查，确保教育教学秩序平稳有序。","会议要求，各专业部要结合本学期教学计划，统筹安排好实训课程和企业实践，管好用好实训室设备，把安全操作规范落实到每一堂课。","会议还就校园安全隐患排查、食品安全、宿舍管理和学生心理健康教育等工作进行了具体部署。会后，各科室、各专业部按照分工开展开学准备检查。"],"sign":"（示例稿件，具体信息以学校官方发布为准。）"},"n2":{"cat":"招生就业","date":"2026-02-20","dept":"招生办","img":"images/visit.jpg","title":"2026 年招生咨询工作全面启动","lead":"学校开通招生咨询电话 0558-2315697，面向应往届初中毕业生提供专业选择、报名流程和资助政策咨询。","body":["2026 年招生咨询工作已全面启动。学校招生办通过电话、现场咨询等方式，为考生和家长介绍专业设置、报名条件、资助政策和升学就业情况。","学校现开设 25 个专业，覆盖装备制造、电子与信息、交通运输、财经商贸、教育与体育等门类。公办中职免学费全覆盖，家庭经济困难学生可按规定申请国家助学金等资助。","招生咨询电话：0558-2315697。到校咨询请前往阜阳市颍东区富强路与众兴路交汇处，乘 66 路公交可直达校门口。"],"sign":"（示例稿件，具体招生计划、报名时间和录取办法以教育主管部门及学校正式发布为准。）"},"n3":{"cat":"教学教研","date":"2026-01-16","dept":"教务处","img":"images/contest-hall.jpg","title":"学校在省职业院校技能大赛再获佳绩","lead":"参赛师生在多个赛项中取得优异成绩，展现了学校理实一体化教学和技能训练的阶段性成果。","body":["近日，学校组织师生参加安徽省职业院校技能大赛相关赛项，参赛选手在比赛中沉着应战、规范操作，取得优异成绩。","备赛期间，各专业部按照赛项规程制定训练计划，指导教师带领选手开展模块化训练和模拟比赛，重点打磨操作规范、工艺质量和现场应变能力。","学校长期坚持“以赛促教、以赛促学、以赛促改”，把技能竞赛标准融入日常实训教学，推动课程内容与岗位要求对接。","具体获奖名单可在“资料下载”栏目查看省赛获奖名单文件。"],"sign":"（示例稿件，具体获奖信息以官方公布名单为准。）"},"n4":{"cat":"教学教研","date":"2026-01-08","dept":"装备制造专业部","img":"images/cnc-shop.jpg","title":"装备制造专业部开展企业实践教学活动","lead":"师生走进合作企业，了解智能制造产线运行、岗位技能要求和企业质量管理流程。","body":["为进一步深化产教融合，装备制造专业部组织师生赴合作企业开展实践教学活动，实地了解企业生产组织和技术应用情况。","在企业技术人员带领下，师生参观了数控加工、自动化生产线和质检等岗位，了解设备操作规范、工艺文件管理和安全生产要求。","双方围绕人才培养方案、实训课程设置和学生实习安排进行了交流，为后续开展订单式培养、教师企业实践和学生岗位实习打下基础。"],"sign":"（示例稿件，具体合作企业与活动安排以学校官方发布为准。）"},"n5":{"cat":"德育天地","date":"2025-12-30","dept":"政教处","img":"images/show-1.jpg","title":"学校举行“技能成才 强国有我”主题教育活动","lead":"通过主题班会、技能展示和榜样分享，引导学生树立技能报国的理想信念。","body":["学校举行“技能成才 强国有我”主题教育活动，通过主题班会、技能成果展示和优秀学生分享等形式，引导学生认识技能人才成长路径。","活动期间，各班级结合专业特点开展主题班会，组织学生观看技能大赛和优秀毕业生事迹材料，讨论“我能为家乡做什么”。","在技能展示环节，学生现场展示数控加工、机电装配、汽车维护、幼儿保育等专业成果，增强了学习专业的信心。"],"sign":"（示例稿件，具体活动信息以学校官方发布为准。）"},"n6":{"cat":"通知公告","date":"2025-12-22","dept":"办公室","img":"images/plaza.jpg","title":"2026 年校园开放日暨职业教育活动周安排","lead":"学校将开展校园开放、专业体验和招生咨询活动，具体时间与预约方式另行通知。","body":["为展示职业教育办学成果，学校计划开展校园开放日暨职业教育活动周活动，邀请初中学校师生、家长和社会各界走进校园。","活动拟设置校园参观、实训室体验、专业成果展示和招生咨询等环节，重点展示学校专业建设、实训条件和学生技能水平。","具体开放时间、预约方式和入校要求将另行通知，请关注学校官方发布。咨询电话：0558-2315697。"],"sign":"（示例稿件，活动安排以学校正式通知为准。）"},"n7":{"cat":"校园要闻","date":"2025-12-15","dept":"保卫科","img":"images/building.jpg","title":"学校开展春季校园安全隐患排查","lead":"重点检查消防设施、实训室用电、食堂食品安全和学生宿舍，发现问题立即整改。","body":["学校组织开展校园安全隐患排查，重点对消防设施、实训室用电、食堂食品安全和学生宿舍进行检查。","检查组逐一查看消防通道、灭火器材、配电设施和实训设备运行情况，对发现的问题建立台账，明确整改责任人和完成时限。","学校将常态化开展安全教育和应急演练，完善日常巡查制度，切实保障师生生命财产安全。"],"sign":"（示例稿件，具体工作信息以学校官方发布为准。）"},"n8":{"cat":"德育天地","date":"2025-12-08","dept":"教育与体育专业部","img":"images/preschool-dance.jpg","title":"幼儿保育专业举办毕业汇报演出","lead":"学生通过舞蹈、声乐、手工和情景剧等形式，展示在校期间的专业学习成果。","body":["幼儿保育专业举办毕业汇报演出，学生以舞蹈、声乐、手工展示和情景剧等形式汇报专业学习成果。","演出节目全部由师生共同编排，既展示了学生的专业技能，也体现了团队协作和活动组织能力。","专业部负责人表示，将继续加强校园合作，把幼儿园真实岗位要求融入课程教学，提升学生的实践能力。"],"sign":"（示例稿件，具体活动信息以学校官方发布为准。）"},"n9":{"cat":"通知公告","date":"2025-12-01","dept":"办公室","img":"images/building.jpg","title":"关于 2026 年端午节放假安排的通知","lead":"放假时间按国家法定节假日安排执行，各科室做好值班和安全保障工作。","body":["根据国家法定节假日安排，结合学校实际，现将 2026 年端午节放假有关事宜通知如下。","放假期间，各科室、各专业部要妥善安排好值班和安全保卫工作，遇有突发事件按规定及时报告并妥善处置。","请全体师生注意出行安全，合理安排假期学习生活，按时返校。具体调课安排以教务处通知为准。"],"sign":"（示例稿件，具体放假安排以学校正式通知为准。）"}}</script>
+</main>
+
+<!-- 页脚 -->
+<footer class="ftr">
+  <div class="ftr__in">
+    <div class="ftr__top">
+      <div>
+        <div class="ftr__brand">
+          <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+          <strong>阜阳职业技术学校<small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small></strong>
+        </div>
+        <p class="ftr__desc">颍东区属公办中等职业学校，安徽省优秀中等职业学校、全省首批 A 类中职学校。一校两牌：阜阳职业技术学校 / 颍东技工学校。</p>
+      </div>
+      <div>
+        <h5>网站导航</h5>
+        <div class="ftr__links">
+          <a href="index.html">首页</a>
+          <a href="about.html">学校概况</a>
+          <a href="news.html">新闻动态</a>
+          <a href="majors.html">专业设置</a>
+          <a href="teachers.html">师资队伍</a>
+          <a href="campus.html">校园风采</a>
+          <a href="admission.html">招生就业</a>
+          <a href="contact.html">联系我们</a>
+        </div>
+      </div>
+      <div>
+        <h5>常用入口</h5>
+        <div class="ftr__links">
+          <a href="admission.html#guide">报名指南</a>
+          <a href="admission.html#coop">校企合作</a>
+          <a href="about.html#honor">荣誉资质</a>
+          <a href="campus.html#video">校园视频</a>
+          <a href="faq.html">常见问题</a>
+          <a href="downloads.html">资料下载</a>
+        </div>
+      </div>
+      <div>
+        <h5>联系我们</h5>
+        <div class="ftr__contact">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>阜阳市颍东区富强路与众兴路交汇处<br>（颍东经济开发区）</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <a class="ftr__tel" href="tel:0558-2315697">0558-2315697</a>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>微信公众号：阜阳职业技术学校</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <span>© <span data-year>2026</span> 阜阳职业技术学校 · 版权所有</span>
+      <span>数据来源：《阜阳职业技术学校中等职业教育质量年度报告（2024 年）》，统计周期 2023.9—2024.8</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 灯箱 -->
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="图片查看">
+  <button class="lb__close" aria-label="关闭">✕</button>
+  <button class="lb__nav lb__prev" id="lbPrev" aria-label="上一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="lb__nav lb__next" id="lbNext" aria-label="下一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+  <div class="lb__stage">
+    <img class="lb__img" id="lbImgA" alt="">
+    <img class="lb__img is-out" id="lbImgB" alt="">
+    <div class="lb__cap" id="lbCap"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+  <span class="toast__t">已提交</span>
+</div>
+
+<button class="to-top" id="toTop" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<!-- 站内搜索 -->
+<div class="search" id="search" role="dialog" aria-modal="true" aria-label="站内搜索">
+  <div class="search__bd" data-search-close></div>
+  <div class="search__panel" role="document">
+    <div class="search__top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <input id="searchInput" type="search" placeholder="搜索页面、专业或资讯…" autocomplete="off" spellcheck="false" aria-label="输入关键词">
+      <button class="search__close" type="button" data-search-close aria-label="关闭搜索">✕</button>
+    </div>
+    <p class="search__hint">输入关键词即时检索 · <kbd>/</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+    <div class="search__res" id="searchRes" aria-live="polite"></div>
+    <div class="search__hot" id="searchHot">
+      <span>热门：</span>
+      <button type="button" data-search-q="招生">招生</button>
+      <button type="button" data-search-q="专业">专业</button>
+      <button type="button" data-search-q="升学">升学</button>
+      <button type="button" data-search-q="数控">数控</button>
+      <button type="button" data-search-q="学费">学费</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

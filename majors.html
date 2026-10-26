@@ -1,162 +1,475 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>阜阳职业技术学校 - 专业设置</title>
-		<link rel="stylesheet" href="css/style.css">
-	</head>
-	<body>
-		<!-- 导航栏 -->
-		<header class="header">
-			<div class="container">
-				<nav class="nav">
-					<div class="logo">
-						<img src="images/logo.png" alt="阜阳职业技术学校logo">
-					</div>
-					<div class="menu-toggle">☰</div>
-					<ul class="nav-menu">
-						<li><a href="index.html">首页</a></li>
-						<li><a href="about.html">学校简介</a></li>
-						<li><a href="majors.html">专业设置</a></li>
-						<li><a href="admission.html">招生就业</a></li>
-						<li><a href="campus.html">校园风采</a></li>
-						<li><a href="contact.html">联系我们</a></li>
-					</ul>
-				</nav>
-			</div>
-		</header>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#F6FAFE">
+<title>专业设置 · 阜阳职业技术学校</title>
+<meta name="description" content="阜阳职业技术学校开设 25 个专业，15 个品牌专业方向，覆盖装备制造、电子与信息、交通运输、财经商贸、教育与体育等门类。">
+<link rel="icon" href="images/favicon.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}.odo__d{height:auto !important;overflow:visible !important}</style></noscript>
+</head>
+<body>
 
-		<!-- 页面标题 -->
-		<section class="banner" style="height: 40vh; margin-top: 80px; background: #2c5282;">
-			<div class="banner-content">
-				<h1>专业设置</h1>
-				<p>选择适合你的专业，开启技能成才之路</p>
-			</div>
-		</section>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
-		<!-- 专业列表 -->
-		<section class="section">
-			<div class="container">
-				<h2 class="section-title animate">核心专业</h2>
-				<div class="majors-grid">
-					<!-- 计算机应用 -->
-					<div class="major-card animate-left">
-						<div class="major-img">
-							<img src="images/major1.jpg" alt="计算机应用专业">
-						</div>
-						<div class="major-info">
-							<h3>计算机应用</h3>
-							<p><strong>培养目标：</strong>培养具备计算机基础操作、办公自动化、网页制作、平面设计、数据库应用等技能的技术人才。</p>
-							<p><strong>核心课程：</strong>计算机基础、Photoshop、HTML/CSS、Java基础、办公自动化、数据库应用。</p>
-							<p><strong>就业方向：</strong>企业文员、网页设计员、平面设计师、计算机维护员、电商运营助理等。</p>
-						</div>
-					</div>
+<header class="hdr" id="hdr">
+  <div class="hdr__in">
+    <a class="brand" href="index.html" aria-label="阜阳职业技术学校 首页">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <span class="nav__ind" aria-hidden="true"></span>
+      <a href="index.html">首页</a>
+      <a href="about.html">学校概况</a>
+      <a href="news.html">新闻动态</a>
+      <a href="majors.html" class="is-active" aria-current="page">专业设置</a>
+      <a href="teachers.html">师资队伍</a>
+      <a href="campus.html">校园风采</a>
+      <a href="admission.html">招生就业</a>
+      <a href="contact.html">联系我们</a>
+    </nav>
+    <div class="hdr__cta">
+      <button class="hdr__search" type="button" data-search-open aria-label="站内搜索" title="站内搜索（/）">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      </button>
+      <a class="hdr__tel" href="tel:0558-2315697">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>0558-2315697</span>
+      </a>
+      <a class="btn btn--primary" href="admission.html">招生咨询
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <button class="burger" id="burger" aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"><span></span></button>
+  </div>
+</header>
 
-					<!-- 机电技术应用 -->
-					<div class="major-card animate">
-						<div class="major-img">
-							<img src="images/major2.jpg" alt="机电技术应用专业">
-						</div>
-						<div class="major-info">
-							<h3>机电技术应用</h3>
-							<p><strong>培养目标：</strong>培养具备机械制造、电气控制、设备安装与维修等技能的实用型技术人才。</p>
-							<p><strong>核心课程：</strong>机械基础、电工电子技术、液压与气动、PLC编程、数控加工、设备维修。</p>
-							<p><strong>就业方向：</strong>机械加工操作员、电气设备维修员、数控操作工、自动化设备维护员等。</p>
-						</div>
-					</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="移动端菜单">
+  <div class="drawer__top">
+    <a class="brand" href="index.html">
+      <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+      <span class="brand__text">
+        <strong>阜阳职业技术学校</strong>
+        <small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small>
+      </span>
+    </a>
+    <button class="drawer__close" id="drawerClose" aria-label="关闭菜单">✕</button>
+  </div>
+  <button class="drawer__search" type="button" data-search-open>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    <span>搜索页面、专业、资讯</span>
+    <kbd>/</kbd>
+  </button>
+  <nav class="drawer__nav" aria-label="移动端导航">
+    <a href="index.html"><i>01</i>首页</a>
+    <a href="about.html"><i>02</i>学校概况</a>
+    <a href="news.html"><i>03</i>新闻动态</a>
+    <a href="majors.html"><i>04</i>专业设置</a>
+    <a href="teachers.html"><i>05</i>师资队伍</a>
+    <a href="campus.html"><i>06</i>校园风采</a>
+    <a href="admission.html"><i>07</i>招生就业</a>
+    <a href="contact.html"><i>08</i>联系我们</a>
+    <a href="faq.html"><i>09</i>常见问题</a>
+    <a href="downloads.html"><i>10</i>资料下载</a>
+  </nav>
+  <div class="drawer__foot">
+    <div>招生咨询</div>
+    <strong>0558-2315697</strong>
+    <div>阜阳市颍东区富强路与众兴路交汇处</div>
+    <a class="btn btn--primary" href="admission.html">查看招生指南</a>
+  </div>
+</aside>
 
-					<!-- 幼儿保育 -->
-					<div class="major-card animate-right">
-						<div class="major-img">
-							<img src="images/major3.jpg" alt="幼儿保育专业">
-						</div>
-						<div class="major-info">
-							<h3>幼儿保育</h3>
-							<p><strong>培养目标：</strong>培养具备幼儿教育、保育护理、幼儿活动组织等能力的专业人才。</p>
-							<p><strong>核心课程：</strong>幼儿心理学、幼儿教育学、幼儿卫生保健、舞蹈、美术、钢琴、幼儿园活动设计。</p>
-							<p><strong>就业方向：</strong>幼儿园教师、早教机构辅导员、幼儿保育师、托育机构工作人员等。</p>
-						</div>
-					</div>
+<main>
 
-					<!-- 会计电算化 -->
-					<div class="major-card animate-left">
-						<div class="major-img">
-							<img src="images/major4.jpg" alt="会计电算化专业">
-						</div>
-						<div class="major-info">
-							<h3>会计电算化</h3>
-							<p><strong>培养目标：</strong>培养具备会计核算、财务管理、税务申报等技能的财会人才。</p>
-							<p><strong>核心课程：</strong>基础会计、财务会计、会计电算化、税法、财务管理、出纳实务。</p>
-							<p><strong>就业方向：</strong>企业出纳、会计助理、财务文员、税务申报员、统计员等。</p>
-						</div>
-					</div>
+  <section class="phead">
+    <div class="wrap phead__in">
+      <div class="phead__main">
+        <p class="crumb"><a href="index.html">首页</a><i>/</i>专业设置</p>
+        <h1 class="phead__h1">专业设置</h1>
+        <p class="phead__d">25 个专业，15 个品牌方向，每一个都对应着一类岗位</p>
+      </div>
+      <div class="phead__stats">
+        <div>
+          <div class="pstat__n">25<em>个</em></div>
+          <div class="pstat__l">开设专业</div>
+        </div>
+        <div>
+          <div class="pstat__n">15<em>个</em></div>
+          <div class="pstat__l">品牌专业方向</div>
+        </div>
+        <div>
+          <div class="pstat__n">784<em>人</em></div>
+          <div class="pstat__l">已获 1+X 证书</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-					<!-- 汽车运用与维修 -->
-					<div class="major-card animate">
-						<div class="major-img">
-							<img src="images/major5.jpg" alt="汽车运用与维修专业">
-						</div>
-						<div class="major-info">
-							<h3>汽车运用与维修</h3>
-							<p><strong>培养目标：</strong>培养具备汽车检测、维修、保养等技能的汽车技术服务人才。</p>
-							<p><strong>核心课程：</strong>汽车构造、汽车电器、汽车检测技术、汽车维修工艺、汽车美容。</p>
-							<p><strong>就业方向：</strong>汽车维修工、汽车检测员、汽车4S店服务顾问、汽车美容师等。</p>
-						</div>
-					</div>
+  <!-- 专业列表 -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="shead-row">
+        <div class="shead">
+          <p class="eyebrow reveal">MAJOR CATALOG</p>
+          <h2 class="h2 reveal">按门类浏览</h2>
+        </div>
+        <p class="reveal" style="font-size:13px;color:var(--ink-3);max-width:320px;margin:0">
+          标注“实景照片待补”的专业暂未采集到实训影像，其余图片均为校内实拍。
+        </p>
+      </div>
 
-					<!-- 电子商务 -->
-					<div class="major-card animate-right">
-						<div class="major-img">
-							<img src="images/major6.jpg" alt="电子商务专业">
-						</div>
-						<div class="major-info">
-							<h3>电子商务</h3>
-							<p><strong>培养目标：</strong>培养具备网店运营、直播带货、网络营销等技能的电商人才。</p>
-							<p><strong>核心课程：</strong>电子商务基础、网络营销、网店运营、直播电商、物流配送、客户服务。</p>
-							<p><strong>就业方向：</strong>网店运营专员、直播主播、电商客服、新媒体运营、物流专员等。</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+      <div class="filters-bar">
+        <div class="filters" data-filter-group="#majorGrid" role="group" aria-label="按专业门类筛选">
+          <span class="filters__ind" aria-hidden="true"></span>
+          <button class="fbtn is-active" type="button" data-filter="all">全部专业</button>
+          <button class="fbtn" type="button" data-filter="装备制造">装备制造</button>
+          <button class="fbtn" type="button" data-filter="电子与信息">电子与信息</button>
+          <button class="fbtn" type="button" data-filter="交通运输">交通运输</button>
+          <button class="fbtn" type="button" data-filter="财经商贸">财经商贸</button>
+          <button class="fbtn" type="button" data-filter="教育与体育">教育与体育</button>
+          <button class="fbtn" type="button" data-filter="食品药品">食品药品</button>
+          <button class="fbtn" type="button" data-filter="轻工纺织">轻工纺织</button>
+          <button class="fbtn" type="button" data-filter="医药卫生">医药卫生</button>
+          <button class="fbtn" type="button" data-filter="旅游服务">旅游服务</button>
+        </div>
+      </div>
 
-		<!-- 页脚 -->
-		<footer class="footer">
-			<div class="container">
-				<div class="footer-content">
-					<div class="footer-col">
-						<h3>学校导航</h3>
-						<ul>
-							<li><a href="index.html">首页</a></li>
-							<li><a href="about.html">学校简介</a></li>
-							<li><a href="majors.html">专业设置</a></li>
-							<li><a href="admission.html">招生就业</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>联系我们</h3>
-						<ul>
-							<li><a href="contact.html">联系方式</a></li>
-							<li><a href="contact.html#map">学校地址</a></li>
-							<li><a href="admission.html#consult">招生咨询</a></li>
-						</ul>
-					</div>
-					<div class="footer-col">
-						<h3>关注我们</h3>
-						<ul>
-							<li>微信公众号：阜阳职业技术学校</li>
-							<li>抖音号：fyzjjsxx</li>
-							<li>官方QQ群：123456789</li>
-						</ul>
-					</div>
-				</div>
-				<div class="copyright">
-					<p>© 2026 阜阳职业技术学校 版权所有 | 皖ICP备XXXXXXX号</p>
-				</div>
-			</div>
-		</footer>
+      <div class="major-grid" id="majorGrid">
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="电子与信息">
+          <div class="mcard__media"><img src="images/computer-repair.jpg" alt="计算机检测维修实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">电子与信息</span>
+            <div class="mcard__name">计算机应用技术</div>
+            <p class="mcard__desc">国家级专业教学资源库在建，1+X 证书试点方向，对接京东方、盈田智能。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="电子与信息">
+          <div class="mcard__media"><img src="images/network-security.jpg" alt="网络安防实训室" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">电子与信息</span>
+            <div class="mcard__name">网络信息安全</div>
+            <p class="mcard__desc">网络安防实训室支撑，面向系统运维、网络安全服务岗位。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="电子与信息">
+          <div class="mcard__media"><img src="images/smart-home.jpg" alt="智能家居赛场" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">电子与信息</span>
+            <div class="mcard__name">物联网技术应用</div>
+            <p class="mcard__desc">安徽省首批 1+X 智能家居证书试点；中国移动阜阳分公司产教融合基地。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="文化艺术">
+          <div class="mcard__media"><img src="images/tv-studio.jpg" alt="影视演播厅实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">文化艺术</span>
+            <div class="mcard__name">影像与影视技术</div>
+            <p class="mcard__desc">省级在线精品课程；1+X 考证通过率 100%；国赛短视频制作一等奖。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
 
-		<script src="js/script.js"></script>
-	</body>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="装备制造">
+          <div class="mcard__media"><img src="images/mechatronics.jpg" alt="机电一体化实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">装备制造</span>
+            <div class="mcard__name">机电技术应用</div>
+            <p class="mcard__desc">安徽省在建精品课程；海尔、美的、昊源化工实习实训基地。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="装备制造">
+          <div class="mcard__media"><img src="images/robot.jpg" alt="工业机器人实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">装备制造</span>
+            <div class="mcard__name">智能化生产线安装与运维</div>
+            <p class="mcard__desc">工业机器人实训室支撑，面向智能制造产线安装、调试与运维。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="装备制造">
+          <div class="mcard__media"><img src="images/lathe.jpg" alt="车床实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">装备制造</span>
+            <div class="mcard__name">机械加工技术</div>
+            <p class="mcard__desc">车、铣、装配全流程实训，省赛机电装配赛项主力专业。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="装备制造">
+          <div class="mcard__media"><img src="images/cnc-shop.jpg" alt="数控实训车间" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">装备制造</span>
+            <div class="mcard__name">数控技术应用</div>
+            <p class="mcard__desc">数控车、加工中心实训，对接精密制造与模具加工岗位。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="交通运输">
+          <div class="mcard__media"><img src="images/auto-shop.jpg" alt="汽车实训车间" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">交通运输</span>
+            <div class="mcard__name">汽车运用与维修</div>
+            <p class="mcard__desc">1+X 证书试点，考证通过率 100%；长安汽车、开乐汽车实训基地。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="交通运输">
+          <div class="mcard__media"><img src="images/auto-beauty.jpg" alt="汽车美容实训车间" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">交通运输</span>
+            <div class="mcard__name">汽车美容与装潢</div>
+            <p class="mcard__desc">汽车美容实训车间，面向汽车后市场美容、改装与门店服务。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="交通运输">
+          <div class="mcard__media"><img src="images/auto-body.jpg" alt="汽车车身修复实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">交通运输</span>
+            <div class="mcard__name">新能源汽车制造与检测</div>
+            <p class="mcard__desc">面向新能源整车装配、三电检测与售后技术服务岗位。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="财经商贸">
+          <div class="mcard__media"><img src="images/accounting-room.jpg" alt="会计电算化教室" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">财经商贸</span>
+            <div class="mcard__name">会计</div>
+            <p class="mcard__desc">电算化教室 + 企业真账实操；华道信息（苏州）实习实训基地。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="财经商贸">
+          <div class="mcard__media"><img src="images/accounting-class.jpg" alt="财经商贸专业课堂" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">财经商贸</span>
+            <div class="mcard__name">电子商务</div>
+            <p class="mcard__desc">面向店铺运营、直播电商与客户服务；承接本地电商平台宣传拍摄。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="教育与体育">
+          <div class="mcard__media"><img src="images/preschool-dance.jpg" alt="幼儿保育专业舞蹈房实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">教育与体育</span>
+            <div class="mcard__name">幼儿保育</div>
+            <p class="mcard__desc">舞蹈房、琴房、美工室配套齐全；振颍幼儿园实习实训基地。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="食品药品">
+          <div class="mcard__media"><img src="images/food.jpg" alt="食品加工实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">食品药品</span>
+            <div class="mcard__name">食品加工工艺</div>
+            <p class="mcard__desc">食品加工实训室；阜阳健诺生物科技实习实训基地。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard hl fade-item reveal" href="admission.html" data-cat="轻工纺织">
+          <div class="mcard__media"><img src="images/fashion.jpg" alt="服装设计缝纫实训" loading="lazy"></div>
+          <div class="mcard__body">
+            <span class="mcard__cat">轻工纺织</span>
+            <div class="mcard__name">服装设计与工艺</div>
+            <p class="mcard__desc">缝纫、制版、样衣制作实训，面向服装生产与设计岗位。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+
+        <a class="mcard mcard--text hl fade-item reveal" href="admission.html" data-cat="医药卫生">
+          <span class="mcard__mark" aria-hidden="true">护</span>
+          <span class="mcard__empty">实景照片待补</span>
+          <div class="mcard__body">
+            <span class="mcard__cat">医药卫生</span>
+            <div class="mcard__name">护理</div>
+            <p class="mcard__desc">中铁医院实习实训基地，面向临床护理、养老照护岗位。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+        <a class="mcard mcard--text hl fade-item reveal" href="admission.html" data-cat="旅游服务">
+          <span class="mcard__mark" aria-hidden="true">游</span>
+          <span class="mcard__empty">实景照片待补</span>
+          <div class="mcard__body">
+            <span class="mcard__cat">旅游服务</span>
+            <div class="mcard__name">导游服务</div>
+            <p class="mcard__desc">面向旅行社、景区讲解与研学服务岗位，注重口语与带团实训。</p>
+            <span class="mcard__more">查看招生信息</span>
+          </div>
+        </a>
+      </div>
+
+      <p class="note note--center reveal">
+        以上为部分专业展示，完整专业目录与当年招生计划以招生简章为准。
+      </p>
+    </div>
+  </section>
+
+  <!-- 课程与证书 -->
+  <section class="sec sec--tint">
+    <div class="wrap">
+      <div class="shead" style="margin-bottom:clamp(28px,3.6vw,40px)">
+        <p class="eyebrow reveal">CURRICULUM</p>
+        <h2 class="h2 reveal">课怎么上，证怎么拿</h2>
+        <p class="reveal" style="margin-top:14px">学校把课程、实训、证书三件事绑在一起：课上练的，就是考证考的；考证考的，就是企业要的。</p>
+      </div>
+      <div class="grid g-3">
+        <div class="panel reveal">
+          <div class="panel__h">国家级教学资源库</div>
+          <p class="panel__sub">计算机专业教学资源库为国家级在建项目，课程资源向全校开放共享。</p>
+          <span class="chip chip--accent">在建项目</span>
+        </div>
+        <div class="panel reveal" style="--d:.08s">
+          <div class="panel__h">省级精品课程</div>
+          <p class="panel__sub">影视专业为省级在线精品课程；机电专业为安徽省在建精品课程。</p>
+          <span class="chip chip--accent">在线开放</span>
+        </div>
+        <div class="panel reveal" style="--d:.16s">
+          <div class="panel__h">1+X 证书试点</div>
+          <p class="panel__sub">安徽省首批试点：汽修、影视、物联网智能家居。2020—2024 年已有 784 人获证，影视、汽修通过率 100%。</p>
+          <span class="chip chip--accent">首批试点</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="sec">
+    <div class="wrap center">
+      <p class="eyebrow reveal">NEXT STEP</p>
+      <h2 class="h2 reveal">选专业之前，先来学校看一眼</h2>
+      <p class="reveal" style="color:var(--ink-2);max-width:560px;margin:18px auto 32px">招生期间校园开放，可实地参观实训室、宿舍与食堂。乘 66 路公交直达校门口。</p>
+      <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a class="btn btn--primary" href="admission.html">查看招生指南
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn--ghost" href="contact.html">到校路线</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="ftr">
+  <div class="ftr__in">
+    <div class="ftr__top">
+      <div>
+        <div class="ftr__brand">
+          <span class="brand__mark" aria-hidden="true"><img src="images/logo.png" alt="" width="40" height="40" decoding="async"></span>
+          <strong>阜阳职业技术学校<small>FUYANG VOCATIONAL TECHNICAL SCHOOL</small></strong>
+        </div>
+        <p class="ftr__desc">颍东区属公办中等职业学校，安徽省优秀中等职业学校、全省首批 A 类中职学校。一校两牌：阜阳职业技术学校 / 颍东技工学校。</p>
+      </div>
+      <div>
+        <h5>网站导航</h5>
+        <div class="ftr__links">
+          <a href="index.html">首页</a>
+          <a href="about.html">学校概况</a>
+          <a href="news.html">新闻动态</a>
+          <a href="majors.html">专业设置</a>
+          <a href="teachers.html">师资队伍</a>
+          <a href="campus.html">校园风采</a>
+          <a href="admission.html">招生就业</a>
+          <a href="contact.html">联系我们</a>
+        </div>
+      </div>
+      <div>
+        <h5>常用入口</h5>
+        <div class="ftr__links">
+          <a href="admission.html#guide">报名指南</a>
+          <a href="admission.html#coop">校企合作</a>
+          <a href="about.html#honor">荣誉资质</a>
+          <a href="campus.html#video">校园视频</a>
+          <a href="faq.html">常见问题</a>
+          <a href="downloads.html">资料下载</a>
+        </div>
+      </div>
+      <div>
+        <h5>联系我们</h5>
+        <div class="ftr__contact">
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>阜阳市颍东区富强路与众兴路交汇处<br>（颍东经济开发区）</span>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <a class="ftr__tel" href="tel:0558-2315697">0558-2315697</a>
+          </div>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            <span>微信公众号：阜阳职业技术学校</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <span>© <span data-year>2026</span> 阜阳职业技术学校 · 版权所有</span>
+      <span>数据来源：《阜阳职业技术学校中等职业教育质量年度报告（2024 年）》，统计周期 2023.9—2024.8</span>
+    </div>
+  </div>
+</footer>
+
+<div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="图片查看">
+  <button class="lb__close" aria-label="关闭">✕</button>
+  <button class="lb__nav lb__prev" id="lbPrev" aria-label="上一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="lb__nav lb__next" id="lbNext" aria-label="下一张">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+  <div class="lb__stage">
+    <img class="lb__img" id="lbImgA" alt="">
+    <img class="lb__img is-out" id="lbImgB" alt="">
+    <div class="lb__cap" id="lbCap"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+  <span class="toast__t">已提交</span>
+</div>
+
+<button class="to-top" id="toTop" aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<!-- 站内搜索 -->
+<div class="search" id="search" role="dialog" aria-modal="true" aria-label="站内搜索">
+  <div class="search__bd" data-search-close></div>
+  <div class="search__panel" role="document">
+    <div class="search__top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <input id="searchInput" type="search" placeholder="搜索页面、专业或资讯…" autocomplete="off" spellcheck="false" aria-label="输入关键词">
+      <button class="search__close" type="button" data-search-close aria-label="关闭搜索">✕</button>
+    </div>
+    <p class="search__hint">输入关键词即时检索 · <kbd>/</kbd> 打开 · <kbd>Esc</kbd> 关闭</p>
+    <div class="search__res" id="searchRes" aria-live="polite"></div>
+    <div class="search__hot" id="searchHot">
+      <span>热门：</span>
+      <button type="button" data-search-q="招生">招生</button>
+      <button type="button" data-search-q="专业">专业</button>
+      <button type="button" data-search-q="升学">升学</button>
+      <button type="button" data-search-q="数控">数控</button>
+      <button type="button" data-search-q="学费">学费</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
 </html>

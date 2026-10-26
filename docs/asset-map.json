@@ -1,0 +1,394 @@
+[
+  {
+    "file": "images/gate-aerial.jpg",
+    "source": "07-gate-aerial.jpg",
+    "usage": "首页主视觉备选/概况",
+    "size": "1080x720",
+    "kb": 110
+  },
+  {
+    "file": "images/aerial-panorama.jpg",
+    "source": "05-aerial-panorama.jpg",
+    "usage": "概况全景",
+    "size": "1034x450",
+    "kb": 150
+  },
+  {
+    "file": "images/aerial-cluster.jpg",
+    "source": "04-aerial-cluster.jpg",
+    "usage": "概况",
+    "size": "1080x720",
+    "kb": 171
+  },
+  {
+    "file": "images/gate-front.jpg",
+    "source": "01-gate-front.jpg",
+    "usage": "概况/联系",
+    "size": "1080x720",
+    "kb": 124
+  },
+  {
+    "file": "images/gate-arch.jpg",
+    "source": "10-gate-arch.jpg",
+    "usage": "校园风光",
+    "size": "375x500",
+    "kb": 32
+  },
+  {
+    "file": "images/plaza.jpg",
+    "source": "47-campus-plaza.jpg",
+    "usage": "首页/概况",
+    "size": "1800x949",
+    "kb": 254
+  },
+  {
+    "file": "images/building.jpg",
+    "source": "14-teaching-building.jpg",
+    "usage": "概况",
+    "size": "640x426",
+    "kb": 52
+  },
+  {
+    "file": "images/field.jpg",
+    "source": "08-sports-field.jpg",
+    "usage": "校园生活",
+    "size": "800x370",
+    "kb": 32
+  },
+  {
+    "file": "images/road.jpg",
+    "source": "15-campus-road.jpg",
+    "usage": "校园风光",
+    "size": "430x229",
+    "kb": 22
+  },
+  {
+    "file": "images/lake.jpg",
+    "source": "48-campus-lake.jpg",
+    "usage": "校园风光",
+    "size": "640x420",
+    "kb": 67
+  },
+  {
+    "file": "images/water.jpg",
+    "source": "50-water-reflection.jpg",
+    "usage": "校园风光",
+    "size": "806x1700",
+    "kb": 160
+  },
+  {
+    "file": "images/dorm.jpg",
+    "source": "58-dormitory.jpg",
+    "usage": "办学条件",
+    "size": "640x427",
+    "kb": 37
+  },
+  {
+    "file": "images/culture-wall.jpg",
+    "source": "59-culture-wall.jpg",
+    "usage": "校园文化",
+    "size": "640x426",
+    "kb": 47
+  },
+  {
+    "file": "images/visit.jpg",
+    "source": "11-student-visit.jpg",
+    "usage": "招生",
+    "size": "552x368",
+    "kb": 44
+  },
+  {
+    "file": "images/mcu-contest.jpg",
+    "source": "16-mcu-contest.jpg",
+    "usage": "专业-计算机",
+    "size": "1400x933",
+    "kb": 156
+  },
+  {
+    "file": "images/lathe.jpg",
+    "source": "17-lathe-training.jpg",
+    "usage": "专业-机械",
+    "size": "840x560",
+    "kb": 76
+  },
+  {
+    "file": "images/robot.jpg",
+    "source": "18-industrial-robot.jpg",
+    "usage": "专业-智能制造",
+    "size": "640x426",
+    "kb": 56
+  },
+  {
+    "file": "images/mech-assembly.jpg",
+    "source": "19-mech-assembly.jpg",
+    "usage": "专业-机电",
+    "size": "1400x933",
+    "kb": 159
+  },
+  {
+    "file": "images/mechatronics.jpg",
+    "source": "20-mechatronics-training.jpg",
+    "usage": "专业-机电",
+    "size": "1080x606",
+    "kb": 100
+  },
+  {
+    "file": "images/auto-shop.jpg",
+    "source": "23-auto-shop.jpg",
+    "usage": "专业-汽修",
+    "size": "1351x901",
+    "kb": 178
+  },
+  {
+    "file": "images/accounting-contest.jpg",
+    "source": "25-accounting-contest.jpg",
+    "usage": "专业-会计",
+    "size": "600x450",
+    "kb": 51
+  },
+  {
+    "file": "images/cnc-shop.jpg",
+    "source": "26-cnc-shop.jpg",
+    "usage": "专业-数控",
+    "size": "1080x810",
+    "kb": 112
+  },
+  {
+    "file": "images/equipment-debug.jpg",
+    "source": "27-equipment-debug.jpg",
+    "usage": "实训",
+    "size": "1200x800",
+    "kb": 102
+  },
+  {
+    "file": "images/smart-home.jpg",
+    "source": "28-smart-home.jpg",
+    "usage": "专业-物联网",
+    "size": "1080x721",
+    "kb": 110
+  },
+  {
+    "file": "images/cnc-contest.jpg",
+    "source": "29-cnc-contest.jpg",
+    "usage": "专业-数控",
+    "size": "600x600",
+    "kb": 68
+  },
+  {
+    "file": "images/computer-repair.jpg",
+    "source": "30-computer-repair.jpg",
+    "usage": "专业-计算机",
+    "size": "1080x720",
+    "kb": 84
+  },
+  {
+    "file": "images/teacher-guide.jpg",
+    "source": "31-teacher-guide.jpg",
+    "usage": "师资",
+    "size": "1351x901",
+    "kb": 125
+  },
+  {
+    "file": "images/contest-hall.jpg",
+    "source": "32-contest-hall.jpg",
+    "usage": "技能大赛",
+    "size": "600x419",
+    "kb": 54
+  },
+  {
+    "file": "images/fashion.jpg",
+    "source": "33-fashion-training.jpg",
+    "usage": "专业-服装",
+    "size": "640x432",
+    "kb": 50
+  },
+  {
+    "file": "images/preschool-dance.jpg",
+    "source": "51-preschool-dance.jpg",
+    "usage": "专业-幼保",
+    "size": "300x200",
+    "kb": 12
+  },
+  {
+    "file": "images/network-security.jpg",
+    "source": "53-network-security.jpg",
+    "usage": "专业-网络安全",
+    "size": "300x200",
+    "kb": 16
+  },
+  {
+    "file": "images/auto-beauty.jpg",
+    "source": "54-auto-beauty.jpg",
+    "usage": "专业-汽修",
+    "size": "300x199",
+    "kb": 18
+  },
+  {
+    "file": "images/accounting-room.jpg",
+    "source": "55-accounting-room.jpg",
+    "usage": "专业-会计",
+    "size": "300x200",
+    "kb": 15
+  },
+  {
+    "file": "images/auto-body.jpg",
+    "source": "56-auto-body.jpg",
+    "usage": "专业-汽修",
+    "size": "300x200",
+    "kb": 12
+  },
+  {
+    "file": "images/accounting-class.jpg",
+    "source": "57-accounting-class.jpg",
+    "usage": "专业-会计",
+    "size": "300x200",
+    "kb": 19
+  },
+  {
+    "file": "images/cnc-center.jpg",
+    "source": "60-cnc-center.jpg",
+    "usage": "专业-数控",
+    "size": "640x426",
+    "kb": 34
+  },
+  {
+    "file": "images/dance-room.jpg",
+    "source": "61-dance-room.jpg",
+    "usage": "专业-幼保",
+    "size": "640x455",
+    "kb": 46
+  },
+  {
+    "file": "images/tv-studio.jpg",
+    "source": "62-tv-studio.jpg",
+    "usage": "专业-影视",
+    "size": "640x484",
+    "kb": 37
+  },
+  {
+    "file": "images/food.jpg",
+    "source": "63-food-training.jpg",
+    "usage": "专业-食品",
+    "size": "640x426",
+    "kb": 44
+  },
+  {
+    "file": "images/enterprise-visit.jpg",
+    "source": "64-enterprise-visit.jpg",
+    "usage": "校企合作",
+    "size": "640x427",
+    "kb": 35
+  },
+  {
+    "file": "images/soldering.jpg",
+    "source": "78-soldering.jpg",
+    "usage": "实训",
+    "size": "1002x719",
+    "kb": 79
+  },
+  {
+    "file": "images/act-1.jpg",
+    "source": "35-activity-1.jpg",
+    "usage": "学生活动",
+    "size": "1000x712",
+    "kb": 101
+  },
+  {
+    "file": "images/act-2.jpg",
+    "source": "36-military-2.jpg",
+    "usage": "学生活动",
+    "size": "1000x667",
+    "kb": 110
+  },
+  {
+    "file": "images/act-4.jpg",
+    "source": "38-military-4.jpg",
+    "usage": "学生活动",
+    "size": "1000x667",
+    "kb": 160
+  },
+  {
+    "file": "images/act-6.jpg",
+    "source": "40-activity-6.jpg",
+    "usage": "学生活动",
+    "size": "1000x669",
+    "kb": 100
+  },
+  {
+    "file": "images/act-7.jpg",
+    "source": "41-activity-7.jpg",
+    "usage": "学生活动",
+    "size": "1000x583",
+    "kb": 95
+  },
+  {
+    "file": "images/act-8.jpg",
+    "source": "42-military-8.jpg",
+    "usage": "学生活动",
+    "size": "1000x667",
+    "kb": 142
+  },
+  {
+    "file": "images/act-10.jpg",
+    "source": "44-activity-10.jpg",
+    "usage": "学生活动",
+    "size": "1000x666",
+    "kb": 84
+  },
+  {
+    "file": "images/act-11.jpg",
+    "source": "45-military-11.jpg",
+    "usage": "学生活动",
+    "size": "1000x667",
+    "kb": 106
+  },
+  {
+    "file": "images/act-12.jpg",
+    "source": "46-military-12.jpg",
+    "usage": "学生活动",
+    "size": "1000x667",
+    "kb": 130
+  },
+  {
+    "file": "images/show-1.jpg",
+    "source": "65-show-1.jpg",
+    "usage": "文艺汇演",
+    "size": "640x398",
+    "kb": 56
+  },
+  {
+    "file": "images/show-2.jpg",
+    "source": "66-show-2.jpg",
+    "usage": "文艺汇演",
+    "size": "640x426",
+    "kb": 39
+  },
+  {
+    "file": "images/award-training.jpg",
+    "source": "71-award-training.jpg",
+    "usage": "荣誉",
+    "size": "1080x502",
+    "kb": 81
+  },
+  {
+    "file": "images/award-cert.jpg",
+    "source": "73-award-cert.jpg",
+    "usage": "荣誉",
+    "size": "600x400",
+    "kb": 41
+  },
+  {
+    "file": "images/award-ceremony.jpg",
+    "source": "75-award-ceremony.jpg",
+    "usage": "荣誉",
+    "size": "700x350",
+    "kb": 51
+  },
+  {
+    "file": "images/award-video.jpg",
+    "source": "76-award-video.jpg",
+    "usage": "荣誉",
+    "size": "700x525",
+    "kb": 70
+  }
+]
