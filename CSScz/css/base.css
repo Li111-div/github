@@ -183,6 +183,10 @@ kbd {
   text-align: center;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .hidden {
   display: none !important;
 }
