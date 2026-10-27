@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Windows 10 / 11 常用快捷键速查</title>
+<script>
+  (function(){
+    try{
+      var t = localStorage.getItem('win-theme');
+      if(!t) t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    }catch(e){}
+  })();
+</script>
+<meta name="description" content="Windows 10 / 11 常用快捷键速查，共 186 条，按系统功能分类，支持搜索、深色模式与高频筛选，标注 Win11 新增/变化。">
+<style>
+:root{
+  --bg:#f5f7f9; --panel:#ffffff; --ink:#1b2430; --muted:#6a7686; --line:#e4e9ef;
+  --accent:#0067c0; --accent-soft:#e8f1fc; --accent-ink:#00559e;
+  --kbd-bg:#ffffff; --kbd-border:#d5dde6; --kbd-ink:#26313d; --kbd-shadow:#c9d3de;
+  --star:#f0a020; --radius:14px; --maxw:1120px;
+}
+html[data-theme="dark"]{
+  --bg:#0f1419; --panel:#161c23; --ink:#e6edf3; --muted:#93a1b1; --line:#242d38;
+  --accent:#4cc2ff; --accent-soft:#0f2740; --accent-ink:#8fd3ff;
+  --kbd-bg:#1c242e; --kbd-border:#33404e; --kbd-ink:#e6edf3; --kbd-shadow:#0b0f14;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{display:grid;grid-template-columns:236px minmax(0,1fr);gap:0;max-width:1600px;margin:0 auto}
+
+/* ---------- sidebar ---------- */
+.side{position:sticky;top:0;height:100vh;overflow:auto;padding:22px 14px 30px;
+  border-right:1px solid var(--line);background:var(--panel)}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 16px}
+.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#2b88d8,#0067c0);
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;letter-spacing:-.5px;
+  box-shadow:0 4px 12px rgba(0,103,192,.35)}
+.brand b{display:block;font-size:14px;line-height:1.2}
+.brand small{color:var(--muted);font-size:11.5px}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;
+  color:var(--muted);font-size:13px;transition:.15s}
+.nav a:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.nav a.active{background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
+.nav a span{font-size:11px;opacity:.7;font-variant-numeric:tabular-nums}
+.side-foot{margin-top:18px;padding:12px 10px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px;line-height:1.6}
+
+/* ---------- main ---------- */
+main{padding:0 34px 70px;min-width:0}
+.hero{padding:38px 0 8px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.badge{font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);
+  border:1px solid rgba(0,103,192,.18);font-weight:600}
+.badge.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+h1{margin:0 0 10px;font-size:31px;letter-spacing:-.6px;line-height:1.25}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{margin:0;color:var(--muted);max-width:70ch;font-size:14px}
+
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;min-width:112px}
+.stat b{display:block;font-size:21px;line-height:1.2;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:11.5px}
+
+/* ---------- logic ---------- */
+.block{margin-top:40px}
+.block>h2{font-size:19px;margin:0 0 6px;letter-spacing:-.3px}
+.block>p.sub{margin:0 0 16px;color:var(--muted);font-size:13px}
+.logic{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.card h3{margin:0 0 6px;font-size:13.5px;display:flex;align-items:center;gap:7px}
+.card h3 i{width:20px;height:20px;border-radius:6px;background:var(--accent-soft);color:var(--accent-ink);
+  display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:700}
+.card p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.6}
+.card p kbd{margin:1px 2px}
+
+/* ---------- cheat ---------- */
+.cheat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px}
+.cheat{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:10px 12px;
+  display:flex;flex-direction:column;gap:6px;transition:.15s}
+.cheat:hover{border-color:var(--accent);box-shadow:0 4px 14px rgba(0,103,192,.10)}
+.cheat-desc{font-size:12.5px;color:var(--muted);line-height:1.35}
+.cheat-keys{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+
+kbd{display:inline-block;padding:2px 7px;border-radius:6px;background:var(--kbd-bg);
+  border:1px solid var(--kbd-border);border-bottom-width:2px;box-shadow:0 1px 0 var(--kbd-shadow);
+  font-family:ui-monospace,SFMono-Regular,"SF Mono",Consolas,"Liberation Mono",monospace;
+  font-size:11.5px;color:var(--kbd-ink);line-height:1.5;white-space:nowrap}
+.keys .combo{display:inline-flex;align-items:center;gap:3px}
+.keys{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.keys .plus{color:var(--muted);font-size:10px}
+.keys .or{color:var(--muted);font-size:11px;margin:0 2px}
+
+/* ---------- toolbar ---------- */
+.toolbar{position:sticky;top:0;z-index:20;background:var(--bg);
+  padding:12px 0;margin:0 -34px;padding-left:34px;padding-right:34px;
+  border-bottom:1px solid transparent;transition:.2s}
+.toolbar.stuck{border-bottom-color:var(--line)}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search{position:relative;flex:1;min-width:220px;max-width:480px}
+.search input{width:100%;padding:10px 36px 10px 36px;border-radius:10px;border:1px solid var(--line);
+  background:var(--panel);color:var(--ink);font-size:13.5px;outline:none;transition:.15s;font-family:inherit}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search .ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px}
+.search .clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;
+  color:var(--muted);cursor:pointer;font-size:15px;display:none;padding:2px 5px;border-radius:6px}
+.search .clear:hover{background:var(--accent-soft);color:var(--accent-ink)}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:9px;
+  padding:8px 12px;font-size:12.5px;cursor:pointer;font-family:inherit;transition:.15s;white-space:nowrap}
+.btn:hover,.btn.on{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+.hint{margin:8px 0 0;font-size:11.5px;color:var(--muted)}
+.hint kbd{font-size:10.5px;padding:1px 5px}
+.hidden{display:none !important}
+
+/* ---------- category ---------- */
+.cat{margin-top:30px;scroll-margin-top:86px}
+.cat h2{display:flex;align-items:center;gap:9px;font-size:14px;margin:0 0 8px;
+  padding-bottom:8px;border-bottom:1px solid var(--line);font-weight:650;letter-spacing:.2px}
+.cat h2 .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.cat h2 .count{margin-left:auto;font-size:11px;color:var(--muted);font-weight:500;font-variant-numeric:tabular-nums}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto 190px;align-items:center;gap:12px;
+  padding:7px 10px;border-radius:9px;transition:background .12s}
+.row:hover{background:var(--panel)}
+.row .desc{font-size:13.5px;display:flex;align-items:center;gap:7px;min-width:0}
+.row .star{color:var(--star);font-size:10px}
+.row .keys{justify-self:end}
+.row .cmd{font-family:ui-monospace,Consolas,monospace;font-size:10px;color:var(--muted);
+  background:transparent;border:1px dashed transparent;border-radius:6px;padding:2px 6px;
+  cursor:pointer;opacity:.55;transition:.15s;white-space:nowrap;justify-self:end;
+  max-width:190px;overflow:hidden;text-overflow:ellipsis}
+.row:hover .cmd{border-color:var(--line);opacity:.95}
+.row .cmd:hover{border-color:var(--accent);color:var(--accent-ink);background:var(--accent-soft)}
+mark{background:rgba(240,180,30,.28);color:inherit;border-radius:3px;padding:0 1px}
+
+/* ---------- tables ---------- */
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--panel);
+  border:1px solid var(--line);border-radius:var(--radius)}
+.tbl{width:100%;border-collapse:collapse;background:var(--panel);font-size:13px;min-width:440px}
+.tbl th{text-align:left;font-weight:650;font-size:12px;color:var(--muted);background:var(--bg);
+  padding:10px 14px;border-bottom:1px solid var(--line)}
+.tbl td{padding:9px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td:first-child{white-space:nowrap;color:var(--muted)}
+
+details{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:0 16px}
+details summary{cursor:pointer;padding:13px 0;font-size:13.5px;font-weight:600;list-style:none;display:flex;gap:8px;align-items:center}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸";color:var(--muted);font-size:11px;transition:.2s}
+details[open] summary::before{transform:rotate(90deg)}
+.nk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;padding:4px 0 18px}
+.nk-group h4{margin:0 0 5px;font-size:12px;color:var(--muted);font-weight:600}
+.nk-group ul{margin:0;padding-left:15px}
+.nk-group li{font-size:12.5px;margin:2px 0;color:var(--ink)}
+
+/* ---------- footer ---------- */
+footer{margin-top:54px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);
+  padding:9px 16px;border-radius:10px;font-size:12.5px;opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.empty{display:none;padding:40px 0;color:var(--muted);text-align:center;font-size:13.5px}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr)}
+  .tbl{min-width:0}
+  .tbl th,.tbl td{padding:8px 10px}
+  .tools{gap:8px}
+  .toolbar .search{flex:1 1 100%;max-width:none}
+  .stats{gap:8px}
+  .stat{flex:1 1 42%;min-width:0;padding:9px 12px}
+  .stat b{font-size:19px}
+  .hero{padding:26px 0 4px}
+  h1{font-size:23px}
+  .lede{font-size:13.5px}
+  .side{display:none}
+  main{padding:0 16px 60px}
+  .toolbar{margin:0 -16px;padding-left:16px;padding-right:16px}
+  h1{font-size:24px}
+  .row{grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .row .cmd{display:none}
+  .row .keys{justify-self:end}
+}
+@media print{
+  .side,.toolbar,.toast,.row .cmd{display:none!important}
+  .wrap{display:block}
+  main{padding:0}
+  .row .cmd{display:none}
+  body{background:#fff}
+}
+
+/* ---------- Windows 版补充 ---------- */
+.row{grid-template-columns:minmax(0,1fr) auto}
+.row .desc{flex-wrap:wrap;gap:6px}
+.tag{font-size:10px;font-weight:700;letter-spacing:.2px;padding:1px 7px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent-ink);border:1px solid rgba(0,103,192,.18);
+  white-space:nowrap;flex:none}
+html[data-theme="dark"] .tag{border-color:transparent}
+.diff-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:10px}
+.diff{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+.diff h4{margin:0 0 6px;font-size:13px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.diff h4 kbd{font-size:10.5px}
+.diff p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <aside class="side">
+    <div class="brand">
+      <div class="logo">⊞</div>
+      <div><b>快捷键速查</b><small>Windows 10 / 11</small></div>
+    </div>
+    <nav class="nav" id="nav">
+<a href="#cat-0" data-target="cat-0">开始菜单 · 搜索 · 任务栏<span>21</span></a><a href="#cat-1" data-target="cat-1">窗口与桌面<span>24</span></a><a href="#cat-2" data-target="cat-2">文件资源管理器<span>33</span></a><a href="#cat-3" data-target="cat-3">虚拟桌面与任务视图<span>5</span></a><a href="#cat-4" data-target="cat-4">截图 · 录屏 · 游戏栏<span>10</span></a><a href="#cat-5" data-target="cat-5">显示 · 声音 · 投影<span>8</span></a><a href="#cat-6" data-target="cat-6">辅助功能<span>13</span></a><a href="#cat-7" data-target="cat-7">输入法 · 表情 · 剪贴板<span>9</span></a><a href="#cat-8" data-target="cat-8">通用文本编辑（几乎所有应用）<span>21</span></a><a href="#cat-9" data-target="cat-9">终端与命令行<span>15</span></a><a href="#cat-10" data-target="cat-10">系统与安全<span>5</span></a><a href="#cat-11" data-target="cat-11">浏览器与通用应用（通用习惯，非系统键）<span>14</span></a><a href="#cat-12" data-target="cat-12">对话框 · 菜单 · 表单<span>8</span></a>
+    </nav>
+    <div class="side-foot">
+      共 186 条 · 13 个分类<br>
+      <span style="opacity:.75">参考 Microsoft 官方文档整理</span>
+    </div>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div class="badges">
+        <span class="badge">Windows 10 / 11</span>
+        <span class="badge ghost">共 186 条</span>
+        <span class="badge ghost">★ 高频 25 条</span>
+      </div>
+      <h1>Windows <em>10 / 11</em> 常用快捷键速查</h1>
+      <p class="lede">按「系统功能」分类整理的系统级快捷键，覆盖开始菜单、窗口贴靠、资源管理器、虚拟桌面、截图录屏、输入法与终端。Win11 新增或行为有变化的条目都标了「Win11」，笔记本请先确认 Fn Lock。</p>
+      <div class="stats">
+        <div class="stat"><b>186</b><small>快捷键条目</small></div>
+        <div class="stat"><b>13</b><small>分类</small></div>
+        <div class="stat"><b>22</b><small>Win11 新增/变化</small></div>
+        <div class="stat"><b>25</b><small>★ 高频</small></div>
+      </div>
+    </div>
+
+    <div class="toolbar" id="toolbar">
+      <div class="tools">
+        <div class="search">
+          <span class="ico">⌕</span>
+          <input id="q" type="search" placeholder="搜索功能或快捷键，如「截图」「Win+Shift+S」「虚拟桌面」" autocomplete="off" spellcheck="false">
+          <button class="clear" id="clear" title="清空">×</button>
+        </div>
+        <button class="btn" id="themeBtn" title="切换深浅色">◐ 深色</button>
+        <button class="btn" id="starBtn" title="只看高频快捷键">★ 只看高频</button>
+      </div>
+      <p class="hint">按 <kbd>/</kbd> 快速聚焦搜索框，<kbd>Esc</kbd> 清空；标 <span class="tag">Win11</span> 的条目在 Windows 11 上才可用或有行为变化。</p>
+    </div>
+
+    <div class="block" id="logic">
+      <h2>先记住 6 条规律</h2>
+      <p class="sub">快捷键不是靠死记，记住下面几条规律，大部分组合键都能推出来。</p>
+      <div class="logic"><div class="card"><h3><i>1</i>Win 键是系统总开关</h3><p>单按开「开始」；<kbd>Win+S</kbd> 搜索、<kbd>Win+E</kbd> 资源管理器、<kbd>Win+I</kbd> 设置、<kbd>Win+X</kbd> 快速菜单；<kbd>Win+方向</kbd> 贴靠；<kbd>Win+数字</kbd> 打开任务栏第 N 个应用。</p></div><div class="card"><h3><i>2</i>Ctrl 管文档内，Alt 管窗口与菜单</h3><p><kbd>Ctrl+C/V/Z/S</kbd> 在应用内部生效；<kbd>Alt+Tab</kbd> 切窗口、<kbd>Alt+F4</kbd> 关窗口、<kbd>Alt+Space</kbd> 开窗口菜单；对话框里 <kbd>Alt+字母</kbd> 直接触发带下划线的按钮。</p></div><div class="card"><h3><i>3</i>Shift 表示反向、扩展、加强</h3><p><kbd>Alt+Shift+Tab</kbd> 反向切窗口；<kbd>Shift+Delete</kbd> 永久删除；<kbd>Shift+方向键</kbd> 选择；<kbd>Win+Shift+S</kbd> 截区域；<kbd>Win+Shift+←/→</kbd> 把窗口扔到另一台显示器。</p></div><div class="card"><h3><i>4</i>Win+方向键是贴靠，两两组合成四分屏</h3><p><kbd>Win+←</kbd> 再 <kbd>Win+↑</kbd> = 左上角；<kbd>Win+Alt+↑/↓</kbd>（Win11）直接贴上半屏/下半屏；<kbd>Win+Z</kbd> 打开贴靠布局，鼠标悬停最大化按钮也能选。</p></div><div class="card"><h3><i>5</i>数字键对应任务栏位置</h3><p><kbd>Win+1…9</kbd> 打开/切换；<kbd>Shift</kbd> 开新实例；<kbd>Ctrl</kbd> 切到该应用最近窗口；<kbd>Ctrl+Shift</kbd> 以管理员启动；<kbd>Win+Alt</kbd> 打开跳转列表。</p></div><div class="card"><h3><i>6</i>Win+Ctrl 与虚拟桌面，Win+Alt 与显示/声音</h3><p><kbd>Win+Ctrl+D</kbd> 新建桌面、<kbd>Win+Ctrl+←/→</kbd> 切换、<kbd>Win+Ctrl+F4</kbd> 关闭；<kbd>Win+Alt+B</kbd> 开关 HDR、<kbd>Win+Alt+K</kbd> 静音麦克风、<kbd>Win+Alt+D</kbd> 隐藏桌面日期时间。</p></div></div>
+
+      <h2 style="margin-top:36px">Windows 11 与 Windows 10 的差异</h2>
+      <p class="sub">同一个键在 Win10 / Win11 上含义不同，升级后最容易按错的都在这。</p>
+      <div class="diff-grid"><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Z</kbd></span></span>贴靠布局</h4><p>Win10 没有；Win11 悬停最大化按钮或按 Win+Z 弹出贴靠布局，可一次选四分屏。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>A</kbd></span></span>快速设置</h4><p>Win10 是操作中心；Win11 变成音量、亮度、Wi-Fi、蓝牙的快速开关面板。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>N</kbd></span></span>通知中心</h4><p>Win11 新增，通知与日历合并显示；Win10 只有操作中心。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>W</kbd></span></span>小组件</h4><p>Win10 是墨迹工作区；Win11 变成小组件面板（天气、新闻等）。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>C</kbd></span></span>聊天 / Copilot</h4><p>Win10 是 Cortana；Win11 随版本变化：聊天、Copilot 或仅打开设置。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↑</kbd></span><span class="or">/</span><span class="combo"><kbd>↓</kbd></span></span>贴靠半屏</h4><p>Win11 新增，直接把窗口贴到上半屏或下半屏，省去两次方向键。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>R</kbd></span></span>区域录屏</h4><p>Win11 新增，框选区域录屏并自动存成 MP4（视频\屏幕录制）。</p></div><div class="diff"><h4><span><span class="combo"><kbd>PrtScn</kbd></span></span>默认区域截图</h4><p>Win10 复制全屏到剪贴板；Win11 默认打开区域截图，可在辅助功能里关掉。</p></div><div class="diff"><h4><span><span class="combo"><kbd>资源管理器</kbd></span></span>标签页</h4><p>Win11 22H2 起资源管理器支持标签页：Ctrl+T 新建、Ctrl+W 关闭、Ctrl+1…9 切换。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Tab</kbd></span></span>任务视图</h4><p>两代都有，但 Win11 支持把窗口拖到别的虚拟桌面、合并成贴靠组。</p></div><div class="diff"><h4><span><span class="combo"><kbd>开始菜单</kbd></span></span>贴靠布局入口</h4><p>Win10 只能把窗口拖到屏幕边缘；Win11 悬停最大化按钮即可选布局。</p></div><div class="diff"><h4><span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>D</kbd></span><span class="or">/</span><span class="combo"><kbd>K</kbd></span><span class="or">/</span><span class="combo"><kbd>V</kbd></span></span>桌面与声音</h4><p>Win11 新增：隐藏桌面日期时间 / 全局麦克风静音 / 声音输出快速设置。</p></div></div>
+    </div>
+
+    <div class="block" id="cheat">
+      <h2>最常用（先背这些）</h2>
+      <p class="sub">标 ★ 的也在分类里出现，建议先把这 25 个练成肌肉记忆。</p>
+      <div class="cheat-grid"><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd></span></div><div class="cheat-desc">打开或关闭「开始」菜单</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>S</kbd></span></div><div class="cheat-desc">打开搜索</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>R</kbd></span></div><div class="cheat-desc">打开「运行」对话框</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>X</kbd></span></div><div class="cheat-desc">打开快速链接菜单（等于右键「开始」按钮）</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div><div class="cheat-desc">打开/切换到任务栏第 N 个位置的应用</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>D</kbd></span></div><div class="cheat-desc">显示 / 隐藏桌面</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>↑</kbd></span></div><div class="cheat-desc">最大化当前窗口</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>←</kbd></span></div><div class="cheat-desc">贴靠到屏幕左半边</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>→</kbd></span></div><div class="cheat-desc">贴靠到屏幕右半边</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Z</kbd></span></div><div class="cheat-desc">打开贴靠布局 Snap Layouts</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div><div class="cheat-desc">切换窗口</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>E</kbd></span></div><div class="cheat-desc">打开文件资源管理器</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Delete</kbd></span></div><div class="cheat-desc">永久删除（不进回收站）</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div><div class="cheat-desc">打开任务视图</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>D</kbd></span></div><div class="cheat-desc">创建新的虚拟桌面</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd></span></div><div class="cheat-desc">切换到左侧虚拟桌面</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>→</kbd></span></div><div class="cheat-desc">切换到右侧虚拟桌面</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>S</kbd></span></div><div class="cheat-desc">区域截图到剪贴板（截图工具）</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>R</kbd></span></div><div class="cheat-desc">区域录屏并自动存为 MP4</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>P</kbd></span></div><div class="cheat-desc">投影 / 切换显示模式（仅电脑、复制、扩展…）</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>.</kbd></span><span class="or">/</span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>;</kbd></span></div><div class="cheat-desc">打开表情符号面板</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>V</kbd></span></div><div class="cheat-desc">打开剪贴板历史（默认未开启）</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd></span></div><div class="cheat-desc">撤销</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Esc</kbd></span></div><div class="cheat-desc">直接打开任务管理器</div></div><div class="cheat"><div class="cheat-keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>L</kbd></span></div><div class="cheat-desc">锁定电脑</div></div></div>
+    </div>
+
+    <div class="empty" id="empty">没有匹配的快捷键，换个关键词试试。</div>
+
+    <div id="list">
+<section class="cat" id="cat-0" data-cat="开始菜单 · 搜索 · 任务栏">
+    <h2><span class="dot"></span>开始菜单 · 搜索 · 任务栏<span class="count">21</span></h2>
+    <div class="rows"><div class="row" data-search="打开或关闭「开始」菜单 win" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开或关闭「开始」菜单<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd></span></div>
+    </div>
+<div class="row" data-search="打开「开始」菜单（旧习惯键） ctrl+esc" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开「开始」菜单（旧习惯键）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Esc</kbd></span></div>
+    </div>
+<div class="row" data-search="打开搜索 win+s" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开搜索<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+    </div>
+<div class="row" data-search="打开搜索（等同 win+s） win+q" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开搜索（等同 Win+S）</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Q</kbd></span></div>
+    </div>
+<div class="row" data-search="打开「运行」对话框 win+r" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开「运行」对话框<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>R</kbd></span></div>
+    </div>
+<div class="row" data-search="打开「设置」 win+i" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开「设置」</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>I</kbd></span></div>
+    </div>
+<div class="row" data-search="打开快速链接菜单（等于右键「开始」按钮） win+x" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开快速链接菜单（等于右键「开始」按钮）<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>X</kbd></span></div>
+    </div>
+<div class="row" data-search="操作中心（win10）/ 快速设置（win11） win+a" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">操作中心（Win10）/ 快速设置（Win11）<span class="tag" title="Windows 11 行为有变化">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>A</kbd></span></div>
+    </div>
+<div class="row" data-search="打开通知中心与日历 win+n" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开通知中心与日历<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+    </div>
+<div class="row" data-search="在通知之间循环切换 win+shift+v" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">在通知之间循环切换<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+    </div>
+<div class="row" data-search="墨迹工作区（win10）/ 小组件（win11） win+w" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">墨迹工作区（Win10）/ 小组件（Win11）<span class="tag" title="Windows 11 行为有变化">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>W</kbd></span></div>
+    </div>
+<div class="row" data-search="cortana（win10）/ 聊天、copilot（win11，随版本变化） win+c" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">Cortana（Win10）/ 聊天、Copilot（Win11，随版本变化）<span class="tag" title="Windows 11 行为有变化">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+    </div>
+<div class="row" data-search="在任务栏应用间循环切换焦点 win+t" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">在任务栏应用间循环切换焦点</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+    </div>
+<div class="row" data-search="反向循环切换任务栏应用 win+shift+t" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">反向循环切换任务栏应用<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+    </div>
+<div class="row" data-search="聚焦通知区域（系统托盘）第一个图标 win+b" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">聚焦通知区域（系统托盘）第一个图标</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>B</kbd></span></div>
+    </div>
+<div class="row" data-search="打开任务栏设置（焦点在任务栏项目上时） win+alt+enter" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开任务栏设置（焦点在任务栏项目上时）<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+    </div>
+<div class="row" data-search="打开/切换到任务栏第 n 个位置的应用 win+1…9" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开/切换到任务栏第 N 个位置的应用<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+<div class="row" data-search="启动任务栏第 n 个应用的新实例 shift+win+1…9" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">启动任务栏第 N 个应用的新实例</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Win</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到第 n 个应用最近使用的窗口 ctrl+win+1…9" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">切换到第 N 个应用最近使用的窗口</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Win</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+<div class="row" data-search="以管理员身份启动任务栏第 n 个应用 ctrl+shift+win+1…9" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">以管理员身份启动任务栏第 N 个应用</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Win</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+<div class="row" data-search="打开任务栏第 n 个应用的跳转列表 win+alt+1…9" data-cat="开始菜单 · 搜索 · 任务栏">
+      <div class="desc">打开任务栏第 N 个应用的跳转列表</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-1" data-cat="窗口与桌面">
+    <h2><span class="dot"></span>窗口与桌面<span class="count">24</span></h2>
+    <div class="rows"><div class="row" data-search="显示 / 隐藏桌面 win+d" data-cat="窗口与桌面">
+      <div class="desc">显示 / 隐藏桌面<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>D</kbd></span></div>
+    </div>
+<div class="row" data-search="临时偷看桌面（松开按键恢复） win+," data-cat="窗口与桌面">
+      <div class="desc">临时偷看桌面（松开按键恢复）</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>,</kbd></span></div>
+    </div>
+<div class="row" data-search="最小化所有窗口 win+m" data-cat="窗口与桌面">
+      <div class="desc">最小化所有窗口</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>M</kbd></span></div>
+    </div>
+<div class="row" data-search="还原最小化的窗口 win+shift+m" data-cat="窗口与桌面">
+      <div class="desc">还原最小化的窗口</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>M</kbd></span></div>
+    </div>
+<div class="row" data-search="最小化除当前窗口外的所有窗口 win+home" data-cat="窗口与桌面">
+      <div class="desc">最小化除当前窗口外的所有窗口</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Home</kbd></span></div>
+    </div>
+<div class="row" data-search="最大化当前窗口 win+↑" data-cat="窗口与桌面">
+      <div class="desc">最大化当前窗口<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>↑</kbd></span></div>
+    </div>
+<div class="row" data-search="还原 / 最小化当前窗口 win+↓" data-cat="窗口与桌面">
+      <div class="desc">还原 / 最小化当前窗口</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>↓</kbd></span></div>
+    </div>
+<div class="row" data-search="贴靠到屏幕左半边 win+←" data-cat="窗口与桌面">
+      <div class="desc">贴靠到屏幕左半边<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+    </div>
+<div class="row" data-search="贴靠到屏幕右半边 win+→" data-cat="窗口与桌面">
+      <div class="desc">贴靠到屏幕右半边<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="打开贴靠布局 snap layouts win+z" data-cat="窗口与桌面">
+      <div class="desc">打开贴靠布局 Snap Layouts<span class="star">★</span><span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Z</kbd></span></div>
+    </div>
+<div class="row" data-search="贴靠到上半屏 win+alt+↑" data-cat="窗口与桌面">
+      <div class="desc">贴靠到上半屏<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↑</kbd></span></div>
+    </div>
+<div class="row" data-search="贴靠到下半屏 win+alt+↓" data-cat="窗口与桌面">
+      <div class="desc">贴靠到下半屏<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>↓</kbd></span></div>
+    </div>
+<div class="row" data-search="把窗口移到左侧显示器 win+shift+←" data-cat="窗口与桌面">
+      <div class="desc">把窗口移到左侧显示器</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+    </div>
+<div class="row" data-search="把窗口移到右侧显示器 win+shift+→" data-cat="窗口与桌面">
+      <div class="desc">把窗口移到右侧显示器</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="垂直拉伸窗口（上下铺满） win+shift+↑" data-cat="窗口与桌面">
+      <div class="desc">垂直拉伸窗口（上下铺满）</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>↑</kbd></span></div>
+    </div>
+<div class="row" data-search="还原 / 最小化贴靠或最大化的窗口 win+shift+↓" data-cat="窗口与桌面">
+      <div class="desc">还原 / 最小化贴靠或最大化的窗口</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>↓</kbd></span></div>
+    </div>
+<div class="row" data-search="切换窗口 alt+tab" data-cat="窗口与桌面">
+      <div class="desc">切换窗口<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="反向切换窗口 alt+shift+tab" data-cat="窗口与桌面">
+      <div class="desc">反向切换窗口</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="打开可停留的窗口切换器 ctrl+alt+tab" data-cat="窗口与桌面">
+      <div class="desc">打开可停留的窗口切换器</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="按打开顺序循环切换窗口 alt+esc" data-cat="窗口与桌面">
+      <div class="desc">按打开顺序循环切换窗口</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Esc</kbd></span></div>
+    </div>
+<div class="row" data-search="关闭当前窗口（桌面上无窗口时弹出关机菜单） alt+f4" data-cat="窗口与桌面">
+      <div class="desc">关闭当前窗口（桌面上无窗口时弹出关机菜单）</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>F4</kbd></span></div>
+    </div>
+<div class="row" data-search="打开窗口系统菜单（移动 / 大小 / 最小化 / 关闭） alt+space" data-cat="窗口与桌面">
+      <div class="desc">打开窗口系统菜单（移动 / 大小 / 最小化 / 关闭）</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Space</kbd></span></div>
+    </div>
+<div class="row" data-search="最大化 / 还原当前窗口（资源管理器、浏览器） f11" data-cat="窗口与桌面">
+      <div class="desc">最大化 / 还原当前窗口（资源管理器、浏览器）</div>
+      <div class="keys"><span class="combo"><kbd>F11</kbd></span></div>
+    </div>
+<div class="row" data-search="让当前 uwp 应用全屏 win+shift+enter" data-cat="窗口与桌面">
+      <div class="desc">让当前 UWP 应用全屏</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-2" data-cat="文件资源管理器">
+    <h2><span class="dot"></span>文件资源管理器<span class="count">33</span></h2>
+    <div class="rows"><div class="row" data-search="打开文件资源管理器 win+e" data-cat="文件资源管理器">
+      <div class="desc">打开文件资源管理器<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>E</kbd></span></div>
+    </div>
+<div class="row" data-search="新建窗口 ctrl+n" data-cat="文件资源管理器">
+      <div class="desc">新建窗口</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+    </div>
+<div class="row" data-search="新建标签页并切换过去 ctrl+t" data-cat="文件资源管理器">
+      <div class="desc">新建标签页并切换过去<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+    </div>
+<div class="row" data-search="关闭当前标签页 / 窗口 ctrl+w" data-cat="文件资源管理器">
+      <div class="desc">关闭当前标签页 / 窗口</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>W</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到下一个 / 上一个标签页 ctrl+tab / ctrl+shift+tab" data-cat="文件资源管理器">
+      <div class="desc">切换到下一个 / 上一个标签页</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Tab</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到第 n 个标签页 ctrl+1…9" data-cat="文件资源管理器">
+      <div class="desc">切换到第 N 个标签页<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+<div class="row" data-search="新建文件夹 ctrl+shift+n" data-cat="文件资源管理器">
+      <div class="desc">新建文件夹</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+    </div>
+<div class="row" data-search="重命名选中项 f2" data-cat="文件资源管理器">
+      <div class="desc">重命名选中项</div>
+      <div class="keys"><span class="combo"><kbd>F2</kbd></span></div>
+    </div>
+<div class="row" data-search="搜索文件或文件夹 f3" data-cat="文件资源管理器">
+      <div class="desc">搜索文件或文件夹</div>
+      <div class="keys"><span class="combo"><kbd>F3</kbd></span></div>
+    </div>
+<div class="row" data-search="聚焦搜索框 ctrl+e / ctrl+f" data-cat="文件资源管理器">
+      <div class="desc">聚焦搜索框</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>E</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F</kbd></span></div>
+    </div>
+<div class="row" data-search="聚焦地址栏 ctrl+l / alt+d" data-cat="文件资源管理器">
+      <div class="desc">聚焦地址栏</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>L</kbd></span><span class="or">/</span><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>D</kbd></span></div>
+    </div>
+<div class="row" data-search="展开 / 折叠地址栏历史 f4" data-cat="文件资源管理器">
+      <div class="desc">展开 / 折叠地址栏历史</div>
+      <div class="keys"><span class="combo"><kbd>F4</kbd></span></div>
+    </div>
+<div class="row" data-search="返回上一级文件夹 alt+↑" data-cat="文件资源管理器">
+      <div class="desc">返回上一级文件夹</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>↑</kbd></span></div>
+    </div>
+<div class="row" data-search="后退到上一个文件夹 alt+← / backspace" data-cat="文件资源管理器">
+      <div class="desc">后退到上一个文件夹</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd></span><span class="or">/</span><span class="combo"><kbd>Backspace</kbd></span></div>
+    </div>
+<div class="row" data-search="前进到下一个文件夹 alt+→" data-cat="文件资源管理器">
+      <div class="desc">前进到下一个文件夹</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="查看选中项的属性 alt+enter" data-cat="文件资源管理器">
+      <div class="desc">查看选中项的属性</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+    </div>
+<div class="row" data-search="显示 / 隐藏预览窗格 alt+p" data-cat="文件资源管理器">
+      <div class="desc">显示 / 隐藏预览窗格</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>P</kbd></span></div>
+    </div>
+<div class="row" data-search="显示 / 隐藏详细信息窗格 alt+shift+p" data-cat="文件资源管理器">
+      <div class="desc">显示 / 隐藏详细信息窗格</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>P</kbd></span></div>
+    </div>
+<div class="row" data-search="展开导航窗格中的所有文件夹 ctrl+shift+e" data-cat="文件资源管理器">
+      <div class="desc">展开导航窗格中的所有文件夹</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>E</kbd></span></div>
+    </div>
+<div class="row" data-search="删除到回收站 delete" data-cat="文件资源管理器">
+      <div class="desc">删除到回收站</div>
+      <div class="keys"><span class="combo"><kbd>Delete</kbd></span></div>
+    </div>
+<div class="row" data-search="永久删除（不进回收站） shift+delete" data-cat="文件资源管理器">
+      <div class="desc">永久删除（不进回收站）<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Delete</kbd></span></div>
+    </div>
+<div class="row" data-search="撤销上一步文件操作 ctrl+z" data-cat="文件资源管理器">
+      <div class="desc">撤销上一步文件操作</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd></span></div>
+    </div>
+<div class="row" data-search="重做文件操作 ctrl+y" data-cat="文件资源管理器">
+      <div class="desc">重做文件操作</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Y</kbd></span></div>
+    </div>
+<div class="row" data-search="全选 ctrl+a" data-cat="文件资源管理器">
+      <div class="desc">全选</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>A</kbd></span></div>
+    </div>
+<div class="row" data-search="显示选中项的右键菜单 shift+f10" data-cat="文件资源管理器">
+      <div class="desc">显示选中项的右键菜单</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>F10</kbd></span></div>
+    </div>
+<div class="row" data-search="显示「显示更多选项」菜单 shift+右键" data-cat="文件资源管理器">
+      <div class="desc">显示「显示更多选项」菜单<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>右键</kbd></span></div>
+    </div>
+<div class="row" data-search="切换视图样式（大图标 / 列表 / 详细信息等） ctrl+shift+1…9" data-cat="文件资源管理器">
+      <div class="desc">切换视图样式（大图标 / 列表 / 详细信息等）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+<div class="row" data-search="调整图标 / 缩略图大小 ctrl+滚轮" data-cat="文件资源管理器">
+      <div class="desc">调整图标 / 缩略图大小</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>滚轮</kbd></span></div>
+    </div>
+<div class="row" data-search="拖动文件：复制 / 移动 / 创建快捷方式 ctrl+拖动 / shift+拖动 / alt+拖动" data-cat="文件资源管理器">
+      <div class="desc">拖动文件：复制 / 移动 / 创建快捷方式</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>拖动</kbd></span><span class="or">/</span><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>拖动</kbd></span><span class="or">/</span><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>拖动</kbd></span></div>
+    </div>
+<div class="row" data-search="滚动到列表顶部 / 底部 home / end" data-cat="文件资源管理器">
+      <div class="desc">滚动到列表顶部 / 底部</div>
+      <div class="keys"><span class="combo"><kbd>Home</kbd></span><span class="or">/</span><span class="combo"><kbd>End</kbd></span></div>
+    </div>
+<div class="row" data-search="折叠 / 展开文件夹（选中文件夹时） ← / →" data-cat="文件资源管理器">
+      <div class="desc">折叠 / 展开文件夹（选中文件夹时）</div>
+      <div class="keys"><span class="combo"><kbd>←</kbd></span><span class="or">/</span><span class="combo"><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="刷新窗口 f5" data-cat="文件资源管理器">
+      <div class="desc">刷新窗口</div>
+      <div class="keys"><span class="combo"><kbd>F5</kbd></span></div>
+    </div>
+<div class="row" data-search="在窗口元素间循环切换 f6" data-cat="文件资源管理器">
+      <div class="desc">在窗口元素间循环切换</div>
+      <div class="keys"><span class="combo"><kbd>F6</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-3" data-cat="虚拟桌面与任务视图">
+    <h2><span class="dot"></span>虚拟桌面与任务视图<span class="count">5</span></h2>
+    <div class="rows"><div class="row" data-search="打开任务视图 win+tab" data-cat="虚拟桌面与任务视图">
+      <div class="desc">打开任务视图<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="创建新的虚拟桌面 win+ctrl+d" data-cat="虚拟桌面与任务视图">
+      <div class="desc">创建新的虚拟桌面<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>D</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到左侧虚拟桌面 win+ctrl+←" data-cat="虚拟桌面与任务视图">
+      <div class="desc">切换到左侧虚拟桌面<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到右侧虚拟桌面 win+ctrl+→" data-cat="虚拟桌面与任务视图">
+      <div class="desc">切换到右侧虚拟桌面<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="关闭当前虚拟桌面 win+ctrl+f4" data-cat="虚拟桌面与任务视图">
+      <div class="desc">关闭当前虚拟桌面</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F4</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-4" data-cat="截图 · 录屏 · 游戏栏">
+    <h2><span class="dot"></span>截图 · 录屏 · 游戏栏<span class="count">10</span></h2>
+    <div class="rows"><div class="row" data-search="区域截图到剪贴板（截图工具） win+shift+s" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">区域截图到剪贴板（截图工具）<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+    </div>
+<div class="row" data-search="区域录屏并自动存为 mp4 win+shift+r" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">区域录屏并自动存为 MP4<span class="star">★</span><span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>R</kbd></span></div>
+    </div>
+<div class="row" data-search="区域截图（win11 默认）/ 全屏截图到剪贴板（win10） prtscn" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">区域截图（Win11 默认）/ 全屏截图到剪贴板（Win10）<span class="tag" title="Windows 11 行为有变化">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>PrtScn</kbd></span></div>
+    </div>
+<div class="row" data-search="截取当前窗口到剪贴板 alt+prtscn" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">截取当前窗口到剪贴板</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>PrtScn</kbd></span></div>
+    </div>
+<div class="row" data-search="全屏截图并保存到「图片\屏幕截图」 win+prtscn" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">全屏截图并保存到「图片\屏幕截图」</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>PrtScn</kbd></span></div>
+    </div>
+<div class="row" data-search="打开游戏栏 win+g" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">打开游戏栏</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>G</kbd></span></div>
+    </div>
+<div class="row" data-search="开始 / 停止录制 win+alt+r" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">开始 / 停止录制</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>R</kbd></span></div>
+    </div>
+<div class="row" data-search="录制最近 30 秒 win+alt+g" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">录制最近 30 秒</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>G</kbd></span></div>
+    </div>
+<div class="row" data-search="游戏栏截图 win+alt+prtscn" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">游戏栏截图</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>PrtScn</kbd></span></div>
+    </div>
+<div class="row" data-search="静音 / 取消静音麦克风（游戏栏） win+alt+m" data-cat="截图 · 录屏 · 游戏栏">
+      <div class="desc">静音 / 取消静音麦克风（游戏栏）</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>M</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-5" data-cat="显示 · 声音 · 投影">
+    <h2><span class="dot"></span>显示 · 声音 · 投影<span class="count">8</span></h2>
+    <div class="rows"><div class="row" data-search="投影 / 切换显示模式（仅电脑、复制、扩展…） win+p" data-cat="显示 · 声音 · 投影">
+      <div class="desc">投影 / 切换显示模式（仅电脑、复制、扩展…）<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>P</kbd></span></div>
+    </div>
+<div class="row" data-search="连接无线显示器 / 蓝牙设备 win+k" data-cat="显示 · 声音 · 投影">
+      <div class="desc">连接无线显示器 / 蓝牙设备</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>K</kbd></span></div>
+    </div>
+<div class="row" data-search="开启 / 关闭 hdr win+alt+b" data-cat="显示 · 声音 · 投影">
+      <div class="desc">开启 / 关闭 HDR</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>B</kbd></span></div>
+    </div>
+<div class="row" data-search="黑屏时唤醒显示器 / 重置显卡驱动 win+ctrl+shift+b" data-cat="显示 · 声音 · 投影">
+      <div class="desc">黑屏时唤醒显示器 / 重置显卡驱动</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>B</kbd></span></div>
+    </div>
+<div class="row" data-search="打开声音输出快速设置 win+ctrl+v" data-cat="显示 · 声音 · 投影">
+      <div class="desc">打开声音输出快速设置<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+    </div>
+<div class="row" data-search="静音 / 取消静音麦克风 win+alt+k" data-cat="显示 · 声音 · 投影">
+      <div class="desc">静音 / 取消静音麦克风<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>K</kbd></span></div>
+    </div>
+<div class="row" data-search="显示 / 隐藏桌面上的日期时间 win+alt+d" data-cat="显示 · 声音 · 投影">
+      <div class="desc">显示 / 隐藏桌面上的日期时间<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>D</kbd></span></div>
+    </div>
+<div class="row" data-search="打开「系统信息 / 关于」 win+pause" data-cat="显示 · 声音 · 投影">
+      <div class="desc">打开「系统信息 / 关于」</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Pause</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-6" data-cat="辅助功能">
+    <h2><span class="dot"></span>辅助功能<span class="count">13</span></h2>
+    <div class="rows"><div class="row" data-search="打开辅助功能设置 win+u" data-cat="辅助功能">
+      <div class="desc">打开辅助功能设置</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>U</kbd></span></div>
+    </div>
+<div class="row" data-search="放大镜放大 win+加号" data-cat="辅助功能">
+      <div class="desc">放大镜放大</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>加号</kbd></span></div>
+    </div>
+<div class="row" data-search="放大镜缩小 win+减号" data-cat="辅助功能">
+      <div class="desc">放大镜缩小</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>减号</kbd></span></div>
+    </div>
+<div class="row" data-search="退出放大镜 win+esc" data-cat="辅助功能">
+      <div class="desc">退出放大镜</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Esc</kbd></span></div>
+    </div>
+<div class="row" data-search="打开屏幕键盘 win+ctrl+o" data-cat="辅助功能">
+      <div class="desc">打开屏幕键盘</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>O</kbd></span></div>
+    </div>
+<div class="row" data-search="启动 / 退出讲述人 win+ctrl+enter" data-cat="辅助功能">
+      <div class="desc">启动 / 退出讲述人</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+    </div>
+<div class="row" data-search="打开讲述人设置 win+ctrl+n" data-cat="辅助功能">
+      <div class="desc">打开讲述人设置<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+    </div>
+<div class="row" data-search="开启 / 关闭颜色滤镜 win+ctrl+c" data-cat="辅助功能">
+      <div class="desc">开启 / 关闭颜色滤镜</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+    </div>
+<div class="row" data-search="启用粘滞键（连按 5 次） shift×5" data-cat="辅助功能">
+      <div class="desc">启用粘滞键（连按 5 次）</div>
+      <div class="keys"><span class="combo"><kbd>Shift×5</kbd></span></div>
+    </div>
+<div class="row" data-search="启用筛选键（按住右 shift 8 秒） 右 shift 长按 8 秒" data-cat="辅助功能">
+      <div class="desc">启用筛选键（按住右 Shift 8 秒）</div>
+      <div class="keys"><span class="combo"><kbd>右 Shift 长按 8 秒</kbd></span></div>
+    </div>
+<div class="row" data-search="启用切换键（按住 num lock 5 秒） num lock 长按 5 秒" data-cat="辅助功能">
+      <div class="desc">启用切换键（按住 Num Lock 5 秒）</div>
+      <div class="keys"><span class="combo"><kbd>Num Lock 长按 5 秒</kbd></span></div>
+    </div>
+<div class="row" data-search="启用高对比度 左 alt+左 shift+prtscn" data-cat="辅助功能">
+      <div class="desc">启用高对比度</div>
+      <div class="keys"><span class="combo"><kbd>左 Alt</kbd><span class="plus">+</span><kbd>左 Shift</kbd><span class="plus">+</span><kbd>PrtScn</kbd></span></div>
+    </div>
+<div class="row" data-search="打开 windows 语音识别 win+ctrl+s" data-cat="辅助功能">
+      <div class="desc">打开 Windows 语音识别</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-7" data-cat="输入法 · 表情 · 剪贴板">
+    <h2><span class="dot"></span>输入法 · 表情 · 剪贴板<span class="count">9</span></h2>
+    <div class="rows"><div class="row" data-search="切换输入语言 / 键盘布局 win+space" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">切换输入语言 / 键盘布局</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Space</kbd></span></div>
+    </div>
+<div class="row" data-search="反向切换输入语言 / 键盘布局 win+shift+space" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">反向切换输入语言 / 键盘布局<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Space</kbd></span></div>
+    </div>
+<div class="row" data-search="切换回上一次使用的输入选项 win+ctrl+space" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">切换回上一次使用的输入选项<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Space</kbd></span></div>
+    </div>
+<div class="row" data-search="中英文输入切换（中文输入法） ctrl+space" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">中英文输入切换（中文输入法）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Space</kbd></span></div>
+    </div>
+<div class="row" data-search="全角 / 半角切换（中文输入法） shift+space" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">全角 / 半角切换（中文输入法）</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Space</kbd></span></div>
+    </div>
+<div class="row" data-search="切换键盘布局（安装了多种语言时） ctrl+shift" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">切换键盘布局（安装了多种语言时）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd></span></div>
+    </div>
+<div class="row" data-search="打开表情符号面板 win+. / win+;" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">打开表情符号面板<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>.</kbd></span><span class="or">/</span><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>;</kbd></span></div>
+    </div>
+<div class="row" data-search="打开剪贴板历史（默认未开启） win+v" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">打开剪贴板历史（默认未开启）<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+    </div>
+<div class="row" data-search="语音键入 / 听写 win+h" data-cat="输入法 · 表情 · 剪贴板">
+      <div class="desc">语音键入 / 听写</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>H</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-8" data-cat="通用文本编辑（几乎所有应用）">
+    <h2><span class="dot"></span>通用文本编辑（几乎所有应用）<span class="count">21</span></h2>
+    <div class="rows"><div class="row" data-search="撤销 ctrl+z" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">撤销<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd></span></div>
+    </div>
+<div class="row" data-search="重做 ctrl+y" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">重做</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Y</kbd></span></div>
+    </div>
+<div class="row" data-search="剪切 ctrl+x" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">剪切</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>X</kbd></span></div>
+    </div>
+<div class="row" data-search="复制 ctrl+c" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">复制</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+    </div>
+<div class="row" data-search="粘贴 ctrl+v" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">粘贴</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+    </div>
+<div class="row" data-search="全选 ctrl+a" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">全选</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>A</kbd></span></div>
+    </div>
+<div class="row" data-search="加粗 / 斜体 / 下划线 ctrl+b / ctrl+i / ctrl+u" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">加粗 / 斜体 / 下划线</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>B</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>I</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>U</kbd></span></div>
+    </div>
+<div class="row" data-search="保存 ctrl+s" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">保存</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+    </div>
+<div class="row" data-search="查找 ctrl+f" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">查找</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>F</kbd></span></div>
+    </div>
+<div class="row" data-search="查找并替换 ctrl+h" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">查找并替换</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>H</kbd></span></div>
+    </div>
+<div class="row" data-search="跳转到行首 / 行尾 home / end" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">跳转到行首 / 行尾</div>
+      <div class="keys"><span class="combo"><kbd>Home</kbd></span><span class="or">/</span><span class="combo"><kbd>End</kbd></span></div>
+    </div>
+<div class="row" data-search="跳转到文档开头 / 结尾 ctrl+home / ctrl+end" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">跳转到文档开头 / 结尾</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Home</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>End</kbd></span></div>
+    </div>
+<div class="row" data-search="按词移动光标 ctrl+← / ctrl+→" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">按词移动光标</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>←</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="删除前 / 后一个词 ctrl+backspace / ctrl+delete" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">删除前 / 后一个词</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Backspace</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Delete</kbd></span></div>
+    </div>
+<div class="row" data-search="上 / 下一段 ctrl+↑ / ctrl+↓" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">上 / 下一段</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>↑</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>↓</kbd></span></div>
+    </div>
+<div class="row" data-search="逐字 / 逐行选择 shift+方向键" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">逐字 / 逐行选择</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>方向键</kbd></span></div>
+    </div>
+<div class="row" data-search="按词选择 ctrl+shift+← / ctrl+shift+→" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">按词选择</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>←</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="选到文档开头 / 结尾 ctrl+shift+home / ctrl+shift+end" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">选到文档开头 / 结尾</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Home</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>End</kbd></span></div>
+    </div>
+<div class="row" data-search="切换插入 / 改写模式 insert" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">切换插入 / 改写模式</div>
+      <div class="keys"><span class="combo"><kbd>Insert</kbd></span></div>
+    </div>
+<div class="row" data-search="无格式粘贴（多数应用） ctrl+shift+v" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">无格式粘贴（多数应用）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+    </div>
+<div class="row" data-search="复制 / 粘贴（旧习惯键） ctrl+insert / shift+insert" data-cat="通用文本编辑（几乎所有应用）">
+      <div class="desc">复制 / 粘贴（旧习惯键）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Insert</kbd></span><span class="or">/</span><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Insert</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-9" data-cat="终端与命令行">
+    <h2><span class="dot"></span>终端与命令行<span class="count">15</span></h2>
+    <div class="rows"><div class="row" data-search="复制选中内容 / 中断当前命令（无选中时） ctrl+c" data-cat="终端与命令行">
+      <div class="desc">复制选中内容 / 中断当前命令（无选中时）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>C</kbd></span></div>
+    </div>
+<div class="row" data-search="粘贴 ctrl+v" data-cat="终端与命令行">
+      <div class="desc">粘贴</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+    </div>
+<div class="row" data-search="复制 / 粘贴（windows terminal） ctrl+shift+c / ctrl+shift+v" data-cat="终端与命令行">
+      <div class="desc">复制 / 粘贴（Windows Terminal）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>C</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>V</kbd></span></div>
+    </div>
+<div class="row" data-search="新建标签页（windows terminal） ctrl+shift+t" data-cat="终端与命令行">
+      <div class="desc">新建标签页（Windows Terminal）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+    </div>
+<div class="row" data-search="关闭窗口（windows terminal） ctrl+shift+w" data-cat="终端与命令行">
+      <div class="desc">关闭窗口（Windows Terminal）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>W</kbd></span></div>
+    </div>
+<div class="row" data-search="切换标签页（windows terminal） ctrl+tab / ctrl+shift+tab" data-cat="终端与命令行">
+      <div class="desc">切换标签页（Windows Terminal）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Tab</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="复制窗格（windows terminal） alt+shift+d" data-cat="终端与命令行">
+      <div class="desc">复制窗格（Windows Terminal）</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>D</kbd></span></div>
+    </div>
+<div class="row" data-search="垂直拆分窗格 alt+shift+-" data-cat="终端与命令行">
+      <div class="desc">垂直拆分窗格</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>-</kbd></span></div>
+    </div>
+<div class="row" data-search="水平拆分窗格 alt+shift++" data-cat="终端与命令行">
+      <div class="desc">水平拆分窗格</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd></kbd><span class="plus">+</span><kbd></kbd></span></div>
+    </div>
+<div class="row" data-search="搜索终端内容 ctrl+shift+f" data-cat="终端与命令行">
+      <div class="desc">搜索终端内容</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>F</kbd></span></div>
+    </div>
+<div class="row" data-search="命令自动补全 tab" data-cat="终端与命令行">
+      <div class="desc">命令自动补全</div>
+      <div class="keys"><span class="combo"><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="翻看历史命令 ↑ / ↓" data-cat="终端与命令行">
+      <div class="desc">翻看历史命令</div>
+      <div class="keys"><span class="combo"><kbd>↑</kbd></span><span class="or">/</span><span class="combo"><kbd>↓</kbd></span></div>
+    </div>
+<div class="row" data-search="历史命令列表（cmd） f7" data-cat="终端与命令行">
+      <div class="desc">历史命令列表（cmd）</div>
+      <div class="keys"><span class="combo"><kbd>F7</kbd></span></div>
+    </div>
+<div class="row" data-search="进入标记模式（传统控制台） ctrl+m" data-cat="终端与命令行">
+      <div class="desc">进入标记模式（传统控制台）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>M</kbd></span></div>
+    </div>
+<div class="row" data-search="打开 / 隐藏 quake 模式终端（需在设置中启用） win+`" data-cat="终端与命令行">
+      <div class="desc">打开 / 隐藏 Quake 模式终端（需在设置中启用）</div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>`</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-10" data-cat="系统与安全">
+    <h2><span class="dot"></span>系统与安全<span class="count">5</span></h2>
+    <div class="rows"><div class="row" data-search="打开安全选项界面（锁定 / 注销 / 任务管理器） ctrl+alt+del" data-cat="系统与安全">
+      <div class="desc">打开安全选项界面（锁定 / 注销 / 任务管理器）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Alt</kbd><span class="plus">+</span><kbd>Del</kbd></span></div>
+    </div>
+<div class="row" data-search="直接打开任务管理器 ctrl+shift+esc" data-cat="系统与安全">
+      <div class="desc">直接打开任务管理器<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Esc</kbd></span></div>
+    </div>
+<div class="row" data-search="锁定电脑 win+l" data-cat="系统与安全">
+      <div class="desc">锁定电脑<span class="star">★</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>L</kbd></span></div>
+    </div>
+<div class="row" data-search="以管理员身份运行选中的程序 ctrl+shift+enter" data-cat="系统与安全">
+      <div class="desc">以管理员身份运行选中的程序</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Enter</kbd></span></div>
+    </div>
+<div class="row" data-search="打开 recall（copilot+ pc） win+j" data-cat="系统与安全">
+      <div class="desc">打开 Recall（Copilot+ PC）<span class="tag" title="Windows 11 新增">Win11</span></div>
+      <div class="keys"><span class="combo"><kbd>Win</kbd><span class="plus">+</span><kbd>J</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-11" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+    <h2><span class="dot"></span>浏览器与通用应用（通用习惯，非系统键）<span class="count">14</span></h2>
+    <div class="rows"><div class="row" data-search="新建标签页 ctrl+t" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">新建标签页</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+    </div>
+<div class="row" data-search="关闭标签页 ctrl+w" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">关闭标签页</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>W</kbd></span></div>
+    </div>
+<div class="row" data-search="恢复刚关闭的标签页 ctrl+shift+t" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">恢复刚关闭的标签页</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>T</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到下一个标签页 ctrl+tab / ctrl+pgdn" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">切换到下一个标签页</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Tab</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgDn</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到上一个标签页 ctrl+shift+tab / ctrl+pgup" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">切换到上一个标签页</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>PgUp</kbd></span></div>
+    </div>
+<div class="row" data-search="切换到第 1–8 个 / 最后一个标签页 ctrl+1…8 / ctrl+9" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">切换到第 1–8 个 / 最后一个标签页</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>1…8</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>9</kbd></span></div>
+    </div>
+<div class="row" data-search="刷新页面 f5 / ctrl+r" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">刷新页面</div>
+      <div class="keys"><span class="combo"><kbd>F5</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>R</kbd></span></div>
+    </div>
+<div class="row" data-search="强制刷新（忽略缓存） ctrl+shift+r" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">强制刷新（忽略缓存）</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>R</kbd></span></div>
+    </div>
+<div class="row" data-search="放大 / 缩小 / 恢复默认缩放 ctrl+加号 / ctrl+减号 / ctrl+0" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">放大 / 缩小 / 恢复默认缩放</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>加号</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>减号</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>0</kbd></span></div>
+    </div>
+<div class="row" data-search="后退 / 前进 alt+← / alt+→" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">后退 / 前进</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>←</kbd></span><span class="or">/</span><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>→</kbd></span></div>
+    </div>
+<div class="row" data-search="聚焦地址栏 ctrl+l / f6" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">聚焦地址栏</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>L</kbd></span><span class="or">/</span><span class="combo"><kbd>F6</kbd></span></div>
+    </div>
+<div class="row" data-search="打开新窗口 / 无痕窗口 ctrl+n / ctrl+shift+n" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">打开新窗口 / 无痕窗口</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>N</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>N</kbd></span></div>
+    </div>
+<div class="row" data-search="清除浏览数据 ctrl+shift+delete" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">清除浏览数据</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Delete</kbd></span></div>
+    </div>
+<div class="row" data-search="停止加载 / 关闭对话框 esc" data-cat="浏览器与通用应用（通用习惯，非系统键）">
+      <div class="desc">停止加载 / 关闭对话框</div>
+      <div class="keys"><span class="combo"><kbd>Esc</kbd></span></div>
+    </div>
+</div>
+</section>
+<section class="cat" id="cat-12" data-cat="对话框 · 菜单 · 表单">
+    <h2><span class="dot"></span>对话框 · 菜单 · 表单<span class="count">8</span></h2>
+    <div class="rows"><div class="row" data-search="在选项 / 控件间前进 tab" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">在选项 / 控件间前进</div>
+      <div class="keys"><span class="combo"><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="在选项 / 控件间后退 shift+tab" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">在选项 / 控件间后退</div>
+      <div class="keys"><span class="combo"><kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="在对话框标签页间切换 ctrl+tab / ctrl+shift+tab" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">在对话框标签页间切换</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Tab</kbd></span><span class="or">/</span><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>Tab</kbd></span></div>
+    </div>
+<div class="row" data-search="直接跳到第 n 个标签 ctrl+1…9" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">直接跳到第 N 个标签</div>
+      <div class="keys"><span class="combo"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>1…9</kbd></span></div>
+    </div>
+<div class="row" data-search="触发菜单中带下划线字母的命令 alt+字母" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">触发菜单中带下划线字母的命令</div>
+      <div class="keys"><span class="combo"><kbd>Alt</kbd><span class="plus">+</span><kbd>字母</kbd></span></div>
+    </div>
+<div class="row" data-search="勾选 / 取消勾选复选框 空格" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">勾选 / 取消勾选复选框</div>
+      <div class="keys"><span class="combo"><kbd>空格</kbd></span></div>
+    </div>
+<div class="row" data-search="确认 / 取消 enter / esc" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">确认 / 取消</div>
+      <div class="keys"><span class="combo"><kbd>Enter</kbd></span><span class="or">/</span><span class="combo"><kbd>Esc</kbd></span></div>
+    </div>
+<div class="row" data-search="在按钮组中切换选择 方向键" data-cat="对话框 · 菜单 · 表单">
+      <div class="desc">在按钮组中切换选择</div>
+      <div class="keys"><span class="combo"><kbd>方向键</kbd></span></div>
+    </div>
+</div>
+</section>
+
+    </div>
+
+    <footer>
+      快捷键以 Windows 11 24H2（简体中文）实机为准，Windows 10 22H2 通用条目已核对；参考 Microsoft 官方《Keyboard shortcuts in Windows》。
+    </footer>
+  </main>
+</div>
+<div class="toast" id="toast">已复制</div>
+
+<script>
+(function(){
+  const q = document.getElementById('q');
+  const clearBtn = document.getElementById('clear');
+  const empty = document.getElementById('empty');
+  const list = document.getElementById('list');
+  const navLinks = [...document.querySelectorAll('#nav a')];
+  const rows = [...document.querySelectorAll('.row')];
+  const sections = [...document.querySelectorAll('.cat')];
+  const cheatBlock = document.getElementById('cheat');
+  const logicBlock = document.getElementById('logic');
+  const starBtn = document.getElementById('starBtn');
+  let starOnly = false;
+
+  const orig = new Map();
+  rows.forEach(r => orig.set(r, r.querySelector('.desc').innerHTML));
+
+  function highlight(el, html, term){
+    if(!term) { el.innerHTML = html; return; }
+    const tmp = document.createElement('div'); tmp.innerHTML = html;
+    const walk = document.createTreeWalker(tmp, NodeFilter.SHOW_TEXT);
+    const nodes = []; let n;
+    while((n = walk.nextNode())) nodes.push(n);
+    const lower = term.toLowerCase();
+    nodes.forEach(node => {
+      const text = node.nodeValue; const idx = text.toLowerCase().indexOf(lower);
+      if(idx < 0) return;
+      const frag = document.createDocumentFragment();
+      let last = 0, i = idx;
+      while(i >= 0){
+        frag.appendChild(document.createTextNode(text.slice(last, i)));
+        const m = document.createElement('mark'); m.textContent = text.slice(i, i + term.length);
+        frag.appendChild(m); last = i + term.length; i = text.toLowerCase().indexOf(lower, last);
+      }
+      frag.appendChild(document.createTextNode(text.slice(last)));
+      node.parentNode.replaceChild(frag, node);
+    });
+    el.innerHTML = tmp.innerHTML;
+  }
+
+  function apply(){
+    const term = q.value.trim().toLowerCase();
+    clearBtn.style.display = term ? 'block' : 'none';
+    let total = 0;
+    sections.forEach(sec => {
+      let visible = 0;
+      const cnt = sec.querySelector('h2 .count');
+      if(!sec.dataset.total) sec.dataset.total = cnt.textContent;
+      sec.querySelectorAll('.row').forEach(row => {
+        const hay = row.dataset.search;
+        const star = row.querySelector('.star');
+        const okTerm = !term || hay.includes(term);
+        const okStar = !starOnly || !!star;
+        const show = okTerm && okStar;
+        row.classList.toggle('hidden', !show);
+        if(show) visible++;
+        highlight(row.querySelector('.desc'), orig.get(row), term);
+      });
+      cnt.textContent = (term || starOnly) ? visible : sec.dataset.total;
+      sec.classList.toggle('hidden', visible === 0);
+      total += visible;
+    });
+    empty.style.display = total === 0 ? 'block' : 'none';
+    if(term) { logicBlock.classList.add('hidden'); cheatBlock.classList.add('hidden'); }
+    else { logicBlock.classList.remove('hidden'); cheatBlock.classList.remove('hidden'); }
+  }
+
+  q.addEventListener('input', apply);
+  clearBtn.addEventListener('click', () => { q.value = ''; apply(); q.focus(); });
+  document.addEventListener('keydown', e => {
+    if(e.key === '/' && document.activeElement !== q){ e.preventDefault(); q.focus(); }
+    if(e.key === 'Escape' && document.activeElement === q){ q.value = ''; apply(); q.blur(); }
+  });
+
+  starBtn.addEventListener('click', () => {
+    starOnly = !starOnly;
+    starBtn.classList.toggle('on', starOnly);
+    starBtn.textContent = starOnly ? '★ 高频中' : '★ 只看高频';
+    apply();
+  });
+
+  // theme
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('themeBtn');
+  const syncBtn = () => { themeBtn.textContent = root.dataset.theme === 'dark' ? '☀ 浅色' : '◐ 深色'; };
+  syncBtn();
+  themeBtn.addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('win-theme', root.dataset.theme); syncBtn();
+  });
+
+  // copy command id
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.cmd'); if(!btn) return;
+    const text = btn.dataset.cmd;
+    const done = () => { toast.textContent = '已复制 ' + text; toast.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1600); };
+    function legacyCopy(t){
+      var ta = document.createElement('textarea');
+      ta.value = t; ta.setAttribute('readonly','');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); } catch(e) {}
+      document.body.removeChild(ta);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(done, function(){ legacyCopy(text); done(); });
+    } else { legacyCopy(text); done(); }
+  });
+
+  // scrollspy + sticky toolbar
+  const toolbar = document.getElementById('toolbar');
+  const setActive = id => navLinks.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if(en.isIntersecting) setActive(en.target.id); });
+  }, { rootMargin: '-90px 0px -70% 0px', threshold: 0 });
+  document.querySelectorAll('.cat').forEach(s => io.observe(s));
+  navLinks.forEach(a => a.addEventListener('click', () => setActive(a.dataset.target)));
+  window.addEventListener('scroll', () => toolbar.classList.toggle('stuck', window.scrollY > 40), { passive: true });
+})();</script>
+</body>
+</html>
