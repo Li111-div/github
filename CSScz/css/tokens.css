@@ -1,0 +1,160 @@
+/* ==========================================================================
+   Design Tokens — CSS 属性图谱
+   颜色、字体、间距、阴影、层级与分类色板
+   ========================================================================== */
+
+:root {
+  /* 字体 */
+  --font-sans: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", "Roboto Mono",
+    Consolas, "Liberation Mono", monospace;
+
+  /* 字号 */
+  --fs-xs: 0.72rem;
+  --fs-sm: 0.8125rem;
+  --fs-base: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: 1.25rem;
+  --fs-xl: 1.6rem;
+  --fs-2xl: 2.25rem;
+  --fs-hero: clamp(2.1rem, 5vw, 3.75rem);
+
+  /* 间距 */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* 圆角 */
+  --r-xs: 6px;
+  --r-sm: 9px;
+  --r-md: 13px;
+  --r-lg: 18px;
+  --r-xl: 26px;
+  --r-full: 999px;
+
+  /* 布局 */
+  --header-h: 68px;
+  --topbar-h: 68px;
+  --sidebar-w: 264px;
+  --content-max: 1560px;
+  --detail-w: min(700px, 92vw);
+
+  /* 动效 */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 180ms;
+  --dur-slow: 380ms;
+
+  /* 层级 */
+  --z-topbar: 60;
+  --z-sidebar: 55;
+  --z-scrim: 70;
+  --z-detail: 80;
+  --z-toast: 120;
+  --z-to-top: 50;
+
+  /* 分类色（由 JS 使用） */
+  --cat-layout: #60a5fa;
+  --cat-flexgrid: #34d399;
+  --cat-box: #fbbf24;
+  --cat-typography: #f472b6;
+  --cat-color: #f87171;
+  --cat-border: #a78bfa;
+  --cat-effect: #22d3ee;
+  --cat-animation: #fb923c;
+  --cat-transform: #e879f9;
+  --cat-list: #a3e635;
+  --cat-scroll: #38bdf8;
+  --cat-fragmentation: #facc15;
+  --cat-mask: #c084fc;
+  --cat-content: #2dd4bf;
+  --cat-svg: #f0abfc;
+  --cat-ext: #94a3b8;
+  --cat-other: #64748b;
+}
+
+/* ----------------------------- 深色主题（默认） ----------------------------- */
+[data-theme="dark"] {
+  --bg: #070a12;
+  --bg-soft: #0a0f1c;
+  --bg-elevated: #0e1524;
+  --surface: rgba(17, 24, 41, 0.72);
+  --surface-solid: #0f1626;
+  --surface-2: #141d30;
+  --surface-3: #1a243a;
+  --border: rgba(148, 163, 184, 0.13);
+  --border-strong: rgba(148, 163, 184, 0.26);
+  --text: #e9effb;
+  --text-2: #a7b4ca;
+  --text-3: #6d7d97;
+  --text-inverse: #0b1020;
+  --accent: #67e8f9;
+  --accent-strong: #22d3ee;
+  --accent-2: #a78bfa;
+  --accent-3: #f472b6;
+  --accent-contrast: #04121a;
+  --good: #34d399;
+  --warn: #fbbf24;
+  --bad: #fb7185;
+  --info: #60a5fa;
+  --code-bg: #080d18;
+  --code-border: rgba(103, 232, 249, 0.12);
+  --scrim: rgba(3, 6, 12, 0.66);
+  --glow-1: rgba(34, 211, 238, 0.16);
+  --glow-2: rgba(167, 139, 250, 0.14);
+  --grid-line: rgba(148, 163, 184, 0.055);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 30px 90px rgba(0, 0, 0, 0.55);
+  --card-hover-border: rgba(103, 232, 249, 0.38);
+  --highlight: rgba(103, 232, 249, 0.22);
+  --highlight-text: #c8fbff;
+  color-scheme: dark;
+}
+
+/* ------------------------------- 浅色主题 -------------------------------- */
+[data-theme="light"] {
+  --bg: #f5f7fc;
+  --bg-soft: #eef2f9;
+  --bg-elevated: #ffffff;
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface-solid: #ffffff;
+  --surface-2: #f1f5fb;
+  --surface-3: #e8eef8;
+  --border: rgba(15, 23, 42, 0.09);
+  --border-strong: rgba(15, 23, 42, 0.18);
+  --text: #0f172a;
+  --text-2: #41506b;
+  --text-3: #7a8699;
+  --text-inverse: #ffffff;
+  --accent: #0891b2;
+  --accent-strong: #0e7490;
+  --accent-2: #7c3aed;
+  --accent-3: #db2777;
+  --accent-contrast: #ffffff;
+  --good: #059669;
+  --warn: #d97706;
+  --bad: #e11d48;
+  --info: #2563eb;
+  --code-bg: #0e1626;
+  --code-border: rgba(15, 23, 42, 0.12);
+  --scrim: rgba(15, 23, 42, 0.38);
+  --glow-1: rgba(8, 145, 178, 0.1);
+  --glow-2: rgba(124, 58, 237, 0.08);
+  --grid-line: rgba(15, 23, 42, 0.045);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 12px 30px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 30px 80px rgba(15, 23, 42, 0.16);
+  --card-hover-border: rgba(8, 145, 178, 0.42);
+  --highlight: rgba(8, 145, 178, 0.16);
+  --highlight-text: #0e7490;
+  color-scheme: light;
+}
